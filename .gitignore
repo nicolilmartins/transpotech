@@ -27,3 +27,8 @@ next-env.d.ts
 
 # Coverage
 coverage/
+
+# Binários grandes em inputs (apresentações, planilhas)
+inputs/*.pdf
+inputs/*.xlsx
+inputs/*.docx

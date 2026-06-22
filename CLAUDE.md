@@ -472,6 +472,23 @@ Services: `camelCase` — `leadsService`
 
 ---
 
+## Git — branches por fluxo
+
+Sempre que iniciar um novo fluxo de trabalho (nova feature, página, refactor ou correção), criar uma branch separada antes de qualquer alteração:
+
+```bash
+git checkout -b <tipo>/<descricao-curta>
+# exemplos:
+# feat/pagina-servicos
+# feat/hero-section-redesign
+# fix/formulario-contato
+# refactor/estrutura-pastas
+```
+
+Só commitar na `main` via merge/PR após revisão. Nunca trabalhar diretamente na `main`.
+
+---
+
 ## Regras finais
 
 - Não criar padrões novos sem necessidade
