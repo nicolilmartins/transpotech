@@ -1,0 +1,91 @@
+@theme inline {
+  /* Brand colors → Tailwind utilities (bg-primary, text-primary, etc.) */
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-fg);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-fg);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-fg);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-fg);
+
+  --color-border: var(--border);
+
+  --color-error: var(--error);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+
+  /* Border radius → Tailwind utilities (rounded-sm, rounded-md, etc.) */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+
+  /* Shadows → Tailwind utilities (shadow-sm, shadow-md, etc.) */
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+
+  /* Fonts */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ---------------------------------------------------------------------------
+ * Design tokens da home (TPT01 — Website Redesign / Figma)
+ * Portados do site original. Geram utilitários Tailwind: bg-primary-500,
+ * text-neutral-800, text-secondary-600, text-h2, font-heading, etc.
+ * ------------------------------------------------------------------------- */
+@theme {
+  /* ----- Brand / Primary (Sangue Laranja) ----- */
+  --color-primary-50: #fff4ec;
+  --color-primary-300: #ffaa6d;
+  --color-primary-500: #f58220;
+
+  /* ----- Secondary ----- */
+  --color-secondary-600: #146b55;
+  --color-secondary-800: #264037;
+
+  /* ----- Neutral scale ----- */
+  --color-neutral-50: #f7f6f6;
+  --color-neutral-100: #eeecec;
+  --color-neutral-200: #dddbdb;
+  --color-neutral-300: #c6c3c3;
+  --color-neutral-400: #a3a0a0;
+  --color-neutral-500: #7a7777;
+  --color-neutral-600: #5a5757;
+  --color-neutral-700: #3f3c3d;
+  --color-neutral-800: #2b2728;
+  --color-neutral-900: #181616;
+
+  /* ----- Typography ----- */
+  --font-heading: var(--font-stack-sans), "Sora", system-ui, sans-serif;
+  --font-body: var(--font-mukta-vaani), system-ui, sans-serif;
+
+  /* Headings line-height 1.3 */
+  --text-h2: 2.5rem; /* 40 */
+  --text-h2--line-height: 1.3;
+  --text-h3: 2rem; /* 32 */
+  --text-h3--line-height: 1.3;
+  --text-h4: 1.75rem; /* 28 */
+  --text-h4--line-height: 1.3;
+  --text-h6: 1.25rem; /* 20 */
+  --text-h6--line-height: 1.3;
+
+  /* Body line-height 1.35 */
+  --text-body-lg: 1.25rem; /* 20 */
+  --text-body-lg--line-height: 1.35;
+  --text-body: 1rem; /* 16 */
+  --text-body--line-height: 1.35;
+  --text-body-sm: 0.875rem; /* 14 */
+  --text-body-sm--line-height: 1.35;
+}
