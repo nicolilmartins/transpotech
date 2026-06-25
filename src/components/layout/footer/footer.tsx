@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Facebook, Instagram, Linkedin, Spotify, Youtube } from "@/components/ui/icons";
+import { Facebook, Instagram, Linkedin, Youtube } from "@/components/ui/icons";
+import { FooterGlow } from "./footer-glow";
 import logoLight from "@/assets/images/logo-transpotech-light.svg";
 import gptw from "@/assets/images/gptw-badge.png";
 import atomsix from "@/assets/images/atomsix-symbol.svg";
@@ -46,11 +47,15 @@ const units = [
   { city: "Maringá - PR", phone: "(44) 3200-0414" },
 ];
 
-const socials = [Facebook, Instagram, Linkedin, Spotify, Youtube];
+const socials = [Facebook, Instagram, Linkedin, Youtube];
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden rounded-t-2xl bg-neutral-800 px-[70px] pb-8 pt-20 text-body">
+    <footer
+      data-header-dark
+      data-reveal-skip
+      className="relative overflow-hidden rounded-t-2xl bg-neutral-800 px-4 pb-10 pt-14 text-body sm:px-8 lg:px-16 lg:pb-16 lg:pt-20"
+    >
       {/* Watermark */}
       <Image
         src={logoWatermark}
@@ -59,9 +64,12 @@ export function Footer() {
         className="pointer-events-none absolute -bottom-10 left-1/2 w-[1200px] max-w-none -translate-x-1/2 opacity-[0.03] blur-2xl"
       />
 
-      <div className="relative flex flex-col gap-16">
+      {/* Blur radial verde no rodapé (#218F73) — acompanha o cursor na horizontal */}
+      <FooterGlow />
+
+      <div className="relative flex flex-col gap-8">
         {/* Topo: logo + social + links + selo */}
-        <div className="flex justify-between gap-8">
+        <div className="flex flex-col gap-8 lg:flex-row lg:justify-between">
           <div className="flex flex-col gap-9">
             <Image src={logoLight} alt="TranspoTech" className="h-8 w-[174px]" />
             <div className="flex items-center gap-5">
@@ -77,10 +85,13 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="flex gap-16">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:flex lg:gap-16">
             {linkGroups.map((group) => (
-              <div key={group.title} className="flex w-[184px] flex-col gap-2">
-                <p className="font-semibold leading-[1.35] text-neutral-200">
+              <div
+                key={group.title}
+                className="flex w-full flex-col gap-2 lg:w-fit lg:max-w-[184px] lg:shrink-0"
+              >
+                <p className="font-semibold leading-[1.35] text-neutral-100">
                   {group.title}
                 </p>
                 {group.links.map((link) => (
@@ -99,7 +110,7 @@ export function Footer() {
           <Image
             src={gptw}
             alt="Great Place To Work Certificada"
-            className="h-[115px] w-auto shrink-0"
+            className="h-[90px] w-auto shrink-0 self-start lg:h-[115px] lg:self-auto"
           />
         </div>
 
@@ -108,10 +119,10 @@ export function Footer() {
 
         {/* Unidades */}
         <div className="flex flex-col gap-8">
-          <h3 className="font-heading text-h6 font-semibold text-neutral-200">
+          <h3 className="font-heading text-h6 font-semibold text-neutral-100">
             Nossas unidades
           </h3>
-          <div className="grid grid-cols-5 gap-x-[100px] gap-y-5">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-x-[100px]">
             {units.map((unit) => (
               <div key={unit.city} className="flex flex-col gap-[5px] text-body-sm">
                 <p className="leading-[1.35] text-neutral-300">
@@ -134,12 +145,17 @@ export function Footer() {
           <p className="text-body-sm leading-[1.35] text-neutral-100">
             © 2026 Transpotech todos os direitos reservados.
           </p>
-          <div className="flex items-center gap-2.5 text-neutral-300">
+          <Link
+            href="https://www.atom6studio.com/pt-br"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2.5 text-neutral-300 transition-colors hover:text-neutral-50"
+          >
             <span className="text-[8px] font-medium uppercase tracking-[0.1em]">
               Criado por
             </span>
-            <Image src={atomsix} alt="Atomsix" className="size-6" />
-          </div>
+            <Image src={atomsix} alt="Atom6 Studio" className="size-6" />
+          </Link>
         </div>
       </div>
     </footer>

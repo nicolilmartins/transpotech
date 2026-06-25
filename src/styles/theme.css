@@ -35,9 +35,8 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
 
-  /* Fonts */
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Fonts — apenas Stack Sans (headings) e Mukta Vaani (texto) */
+  --font-sans: var(--font-mukta-vaani), system-ui, sans-serif;
 }
 
 /* ---------------------------------------------------------------------------
@@ -49,9 +48,13 @@
   /* ----- Brand / Primary (Sangue Laranja) ----- */
   --color-primary-50: #fff4ec;
   --color-primary-300: #ffaa6d;
+  --color-primary-400: #ff9448;
   --color-primary-500: #f58220;
+  --color-primary-600: #db6f1a;
+  --color-primary-700: #b85c15;
 
   /* ----- Secondary ----- */
+  --color-secondary-500: #218f73;
   --color-secondary-600: #146b55;
   --color-secondary-800: #264037;
 
@@ -66,6 +69,9 @@
   --color-neutral-700: #3f3c3d;
   --color-neutral-800: #2b2728;
   --color-neutral-900: #181616;
+
+  /* Cinza intrínseco do logo TranspoTech (vira neutral-50 sobre fundo escuro) */
+  --color-logo-ink: #454a4f;
 
   /* ----- Typography ----- */
   --font-heading: var(--font-stack-sans), "Sora", system-ui, sans-serif;
@@ -88,4 +94,13 @@
   --text-body--line-height: 1.35;
   --text-body-sm: 0.875rem; /* 14 */
   --text-body-sm--line-height: 1.35;
+
+  /* ----- Animações ----- */
+  /* Carrossel infinito (track com 2 cópias → translateX -50% emenda perfeita) */
+  --animate-marquee: marquee 40s linear infinite;
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }

@@ -11,7 +11,7 @@
   --accent-fg: #ffffff;
 
   /* Neutral */
-  --background: #ffffff;
+  --background: #fdfdfd;
   --foreground: #111827;
 
   --muted: #f9fafb;
@@ -56,4 +56,12 @@
   /* Layout */
   --container-max: 1280px;
   --section-padding-y: clamp(4rem, 8vw, 8rem);
+
+  /* Hero — overlay de gradiente (Figma TPT01 / node image 4):
+     verde sutil no topo (transparente) → laranja suave na base */
+  --hero-overlay: linear-gradient(
+    180deg,
+    rgba(83, 187, 18, 0) 26.07%,
+    rgba(245, 130, 32, 0.25) 96.83%
+  );
 }

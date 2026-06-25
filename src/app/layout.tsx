@@ -1,22 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Sora, Mukta_Vaani } from "next/font/google";
+import { Mukta_Vaani } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { FloatingActions } from "@/components/layout/floating-actions";
+import { ScrollReveal } from "@/components/layout/scroll-reveal";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-// "Stack Sans Text" é uma fonte licenciada do design original (fora do Google Fonts).
-// Usamos Sora como fallback fiel para os headings — --font-heading referencia
-// var(--font-stack-sans) primeiro, bastando carregá-la nessa variável ao licenciar.
-const stackSans = Sora({
+// "Stack Sans Text" — fonte do design original (TPT01 / Figma), carregada
+// localmente. O arquivo variável cobre os pesos 400–700 usados nos headings.
+const stackSans = localFont({
+  src: "../components/ui/Typography/Stack_Sans_Text/StackSansText-VariableFont_wght.ttf",
   variable: "--font-stack-sans",
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: "400 700",
+  display: "swap",
 });
 
 const muktaVaani = Mukta_Vaani({
@@ -60,13 +58,15 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${stackSans.variable} ${muktaVaani.variable} h-full antialiased`}
+      className={`${stackSans.variable} ${muktaVaani.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-body text-neutral-900">
         <Providers>
           <Header />
           {children}
           <Footer />
+          <FloatingActions />
+          <ScrollReveal />
         </Providers>
       </body>
     </html>

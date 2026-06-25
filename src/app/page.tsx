@@ -14,6 +14,8 @@ import { TestimonialsSection } from "@/components/home/testimonials-section/test
 import { WhyUsSection } from "@/components/home/why-us-section/why-us-section";
 import { BlogSection } from "@/components/home/blog-section/blog-section";
 import { CtaSection } from "@/components/layout/cta/cta-section";
+import { DarkAmbient } from "@/components/layout/dark-ambient";
+import { HoverMesh } from "@/components/layout/hover-mesh";
 
 export const metadata: Metadata = {
   title: "TranspoTech | Empilhadeiras, Locação e Manutenção",
@@ -31,18 +33,39 @@ export default function HomePage() {
   return (
     <main>
       <HeroSection />
-      <ClientsSection />
-      <ExperienceSection />
-      <SolutionsSection />
-      <PortfolioSection />
-      <BrandsSection />
-      <EsgSection />
-      <ServicesSection />
-      <AutomationSection />
-      <SegmentsSection />
-      <TestimonialsSection />
-      <WhyUsSection />
-      <BlogSection />
+      {/* Grupo claro 1 — Clients + Experiência. Malha livre cobrindo todo o
+          fundo (sem silhueta): o hover revela a malha em qualquer área. */}
+      <div className="relative isolate bg-[#fdfdfd]">
+        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+        <ClientsSection />
+        <ExperienceSection />
+      </div>
+      {/* Bloco dark 1 — fundo #181616 + ambiência (blurs que andam no scroll) */}
+      <div className="relative isolate bg-[#181616]">
+        <DarkAmbient />
+        <SolutionsSection />
+        <PortfolioSection />
+        <BrandsSection />
+      </div>
+      {/* Grupo claro 2 — ESG + Serviços + Automação + Segmentos */}
+      <div className="relative isolate bg-[#fdfdfd]">
+        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+        <EsgSection />
+        <ServicesSection />
+        <AutomationSection />
+        <SegmentsSection />
+      </div>
+      {/* Bloco dark 2 — fundo #181616 + ambiência (blurs que andam no scroll) */}
+      <div className="relative isolate bg-[#181616]">
+        <DarkAmbient />
+        <TestimonialsSection />
+        <WhyUsSection />
+      </div>
+      {/* Grupo claro 3 — Blog */}
+      <div className="relative isolate bg-[#fdfdfd]">
+        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+        <BlogSection />
+      </div>
       <CtaSection />
     </main>
   );

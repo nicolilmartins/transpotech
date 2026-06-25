@@ -1,9 +1,13 @@
 import { Button } from "@/components/ui/button";
+import { StateMesh } from "@/components/layout/state-mesh";
 
 export function CtaSection() {
   return (
-    <section className="overflow-hidden rounded-t-2xl bg-neutral-50">
-      <div className="relative flex h-[419px] flex-col items-center justify-center gap-10 overflow-hidden px-16 py-20">
+    <section
+      className="overflow-hidden rounded-t-2xl bg-[#fdfdfd]"
+    >
+      <div className="relative flex min-h-[360px] flex-col items-center justify-center gap-10 overflow-hidden px-4 py-16 sm:px-8 lg:h-[419px] lg:px-16 lg:py-20">
+        <StateMesh className="pointer-events-none absolute inset-0 -z-10 h-full w-full" />
         <div className="pointer-events-none absolute -right-32 -top-40 size-[700px] -rotate-45 rounded-full bg-primary-500/15 blur-[120px]" />
         <div className="pointer-events-none absolute -left-40 top-0 size-[700px] -rotate-45 rounded-full bg-secondary-600/15 blur-[120px]" />
 

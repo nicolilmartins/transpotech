@@ -23,3 +23,43 @@ h6 {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
+
+/* ── Botão primário — efeito de levantamento ────────────────────────────────
+   O botão sobe 3 px no hover (transition no próprio elemento) e o texto faz
+   uma rotação suave no eixo X enquanto levanta, parando flat ao final.      */
+@keyframes lift-text-spin {
+  0%   { transform: perspective(500px) rotateX(0deg); }
+  45%  { transform: perspective(500px) rotateX(16deg); }
+  100% { transform: perspective(500px) rotateX(0deg); }
+}
+
+/* SolutionsSection — solution card fade-in when active changes */
+@keyframes fade-in-solution {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Stroke em gradiente que apaga no canto inferior direito (cards de depoimento).
+   Usa máscara para respeitar o border-radius do card. */
+.stroke-fade {
+  position: relative;
+}
+.stroke-fade::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}

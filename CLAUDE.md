@@ -215,6 +215,35 @@ Fazer:
 
 ---
 
+## Ícones
+
+A biblioteca de ícones obrigatória é **lucide-react** (`lucide-react@latest`).
+
+Regras:
+- Sempre importar ícones direto de `lucide-react` — nunca criar SVGs manuais para ícones que já existem na lib.
+- Nunca usar arquivos `.svg` em `src/assets/icons/` para ícones de UI — usar Lucide.
+- Usar a prop `aria-hidden` em ícones decorativos.
+- Usar `aria-label` ou texto visível em ícones clicáveis (sem `aria-hidden`).
+- Dimensionar com classes Tailwind: `size-4`, `size-5`, `size-6`, etc.
+
+Exceção — `src/components/ui/icons.tsx`:
+- Contém apenas **ícones de redes sociais** (Facebook, Instagram, LinkedIn, YouTube, Spotify) que o Lucide não inclui por serem brand icons.
+- Para qualquer outro ícone, sempre usar `lucide-react`.
+
+Não fazer:
+```tsx
+import shield from "@/assets/icons/shield.svg";
+<Image src={shield} alt="" className="size-6" />
+```
+
+Fazer:
+```tsx
+import { ShieldCheck } from "lucide-react";
+<ShieldCheck className="size-6" aria-hidden />
+```
+
+---
+
 ## Tailwind CSS
 
 Tailwind CSS 4+ é obrigatório.
@@ -226,6 +255,73 @@ Regras:
 - Usar tokens e variáveis CSS
 - Criar padrões reutilizáveis para botões, inputs, cards, containers e seções
 - Manter responsividade desde o início (mobile-first)
+
+---
+
+## Responsividade
+
+Toda implementação deve ser **mobile-first**. Proibido criar layouts desktop-only sem breakpoints.
+
+### Breakpoints (padrão Tailwind CSS 4)
+
+| Prefixo | Largura mínima | Uso |
+|---|---|---|
+| (base) | 0px | Mobile portrait |
+| `sm:` | 640px | Mobile landscape |
+| `md:` | 768px | Tablet |
+| `lg:` | 1024px | Desktop |
+| `xl:` | 1280px | Desktop largo |
+
+### Padrões obrigatórios
+
+**Container padding:**
+```tsx
+// Não fazer:
+<section className="px-16">
+// Fazer:
+<section className="px-4 sm:px-8 lg:px-16">
+```
+
+**Layout de seção com duas colunas:**
+```tsx
+// Não fazer:
+<div className="flex items-center gap-16">
+// Fazer:
+<div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-16">
+```
+
+**Grid de cards:**
+```tsx
+// Não fazer:
+<div className="flex gap-4"> {/* cards em linha sem stacking */}
+// Fazer:
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+```
+
+**Larguras fixas:**
+```tsx
+// Não fazer:
+<div className="w-[600px]">
+// Fazer:
+<div className="w-full lg:max-w-[600px]">
+```
+
+**Alturas fixas:**
+```tsx
+// Não fazer:
+<div className="h-[373px]">
+// Fazer:
+<div className="min-h-[240px] lg:h-[373px]">
+```
+
+### Regras
+
+- Testar sempre em 375px (iPhone SE), 768px (tablet) e 1440px (desktop)
+- Header sempre deve ter menu hambúrguer para mobile (`lg:hidden` / `lg:flex`)
+- Grids começam em 1 coluna e expandem com breakpoints
+- Tipografia usa `clamp()` via tokens — não sobrescrever com tamanhos fixos em px
+- Carrosséis complexos (3D, órbita) devem ter fallback simples em mobile (grid ou scroll horizontal)
+- Nunca usar `overflow-hidden` em container externo sem testar scroll lateral no mobile
 
 ---
 

@@ -1,30 +1,32 @@
-import Image from "next/image";
-import userSettings from "@/assets/icons/user-settings.svg";
-import dashboard2 from "@/assets/icons/dashboard2.svg";
-import mapPin from "@/assets/icons/map-pin.svg";
-import settings from "@/assets/icons/settings.svg";
+import { UserCog, BarChart3, MapPin, Settings, type LucideIcon } from "lucide-react";
 
-const cards = [
+type WhyUsCard = {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+};
+
+const cards: WhyUsCard[] = [
   {
-    icon: userSettings,
+    icon: UserCog,
     title: "+400 técnicos especializados",
     description:
       "Suporte para abastecimento de linha, movimentação interna e continuidade de produção.",
   },
   {
-    icon: dashboard2,
+    icon: BarChart3,
     title: "Atendimento multimarcas",
     description:
       "Soluções para armazenagem, fluxo, picking, expedição e produtividade operacional.",
   },
   {
-    icon: mapPin,
+    icon: MapPin,
     title: "90% de presença nacional",
     description:
       "11 unidades em PR, SC, RS, SP e GO para resposta próxima e suporte técnico local.",
   },
   {
-    icon: settings,
+    icon: Settings,
     title: "+30 milhões em estoque de peças",
     description:
       "Estrutura que garante rapidez, eficiência e flexibilidade total na manutenção de empilhadeiras.",
@@ -33,26 +35,23 @@ const cards = [
 
 export function WhyUsSection() {
   return (
-    <section className="relative flex flex-col items-start gap-[67px] overflow-hidden bg-neutral-900 px-16 py-20">
-      {/* Glows de fundo */}
-      <div className="pointer-events-none absolute -left-40 top-20 size-[600px] -rotate-45 rounded-full bg-secondary-600/15 blur-[120px]" />
-      <div className="pointer-events-none absolute -right-20 -top-40 size-[600px] -rotate-45 rounded-full bg-primary-500/5 blur-[120px]" />
-
+    <section
+      data-header-dark
+      className="relative flex flex-col items-start gap-10 px-4 py-16 sm:px-8 lg:gap-[67px] lg:px-16 lg:py-20"
+    >
       <div className="relative w-full">
         <h2 className="w-full text-center text-h3 font-normal text-neutral-200">
           Por que empresas escolhem a Transpotech
         </h2>
       </div>
 
-      <div className="relative flex w-full items-center gap-4">
+      <div className="relative grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((card) => (
           <div
             key={card.title}
-            className="flex h-[299px] flex-1 flex-col justify-between overflow-hidden rounded-xl bg-[rgba(251,251,251,0.05)] p-6"
+            className="flex min-h-[240px] flex-col justify-between overflow-hidden rounded-xl bg-[rgba(251,251,251,0.05)] p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.35)] lg:h-[299px]"
           >
-            <div className="flex size-12 items-center justify-center rounded-full bg-primary-500">
-              <Image src={card.icon} alt="" className="size-8" />
-            </div>
+            <card.icon className="size-8 text-white/50" aria-hidden />
             <div className="flex flex-col gap-4">
               <h3 className="w-[242px] max-w-full font-heading text-h6 font-semibold text-neutral-200">
                 {card.title}

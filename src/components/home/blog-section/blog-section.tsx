@@ -1,7 +1,5 @@
 import Image, { type StaticImageData } from "next/image";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "@/components/ui/icons";
-import time from "@/assets/icons/time.svg";
+import { ArrowRight, Clock } from "lucide-react";
 import post1 from "@/assets/images/blog/post1.png";
 import post2 from "@/assets/images/blog/post2.png";
 import post3 from "@/assets/images/blog/post3.jpg";
@@ -50,11 +48,13 @@ const posts: Post[] = [
   },
 ];
 
+const [featured, ...rest] = posts;
+
 export function BlogSection() {
   return (
-    <section className="flex flex-col items-start gap-16 bg-[#fdfdfd] px-16 py-20">
-      {/* Cabeçalho com navegação */}
-      <div className="flex w-full items-end justify-end gap-4">
+    <section className="relative isolate flex flex-col items-start gap-10 overflow-hidden px-4 py-16 sm:px-8 lg:gap-16 lg:px-16 lg:py-20">
+      {/* Cabeçalho — texto à esquerda, link "ver todos" à direita */}
+      <div className="flex w-full items-end justify-between gap-4">
         <div className="flex flex-1 flex-col gap-4">
           <h2 className="w-[613px] max-w-full text-h2 text-neutral-800">
             <span className="font-normal">Conteúdo prático para apoiar </span>
@@ -65,75 +65,100 @@ export function BlogSection() {
             automação.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            aria-label="Anterior"
-            className="flex size-12 items-center justify-center rounded-full bg-secondary-600/10 text-secondary-600 transition-colors hover:bg-secondary-600/20"
-          >
-            <ArrowLeft className="size-7" />
-          </button>
-          <button
-            aria-label="Próximo"
-            className="flex size-12 items-center justify-center rounded-full bg-secondary-600/10 text-secondary-600 transition-colors hover:bg-secondary-600/20"
-          >
-            <ArrowRight className="size-7" />
-          </button>
-        </div>
+        <button className="flex shrink-0 items-center gap-1.5 text-body font-semibold text-primary-500 transition-opacity hover:opacity-70">
+          Ver todos os conteúdos
+          <ArrowRight className="size-5" aria-hidden />
+        </button>
       </div>
 
-      {/* Cards */}
-      <div className="flex w-full gap-4 overflow-hidden">
-        {posts.map((post, i) => (
-          <article
-            key={i}
-            className="flex h-[516px] w-[427px] shrink-0 flex-col gap-4 rounded-xl bg-neutral-50 p-4"
-          >
-            <div className="relative min-h-0 flex-1 overflow-hidden rounded-xl">
-              <Image
-                src={post.img}
-                alt={post.title}
-                fill
-                sizes="427px"
-                className="object-cover"
-              />
+      {/* Grade: artigo principal grande à esquerda + cards menores à direita */}
+      <div className="flex w-full flex-col gap-6 lg:flex-row lg:items-stretch">
+        {/* Artigo em destaque */}
+        <article className="group relative h-[360px] overflow-hidden rounded-2xl bg-neutral-900 lg:h-[560px] lg:flex-[1.35]">
+          <Image
+            src={featured.img}
+            alt={featured.title}
+            fill
+            sizes="55vw"
+            priority
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent"
+          />
+          <div className="absolute inset-x-0 bottom-0 flex flex-col gap-4 p-8">
+            <span className="text-body font-semibold leading-[1.35] text-primary-400">
+              {featured.category}
+            </span>
+            <h3 className="max-w-[560px] font-heading text-[28px] font-bold leading-[1.2] text-neutral-50">
+              {featured.title}
+            </h3>
+            <p className="max-w-[540px] text-body leading-[1.4] text-neutral-200">
+              {featured.description}
+            </p>
+            {/* Rodapé: ler conteúdo (esquerda) · tempo de leitura (direita) */}
+            <div className="flex items-center justify-between pt-2">
+              <button className="flex items-center gap-2 text-body font-semibold leading-[1.35] text-neutral-400 transition-colors hover:text-neutral-200">
+                Ler conteúdo
+                <ArrowRight className="size-5" aria-hidden />
+              </button>
+              <div className="flex items-center gap-2 text-neutral-400">
+                <Clock className="size-4" aria-hidden />
+                <span className="text-body leading-[1.35]">
+                  {featured.readTime}
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                  <span className="text-body font-semibold leading-[1.35] text-primary-500">
+          </div>
+        </article>
+
+        {/* Cards menores empilhados */}
+        <div className="flex flex-1 flex-col gap-6">
+          {rest.map((post, i) => (
+            <article
+              key={i}
+              className="group flex flex-1 gap-4 overflow-hidden rounded-xl bg-neutral-50 p-3"
+            >
+              {/* Thumbnail */}
+              <div className="relative aspect-[4/3] w-28 shrink-0 overflow-hidden rounded-lg sm:w-36 lg:h-full lg:w-auto">
+                <Image
+                  src={post.img}
+                  alt={post.title}
+                  fill
+                  sizes="220px"
+                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                />
+              </div>
+
+              {/* Texto — topo: categoria + título | rodapé: ler conteúdo + tempo */}
+              <div className="flex min-w-0 flex-1 flex-col justify-between py-1">
+                {/* Topo esquerdo */}
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm font-semibold leading-[1.35] text-primary-500">
                     {post.category}
                   </span>
-                  <div className="flex flex-col gap-4">
-                    <h3 className="font-heading text-h6 font-semibold text-neutral-800">
-                      {post.title}
-                    </h3>
-                    <p className="text-body leading-[1.35] text-neutral-600">
-                      {post.description}
-                    </p>
+                  <h3 className="line-clamp-2 font-heading text-lg font-semibold leading-[1.3] text-neutral-800">
+                    {post.title}
+                  </h3>
+                </div>
+
+                {/* Rodapé: ler conteúdo (esquerda) · tempo (direita) */}
+                <div className="flex items-center justify-between">
+                  <button className="flex items-center gap-1.5 text-sm font-semibold leading-[1.35] text-neutral-500 transition-colors hover:text-neutral-700">
+                    Ler conteúdo
+                    <ArrowRight className="size-4" aria-hidden />
+                  </button>
+                  <div className="flex items-center gap-1.5 text-neutral-400">
+                    <Clock className="size-4" aria-hidden />
+                    <span className="text-sm leading-[1.35]">{post.readTime}</span>
                   </div>
                 </div>
-                <div className="h-px w-full bg-neutral-200" />
               </div>
-              <div className="flex items-center gap-2">
-                <button className="flex flex-1 items-center gap-2 text-body font-semibold leading-[1.35] text-neutral-500">
-                  Ler conteúdo
-                  <ArrowRight className="size-6" />
-                </button>
-                <div className="flex items-center gap-2 text-neutral-500">
-                  <Image src={time} alt="" className="size-5" />
-                  <span className="text-body leading-[1.35]">
-                    {post.readTime}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </article>
-        ))}
+            </article>
+          ))}
+        </div>
       </div>
-
-      <Button variant="primary" size="lg">
-        Ver todos os conteúdos
-      </Button>
     </section>
   );
 }
