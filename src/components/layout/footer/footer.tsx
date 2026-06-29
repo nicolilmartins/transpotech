@@ -67,7 +67,7 @@ export function Footer() {
     <footer
       data-header-dark
       data-reveal-skip
-      className="relative overflow-hidden rounded-t-2xl bg-neutral-800 text-body"
+      className="relative -mt-6 overflow-hidden rounded-t-2xl bg-neutral-800 text-body"
     >
       {/* Watermark */}
       <Image

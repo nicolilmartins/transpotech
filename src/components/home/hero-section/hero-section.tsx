@@ -6,7 +6,7 @@ export function HeroSection() {
   return (
     <section
       data-header-hero
-      className="relative w-full overflow-hidden lg:h-[720px]"
+      className="relative h-[100svh] w-full overflow-hidden"
     >
       {/* Gradiente base (verde transparente → laranja 25%, Figma) */}
       <div
@@ -34,16 +34,16 @@ export function HeroSection() {
       </div>
 
       {/* Conteúdo */}
-      <div className="relative mx-auto w-full max-w-[1440px] lg:h-full">
+      <div className="relative mx-auto flex h-full w-full max-w-[1440px] flex-col">
         {/* Texto + botões: centralizado no mobile, sobreposto à esquerda no desktop */}
-        <div className="flex flex-col items-center gap-8 px-5 pt-32 text-center sm:px-6 lg:absolute lg:top-[200px] lg:max-w-[560px] lg:items-start lg:gap-10 lg:px-16 lg:pt-0 lg:text-left">
+        <div className="flex flex-col items-center gap-8 px-5 pt-32 text-center sm:px-6 lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:items-start lg:gap-10 lg:px-16 lg:pt-0 lg:text-left 2xl:px-30">
           <div className="flex flex-col gap-4">
-            <h1 className="text-h2 text-neutral-800 lg:w-[540px]">
+            <h1 className="text-[48px] leading-[1.1] text-neutral-800 lg:w-max 2xl:text-[54px]">
               <span className="font-bold">Empilhadeiras,</span>{" "}
               <br className="hidden sm:block" />
               <span className="font-normal">locação e manutenção</span>
             </h1>
-            <p className="text-body font-normal text-neutral-800">
+            <p className="text-[16px] font-normal text-neutral-800 lg:max-w-[440px] 2xl:text-[18px]">
               Dealer autorizado Linde, STILL e Baoli no Sul do Brasil. Frota
               funcionando, custo previsível e atendimento técnico 24h, tudo em um
               único parceiro.
@@ -68,8 +68,8 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Imagem (mobile): abaixo do conteúdo, ocupando a base da hero */}
-        <div className="relative mt-10 h-[340px] w-full lg:hidden">
+        {/* Imagem (mobile): abaixo do conteúdo, preenchendo o resto do viewport */}
+        <div className="relative mt-10 min-h-0 w-full flex-1 lg:hidden">
           <Image
             src={forklift}
             alt="Empilhadeira STILL elétrica movimentando carga em centro de distribuição"

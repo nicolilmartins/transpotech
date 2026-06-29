@@ -286,22 +286,26 @@ export function SolutionsSection() {
             const act = i === active;
             const tx = x > CX + 20 ? "0%" : x < CX - 20 ? "-100%" : "-50%";
             return (
-              <span
+              <button
+                type="button"
                 key={i}
                 aria-hidden
+                tabIndex={-1}
+                onMouseEnter={() => handleSelect(i)}
+                onClick={() => handleSelect(i)}
                 style={{
                   left: `${(lbl.x / VB) * 100}%`,
                   top: `${(lbl.y / VB) * 100}%`,
                   transform: `translate(${tx}, -50%)`,
                 }}
-                className={`pointer-events-none absolute whitespace-nowrap rounded-full border px-3 py-1.5 text-[14px] transition-all duration-300 ${
+                className={`absolute cursor-pointer whitespace-nowrap rounded-full border px-3 py-1.5 text-[14px] transition-all duration-300 ${
                   act
                     ? "border-white/15 bg-white/10 font-semibold text-white backdrop-blur-sm"
                     : "border-transparent font-medium text-white/60"
                 }`}
               >
                 {solution.title}
-              </span>
+              </button>
             );
           })}
 
