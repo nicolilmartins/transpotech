@@ -1,23 +1,22 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Section } from "@/components/ui/section";
 import card1 from "@/assets/images/stats/card1.png";
 import card2 from "@/assets/images/stats/card2.png";
 import card3 from "@/assets/images/stats/card3.png";
-import card4 from "@/assets/images/stats/card4.png";
+import illoMap from "@/assets/images/stats/map-illustration.webp";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 
-const cardImages = [card1, card2, card3, card4];
-
-const COUNT_DURATION = 1800; // ms — todos contam juntos e terminam juntos
-const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+const cardImages = [card1, card2, card3, illoMap];
 
 // Conta o número principal (primeiro grupo de dígitos), preservando
 // prefixos/sufixos: "+3500", "34%", "24/7" → "/7" fica estático.
-const countValue = (value: string, t: number) =>
+const countValue = (value: string, progress: number) =>
   value.replace(/\d+/, (digits) =>
-    String(Math.round(parseInt(digits, 10) * t))
+    String(Math.round(parseInt(digits, 10) * progress))
   );
 
 const stats = [
@@ -37,49 +36,80 @@ const stats = [
     labelWidth: 163,
   },
   {
-    value: "+24",
-    label: "Anos de mercado com experiência consolidada no setor.",
-    labelWidth: 170,
+    value: "+11",
+    label: "Postos espalhados por 4 estados do Brasil",
+    labelWidth: 165,
   },
 ];
 
 export function ExperienceSection() {
   const cardsRef = useRef<HTMLDivElement>(null);
   const numberRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const cardElRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // Card "ativo" no mobile: aquele que está passando pelo centro da viewport.
+  // No desktop o blur/zoom seguem o hover (este estado é ignorado em lg+).
+  const [activeCard, setActiveCard] = useState(0);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const idx = cardElRefs.current.indexOf(
+              entry.target as HTMLDivElement
+            );
+            if (idx >= 0) setActiveCard(idx);
+          }
+        }
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+    );
+    cardElRefs.current.forEach((el) => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const el = cardsRef.current;
     if (!el) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const setProgress = (t: number) =>
-      stats.forEach((s, i) => {
-        const node = numberRefs.current[i];
-        if (node) node.textContent = countValue(s.value, t);
-      });
+    // Zera todos os contadores antes de entrar na viewport
+    stats.forEach((s, i) => {
+      const node = numberRefs.current[i];
+      if (node) node.textContent = countValue(s.value, 0);
+    });
 
-    setProgress(0); // começa zerado até entrar na viewport
+    const counters = stats.map(() => ({ progress: 0 }));
+    const tweens: gsap.core.Tween[] = [];
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (!entries[0]?.isIntersecting) return;
-        observer.disconnect();
-        const start = performance.now();
-        const tick = (now: number) => {
-          const t = Math.min(1, (now - start) / COUNT_DURATION);
-          setProgress(easeOut(t));
-          if (t < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
+    const trigger = ScrollTrigger.create({
+      trigger: el,
+      start: "top 70%",
+      once: true,
+      onEnter: () => {
+        stats.forEach((s, i) => {
+          const tween = gsap.to(counters[i], {
+            progress: 1,
+            duration: 1.8,
+            ease: "power3.out", // equivale ao easeOut cúbico original: 1 - (1-t)^3
+            onUpdate: () => {
+              const node = numberRefs.current[i];
+              if (node) node.textContent = countValue(s.value, counters[i].progress);
+            },
+          });
+          tweens.push(tween);
+        });
       },
-      { threshold: 0.3 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    });
+
+    return () => {
+      trigger.kill();
+      tweens.forEach((t) => t.kill());
+    };
   }, []);
 
   return (
-    <section className="relative isolate flex flex-col items-start gap-10 overflow-hidden px-4 py-16 sm:px-8 lg:gap-16 lg:px-16 lg:py-20">
+    <Section className="relative isolate flex flex-col items-start gap-10 overflow-hidden lg:gap-16">
       {/* Cabeçalho */}
       <div className="flex w-[641px] max-w-full flex-col gap-6">
         <div className="flex w-[400px] max-w-full flex-col gap-4">
@@ -101,28 +131,41 @@ export function ExperienceSection() {
         {stats.map((s, i) => (
           <div
             key={s.value}
-            className="group relative flex min-h-[160px] flex-1 flex-col gap-1 overflow-hidden rounded-3xl bg-[#f9f9f9] p-5 lg:h-[172px]"
+            ref={(node) => {
+              cardElRefs.current[i] = node;
+            }}
+            className="group relative flex min-h-[160px] flex-1 flex-col gap-1 overflow-hidden rounded-3xl bg-[#f9f9f9] p-4 lg:h-[172px] lg:p-5"
           >
-            {/* Ilustração à direita (tamanho do Figma) — leve zoom no hover */}
+            {/* Ilustração à direita — zoom no hover (desktop) / no card ativo (mobile) */}
             <Image
               src={cardImages[i]}
               alt=""
               fill
               sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-              className="pointer-events-none origin-right select-none object-contain object-right transition-transform duration-500 ease-out group-hover:scale-105"
+              className={`pointer-events-none origin-right select-none object-contain object-right transition-transform duration-500 ease-out ${
+                i === 3
+                  ? `translate-x-[31%] lg:scale-[1.4] lg:group-hover:scale-[1.47] ${
+                      activeCard === i ? "scale-[1.47]" : "scale-[1.4]"
+                    }`
+                  : `lg:scale-100 lg:group-hover:scale-105 ${
+                      activeCard === i ? "scale-105" : "scale-100"
+                    }`
+              }`}
             />
 
-            {/* Glow laranja radial no rodapé — visível apenas no hover */}
+            {/* Glow laranja radial no rodapé — hover (desktop) / card ativo (mobile) */}
             <div
               aria-hidden
-              className="pointer-events-none absolute left-1/2 top-[165px] h-[66px] w-[162px] -translate-x-1/2 rounded-full bg-primary-500 opacity-0 blur-[77px] transition-opacity duration-300 group-hover:opacity-100"
+              className={`pointer-events-none absolute left-1/2 top-[165px] h-[66px] w-[162px] -translate-x-1/2 rounded-full bg-primary-500 blur-[77px] transition-opacity duration-300 lg:opacity-0 lg:group-hover:opacity-100 ${
+                activeCard === i ? "opacity-100" : "opacity-0"
+              }`}
             />
             <div className="relative flex flex-col gap-2">
               <span
                 ref={(node) => {
                   numberRefs.current[i] = node;
                 }}
-                className="font-heading text-[40px] font-bold leading-[1.3] text-primary-500"
+                className="font-heading text-h2 font-bold leading-[1.3] text-primary-500"
               >
                 {s.value}
               </span>
@@ -140,6 +183,6 @@ export function ExperienceSection() {
       <Button variant="primary" size="lg">
         Quero reduzir meus custos
       </Button>
-    </section>
+    </Section>
   );
 }

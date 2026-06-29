@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { UnderConstruction } from "@/components/layout/under-construction/under-construction";
 
 export const metadata: Metadata = {
   title: "Empilhadeiras Usadas",
@@ -14,9 +15,7 @@ export const metadata: Metadata = {
 export default function EmpilhadeirasUsadasPage() {
   return (
     <main>
-      <section aria-labelledby="usadas-title">
-        <h1 id="usadas-title">Empilhadeiras Usadas</h1>
-      </section>
+      <UnderConstruction title="Empilhadeiras Usadas" />
     </main>
   );
 }

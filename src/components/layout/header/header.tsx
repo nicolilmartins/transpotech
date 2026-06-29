@@ -6,73 +6,92 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LogoTranspotech } from "@/components/ui/logo";
 import { MegaMenu, megaMenus } from "./mega-menu";
+import { ROUTES } from "@/lib/routes";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 const MEGA_MENU_ID = "megamenu-panel";
 
-type NavItem = { label: string };
+type NavItem = { label: string; href?: string };
 
 const navItems: NavItem[] = [
   { label: "Produtos" },
   { label: "Serviços" },
-  { label: "Automação" },
+  { label: "Automação", href: ROUTES.AUTOMACAO },
   { label: "Empresa" },
-  { label: "Contato" },
+  { label: "Contato", href: ROUTES.CONTATO },
 ];
 
-function useHeaderState() {
+function useHeaderState(menuOpen: boolean) {
   const [onDark, setOnDark] = useState(false);
+  const [onHero, setOnHero] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const lastScrollY = useRef(0);
+  const menuOpenRef = useRef(menuOpen);
+
+  useEffect(() => {
+    menuOpenRef.current = menuOpen;
+  }, [menuOpen]);
 
   useEffect(() => {
     const DARK_LINE = 70;
-    const HIDE_THRESHOLD = 120;
-    let raf = 0;
 
-    const update = () => {
-      raf = 0;
-      const scrollY = window.scrollY;
-
-      const els = document.querySelectorAll<HTMLElement>("[data-header-dark]");
+    // Detecção de seções (dark + hero) — listener leve (não é animação)
+    const crosses = (el: HTMLElement) => {
+      const rect = el.getBoundingClientRect();
+      return rect.top <= DARK_LINE && rect.bottom >= DARK_LINE;
+    };
+    const updateDark = () => {
       let dark = false;
-      els.forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= DARK_LINE && rect.bottom >= DARK_LINE) dark = true;
-      });
+      document
+        .querySelectorAll<HTMLElement>("[data-header-dark]")
+        .forEach((el) => {
+          if (crosses(el)) dark = true;
+        });
       setOnDark(dark);
 
-      if (scrollY > lastScrollY.current && scrollY > HIDE_THRESHOLD) {
-        setHidden(true);
-      } else if (scrollY < lastScrollY.current || scrollY <= 0) {
-        setHidden(false);
-      }
-
-      lastScrollY.current = scrollY;
+      let hero = false;
+      document
+        .querySelectorAll<HTMLElement>("[data-header-hero]")
+        .forEach((el) => {
+          if (crosses(el)) hero = true;
+        });
+      setOnHero(hero);
     };
 
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
+    updateDark();
+    window.addEventListener("scroll", updateDark, { passive: true });
+    window.addEventListener("resize", updateDark);
 
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    // Hide/show via GSAP ScrollTrigger
+    const st = ScrollTrigger.create({
+      start: "top+=" + 120 + " top", // HIDE_THRESHOLD = 120
+      onUpdate: (self) => {
+        const scrollingDown = self.direction === 1;
+        setHidden(scrollingDown && !menuOpenRef.current);
+      },
+    });
+
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", updateDark);
+      window.removeEventListener("resize", updateDark);
+      st.kill();
     };
   }, []);
 
-  return { onDark, hidden };
+  return { onDark, onHero, hidden };
 }
 
 export function Header() {
-  const { onDark, hidden } = useHeaderState();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { onDark, onHero, hidden } = useHeaderState(menuOpen);
   const [openLabel, setOpenLabel] = useState<string | null>(null);
   const [megaOpen, setMegaOpen] = useState(false);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const closeTimer = useRef<number | undefined>(undefined);
+
+  const closeMobileMenu = () => {
+    setMenuOpen(false);
+    setMobileExpanded(null);
+  };
 
   // Abre/fecha o megamenu com pequeno atraso no fechar (ponte de hover entre o
   // gatilho e o painel, evitando flicker no espaço entre eles).
@@ -111,8 +130,17 @@ export function Header() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [megaOpen]);
 
-  const pillBg = onDark ? "bg-neutral-900/60" : "bg-white/80";
-  const textColor = onDark ? "text-neutral-50" : "text-neutral-800";
+  // Sobre a hero: fundo laranja claro #FFF4ED opaco (legível sobre a imagem).
+  // Demais seções: comportamento atual (dark / branco translúcido).
+  const pillBg = onHero
+    ? "bg-[#fff4ed]"
+    : onDark
+      ? "bg-neutral-900/60"
+      : "bg-white/80";
+  // Pill claro (laranja na hero OU branco translúcido nas seções claras) → texto
+  // escuro. Só fica claro quando sobre seção dark que NÃO é hero.
+  const darkPill = onDark && !onHero;
+  const textColor = darkPill ? "text-neutral-50" : "text-neutral-800";
 
   return (
     <header
@@ -124,10 +152,14 @@ export function Header() {
         hidden && !menuOpen ? "-translate-y-full" : "translate-y-0",
       ].join(" ")}
     >
-      {/* Wrapper de largura — separa o centramento da estilização do pill */}
-      <div className="relative mx-auto mt-[30px] w-[1312px] max-w-[calc(100%-32px)]">
-        {/* Pill */}
-        <div
+      {/* Wrapper de largura — padding lateral responsivo igual ao do primitivo
+          Section (20/24/64/120px) com cap em 1440px, alinhando o header ao
+          conteúdo das páginas: a 1440px o pill mede 1312px. */}
+      <div className="mx-auto mt-[30px] w-full max-w-[1440px] px-5 sm:px-6 lg:px-16 2xl:px-30">
+        {/* Caixa de conteúdo — contexto de posicionamento do megamenu/menu mobile */}
+        <div className="relative">
+          {/* Pill */}
+          <div
           className={[
             "flex items-center justify-between rounded-[200px] py-4 pl-6 pr-4",
             "backdrop-blur-md transition-colors duration-300",
@@ -141,7 +173,7 @@ export function Header() {
               <LogoTranspotech
                 className={[
                   "h-8 w-[174px] transition-colors duration-300",
-                  onDark ? "text-neutral-50" : "text-logo-ink",
+                  darkPill ? "text-neutral-50" : "text-logo-ink",
                 ].join(" ")}
               />
             </Link>
@@ -161,7 +193,7 @@ export function Header() {
                       onMouseLeave={hasMenu ? scheduleCloseMega : undefined}
                     >
                       <Link
-                        href="#"
+                        href={hasMenu ? "#" : (item.href ?? "#")}
                         aria-haspopup={hasMenu ? "menu" : undefined}
                         aria-expanded={hasMenu ? isActive : undefined}
                         aria-controls={hasMenu ? MEGA_MENU_ID : undefined}
@@ -204,19 +236,30 @@ export function Header() {
             <Button
               variant="gray"
               size="lg"
+              href={ROUTES.ORCAMENTO}
               className={[
                 "hidden lg:flex",
-                onDark ? "!bg-white/15 !text-neutral-50 hover:!bg-white/25" : "",
+                darkPill ? "!bg-white/15 !text-neutral-50 hover:!bg-white/25" : "",
               ].join(" ")}
             >
               Calcular orçamento
             </Button>
-            <Button variant="primary" size="lg" className="hidden lg:flex">
+            <Button
+              variant="primary"
+              size="lg"
+              href={ROUTES.CONTATO}
+              className="hidden lg:flex"
+            >
               Fale com vendas
             </Button>
 
             {/* Mobile: CTA primário */}
-            <Button variant="primary" size="md" className="flex lg:hidden">
+            <Button
+              variant="primary"
+              size="md"
+              href={ROUTES.CONTATO}
+              className="flex lg:hidden"
+            >
               Fale com vendas
             </Button>
 
@@ -249,37 +292,106 @@ export function Header() {
           />
         )}
 
-        {/* Mobile: menu suspenso */}
+        {/* Mobile: menu suspenso (acordeão com submenus do megamenu) */}
         {menuOpen && (
-          <div className="mt-2 flex flex-col gap-1 rounded-2xl bg-white p-4 shadow-lg lg:hidden">
+          <div className="mt-2 flex max-h-[calc(100dvh-120px)] flex-col gap-1 overflow-y-auto rounded-2xl bg-white p-4 shadow-lg lg:hidden">
             <nav aria-label="Menu mobile">
               <ul role="list" className="flex flex-col">
-                {navItems.map((item) => (
-                  <li key={item.label}>
-                    <Link
-                      href="#"
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center justify-between rounded-xl px-4 py-3 text-body font-medium text-neutral-800 hover:bg-neutral-50"
-                    >
-                      {item.label}
-                      {megaMenus[item.label] != null && (
-                        <ChevronDown className="size-4 text-neutral-400" aria-hidden />
+                {navItems.map((item) => {
+                  const menu = megaMenus[item.label];
+                  const expanded = mobileExpanded === item.label;
+                  return (
+                    <li key={item.label}>
+                      {menu ? (
+                        <>
+                          <button
+                            type="button"
+                            aria-expanded={expanded}
+                            onClick={() =>
+                              setMobileExpanded(expanded ? null : item.label)
+                            }
+                            className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-body font-medium text-neutral-800 hover:bg-neutral-50"
+                          >
+                            {item.label}
+                            <ChevronDown
+                              className={`size-4 text-neutral-400 transition-transform duration-200 ${
+                                expanded ? "rotate-180" : ""
+                              }`}
+                              aria-hidden
+                            />
+                          </button>
+                          {expanded && (
+                            <div className="flex flex-col gap-3 px-2 pb-2 pt-1">
+                              {menu.columns.map((col) => (
+                                <div
+                                  key={col.title}
+                                  className="flex flex-col gap-1"
+                                >
+                                  <p className="px-2 text-sm font-semibold leading-6 text-neutral-400">
+                                    {col.title}
+                                  </p>
+                                  {col.items.map((sub) => (
+                                    <Link
+                                      key={sub.title}
+                                      href={sub.href}
+                                      onClick={closeMobileMenu}
+                                      className="flex items-center gap-3 rounded-lg p-2 hover:bg-neutral-50"
+                                    >
+                                      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-neutral-50 text-primary-500">
+                                        <sub.Icon className="size-5" aria-hidden />
+                                      </span>
+                                      <span className="flex min-w-0 flex-col">
+                                        <span className="text-body font-medium leading-tight text-neutral-800">
+                                          {sub.title}
+                                        </span>
+                                        <span className="text-sm leading-snug text-neutral-500">
+                                          {sub.subtitle}
+                                        </span>
+                                      </span>
+                                    </Link>
+                                  ))}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <Link
+                          href={item.href ?? "#"}
+                          onClick={closeMobileMenu}
+                          className="flex items-center justify-between rounded-xl px-4 py-3 text-body font-medium text-neutral-800 hover:bg-neutral-50"
+                        >
+                          {item.label}
+                        </Link>
                       )}
-                    </Link>
-                  </li>
-                ))}
+                    </li>
+                  );
+                })}
               </ul>
             </nav>
             <div className="flex flex-col gap-2 border-t border-neutral-100 pt-4">
-              <Button variant="gray" size="lg" className="w-full justify-center">
+              <Button
+                variant="gray"
+                size="lg"
+                href={ROUTES.ORCAMENTO}
+                onClick={closeMobileMenu}
+                className="w-full justify-center"
+              >
                 Calcular orçamento
               </Button>
-              <Button variant="primary" size="lg" className="w-full justify-center">
+              <Button
+                variant="primary"
+                size="lg"
+                href={ROUTES.CONTATO}
+                onClick={closeMobileMenu}
+                className="w-full justify-center"
+              >
                 Fale com vendas
               </Button>
             </div>
           </div>
         )}
+        </div>
       </div>
     </header>
   );

@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { gsap } from "@/lib/gsap";
 
 /**
  * Blur verde suave que acompanha o cursor dentro da Hero e só existe no hover.
- * Fica atrás da imagem (transparente no topo), então aparece apenas no fundo
- * claro. Segue o cursor com um leve trailing (lerp).
+ * Segue o cursor com lerp (fator 0.18) via gsap.ticker + quickSetter.
  */
 export function HeroGlow() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -16,7 +16,9 @@ export function HeroGlow() {
     const glow = glowRef.current;
     if (!wrap || !glow) return;
 
-    let raf = 0;
+    const xSet = gsap.quickSetter(glow, "x", "px");
+    const ySet = gsap.quickSetter(glow, "y", "px");
+
     let tx = 0;
     let ty = 0;
     let cx = 0;
@@ -24,17 +26,13 @@ export function HeroGlow() {
     let inside = false;
     let init = false;
 
-    const place = () => {
-      glow.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
-    };
-    const tick = () => {
+    const ticker = () => {
+      if (!inside) return;
+      if (Math.abs(tx - cx) < 0.3 && Math.abs(ty - cy) < 0.3) return;
       cx += (tx - cx) * 0.18;
       cy += (ty - cy) * 0.18;
-      place();
-      raf =
-        inside && (Math.abs(tx - cx) > 0.3 || Math.abs(ty - cy) > 0.3)
-          ? requestAnimationFrame(tick)
-          : 0;
+      xSet(cx - glow.offsetWidth / 2);
+      ySet(cy - glow.offsetHeight / 2);
     };
 
     const onMove = (event: MouseEvent) => {
@@ -49,24 +47,26 @@ export function HeroGlow() {
         if (!init) {
           cx = x;
           cy = y;
+          xSet(cx - glow.offsetWidth / 2);
+          ySet(cy - glow.offsetHeight / 2);
           init = true;
-          place();
         }
         if (!inside) {
           inside = true;
-          glow.style.opacity = "0.18";
+          gsap.to(glow, { opacity: 0.18, duration: 0.3, ease: "power1.out" });
         }
-        if (!raf) raf = requestAnimationFrame(tick);
       } else if (inside) {
         inside = false;
-        glow.style.opacity = "0";
+        gsap.to(glow, { opacity: 0, duration: 0.3, ease: "power1.out" });
       }
     };
 
+    gsap.ticker.add(ticker);
     window.addEventListener("mousemove", onMove, { passive: true });
+
     return () => {
+      gsap.ticker.remove(ticker);
       window.removeEventListener("mousemove", onMove);
-      if (raf) cancelAnimationFrame(raf);
     };
   }, []);
 
@@ -78,8 +78,7 @@ export function HeroGlow() {
     >
       <div
         ref={glowRef}
-        className="absolute left-0 top-0 size-[400px] rounded-full bg-[#146b55] opacity-0 blur-[110px] transition-opacity duration-300 ease-out"
-        style={{ transform: "translate(-50%, -50%)" }}
+        className="absolute left-0 top-0 size-[400px] rounded-full bg-[#146b55] opacity-0 blur-[110px]"
       />
     </div>
   );

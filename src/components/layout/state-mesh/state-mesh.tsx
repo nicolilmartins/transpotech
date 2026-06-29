@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { gsap } from "@/lib/gsap";
 
-// Polígono aproximado da região Sul/Sudeste (SP, PR, SC, RS), normalizado 0..1
-// (norte em cima, litoral à direita). Sem bordas/texto — só define onde os
-// pontos da malha existem.
 const REGION: ReadonlyArray<readonly [number, number]> = [
   [0.32, 0.03],
   [0.96, 0.06],
@@ -38,20 +36,12 @@ const inside = (px: number, py: number) => {
   return c;
 };
 
-const SPACING = 18; // distância entre pontos (malha mais fina/delicada)
-const RADIUS = 160; // raio de revelação ao redor do cursor
+const SPACING = 18;
+const RADIUS = 160;
 
 /**
- * Malha de pontos + linhas. Invisível em repouso; ao aproximar o cursor, os
- * pontos e linhas próximos acendem.
- *
- * - `fill={false}` (padrão): a malha existe só dentro da silhueta SP/PR/SC/RS.
- * - `fill={true}`: a malha cobre toda a área do canvas (sem máscara de estados).
- *
- * Continuidade entre seções: distâncias são calculadas em coordenadas do
- * viewport (clientX / clientY), não relativas ao canvas. Isso garante que o
- * raio de 160 px abranja a borda entre duas seções adjacentes, dando a
- * impressão de uma única malha contínua através das seções claras.
+ * Malha de pontos + linhas no canvas. Loop de draw via gsap.ticker — substitui
+ * o requestAnimationFrame manual preservando a lógica de canvas intacta.
  */
 export function StateMesh({
   className,
@@ -72,19 +62,11 @@ export function StateMesh({
     let height = 0;
     let points: { x: number; y: number }[] = [];
     let edges: [number, number][] = [];
-
-    // Posição do canvas no viewport — atualizada a cada mousemove e resize.
-    // Usada para converter pontos (canvas-relative) em coords do viewport
-    // para o cálculo de distância compartilhado entre instâncias.
     let canvasLeft = 0;
     let canvasTop = 0;
-
-    // Posição do cursor em coords do viewport (clientX / clientY).
     let vMx = -9999;
     let vMy = -9999;
-
     let active = false;
-    let raf = 0;
 
     const build = () => {
       const rect = canvas.getBoundingClientRect();
@@ -98,9 +80,6 @@ export function StateMesh({
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       points = [];
-      // Grade ancorada em coordenadas do documento: todas as instâncias usam a
-      // mesma origem global, então as grades de seções/grupos adjacentes
-      // coincidem — sem corte na malha entre uma seção e outra.
       const docLeft = rect.left + window.scrollX;
       const docTop = rect.top + window.scrollY;
       const offsetX = (SPACING - (docLeft % SPACING)) % SPACING;
@@ -128,7 +107,6 @@ export function StateMesh({
         for (let c = 0; c <= cols; c++) {
           const a = grid[r][c];
           if (a < 0) continue;
-          // Conexões diagonais → malha em losango (linhas diagonais sutis)
           const downRight = grid[r + 1]?.[c + 1];
           const downLeft = grid[r + 1]?.[c - 1];
           if (downRight !== undefined && downRight >= 0) edges.push([a, downRight]);
@@ -138,7 +116,6 @@ export function StateMesh({
     };
 
     const draw = () => {
-      raf = 0;
       ctx.clearRect(0, 0, width, height);
       if (!active) return;
 
@@ -146,7 +123,6 @@ export function StateMesh({
       for (const [a, b] of edges) {
         const p1 = points[a];
         const p2 = points[b];
-        // Ponto médio da aresta em coords do viewport
         const viewMidX = canvasLeft + (p1.x + p2.x) / 2;
         const viewMidY = canvasTop + (p1.y + p2.y) / 2;
         const d = Math.hypot(viewMidX - vMx, viewMidY - vMy);
@@ -158,7 +134,6 @@ export function StateMesh({
         ctx.stroke();
       }
       for (const p of points) {
-        // Ponto em coords do viewport
         const viewX = canvasLeft + p.x;
         const viewY = canvasTop + p.y;
         const d = Math.hypot(viewX - vMx, viewY - vMy);
@@ -170,13 +145,7 @@ export function StateMesh({
       }
     };
 
-    const schedule = () => {
-      if (!raf) raf = requestAnimationFrame(draw);
-    };
-
     const onMove = (event: MouseEvent) => {
-      // Atualiza a posição do canvas no viewport a cada movimento de mouse.
-      // Isso garante que o cálculo de distância seja preciso mesmo após scroll.
       const rect = canvas.getBoundingClientRect();
       canvasLeft = rect.left;
       canvasTop = rect.top;
@@ -184,28 +153,24 @@ export function StateMesh({
       vMx = event.clientX;
       vMy = event.clientY;
 
-      const wasActive = active;
       active =
         vMx >= canvasLeft - RADIUS &&
         vMx <= canvasLeft + width + RADIUS &&
         vMy >= canvasTop - RADIUS &&
         vMy <= canvasTop + height + RADIUS;
-
-      if (active || wasActive) schedule();
     };
 
-    const onResize = () => {
-      build();
-      schedule();
-    };
+    const onResize = () => { build(); };
 
     build();
+    gsap.ticker.add(draw);
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("resize", onResize);
+
     return () => {
+      gsap.ticker.remove(draw);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("resize", onResize);
-      if (raf) cancelAnimationFrame(raf);
     };
   }, [fill]);
 

@@ -20,6 +20,7 @@ import {
 import automacao from "@/assets/images/automacao.png";
 import warehouse from "@/assets/images/depoimentos/warehouse.png";
 import esgTeam from "@/assets/images/esg-team.png";
+import { ROUTES } from "@/lib/routes";
 
 type MegaItem = {
   title: string;
@@ -48,7 +49,7 @@ export const megaMenus: Record<string, MegaMenuConfig> = {
       title: "Frota pronta para operar",
       description:
         "Locação de empilhadeiras STILL, Linde e Baoli com custo previsível e atendimento técnico 24h.",
-      href: "#locacao",
+      href: ROUTES.LOCACAO,
     },
     columns: [
       {
@@ -57,19 +58,19 @@ export const megaMenus: Record<string, MegaMenuConfig> = {
           {
             title: "Locação de empilhadeiras",
             subtitle: "Frota pronta para operar",
-            href: "#locacao",
+            href: ROUTES.LOCACAO,
             Icon: Forklift,
           },
           {
             title: "Empilhadeiras novas",
             subtitle: "Linde, STILL e Baoli zero-km",
-            href: "#novas",
+            href: ROUTES.EMPILHADEIRAS_NOVAS,
             Icon: Sparkles,
           },
           {
             title: "Empilhadeiras usadas",
             subtitle: "Seminovos revisados com garantia",
-            href: "#usadas",
+            href: ROUTES.EMPILHADEIRAS_USADAS,
             Icon: Tag,
           },
         ],
@@ -80,19 +81,19 @@ export const megaMenus: Record<string, MegaMenuConfig> = {
           {
             title: "Peças e componentes",
             subtitle: "Originais e compatíveis em estoque",
-            href: "#pecas",
+            href: ROUTES.PECAS,
             Icon: Wrench,
           },
           {
             title: "Baterias e carregadores",
             subtitle: "Energia para frota elétrica",
-            href: "#baterias",
+            href: ROUTES.BATERIAS,
             Icon: BatteryCharging,
           },
           {
             title: "Pneus",
             subtitle: "Para todos os portes e aplicações",
-            href: "#pneus",
+            href: ROUTES.PNEUS,
             Icon: CircleDot,
           },
         ],
@@ -106,7 +107,7 @@ export const megaMenus: Record<string, MegaMenuConfig> = {
       title: "Manutenção que evita paradas",
       description:
         "Planos preventivos, corretiva ágil e cobertura multimarcas com técnicos especializados.",
-      href: "#servicos",
+      href: ROUTES.SERVICOS,
     },
     columns: [
       {
@@ -115,19 +116,19 @@ export const megaMenus: Record<string, MegaMenuConfig> = {
           {
             title: "Planos de Manutenção Preventiva",
             subtitle: "Cronograma de visitas técnicas",
-            href: "#preventiva",
+            href: ROUTES.SERVICOS_PREVENTIVA,
             Icon: ShieldCheck,
           },
           {
             title: "Manutenção Corretiva",
             subtitle: "Atendimento ágil com peças em estoque",
-            href: "#corretiva",
+            href: ROUTES.SERVICOS_CORRETIVA,
             Icon: Wrench,
           },
           {
             title: "Assistência Multimarcas",
             subtitle: "Linde, STILL, Baoli e outras marcas",
-            href: "#multimarcas",
+            href: ROUTES.SERVICOS_MULTIMARCAS,
             Icon: LayoutDashboard,
           },
         ],
@@ -141,7 +142,7 @@ export const megaMenus: Record<string, MegaMenuConfig> = {
       title: "Quem é a TranspoTech",
       description:
         "25 anos de mercado, 11 unidades próprias e ~380 técnicos especializados em movimentação.",
-      href: "#quem-somos",
+      href: ROUTES.QUEM_SOMOS,
     },
     columns: [
       {
@@ -150,19 +151,19 @@ export const megaMenus: Record<string, MegaMenuConfig> = {
           {
             title: "Quem somos",
             subtitle: "Nossa história e estrutura",
-            href: "#quem-somos",
+            href: ROUTES.QUEM_SOMOS,
             Icon: Building2,
           },
           {
             title: "Portal de conteúdo",
             subtitle: "Guias, notícias e tendências",
-            href: "#blog",
+            href: ROUTES.PORTAL_CONTEUDO,
             Icon: BookOpen,
           },
           {
             title: "Trabalhe conosco",
             subtitle: "Faça parte do time",
-            href: "#carreiras",
+            href: ROUTES.TRABALHE_CONOSCO,
             Icon: Users,
           },
         ],
@@ -173,19 +174,19 @@ export const megaMenus: Record<string, MegaMenuConfig> = {
           {
             title: "Sustentabilidade",
             subtitle: "Eletrificação e compromisso ESG",
-            href: "#sustentabilidade",
+            href: ROUTES.SUSTENTABILIDADE,
             Icon: Leaf,
           },
           {
             title: "Canal da transparência",
             subtitle: "Compliance e ética",
-            href: "#transparencia",
+            href: ROUTES.CANAL_TRANSPARENCIA,
             Icon: Scale,
           },
           {
             title: "Ouvidoria Digital",
             subtitle: "Fale com a ouvidoria",
-            href: "#ouvidoria",
+            href: ROUTES.OUVIDORIA,
             Icon: MessageSquare,
           },
         ],

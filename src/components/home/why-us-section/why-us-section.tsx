@@ -1,4 +1,6 @@
 import { UserCog, BarChart3, MapPin, Settings, type LucideIcon } from "lucide-react";
+import { Section } from "@/components/ui/section";
+import { WhyUsGlow } from "./why-us-glow";
 
 type WhyUsCard = {
   icon: LucideIcon;
@@ -35,10 +37,12 @@ const cards: WhyUsCard[] = [
 
 export function WhyUsSection() {
   return (
-    <section
+    <Section
       data-header-dark
-      className="relative flex flex-col items-start gap-10 px-4 py-16 sm:px-8 lg:gap-[67px] lg:px-16 lg:py-20"
+      className="relative isolate flex flex-col items-start gap-10 lg:gap-[67px]"
     >
+      <WhyUsGlow />
+
       <div className="relative w-full">
         <h2 className="w-full text-center text-h3 font-normal text-neutral-200">
           Por que empresas escolhem a Transpotech
@@ -51,7 +55,7 @@ export function WhyUsSection() {
             key={card.title}
             className="flex min-h-[240px] flex-col justify-between overflow-hidden rounded-xl bg-[rgba(251,251,251,0.05)] p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.35)] lg:h-[299px]"
           >
-            <card.icon className="size-8 text-white/50" aria-hidden />
+            <card.icon className="size-7 text-white/50 lg:size-8" aria-hidden />
             <div className="flex flex-col gap-4">
               <h3 className="w-[242px] max-w-full font-heading text-h6 font-semibold text-neutral-200">
                 {card.title}
@@ -63,6 +67,6 @@ export function WhyUsSection() {
           </div>
         ))}
       </div>
-    </section>
+    </Section>
   );
 }

@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import team from "@/assets/images/esg-team.png";
+import { gsap } from "@/lib/gsap";
 
 type EsgItem = {
   title: string;
   description: string;
   link: string | null;
-  // Fatia do degradê verde (#146B55) → laranja (#E78028) — o laranja com
-  // opacidade bem clara. Juntas, as barras formam um único degradê na coluna.
   barGradient: string;
 };
 
@@ -49,33 +49,50 @@ const items: EsgItem[] = [
   },
 ];
 
-const STAGGER = 160; // ms entre cada item da cascata
+const STAGGER = 0.16;
 
 export function EsgSection() {
-  const [revealed, setRevealed] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const itemContainerRefs = useRef<HTMLDivElement[]>([]);
+  const gradientBarRefs = useRef<HTMLDivElement[]>([]);
 
-  // Dispara a cascata quando o conteúdo entra na viewport.
-  useEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          setRevealed(true);
-          observer.disconnect();
-        }
+  useGSAP(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: contentRef.current,
+        start: "top 75%",
+        once: true,
       },
-      { threshold: 0.25 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+    });
+
+    // Imagem
+    tl.from(imageRef.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, 0);
+
+    // Containers dos itens (500ms = 0.5s, stagger 160ms = 0.16s)
+    tl.from(itemContainerRefs.current, {
+      opacity: 0,
+      y: 12,
+      duration: 0.5,
+      ease: "power1.out",
+      stagger: STAGGER,
+    }, 0);
+
+    // Barras de gradiente (delay 300ms = 0.3s após início, stagger 160ms = 0.16s)
+    tl.from(gradientBarRefs.current, {
+      opacity: 0,
+      duration: 0.7,
+      ease: "power1.out",
+      stagger: STAGGER,
+    }, 0.3);
+  }, { scope: contentRef });
 
   return (
     <section
       data-reveal-skip
-      className="relative isolate flex flex-col items-start gap-10 overflow-hidden px-4 py-16 sm:px-8 lg:gap-[67px] lg:px-16 lg:py-20"
+      className="relative isolate mx-auto flex w-full max-w-[1440px] flex-col items-start gap-10 overflow-hidden px-5 py-16 sm:px-6 lg:gap-[67px] lg:px-16 lg:py-20 2xl:px-30"
     >
       {/* Cabeçalho */}
       <div className="flex w-[641px] max-w-full flex-col gap-6">
@@ -98,13 +115,10 @@ export function EsgSection() {
 
       {/* Conteúdo */}
       <div ref={contentRef} className="flex w-full flex-col gap-8 lg:flex-row lg:items-start lg:gap-20">
-        {/* Imagem — aparece junto com o primeiro texto */}
+        {/* Imagem */}
         <div
-          className="h-[300px] w-full shrink-0 overflow-hidden rounded-xl transition-all duration-700 ease-out lg:h-[617px] lg:w-[641px]"
-          style={{
-            opacity: revealed ? 1 : 0,
-            transform: revealed ? "none" : "translateY(16px)",
-          }}
+          ref={imageRef}
+          className="order-last h-[300px] w-full shrink-0 overflow-hidden rounded-xl lg:order-none lg:h-[617px] lg:w-[720px]"
         >
           <Image
             src={team}
@@ -118,22 +132,19 @@ export function EsgSection() {
           {items.map((item, index) => (
             <div
               key={item.title}
-              className="flex items-stretch gap-8 transition-all duration-500 ease-out"
-              style={{
-                opacity: revealed ? 1 : 0,
-                transform: revealed ? "none" : "translateY(12px)",
-                transitionDelay: `${index * STAGGER}ms`,
+              ref={(node) => {
+                if (node) itemContainerRefs.current[index] = node;
               }}
+              className="flex items-stretch gap-2 lg:gap-8"
             >
-              {/* Barra: começa cinza e recebe o degradê verde→laranja */}
+              {/* Barra: fundo neutro + overlay do gradiente animado por opacidade */}
               <div className="relative w-2 shrink-0 rounded-full bg-neutral-200">
                 <div
-                  className="absolute inset-0 rounded-full transition-opacity duration-700 ease-out"
-                  style={{
-                    backgroundImage: item.barGradient,
-                    opacity: revealed ? 1 : 0,
-                    transitionDelay: `${index * STAGGER + 300}ms`,
+                  ref={(node) => {
+                    if (node) gradientBarRefs.current[index] = node;
                   }}
+                  className="absolute inset-0 rounded-full"
+                  style={{ backgroundImage: item.barGradient }}
                 />
               </div>
 
@@ -142,7 +153,7 @@ export function EsgSection() {
                   <h3 className="font-heading text-h6 font-semibold text-neutral-800">
                     {item.title}
                   </h3>
-                  <p className="max-w-[401px] text-body leading-[1.35] text-neutral-600">
+                  <p className="max-w-[560px] text-body leading-[1.35] text-neutral-600">
                     {item.description}
                   </p>
                 </div>

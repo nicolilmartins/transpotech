@@ -12,6 +12,9 @@ export const ROUTES = {
 
   // Serviços
   SERVICOS: "/servicos",
+  SERVICOS_PREVENTIVA: "/servicos/manutencao-preventiva",
+  SERVICOS_CORRETIVA: "/servicos/manutencao-corretiva",
+  SERVICOS_MULTIMARCAS: "/servicos/assistencia-multimarcas",
 
   // Automação
   AUTOMACAO: "/automacao-intralogistica",

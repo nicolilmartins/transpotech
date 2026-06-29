@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { UnderConstruction } from "@/components/layout/under-construction/under-construction";
 
 export const metadata: Metadata = {
   title: "Solicitar Orçamento",
@@ -14,9 +15,7 @@ export const metadata: Metadata = {
 export default function OrcamentoPage() {
   return (
     <main>
-      <section aria-labelledby="orcamento-title">
-        <h1 id="orcamento-title">Solicitar Orçamento</h1>
-      </section>
+      <UnderConstruction title="Solicitar Orçamento" />
     </main>
   );
 }

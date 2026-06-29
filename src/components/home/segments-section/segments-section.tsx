@@ -1,8 +1,10 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useRef } from "react";
+import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import illustration from "@/assets/images/stats/illustration-segment.webp";
+import { gsap } from "@/lib/gsap";
 
 type Marker = {
   title: string;
@@ -15,8 +17,6 @@ type Marker = {
   delay: number;
 };
 
-// Coordenadas em % relativas à composição do Figma (1281 × 449), traduzidas do
-// frame 3247:2677. Mantém o posicionamento fiel ao design.
 const markers: Marker[] = [
   {
     title: "Indústria",
@@ -57,74 +57,94 @@ const markers: Marker[] = [
       "Estrutura para operações que precisam de disponibilidade, resposta rápida e previsibilidade.",
     color: "orange",
     side: "right",
-    label: { left: "78.18%", top: "73.5%" },
-    line: { left: "64.37%", top: "82.41%", width: "31.19%" },
-    dot: { left: "64.4%", top: "82.48%" },
+    label: { left: "78.18%", top: "64.02%" },
+    line: { left: "64.37%", top: "72.93%", width: "31.19%" },
+    dot: { left: "64.4%", top: "73%" },
     delay: 630,
   },
 ];
 
-const baseTransition = "transition-all duration-700 ease-out";
-
 export function SegmentsSection() {
-  const [revealed, setRevealed] = useState(false);
-  const ref = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const labelRef = useRef<HTMLParagraphElement>(null);
+  const h2Ref = useRef<HTMLHeadingElement>(null);
+  const descRef = useRef<HTMLParagraphElement>(null);
+  const illustrationRef = useRef<HTMLDivElement>(null);
+  const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const dotRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const markerLabelRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Dispara a cascata quando a seção entra na viewport.
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          setRevealed(true);
-          observer.disconnect();
-        }
+  useGSAP(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 80%",
+        once: true,
       },
-      { threshold: 0.2 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+    });
 
-  const slideIn = (delay: number) => ({
-    opacity: revealed ? 1 : 0,
-    transform: revealed ? "none" : "translateY(16px)",
-    transitionDelay: `${delay}ms`,
-  });
-  const fadeIn = (delay: number) => ({
-    opacity: revealed ? 1 : 0,
-    transitionDelay: `${delay}ms`,
-  });
+    // Header
+    tl.from(labelRef.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, 0)
+      .from(h2Ref.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, 0.08)
+      .from(descRef.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, 0.16);
+
+    // Ilustração (desktop)
+    if (illustrationRef.current) {
+      tl.from(illustrationRef.current, { opacity: 0, duration: 0.7, ease: "power1.out" }, 0.24);
+    }
+
+    // Marcadores (desktop) — cada um no seu delay original
+    markers.forEach((m, i) => {
+      const d = m.delay / 1000;
+      const line = lineRefs.current[i];
+      const dot = dotRefs.current[i];
+      const label = markerLabelRefs.current[i];
+
+      if (line) tl.from(line, { opacity: 0, duration: 0.7, ease: "power1.out" }, d);
+      if (dot) tl.from(dot, { opacity: 0, duration: 0.7, ease: "power1.out" }, d);
+      if (label) tl.from(label, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, d);
+    });
+  }, { scope: sectionRef });
 
   return (
-    <section ref={ref} data-reveal-skip className="flex flex-col gap-10 px-4 py-16 sm:px-8 lg:gap-16 lg:px-[61px] lg:py-20">
+    <section ref={sectionRef} data-reveal-skip className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-5 py-16 sm:px-6 lg:gap-16 lg:px-16 lg:py-20 2xl:px-30">
       {/* Cabeçalho */}
       <div className="flex flex-col items-center gap-6 text-center">
         <div className="flex w-[626px] max-w-full flex-col items-center gap-4">
           <p
-            className={`text-body font-semibold leading-[1.35] text-primary-500 ${baseTransition}`}
-            style={slideIn(0)}
+            ref={labelRef}
+            className="text-body font-semibold leading-[1.35] text-primary-500"
           >
             SEGMENTOS
           </p>
           <h2
-            className={`w-[426px] max-w-full text-[40px] font-bold leading-[1.1] text-neutral-800 ${baseTransition}`}
-            style={slideIn(80)}
+            ref={h2Ref}
+            className="w-[426px] max-w-full text-[32px] font-bold leading-[1.1] text-neutral-800 lg:text-[40px]"
           >
             Aplicações por setor
           </h2>
         </div>
         <p
-          className={`w-[507px] max-w-full text-body leading-6 text-neutral-600 ${baseTransition}`}
-          style={slideIn(160)}
+          ref={descRef}
+          className="w-[507px] max-w-full text-body leading-6 text-neutral-600"
         >
           A TranspoTech apoia empresas com necessidades distintas de
           movimentação, abastecimento interno, armazenagem e suporte técnico.
         </p>
       </div>
 
-      {/* Mobile — grid simples de segmentos */}
+      {/* Mobile — ilustração do desktop no topo */}
+      <div className="relative w-full lg:hidden">
+        <Image
+          src={illustration}
+          alt="Ilustração isométrica de um polo logístico com indústria, centros de distribuição, varejo e veículos em operação"
+          className="h-auto w-full"
+        />
+      </div>
+
+      {/* Mobile — grid simples de segmentos (sem animação própria) */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
         {markers.map((m) => (
           <div
@@ -150,13 +170,13 @@ export function SegmentsSection() {
       <div className="relative mx-auto hidden aspect-[1281/449] w-full max-w-[1281px] lg:block">
         {/* Ilustração do polo logístico */}
         <div
-          className={`absolute ${baseTransition}`}
+          ref={illustrationRef}
+          className="absolute"
           style={{
             left: "21.46%",
             top: "0%",
             width: "57.5%",
             height: "92.34%",
-            ...fadeIn(240),
           }}
         >
           <Image
@@ -168,7 +188,7 @@ export function SegmentsSection() {
           />
         </div>
 
-        {markers.map((m) => {
+        {markers.map((m, i) => {
           const dotColor =
             m.color === "green" ? "bg-secondary-500" : "bg-primary-500";
           const haloColor =
@@ -182,24 +202,24 @@ export function SegmentsSection() {
             <Fragment key={m.title}>
               {/* Linha conectora */}
               <div
+                ref={(node) => { lineRefs.current[i] = node; }}
                 aria-hidden
-                className={`absolute h-px ${lineGradient} ${baseTransition}`}
+                className={`absolute h-px ${lineGradient}`}
                 style={{
                   left: m.line.left,
                   top: m.line.top,
                   width: m.line.width,
-                  ...fadeIn(m.delay),
                 }}
               />
 
               {/* Marcador (halo + núcleo) */}
               <div
+                ref={(node) => { dotRefs.current[i] = node; }}
                 aria-hidden
-                className={`absolute size-10 ${baseTransition}`}
+                className="absolute size-10"
                 style={{
                   left: `calc(${m.dot.left} - 20px)`,
                   top: `calc(${m.dot.top} - 20px)`,
-                  ...fadeIn(m.delay),
                 }}
               >
                 <span
@@ -212,8 +232,9 @@ export function SegmentsSection() {
 
               {/* Rótulo */}
               <div
-                className={`absolute flex w-[21%] flex-col gap-4 ${baseTransition}`}
-                style={{ left: m.label.left, top: m.label.top, ...slideIn(m.delay) }}
+                ref={(node) => { markerLabelRefs.current[i] = node; }}
+                className="absolute flex w-[21%] flex-col gap-4"
+                style={{ left: m.label.left, top: m.label.top }}
               >
                 <h3 className="whitespace-nowrap font-heading text-[24px] font-bold leading-[1.3] text-neutral-800">
                   {m.title}

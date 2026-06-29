@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { UnderConstruction } from "@/components/layout/under-construction/under-construction";
 
 export const metadata: Metadata = {
   title: "Portal de Conteúdo",
@@ -14,9 +15,7 @@ export const metadata: Metadata = {
 export default function PortalConteudoPage() {
   return (
     <main>
-      <section aria-labelledby="portal-title">
-        <h1 id="portal-title">Portal de Conteúdo</h1>
-      </section>
+      <UnderConstruction title="Portal de Conteúdo" />
     </main>
   );
 }

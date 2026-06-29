@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { UnderConstruction } from "@/components/layout/under-construction/under-construction";
 
 export const metadata: Metadata = {
   title: "Serviços",
@@ -14,21 +15,7 @@ export const metadata: Metadata = {
 export default function ServicosPage() {
   return (
     <main>
-      <section aria-labelledby="servicos-title">
-        <h1 id="servicos-title">Serviços</h1>
-      </section>
-
-      <section id="manutencao-preventiva" aria-labelledby="preventiva-title">
-        <h2 id="preventiva-title">Planos de Manutenção Preventiva</h2>
-      </section>
-
-      <section id="manutencao-corretiva" aria-labelledby="corretiva-title">
-        <h2 id="corretiva-title">Manutenção Corretiva</h2>
-      </section>
-
-      <section id="assistencia-multimarcas" aria-labelledby="multimarcas-title">
-        <h2 id="multimarcas-title">Assistência Multimarcas</h2>
-      </section>
+      <UnderConstruction title="Serviços" />
     </main>
   );
 }

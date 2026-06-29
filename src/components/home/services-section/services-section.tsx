@@ -1,4 +1,5 @@
 import { ShieldCheck, Wrench, LayoutDashboard, type LucideIcon } from "lucide-react";
+import { Section } from "@/components/ui/section";
 
 type ServiceCard = {
   icon: LucideIcon;
@@ -33,9 +34,7 @@ const cards: ServiceCard[] = [
 
 export function ServicesSection() {
   return (
-    <section
-      className="flex flex-col items-start gap-10 px-4 py-16 sm:px-8 lg:gap-[67px] lg:px-16 lg:py-20"
-    >
+    <Section className="flex flex-col items-start gap-10 lg:gap-[67px]">
       {/* Cabeçalho centralizado */}
       <div className="flex w-full flex-col items-center gap-6 text-center">
         <div className="flex w-[535px] max-w-full flex-col items-center gap-4">
@@ -61,12 +60,12 @@ export function ServicesSection() {
             className="flex flex-1 flex-col overflow-hidden rounded-xl bg-primary-50 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(245,130,32,0.3)]"
           >
             <div className="flex flex-1 flex-col gap-8 rounded-xl bg-[#fbfbfb] p-6">
-              <div className="flex size-12 items-center justify-center rounded-full bg-primary-500">
-                <card.icon className="size-7 text-white" aria-hidden />
+              <div className="flex size-10 items-center justify-center rounded-full bg-primary-500 lg:size-12">
+                <card.icon className="size-6 text-white lg:size-7" aria-hidden />
               </div>
               <div className="flex flex-col gap-4">
                 {/* Reserva 2 linhas de título e 2 de texto → cards uniformes */}
-                <h3 className="min-h-[2.6em] font-heading text-[24px] font-semibold leading-[1.3] text-neutral-800">
+                <h3 className="min-h-[2.6em] font-heading text-h5 font-semibold leading-[1.3] text-neutral-800">
                   {card.title.split("\n").map((line) => (
                     <span key={line} className="block">
                       {line}
@@ -84,6 +83,6 @@ export function ServicesSection() {
           </div>
         ))}
       </div>
-    </section>
+    </Section>
   );
 }

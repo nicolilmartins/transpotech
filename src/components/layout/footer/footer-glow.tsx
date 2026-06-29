@@ -1,34 +1,41 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { gsap } from "@/lib/gsap";
 
 /**
- * Blur verde no rodapé do footer — fica fixo na parte inferior e acompanha
- * o cursor horizontalmente, com um leve trailing (lerp).
+ * Blur verde no rodapé do footer — acompanha o cursor horizontalmente
+ * com lerp (fator 0.12) via gsap.ticker + quickSetter.
  */
 export function FooterGlow() {
   const ref = useRef<HTMLDivElement>(null);
-  const target = useRef(50); // posição-alvo em % da largura
+  const target = useRef(50);
   const current = useRef(50);
-  const raf = useRef(0);
 
   useEffect(() => {
-    const tick = () => {
+    const el = ref.current;
+    if (!el) return;
+
+    const leftSet = gsap.quickSetter(el, "left", "%");
+    leftSet(50);
+
+    const ticker = () => {
       const diff = target.current - current.current;
-      current.current += diff * 0.12; // trailing suave
-      if (ref.current) ref.current.style.left = `${current.current}%`;
-      raf.current = Math.abs(diff) > 0.05 ? requestAnimationFrame(tick) : 0;
+      if (Math.abs(diff) < 0.05) return;
+      current.current += diff * 0.12;
+      leftSet(current.current);
     };
 
     const onMove = (event: MouseEvent) => {
       target.current = (event.clientX / window.innerWidth) * 100;
-      if (!raf.current) raf.current = requestAnimationFrame(tick);
     };
 
+    gsap.ticker.add(ticker);
     window.addEventListener("mousemove", onMove, { passive: true });
+
     return () => {
+      gsap.ticker.remove(ticker);
       window.removeEventListener("mousemove", onMove);
-      if (raf.current) cancelAnimationFrame(raf.current);
     };
   }, []);
 
@@ -36,7 +43,8 @@ export function FooterGlow() {
     <div
       ref={ref}
       aria-hidden
-      className="pointer-events-none absolute -bottom-60 left-1/2 size-[520px] -translate-x-1/2 rounded-full bg-secondary-500/30 blur-[160px]"
+      className="pointer-events-none absolute -bottom-60 size-[520px] -translate-x-1/2 rounded-full bg-secondary-500/30 blur-[160px]"
+      style={{ left: "50%" }}
     />
   );
 }

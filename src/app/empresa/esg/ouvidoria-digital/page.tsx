@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { UnderConstruction } from "@/components/layout/under-construction/under-construction";
 
 export const metadata: Metadata = {
   title: "Ouvidoria Digital",
@@ -14,9 +15,7 @@ export const metadata: Metadata = {
 export default function OuvidoriaPage() {
   return (
     <main>
-      <section aria-labelledby="ouvidoria-title">
-        <h1 id="ouvidoria-title">Ouvidoria Digital</h1>
-      </section>
+      <UnderConstruction title="Ouvidoria Digital" />
     </main>
   );
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { UnderConstruction } from "@/components/layout/under-construction/under-construction";
 
 export const metadata: Metadata = {
   title: "Canal da Transparência",
@@ -14,9 +15,7 @@ export const metadata: Metadata = {
 export default function CanalTransparenciaPage() {
   return (
     <main>
-      <section aria-labelledby="transparencia-title">
-        <h1 id="transparencia-title">Canal da Transparência</h1>
-      </section>
+      <UnderConstruction title="Canal da Transparência" />
     </main>
   );
 }

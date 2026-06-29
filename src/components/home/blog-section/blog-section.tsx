@@ -52,7 +52,7 @@ const [featured, ...rest] = posts;
 
 export function BlogSection() {
   return (
-    <section className="relative isolate flex flex-col items-start gap-10 overflow-hidden px-4 py-16 sm:px-8 lg:gap-16 lg:px-16 lg:py-20">
+    <section className="relative isolate mx-auto flex w-full max-w-[1440px] flex-col items-start gap-10 overflow-hidden px-5 py-16 sm:px-6 lg:gap-16 lg:px-16 lg:py-20 2xl:px-30">
       {/* Cabeçalho — texto à esquerda, link "ver todos" à direita */}
       <div className="flex w-full items-end justify-between gap-4">
         <div className="flex flex-1 flex-col gap-4">

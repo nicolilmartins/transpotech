@@ -77,14 +77,17 @@
   --font-heading: var(--font-stack-sans), "Sora", system-ui, sans-serif;
   --font-body: var(--font-mukta-vaani), system-ui, sans-serif;
 
-  /* Headings line-height 1.3 */
-  --text-h2: 2.5rem; /* 40 */
+  /* Headings line-height 1.3 — responsivos via clamp (piso = mobile, teto = desktop).
+     O meio fluido cruza do piso ao teto entre ~375px e ~1024px. */
+  --text-h2: clamp(2rem, 1.45rem + 2.4vw, 2.5rem); /* 32 → 40 */
   --text-h2--line-height: 1.3;
-  --text-h3: 2rem; /* 32 */
+  --text-h3: clamp(1.75rem, 1.45rem + 1.3vw, 2rem); /* 28 → 32 */
   --text-h3--line-height: 1.3;
-  --text-h4: 1.75rem; /* 28 */
+  --text-h4: clamp(1.5rem, 1.3rem + 0.85vw, 1.75rem); /* 24 → 28 */
   --text-h4--line-height: 1.3;
-  --text-h6: 1.25rem; /* 20 */
+  --text-h5: clamp(1.25rem, 1.05rem + 0.85vw, 1.5rem); /* 20 → 24 */
+  --text-h5--line-height: 1.3;
+  --text-h6: clamp(1.125rem, 1.05rem + 0.32vw, 1.25rem); /* 18 → 20 */
   --text-h6--line-height: 1.3;
 
   /* Body line-height 1.35 */
@@ -95,12 +98,4 @@
   --text-body-sm: 0.875rem; /* 14 */
   --text-body-sm--line-height: 1.35;
 
-  /* ----- Animações ----- */
-  /* Carrossel infinito (track com 2 cópias → translateX -50% emenda perfeita) */
-  --animate-marquee: marquee 40s linear infinite;
-  @keyframes marquee {
-    to {
-      transform: translateX(-50%);
-    }
-  }
 }

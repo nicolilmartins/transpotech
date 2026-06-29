@@ -1,61 +1,78 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import logo1 from "@/assets/images/clients/logo1.svg";
 import logo2 from "@/assets/images/clients/logo2.svg";
 import logo3 from "@/assets/images/clients/logo3.svg";
 import logo4 from "@/assets/images/clients/logo4.svg";
 import logo5 from "@/assets/images/clients/logo5.svg";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 const logos = [logo1, logo2, logo3, logo4, logo5];
 
 export function ClientsSection() {
-  const [revealed, setRevealed] = useState(false);
-  const ref = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLParagraphElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
 
-  // Fade-in gradual quando a seção entra na viewport.
+  // Marquee GSAP: substitui @keyframes marquee
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          setRevealed(true);
-          observer.disconnect();
-        }
+    const track = trackRef.current;
+    if (!track) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const tween = gsap.to(track, {
+      xPercent: -50,
+      ease: "none",
+      duration: 40,
+      repeat: -1,
+    });
+
+    return () => { tween.kill(); };
+  }, []);
+
+  // Fade-in da seção ao entrar na viewport
+  useEffect(() => {
+    const section = sectionRef.current;
+    const title = titleRef.current;
+    const carousel = carouselRef.current;
+    if (!section || !title || !carousel) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const trigger = ScrollTrigger.create({
+      trigger: section,
+      start: "top 70%",
+      once: true,
+      onEnter: () => {
+        gsap.from(title, { opacity: 0, y: 12, duration: 0.7, ease: "power1.out" });
+        gsap.from(carousel, { opacity: 0, duration: 0.7, ease: "power1.out", delay: 0.15 });
       },
-      { threshold: 0.3 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    });
+
+    return () => { trigger.kill(); };
   }, []);
 
   return (
     <section
-      ref={ref}
+      ref={sectionRef}
       data-reveal-skip
-      className="relative isolate flex flex-col items-center gap-8 overflow-hidden py-16"
+      className="relative isolate mx-auto flex w-full max-w-[1440px] flex-col items-center gap-8 overflow-hidden py-16"
     >
       <p
-        className="text-center font-heading text-[18px] font-normal leading-[1.3] text-neutral-800 transition-all duration-700 ease-out"
-        style={{
-          opacity: revealed ? 1 : 0,
-          transform: revealed ? "none" : "translateY(12px)",
-        }}
+        ref={titleRef}
+        className="text-center font-heading text-[18px] font-normal leading-[1.3] text-neutral-800"
       >
         Empresas que confiam na TranspoTech
       </p>
 
       <div
-        className="relative h-[109px] w-full overflow-hidden transition-opacity duration-700 ease-out"
-        style={{
-          opacity: revealed ? 1 : 0,
-          transitionDelay: "150ms",
-        }}
+        ref={carouselRef}
+        className="relative h-[109px] w-full overflow-hidden"
       >
-        {/* Track do carrossel — 2 cópias idênticas para loop contínuo */}
-        <div className="flex h-full w-max items-center animate-marquee">
+        {/* Track do carrossel — 2 cópias para loop contínuo */}
+        <div ref={trackRef} className="flex h-full w-max items-center">
           {[0, 1].map((copy) => (
             <div
               key={copy}

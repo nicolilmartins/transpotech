@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, type CSSProperties } from "react";
+import { gsap } from "@/lib/gsap";
 import Image from "next/image";
 import {
   ArrowRight,
@@ -131,26 +132,55 @@ const IDLE_RESUME_MS = 20_000;
 export function SolutionsSection() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  // Rotação acumulada (graus): a engrenagem gira sempre para frente, um passo
-  // por ponto, e a transição CSS faz o "gira → para" entre cada ponto.
-  const [rotationDeg, setRotationDeg] = useState(0);
+  const rotationDeg = useRef(0);
+  const gearRef = useRef<HTMLDivElement>(null);
+  const solutionContentRef = useRef<HTMLDivElement>(null);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Auto-cycle while not paused: avança um ponto e gira um passo.
+  // Anima a engrenagem para o ângulo acumulado usando GSAP + CustomEase
+  const rotateGear = (targetDeg: number) => {
+    gsap.to(gearRef.current, {
+      rotation: targetDeg,
+      duration: 0.85,
+      ease: "gearEase",
+      overwrite: "auto",
+    });
+  };
+
+  // Fade da solução ativa — substitui @keyframes fade-in-solution
+  const fadeSolution = () => {
+    if (!solutionContentRef.current) return;
+    gsap.fromTo(
+      solutionContentRef.current,
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.35, ease: "power1.out" }
+    );
+  };
+
+  // Auto-cycle while not paused
   useEffect(() => {
     if (paused) return;
     const id = setInterval(() => {
-      setActive((a) => (a + 1) % N);
-      setRotationDeg((r) => r + STEP_DEG);
+      setActive((a) => {
+        const next = (a + 1) % N;
+        rotationDeg.current += STEP_DEG;
+        rotateGear(rotationDeg.current);
+        return next;
+      });
     }, 3000);
     return () => clearInterval(id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paused]);
 
   // Cleanup on unmount
   useEffect(() => () => { if (idleTimer.current) clearTimeout(idleTimer.current); }, []);
 
-  // (Re)arma a contagem de inatividade: após IDLE_RESUME_MS sem interação a
-  // engrenagem volta a girar. Cada nova interação reinicia a contagem.
+  // Fade da solução sempre que o ativo muda
+  useEffect(() => {
+    fadeSolution();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active]);
+
   const scheduleResume = () => {
     if (idleTimer.current) clearTimeout(idleTimer.current);
     idleTimer.current = setTimeout(() => {
@@ -159,16 +189,14 @@ export function SolutionsSection() {
     }, IDLE_RESUME_MS);
   };
 
-  // Interação com um ponto: gira para frente até ele, seleciona e para.
   const handleSelect = (i: number) => {
-    setRotationDeg((r) => r + ((i - active + N) % N) * STEP_DEG);
+    rotationDeg.current += ((i - active + N) % N) * STEP_DEG;
+    rotateGear(rotationDeg.current);
     setActive(i);
     setPaused(true);
     scheduleResume();
   };
 
-  // Mexer o mouse sobre a seção mantém a engrenagem parada (reinicia a contagem),
-  // sem religá-la. Só rearma quando já existe uma pausa pendente.
   const handleActivity = () => {
     if (idleTimer.current) scheduleResume();
   };
@@ -176,12 +204,8 @@ export function SolutionsSection() {
   const sol = solutions[active];
   const SolIcon = sol.icon;
 
-  // Rotação de ponto em ponto: a transição anima o giro até o ângulo do ponto
-  // ativo e depois "para" até o próximo passo.
   const gearStyle: CSSProperties = {
     transformOrigin: "center",
-    transform: `rotate(${rotationDeg}deg)`,
-    transition: "transform 0.85s cubic-bezier(0.45, 0, 0.2, 1)",
   };
 
   return (
@@ -194,7 +218,7 @@ export function SolutionsSection() {
           scroll) — sem glow próprio para manter o mesmo tom das outras seções. */}
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <div className="px-4 pt-12 sm:px-8 lg:px-16 lg:pt-20">
+      <div className="mx-auto w-full max-w-[1440px] px-5 pt-12 sm:px-6 lg:px-16 lg:pt-20 2xl:px-30">
         <div className="mx-auto flex max-w-[640px] flex-col items-center gap-5 text-center">
           <p className="font-heading text-[16px] font-medium uppercase leading-[1.1] text-primary-300">
             solução 360°
@@ -211,16 +235,16 @@ export function SolutionsSection() {
       </div>
 
       {/* ── Engrenagem centralizada ────────────────────────────────────────── */}
-      <div className="px-4 pb-16 pt-10 sm:px-8 lg:pb-24 lg:pt-14">
+      <div className="px-5 pb-16 pt-10 sm:px-6 lg:pb-24 lg:pt-14 2xl:px-30">
         <div className="relative mx-auto aspect-square w-full max-w-[560px]">
 
-          {/* Anel segmentado do Figma — gira de ponto em ponto */}
+          {/* Anel segmentado do Figma — gira de ponto em ponto via GSAP */}
           <div
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
             style={{ width: `${(GEAR_D / VB) * 100}%` }}
           >
-            <div style={gearStyle}>
+            <div ref={gearRef} style={gearStyle}>
               <Image src={gearRing} alt="" className="h-auto w-full" />
             </div>
           </div>
@@ -284,8 +308,9 @@ export function SolutionsSection() {
           {/* Centro da engrenagem — descrição + botão da solução ativa */}
           <div className="absolute left-1/2 top-1/2 flex w-[60%] max-w-[300px] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-5 text-center">
             <div
+              ref={solutionContentRef}
               key={active}
-              className="flex flex-col items-center gap-3 animate-[fade-in-solution_0.35s_ease-out]"
+              className="flex flex-col items-center gap-3"
             >
               {/* Ícone da solução — laranja (mesma cor do label do botão) */}
               <SolIcon className="size-8 text-primary-300" aria-hidden />

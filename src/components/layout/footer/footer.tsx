@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Facebook, Instagram, Linkedin, Youtube } from "@/components/ui/icons";
+import { ROUTES } from "@/lib/routes";
 import { FooterGlow } from "./footer-glow";
 import logoLight from "@/assets/images/logo-transpotech-light.svg";
 import gptw from "@/assets/images/gptw-badge.png";
@@ -12,25 +13,37 @@ const linkGroups = [
   {
     title: "Produtos",
     links: [
-      "Locação de empilhadeiras",
-      "Empilhadeiras novas",
-      "Empilhadeiras usadas",
-      "Pneus",
-      "Baterias e carregadores",
-      "Peças",
+      { label: "Locação de empilhadeiras", href: ROUTES.LOCACAO },
+      { label: "Empilhadeiras novas", href: ROUTES.EMPILHADEIRAS_NOVAS },
+      { label: "Empilhadeiras usadas", href: ROUTES.EMPILHADEIRAS_USADAS },
+      { label: "Pneus", href: ROUTES.PNEUS },
+      { label: "Baterias e carregadores", href: ROUTES.BATERIAS },
+      { label: "Peças", href: ROUTES.PECAS },
     ],
   },
   {
     title: "Serviços",
-    links: ["Automação intralogística", "Assistência técnica multimarcas"],
+    links: [
+      { label: "Automação intralogística", href: ROUTES.AUTOMACAO },
+      { label: "Assistência técnica multimarcas", href: ROUTES.SERVICOS_MULTIMARCAS },
+    ],
   },
   {
     title: "Empresa",
-    links: ["Quem somos", "Portal de conteúdo", "Trabalhe conosco", "Contato"],
+    links: [
+      { label: "Quem somos", href: ROUTES.QUEM_SOMOS },
+      { label: "Portal de conteúdo", href: ROUTES.PORTAL_CONTEUDO },
+      { label: "Trabalhe conosco", href: ROUTES.TRABALHE_CONOSCO },
+      { label: "Contato", href: ROUTES.CONTATO },
+    ],
   },
   {
     title: "ESG",
-    links: ["Sustentabilidade", "Canal de transparência", "Ouvidoria digital"],
+    links: [
+      { label: "Sustentabilidade", href: ROUTES.SUSTENTABILIDADE },
+      { label: "Canal de transparência", href: ROUTES.CANAL_TRANSPARENCIA },
+      { label: "Ouvidoria digital", href: ROUTES.OUVIDORIA },
+    ],
   },
 ];
 
@@ -54,7 +67,7 @@ export function Footer() {
     <footer
       data-header-dark
       data-reveal-skip
-      className="relative overflow-hidden rounded-t-2xl bg-neutral-800 px-4 pb-10 pt-14 text-body sm:px-8 lg:px-16 lg:pb-16 lg:pt-20"
+      className="relative overflow-hidden rounded-t-2xl bg-neutral-800 text-body"
     >
       {/* Watermark */}
       <Image
@@ -67,7 +80,7 @@ export function Footer() {
       {/* Blur radial verde no rodapé (#218F73) — acompanha o cursor na horizontal */}
       <FooterGlow />
 
-      <div className="relative flex flex-col gap-8">
+      <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-5 pb-10 pt-14 sm:px-6 lg:px-16 lg:pb-16 lg:pt-20 2xl:px-30">
         {/* Topo: logo + social + links + selo */}
         <div className="flex flex-col gap-8 lg:flex-row lg:justify-between">
           <div className="flex flex-col gap-9">
@@ -96,11 +109,11 @@ export function Footer() {
                 </p>
                 {group.links.map((link) => (
                   <Link
-                    key={link}
-                    href="#"
+                    key={link.label}
+                    href={link.href}
                     className="leading-[1.35] text-neutral-300 transition-colors hover:text-neutral-50"
                   >
-                    {link}
+                    {link.label}
                   </Link>
                 ))}
               </div>

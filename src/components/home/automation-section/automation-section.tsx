@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Section } from "@/components/ui/section";
 import { CircleCheck } from "lucide-react";
 import automacao from "@/assets/images/automacao.png";
+import { gsap } from "@/lib/gsap";
 
 const bullets = [
   "Menos gargalos entre o recebimento, armazenagem e expedição",
@@ -13,45 +16,37 @@ const bullets = [
   "Evolução por etapas - do básico à automacão completa",
 ];
 
-const baseTransition = "transition-all duration-700 ease-out";
-
 export function AutomationSection() {
-  const [revealed, setRevealed] = useState(false);
-  const ref = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const h2Ref = useRef<HTMLHeadingElement>(null);
+  const descRef = useRef<HTMLParagraphElement>(null);
+  const bulletRefs = useRef<HTMLLIElement[]>([]);
+  const buttonRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
 
-  // Dispara a cascata quando a seção entra na viewport.
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          setRevealed(true);
-          observer.disconnect();
-        }
+  useGSAP(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 75%",
+        once: true,
       },
-      { threshold: 0.25 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+    });
 
-  // Cada elemento entra com fade + deslize, escalonado (cascata).
-  const reveal = (delay: number, from: "up" | "right" = "up") => ({
-    opacity: revealed ? 1 : 0,
-    transform: revealed
-      ? "none"
-      : from === "right"
-        ? "translateX(28px)"
-        : "translateY(16px)",
-    transitionDelay: `${delay}ms`,
-  });
+    tl.from(h2Ref.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, 0)
+      .from(descRef.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, 0.12)
+      .from(imageRef.current, { opacity: 0, x: 28, duration: 0.7, ease: "power1.out" }, 0.16)
+      .from(bulletRefs.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out", stagger: 0.09 }, 0.24)
+      .from(buttonRef.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, 0.6);
+  }, { scope: sectionRef });
 
   return (
-    <section
-      ref={ref}
+    <Section
+      ref={sectionRef}
       data-reveal-skip
-      className="flex flex-col items-start px-4 py-16 sm:px-8 lg:px-16 lg:py-20"
+      className="flex flex-col items-start"
     >
       <div className="flex w-full flex-col gap-8 lg:flex-row lg:items-center lg:gap-16">
         {/* Coluna de texto */}
@@ -59,8 +54,8 @@ export function AutomationSection() {
           <div className="flex flex-col gap-10">
             <div className="flex w-[600px] max-w-full flex-col gap-4">
               <h2
-                className={`w-[542px] max-w-full text-h2 text-neutral-800 ${baseTransition}`}
-                style={reveal(0)}
+                ref={h2Ref}
+                className="w-[542px] max-w-full text-h2 text-neutral-800"
               >
                 <span className="font-normal">
                   Automação intralogística para{" "}
@@ -70,8 +65,8 @@ export function AutomationSection() {
                 </span>
               </h2>
               <p
-                className={`w-[512px] max-w-full text-body leading-[1.35] text-neutral-600 ${baseTransition}`}
-                style={reveal(120)}
+                ref={descRef}
+                className="w-[512px] max-w-full text-body leading-[1.35] text-neutral-600"
               >
                 Para empresas que precisam evoluir o fluxo intralogístico, a
                 TranspoTech também atua com soluções de automação voltadas à
@@ -83,8 +78,10 @@ export function AutomationSection() {
               {bullets.map((b, i) => (
                 <li
                   key={b}
-                  className={`flex items-center gap-2 ${baseTransition}`}
-                  style={reveal(240 + i * 90)}
+                  ref={(node) => {
+                    if (node) bulletRefs.current[i] = node;
+                  }}
+                  className="flex items-center gap-2"
                 >
                   <CircleCheck
                     className="size-5 shrink-0 text-neutral-600"
@@ -98,10 +95,7 @@ export function AutomationSection() {
             </ul>
           </div>
 
-          <div
-            className={`self-start ${baseTransition}`}
-            style={reveal(240 + bullets.length * 90)}
-          >
+          <div ref={buttonRef} className="hidden self-start lg:block">
             <Button variant="primary" size="lg">
               Locar empilhadeira
             </Button>
@@ -110,8 +104,8 @@ export function AutomationSection() {
 
         {/* Imagem — desliza da direita junto da cascata */}
         <div
-          className={`relative min-h-[280px] min-w-0 flex-1 self-stretch overflow-hidden rounded-xl lg:min-h-0 ${baseTransition}`}
-          style={reveal(160, "right")}
+          ref={imageRef}
+          className="relative order-2 min-h-[280px] min-w-0 flex-1 self-stretch overflow-hidden rounded-xl lg:order-none lg:min-h-0"
         >
           <Image
             src={automacao}
@@ -121,7 +115,14 @@ export function AutomationSection() {
             className="object-cover"
           />
         </div>
+
+        {/* Botão — após a imagem no mobile */}
+        <div className="order-3 self-start lg:hidden">
+          <Button variant="primary" size="lg">
+            Locar empilhadeira
+          </Button>
+        </div>
       </div>
-    </section>
+    </Section>
   );
 }

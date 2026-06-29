@@ -1,5 +1,6 @@
 import { type CSSProperties } from "react";
 import Image from "next/image";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import warehouse from "@/assets/images/depoimentos/warehouse.png";
 import caseLogo1 from "@/assets/images/depoimentos/case-logo1.png";
 import caseLogo2 from "@/assets/images/depoimentos/case-logo2.png";
@@ -14,7 +15,7 @@ const cardGradient: CSSProperties = {
 };
 
 const cardBase =
-  "stroke-fade min-h-[280px] min-w-0 flex-1 overflow-hidden rounded-xl p-6 lg:h-[380px]";
+  "stroke-fade min-h-[280px] w-[82%] shrink-0 snap-start overflow-hidden rounded-xl p-6 sm:w-[60%] md:w-[45%] lg:h-[380px] lg:w-auto lg:min-w-0 lg:flex-1 lg:shrink lg:snap-align-none";
 
 // Glow laranja (#f58220) difuso à direita — replica as 3 "Mask Shapes" do Figma:
 // retângulo rotacionado -60°, blur 77.5, opacity 12%, clipado pelo card.
@@ -44,7 +45,7 @@ export function TestimonialsSection() {
   return (
     <section
       data-header-dark
-      className="flex flex-col items-center px-4 py-16 sm:px-8 lg:px-16 lg:py-20"
+      className="mx-auto flex w-full max-w-[1440px] flex-col items-center px-5 py-16 sm:px-6 lg:px-16 lg:py-20 2xl:px-30"
     >
       <div className="flex w-full max-w-[1312px] flex-col items-center gap-16">
         {/* Cabeçalho */}
@@ -54,16 +55,36 @@ export function TestimonialsSection() {
               O que nossos clientes dizem
             </h2>
           </div>
-          <p className="w-[507px] max-w-full text-body leading-[1.35] text-neutral-200">
-            A melhor prova de valor não está só no portfólio, mas na capacidade
-            de responder à cenários reais com a solução certa.
-          </p>
+          <div className="flex w-full items-center justify-between gap-4">
+            <p className="w-[507px] max-w-full text-body leading-[1.35] text-neutral-200">
+              A melhor prova de valor não está só no portfólio, mas na
+              capacidade de responder à cenários reais com a solução certa.
+            </p>
+
+            {/* Setas de navegação — canto superior direito, após o texto */}
+            <div className="hidden shrink-0 items-center gap-2 lg:flex">
+              <button
+                type="button"
+                aria-label="Anterior"
+                className="flex size-12 items-center justify-center rounded-full border border-white/20 text-primary-500 transition-colors hover:bg-white/10"
+              >
+                <ArrowLeft className="size-6" aria-hidden />
+              </button>
+              <button
+                type="button"
+                aria-label="Próximo"
+                className="flex size-12 items-center justify-center rounded-full border border-white/20 text-primary-500 transition-colors hover:bg-white/10"
+              >
+                <ArrowRight className="size-6" aria-hidden />
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Carrossel — imagem + 2 cases (flex) + depoimento (316px) */}
-        <div className="relative grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:flex lg:items-center">
-          {/* Imagem — oculta em mobile, visível no desktop */}
-          <div className="relative hidden h-[380px] min-w-0 flex-1 overflow-hidden rounded-xl bg-[#d9d9d9] lg:block">
+        {/* Carrossel — scroll horizontal no mobile; flex no desktop */}
+        <div className="relative -mx-5 flex w-[calc(100%+40px)] snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:-mx-6 sm:w-[calc(100%+48px)] sm:px-6 lg:mx-0 lg:w-full lg:snap-none lg:items-center lg:overflow-visible lg:px-0 lg:pb-0">
+          {/* Imagem — oculta em mobile, visível no desktop (mesmo tamanho dos cards) */}
+          <div className="relative hidden min-h-[280px] min-w-0 flex-1 overflow-hidden rounded-xl bg-[#d9d9d9] lg:block lg:h-[380px]">
             <Image
               src={warehouse}
               alt="Operação em armazém"

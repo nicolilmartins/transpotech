@@ -1,40 +1,49 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "@/lib/gsap";
 
-const GREEN_OFFSET = 220; // verde um pouco abaixo do laranja
-const FACTOR = 0.6; // parallax — quão rápido os blurs "andam" com o scroll
+const GREEN_OFFSET = 220;
+const FACTOR = 0.6;
 
 /**
- * Ambiência das seções dark: um blur laranja (direita) e um verde (esquerda,
- * um pouco abaixo) que "andam" para baixo conforme o scroll, atravessando as
- * seções dark do bloco. Fica atrás do conteúdo (fundo #181616 vem do wrapper).
+ * Ambiência das seções dark: blur laranja (direita) e verde (esquerda, abaixo)
+ * que "andam" para baixo com o scroll via GSAP ScrollTrigger scrub.
  */
 export function DarkAmbient() {
   const ref = useRef<HTMLDivElement>(null);
-  const [y, setY] = useState(0);
+  const orangeRef = useRef<HTMLDivElement>(null);
+  const greenRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const rect = el.getBoundingClientRect();
-      setY(Math.max(0, -rect.top) * FACTOR);
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
+  useGSAP(() => {
+    const container = ref.current!;
+
+    gsap.set(orangeRef.current, { xPercent: 25, y: 0 });
+    gsap.set(greenRef.current, { xPercent: -25, y: GREEN_OFFSET });
+
+    gsap.to(orangeRef.current, {
+      y: () => container.offsetHeight * FACTOR,
+      ease: "none",
+      scrollTrigger: {
+        trigger: container,
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+
+    gsap.to(greenRef.current, {
+      y: () => container.offsetHeight * FACTOR + GREEN_OFFSET,
+      ease: "none",
+      scrollTrigger: {
+        trigger: container,
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+  }, { scope: ref });
 
   return (
     <div
@@ -44,13 +53,13 @@ export function DarkAmbient() {
     >
       {/* Laranja — lado direito */}
       <div
+        ref={orangeRef}
         className="absolute right-0 top-0 size-[520px] rounded-full bg-primary-500/25 blur-[160px]"
-        style={{ transform: `translate(25%, ${y}px)` }}
       />
       {/* Verde — lado esquerdo, um pouco abaixo */}
       <div
+        ref={greenRef}
         className="absolute left-0 top-0 size-[520px] rounded-full bg-secondary-600/25 blur-[160px]"
-        style={{ transform: `translate(-25%, ${y + GREEN_OFFSET}px)` }}
       />
     </div>
   );

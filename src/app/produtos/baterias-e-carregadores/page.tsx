@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { UnderConstruction } from "@/components/layout/under-construction/under-construction";
 
 export const metadata: Metadata = {
   title: "Baterias e Carregadores para Empilhadeiras",
@@ -14,9 +15,7 @@ export const metadata: Metadata = {
 export default function BateriasPage() {
   return (
     <main>
-      <section aria-labelledby="baterias-title">
-        <h1 id="baterias-title">Baterias e Carregadores</h1>
-      </section>
+      <UnderConstruction title="Baterias e Carregadores" />
     </main>
   );
 }
