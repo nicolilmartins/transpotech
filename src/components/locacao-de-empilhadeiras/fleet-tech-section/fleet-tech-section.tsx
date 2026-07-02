@@ -1,164 +1,65 @@
-"use client";
-
-import { useEffect, useRef } from "react";
 import Image, { type StaticImageData } from "next/image";
-import {
-  BatteryCharging,
-  TrendingDown,
-  Leaf,
-  TrendingUp,
-  Clock,
-  Zap,
-  Maximize,
-  Battery,
-  type LucideIcon,
-} from "lucide-react";
 import { Section } from "@/components/ui/section";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
-import illoForklift from "@/assets/images/stats/illustration-forklift.webp";
-import illoCharge from "@/assets/images/stats/illustration-charge.webp";
-import illoTool from "@/assets/images/stats/illustration-tool.webp";
+import illoChart from "@/assets/images/stats/illustration-chart-2.webp";
+import illoForklift from "@/assets/images/stats/illustration-emp-2.webp";
+import illoCalendar from "@/assets/images/stats/illustration-calendar.webp";
+import illoDesktop from "@/assets/images/stats/illustration-desktop.webp";
 
-// Conta o número principal preservando prefixo/sufixo ("+3700", "80%", "24/7").
-const countValue = (value: string, progress: number) =>
-  value.replace(/\d+/, (digits) =>
-    String(Math.round(parseInt(digits, 10) * progress))
-  );
+type Card = { title: string; description: string; image: StaticImageData };
 
-type Stat = { value: string; label: string; image: StaticImageData };
-
-const stats: Stat[] = [
+const cards: Card[] = [
   {
-    value: "+3700",
-    label: "Empilhadeiras trabalhando em frota",
+    title: "Incentivos fiscais",
+    description: "Redução de custos gerais\ne de manutenção.",
+    image: illoChart,
+  },
+  {
+    title: "Flexibilidade de troca",
+    description: "Atualização e renovação\nde frota garantida.",
     image: illoForklift,
   },
-  { value: "80%", label: "Das empilhadeiras são elétricas.", image: illoCharge },
   {
-    value: "24/7",
-    label: "Atendimento com manutenção preventiva e corretiva",
-    image: illoTool,
+    title: "Custo mensal fixo",
+    description: "Valores previsíveis que\nse mantêm mês a mês.",
+    image: illoCalendar,
+  },
+  {
+    title: "Gestão inteligente de frota",
+    description: "Você 100% focado na gestão\ndo seu negócio.",
+    image: illoDesktop,
   },
 ];
 
-type Benefit = { title: string; description: string; Icon: LucideIcon };
-
-const retorno: Benefit[] = [
-  {
-    title: "Sem troca de bateria",
-    description: "Menor custo operacional ao longo do tempo.",
-    Icon: BatteryCharging,
-  },
-  {
-    title: "Redução de até 30% no consumo",
-    description: "Eficiência energética superior.",
-    Icon: TrendingDown,
-  },
-  {
-    title: "Sem emissão de gases nem ácidos",
-    description: "Ambiente mais seguro e limpo.",
-    Icon: Leaf,
-  },
-  {
-    title: "Retorno do investimento mais rápido",
-    description: "Comparado a tecnologias tradicionais.",
-    Icon: TrendingUp,
-  },
-];
-
-const eficiencia: Benefit[] = [
-  {
-    title: "Vida útil até 3x maior.",
-    description: "Em relação a baterias chumbo-ácidas.",
-    Icon: Clock,
-  },
-  {
-    title: "Carregamento rápido",
-    description: "Cargas de oportunidade entre operações.",
-    Icon: Zap,
-  },
-  {
-    title: "Não requer sala de baterias",
-    description: "Menos área dedicada na operação.",
-    Icon: Maximize,
-  },
-  {
-    title: "Uma única bateria por equipamento",
-    description: "Sem troca durante o turno.",
-    Icon: Battery,
-  },
-];
-
-function BenefitColumn({ title, items }: { title: string; items: Benefit[] }) {
+function FleetCard({ title, description, image }: Card) {
   return (
-    <div className="flex flex-col gap-5">
-      <h4 className="text-h6 font-semibold text-secondary-600">{title}</h4>
-      <ul className="flex flex-col gap-4">
-        {items.map((item) => (
-          <li key={item.title} className="flex items-start gap-3">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-secondary-600/10 text-secondary-600">
-              <item.Icon aria-hidden className="size-5" />
-            </span>
-            <div className="flex flex-col gap-0.5">
-              <span className="text-body font-semibold leading-[1.35] text-neutral-800">
-                {item.title}
-              </span>
-              <span className="text-body-sm leading-[1.35] text-neutral-500">
-                {item.description}
-              </span>
-            </div>
-          </li>
-        ))}
-      </ul>
+    <div className="group relative flex h-[348px] w-full flex-col overflow-hidden rounded-[20px] lg:max-w-[314px]">
+      {/* Parte do texto — 127px de altura; título + descrição centralizados */}
+      <div className="relative flex h-[127px] flex-col items-center gap-2 overflow-hidden bg-[#f7f6f6] px-6 pt-6 text-center">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-1/2 size-[174px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-500 opacity-[0.1] blur-[58px] transition-opacity duration-500 group-hover:opacity-[0.28]"
+        />
+        <h3 className="relative text-[18px] font-semibold leading-[1.35] text-neutral-800">
+          {title}
+        </h3>
+        <p className="relative whitespace-pre-line text-[16px] leading-[1.35] text-neutral-600">
+          {description}
+        </p>
+      </div>
+
+      {/* Imagem centralizada na parte de baixo */}
+      <div className="relative flex flex-1 items-center justify-center bg-[#f7f6f6]/40">
+        <Image
+          src={image}
+          alt=""
+          className="pointer-events-none h-[240px] w-auto max-w-none select-none object-contain"
+        />
+      </div>
     </div>
   );
 }
 
 export function FleetTechSection() {
-  const statsRef = useRef<HTMLDivElement>(null);
-  const numberRefs = useRef<(HTMLSpanElement | null)[]>([]);
-
-  useEffect(() => {
-    const el = statsRef.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    stats.forEach((s, i) => {
-      const node = numberRefs.current[i];
-      if (node) node.textContent = countValue(s.value, 0);
-    });
-
-    const counters = stats.map(() => ({ progress: 0 }));
-    const tweens: gsap.core.Tween[] = [];
-
-    const trigger = ScrollTrigger.create({
-      trigger: el,
-      start: "top 75%",
-      once: true,
-      onEnter: () => {
-        stats.forEach((s, i) => {
-          tweens.push(
-            gsap.to(counters[i], {
-              progress: 1,
-              duration: 1.8,
-              ease: "power3.out",
-              onUpdate: () => {
-                const node = numberRefs.current[i];
-                if (node)
-                  node.textContent = countValue(s.value, counters[i].progress);
-              },
-            })
-          );
-        });
-      },
-    });
-
-    return () => {
-      trigger.kill();
-      tweens.forEach((t) => t.kill());
-    };
-  }, []);
-
   return (
     <Section className="flex flex-col gap-10 lg:gap-12">
       {/* Cabeçalho */}
@@ -171,70 +72,11 @@ export function FleetTechSection() {
         </h2>
       </div>
 
-      {/* Cards de números + card "frota elétrica" — 16px de gap entre eles */}
-      <div className="flex flex-col gap-4">
-        {/* Estatísticas — mesmo card/hover da home; larguras adaptadas */}
-        <div
-          ref={statsRef}
-          className="grid grid-cols-1 gap-4 sm:grid-cols-3"
-        >
-        {stats.map((s, i) => {
-          // Cards 1 e 2 (forklift e bateria) sangram mais para a direita,
-          // ficando mais próximos da lateral. Card 3 mantém o deslocamento base.
-          const shiftX =
-            i < 2
-              ? "translate-x-[14%] group-hover:translate-x-[14%]"
-              : "translate-x-[7%] group-hover:translate-x-[7%]";
-          return (
-          <div
-            key={s.value}
-            className="group relative flex min-h-[160px] flex-col gap-1 overflow-hidden rounded-3xl bg-[#f9f9f9] p-5 lg:h-[172px]"
-          >
-            {/* Ilustração à direita: ampliada e deslocada para fora da borda
-                direita (sangra/corta pelo overflow-hidden do card) — zoom no hover */}
-            <Image
-              src={s.image}
-              alt=""
-              fill
-              sizes="(min-width: 640px) 33vw, 100vw"
-              className={`pointer-events-none origin-right scale-[1.6] select-none object-contain object-right transition-transform duration-500 ease-out group-hover:scale-[1.67] ${shiftX}`}
-            />
-
-            {/* Glow laranja radial no rodapé — visível apenas no hover */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute left-1/2 top-[165px] h-[66px] w-[162px] -translate-x-1/2 rounded-full bg-primary-500 opacity-0 blur-[77px] transition-opacity duration-300 group-hover:opacity-100"
-            />
-
-            <div className="relative flex flex-col gap-1">
-              <span
-                ref={(node) => {
-                  numberRefs.current[i] = node;
-                }}
-                className="font-heading text-h2 font-bold leading-[1.3] text-primary-500"
-              >
-                {s.value}
-              </span>
-              <span className="max-w-[170px] text-body leading-[1.35] text-neutral-600">
-                {s.label}
-              </span>
-            </div>
-          </div>
-          );
-        })}
-      </div>
-
-        {/* Por que a maior parte da frota é elétrica — card no tom dos números */}
-        <div className="flex flex-col gap-10 rounded-3xl bg-[#f9f9f9] p-8 lg:flex-row lg:gap-16 lg:p-12">
-          <h3 className="text-h4 text-neutral-800 lg:w-[340px] lg:shrink-0">
-            <span className="font-normal">Por que a maior parte da </span>
-            <span className="font-bold">nossa frota é elétrica</span>
-          </h3>
-          <div className="grid flex-1 grid-cols-1 gap-x-12 gap-y-10 sm:grid-cols-2">
-            <BenefitColumn title="Retorno" items={retorno} />
-            <BenefitColumn title="Eficiência" items={eficiencia} />
-          </div>
-        </div>
+      {/* 4 cards — título/descrição em cima, ilustração centralizada embaixo */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {cards.map((card) => (
+          <FleetCard key={card.title} {...card} />
+        ))}
       </div>
     </Section>
   );

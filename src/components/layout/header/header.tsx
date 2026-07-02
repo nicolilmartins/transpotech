@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { LogoTranspotech } from "@/components/ui/logo";
 import { MegaMenu, megaMenus } from "./mega-menu";
 import { ROUTES } from "@/lib/routes";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { ScrollTrigger } from "@/lib/gsap";
 
 const MEGA_MENU_ID = "megamenu-panel";
 
@@ -15,7 +15,7 @@ type NavItem = { label: string; href?: string };
 
 const navItems: NavItem[] = [
   { label: "Produtos" },
-  { label: "Serviços" },
+  { label: "Serviços", href: ROUTES.SERVICOS },
   { label: "Automação", href: ROUTES.AUTOMACAO },
   { label: "Empresa" },
   { label: "Contato", href: ROUTES.CONTATO },
@@ -230,38 +230,25 @@ export function Header() {
             </nav>
           </div>
 
-          {/* Direita: Desktop CTAs | Mobile CTA + Hamburger */}
+          {/* Direita: Desktop CTAs (ocultas no mobile) | Hamburger (mobile) */}
           <div className="flex items-center gap-2">
-            {/* Desktop CTAs */}
-            <Button
-              variant="gray"
-              size="lg"
-              href={ROUTES.ORCAMENTO}
-              className={[
-                "hidden lg:flex",
-                darkPill ? "!bg-white/15 !text-neutral-50 hover:!bg-white/25" : "",
-              ].join(" ")}
-            >
-              Calcular orçamento
-            </Button>
-            <Button
-              variant="primary"
-              size="lg"
-              href={ROUTES.CONTATO}
-              className="hidden lg:flex"
-            >
-              Fale com vendas
-            </Button>
-
-            {/* Mobile: CTA primário */}
-            <Button
-              variant="primary"
-              size="md"
-              href={ROUTES.CONTATO}
-              className="flex lg:hidden"
-            >
-              Fale com vendas
-            </Button>
+            {/* Desktop CTAs — a visibilidade fica no wrapper (o Button tem display
+                próprio e ignoraria `hidden`/`lg:hidden` na própria className). */}
+            <div className="hidden items-center gap-2 lg:flex">
+              <Button
+                variant="gray"
+                size="lg"
+                href={ROUTES.ORCAMENTO}
+                className={
+                  darkPill ? "!bg-white/15 !text-neutral-50 hover:!bg-white/25" : ""
+                }
+              >
+                Calcular orçamento
+              </Button>
+              <Button variant="primary" size="lg" href={ROUTES.CONTATO}>
+                Fale com vendas
+              </Button>
+            </div>
 
             {/* Mobile: hamburger */}
             <button

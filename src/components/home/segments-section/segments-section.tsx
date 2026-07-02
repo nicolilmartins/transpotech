@@ -121,7 +121,7 @@ export function SegmentsSection() {
           </p>
           <h2
             ref={h2Ref}
-            className="w-[426px] max-w-full text-[32px] font-bold leading-[1.1] text-neutral-800 lg:text-[40px]"
+            className="w-[426px] max-w-full text-h2 font-bold leading-[1.1] text-neutral-800"
           >
             Aplicações por setor
           </h2>

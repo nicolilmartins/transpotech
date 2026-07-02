@@ -1,5 +1,19 @@
 import type { Metadata } from "next";
-import { UnderConstruction } from "@/components/layout/under-construction/under-construction";
+
+import { ServicosHeroSection } from "@/components/servicos/hero-section/hero-section";
+import { MultibrandSection } from "@/components/servicos/multibrand-section/multibrand-section";
+import { PortfolioSection } from "@/components/servicos/portfolio-section/portfolio-section";
+import { Pm2pSection } from "@/components/servicos/pm2p-section/pm2p-section";
+import { ProcessSection } from "@/components/servicos/process-section/process-section";
+import { DifferentialsSection } from "@/components/servicos/differentials-section/differentials-section";
+import { TechStructureSection } from "@/components/servicos/tech-structure-section/tech-structure-section";
+import { SegmentsSection } from "@/components/servicos/segments-section/segments-section";
+import { FaqSection } from "@/components/layout/faq/faq-section";
+import { faqServicos } from "@/data/faq-servicos";
+import { CtaSection } from "@/components/layout/cta/cta-section";
+import { HoverMesh } from "@/components/layout/hover-mesh";
+import { DarkAmbient } from "@/components/layout/dark-ambient";
+import { ROUTES } from "@/lib/routes";
 
 export const metadata: Metadata = {
   title: "Serviços",
@@ -15,7 +29,59 @@ export const metadata: Metadata = {
 export default function ServicosPage() {
   return (
     <main>
-      <UnderConstruction title="Serviços" />
+      <ServicosHeroSection />
+
+      {/* Grupo claro 1 — Multimarcas + Portfólio */}
+      <div className="relative isolate bg-[#fdfdfd]">
+        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+        <MultibrandSection />
+        <PortfolioSection />
+      </div>
+
+      {/* Bloco dark — PM2P */}
+      <div className="relative isolate bg-[#181616]">
+        <DarkAmbient />
+        <Pm2pSection />
+      </div>
+
+      {/* Grupo claro 2 — Processo */}
+      <div className="relative isolate bg-[#fdfdfd]">
+        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+        <ProcessSection />
+      </div>
+
+      {/* Grupo claro 3 — Diferenciais */}
+      <div className="relative isolate bg-[#fdfdfd]">
+        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+        <DifferentialsSection />
+      </div>
+
+      {/* Bloco dark único — Estrutura técnica + Segmentos.
+          Um só DarkAmbient para os blurs percorrerem as duas seções de forma
+          contínua (parecem uma seção só). */}
+      <div className="relative isolate bg-[#181616]">
+        <DarkAmbient />
+        <TechStructureSection />
+        <SegmentsSection />
+      </div>
+
+      {/* Grupo claro 4 — FAQ */}
+      <div className="relative isolate bg-[#fdfdfd]">
+        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+        <FaqSection
+          titleRegular="Perguntas frequentes sobre "
+          titleAccent="serviços e manutenção"
+          items={faqServicos}
+        />
+      </div>
+
+      <CtaSection
+        titleRegular="Solicite "
+        titleAccent="atendimento técnico"
+        description="Preencha os dados e um especialista da TranspoTech entrará em contato para entender sua necessidade e direcionar o atendimento."
+        ctaLabel="Solicitar atendimento técnico"
+        ctaHref={ROUTES.ORCAMENTO}
+      />
     </main>
   );
 }

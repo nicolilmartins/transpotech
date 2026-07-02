@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { Sparkles, CircleDollarSign, Calendar, type LucideIcon } from "lucide-react";
+import { TextLink } from "@/components/ui/text-link";
 import novas from "@/assets/images/portfolio-novas.png";
 import egv165 from "@/assets/images/empilhadeiras/egv-16-5.webp";
 import linde from "@/assets/images/empilhadeiras/linde.webp";
@@ -120,9 +121,7 @@ export function PortfolioSection() {
                     {card.description}
                   </p>
                 </div>
-                <button className="text-left text-body font-semibold leading-[1.35] text-primary-400">
-                  {card.cta}
-                </button>
+                <TextLink className="text-left">{card.cta}</TextLink>
               </div>
 
               {/* Imagem — apenas no desktop, animada por GSAP */}

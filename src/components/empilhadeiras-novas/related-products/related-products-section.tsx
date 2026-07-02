@@ -15,7 +15,7 @@ export function RelatedProductsSection({ items }: { items: Forklift[] }) {
           <p className="text-body font-semibold uppercase leading-[1.1] text-secondary-600">
             Produtos relacionados
           </p>
-          <h2 className="max-w-[408px] text-h3 font-normal leading-[1.1] text-neutral-800">
+          <h2 className="max-w-[408px] text-h2 font-normal leading-[1.1] text-neutral-800">
             Outras opções que podem servir
           </h2>
         </div>

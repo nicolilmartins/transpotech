@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { UnderConstruction } from "@/components/layout/under-construction/under-construction";
+
+import { PortalHeroSection } from "@/components/portal-conteudo/hero-section/hero-section";
+import { FeaturedSection } from "@/components/portal-conteudo/featured-section/featured-section";
+import { ArticleList } from "@/components/portal-conteudo/article-list/article-list";
+import { NewsletterSection } from "@/components/portal-conteudo/newsletter-section/newsletter-section";
+import { HoverMesh } from "@/components/layout/hover-mesh";
 
 export const metadata: Metadata = {
   title: "Portal de Conteúdo",
@@ -15,7 +20,15 @@ export const metadata: Metadata = {
 export default function PortalConteudoPage() {
   return (
     <main>
-      <UnderConstruction title="Portal de Conteúdo" />
+      <PortalHeroSection />
+
+      {/* Grupo claro — Destaque + Listagem + Newsletter */}
+      <div className="relative isolate bg-[#fdfdfd]">
+        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+        <FeaturedSection />
+        <ArticleList />
+        <NewsletterSection />
+      </div>
     </main>
   );
 }

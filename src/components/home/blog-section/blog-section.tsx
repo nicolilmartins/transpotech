@@ -1,5 +1,6 @@
 import Image, { type StaticImageData } from "next/image";
 import { ArrowRight, Clock } from "lucide-react";
+import { TextLink } from "@/components/ui/text-link";
 import post1 from "@/assets/images/blog/post1.png";
 import post2 from "@/assets/images/blog/post2.png";
 import post3 from "@/assets/images/blog/post3.jpg";
@@ -65,10 +66,7 @@ export function BlogSection() {
             automação.
           </p>
         </div>
-        <button className="flex shrink-0 items-center gap-1.5 text-body font-semibold text-primary-500 transition-opacity hover:opacity-70">
-          Ver todos os conteúdos
-          <ArrowRight className="size-5" aria-hidden />
-        </button>
+        <TextLink className="shrink-0">Ver todos os conteúdos</TextLink>
       </div>
 
       {/* Grade: artigo principal grande à esquerda + cards menores à direita */}

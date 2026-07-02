@@ -29,7 +29,8 @@ export function StructureSection() {
       {/* Cabeçalho centralizado */}
       <div className="flex max-w-[560px] flex-col gap-4 text-center">
         <h2 className="text-h2 text-neutral-50">
-          <span className="font-normal">Estrutura para atender </span>
+          <span className="font-normal">Estrutura para atender</span>
+          <br />
           <span className="font-bold text-primary-500">sua operação</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-400">
@@ -39,9 +40,9 @@ export function StructureSection() {
         </p>
       </div>
 
-      {/* Imagem + lista de capacidades */}
-      <div className="flex w-full flex-col gap-10 lg:flex-row lg:items-center lg:gap-16">
-        <div className="relative h-[260px] w-full overflow-hidden rounded-2xl lg:h-[320px] lg:w-1/2">
+      {/* Imagem + lista de capacidades — imagem acompanha a altura dos tópicos */}
+      <div className="flex w-full flex-col gap-10 lg:flex-row lg:items-stretch lg:gap-16">
+        <div className="relative order-2 min-h-[260px] w-full self-stretch overflow-hidden rounded-2xl lg:order-none lg:min-h-0 lg:w-1/2">
           <Image
             src={operacao}
             alt="Empilhadeiras Linde, STILL e Baoli enfileiradas em pátio de operação"

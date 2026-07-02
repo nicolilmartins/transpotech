@@ -595,3 +595,69 @@ Só commitar na `main` via merge/PR após revisão. Nunca trabalhar diretamente 
 - Sempre pensar em SEO, performance e acessibilidade
 - `use client` é exceção, não regra — Server Components por padrão
 - `TranspoTech` — sempre grafado assim, nunca referência a transportadora
+
+---
+
+## Construção de Páginas Novas — Fluxo Wireframe-Driven
+
+> A partir de agora, **toda página nova nasce de um wireframe**. Um prompt curto
+> (ex.: *"monte a página de Peças a partir do wireframe X, na rota /produtos/pecas"*)
+> já deve acionar TODO o processo descrito abaixo automaticamente.
+
+### 1. Fontes de verdade
+
+| Fonte | É verdade de… | NÃO é fonte de… |
+|---|---|---|
+| **Wireframe** | **Estrutura e copy**: ordem das seções, hierarquia, blocos e textos exatos | Estilo visual — o wireframe é esquemático/cru |
+| **Páginas já construídas** (Home + todas as demais) | **Visual, componentes e interações**: cores, tipografia, espaçamentos, raios, sombras, animações e convenções de código | Estrutura/copy da página nova |
+
+**Regra de ouro:** o *"o quê e em que ordem"* vem do **wireframe**; o *"como se parece e se comporta"* vem das **páginas já construídas**. **Nunca** copiar o estilo cru do wireframe.
+
+### 2. Regras de fidelidade (não-negociáveis)
+
+- **Estrutura:** replicar a ordem e a composição das seções **exatamente** como no wireframe. Não adicionar, remover nem reordenar seções sem perguntar.
+- **Copy:** usar o texto do wireframe **exatamente como está** — não reescrever, resumir nem "melhorar". Texto que pareça placeholder (ex.: *lorem ipsum*) vira **pendência** para o usuário confirmar.
+- **Visual:** cores, tipografia, espaçamentos, raios, sombras e interações **exatamente** como nas páginas já construídas. Não aproximar nem inventar valores.
+- **Componentes:** reutilizar componentes já existentes — da Home **e de qualquer outra página** (cards, seções, blocos, primitivos como `Button`, `Section`, etc.). Antes de criar algo, **procurar um equivalente em todo o projeto**. Só criar novo se realmente não houver equivalente — e **justificar**.
+- **Ícones:** **sempre** da biblioteca **Lucide** (`lucide-react`). Nenhuma outra fonte. Se o wireframe indicar um ícone, mapear para o nome Lucide; se não indicar, usar o padrão equivalente das páginas já construídas. (Exceção: brand icons de redes sociais em `ui/icons.tsx`.)
+- **Imagens:** usar **somente** os caminhos fornecidos pelo usuário. Nunca inventar caminhos nem gerar imagens. Sempre via `next/image`. Falta de caminho vira **pendência**.
+- **Dependências novas:** **nunca** adicionar sem consultar o usuário.
+
+### 3. Mapeamento Wireframe → Componentes existentes (passo crítico)
+
+Para **cada** seção/bloco do wireframe, identificar o componente correspondente **já existente** no projeto que será usado para renderizá-lo. Onde o wireframe pedir algo **sem equivalente em nenhuma página**, descrever a lacuna e **perguntar antes** de criar algo novo.
+
+### 4. Navegação e rotas
+
+- O usuário **sempre** fornece o **caminho exato** de cada página.
+- Toda página deve ser acessível pelo caminho indicado (App Router: `src/app/<caminho>/page.tsx`, sem route groups — conforme a arquitetura deste arquivo).
+- Páginas **"em construção"** devem ser substituídas pela versão final **sem quebrar** o roteamento nem o link no header.
+- Seguir **sempre** o padrão de roteamento e navegação já existente no projeto.
+
+### 5. Fluxo obrigatório — PLANO antes de código
+
+Para **qualquer** página nova, primeiro entregar um **PLANO** e só codar **após aprovação**. O plano deve conter:
+
+1. **Inventário das seções do wireframe**, na ordem exata, com a copy de cada uma referenciada.
+2. **Mapeamento Wireframe → componentes existentes:** para cada seção, qual componente/estilo (da Home ou de outra página) será usado. Marcar **[reutiliza]** ou **[criar novo + justificativa]**.
+3. **Design tokens herdados:** cores (hex/tokens), fontes, tamanhos, pesos, line-heights, espaçamentos, raios, sombras e interações.
+4. **Mapeamento de ícones → nomes em Lucide.**
+5. **Lista de imagens necessárias** (placeholders aguardando os caminhos).
+6. **Plano de rota/navegação:** onde a página vai morar (caminho fornecido), como será acessada pelo header e, se aplicável, qual página "em construção" será substituída.
+7. **Dúvidas e ambiguidades** (perguntar antes de prosseguir).
+8. **Autoavaliação de confiança em %**, com **meta mínima de 95%**; se abaixo, listar o que falta e perguntar.
+
+### 6. Política de dúvidas
+
+Sempre que algo estiver ambíguo — copy que parece placeholder, seção sem equivalente em nenhuma página, comportamento não definido, qual componente reutilizar, caminho de imagem, ou onde a página deve ficar — **perguntar antes de assumir**. Preferir perguntar a errar. **Nunca** inventar textos, valores, caminhos ou componentes.
+
+### 7. Template por página (preencher a cada página nova)
+
+```txt
+- Nome da página:
+- Caminho/rota (sempre fornecido pelo usuário) e local de acesso no header:
+- Caminho do wireframe: inputs/wireframes/[arquivo]
+- Caminho atual "em construção" a ser substituído (se houver):
+- Pasta de imagens:
+- Observações específicas (se houver):
+```

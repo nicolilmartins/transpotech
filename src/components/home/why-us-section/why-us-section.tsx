@@ -44,7 +44,7 @@ export function WhyUsSection() {
       <WhyUsGlow />
 
       <div className="relative w-full">
-        <h2 className="w-full text-center text-h3 font-normal text-neutral-200">
+        <h2 className="w-full text-center text-h2 font-normal text-neutral-200">
           Por que empresas escolhem a Transpotech
         </h2>
       </div>

@@ -62,7 +62,7 @@ export function FaqSection({ titleRegular, titleAccent, items }: FaqSectionProps
                   onClick={() => setOpenIndex(isOpen ? null : i)}
                   className="flex w-full items-center justify-between gap-4 py-5 text-left"
                 >
-                  <span className="text-h6 font-semibold text-neutral-800">
+                  <span className="text-body font-semibold text-neutral-800">
                     {faq.question}
                   </span>
                   <ChevronDown

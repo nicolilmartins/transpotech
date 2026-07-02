@@ -264,7 +264,7 @@ export function Catalog({ forklifts }: { forklifts: Forklift[] }) {
             <div className="flex flex-col gap-12">
               {grouped.map((group) => (
                 <section key={group.brand} className="flex flex-col gap-6">
-                  <h2 className="font-heading text-[2rem] font-normal text-neutral-800">
+                  <h2 className="font-heading text-h2 font-normal text-neutral-800">
                     {brandLabel[group.brand]}
                   </h2>
                   <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">

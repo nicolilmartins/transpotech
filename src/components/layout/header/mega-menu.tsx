@@ -7,8 +7,6 @@ import {
   Wrench,
   BatteryCharging,
   CircleDot,
-  ShieldCheck,
-  LayoutDashboard,
   Building2,
   BookOpen,
   Users,
@@ -18,7 +16,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import automacao from "@/assets/images/automacao.png";
-import warehouse from "@/assets/images/depoimentos/warehouse.png";
 import esgTeam from "@/assets/images/esg-team.png";
 import { ROUTES } from "@/lib/routes";
 
@@ -95,41 +92,6 @@ export const megaMenus: Record<string, MegaMenuConfig> = {
             subtitle: "Para todos os portes e aplicações",
             href: ROUTES.PNEUS,
             Icon: CircleDot,
-          },
-        ],
-      },
-    ],
-  },
-
-  Serviços: {
-    featured: {
-      image: warehouse,
-      title: "Manutenção que evita paradas",
-      description:
-        "Planos preventivos, corretiva ágil e cobertura multimarcas com técnicos especializados.",
-      href: ROUTES.SERVICOS,
-    },
-    columns: [
-      {
-        title: "Serviços",
-        items: [
-          {
-            title: "Planos de Manutenção Preventiva",
-            subtitle: "Cronograma de visitas técnicas",
-            href: ROUTES.SERVICOS_PREVENTIVA,
-            Icon: ShieldCheck,
-          },
-          {
-            title: "Manutenção Corretiva",
-            subtitle: "Atendimento ágil com peças em estoque",
-            href: ROUTES.SERVICOS_CORRETIVA,
-            Icon: Wrench,
-          },
-          {
-            title: "Assistência Multimarcas",
-            subtitle: "Linde, STILL, Baoli e outras marcas",
-            href: ROUTES.SERVICOS_MULTIMARCAS,
-            Icon: LayoutDashboard,
           },
         ],
       },

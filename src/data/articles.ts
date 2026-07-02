@@ -1,0 +1,113 @@
+import type { StaticImageData } from "next/image";
+import post1 from "@/assets/images/blog/post1.png";
+import post2 from "@/assets/images/blog/post2.png";
+import post3 from "@/assets/images/blog/post3.jpg";
+import post4 from "@/assets/images/blog/post4.png";
+
+export type ArticleCategory =
+  | "Locação"
+  | "Empilhadeiras novas"
+  | "Automação"
+  | "Cases de cliente";
+
+export type ArticleType = "Notícia" | "Guia" | "Case";
+
+export type Article = {
+  id: string;
+  category: ArticleCategory;
+  type: ArticleType;
+  title: string;
+  excerpt: string;
+  /** Data de exibição (curta) e ISO para ordenação. */
+  date: string;
+  dateISO: string;
+  readTime: string;
+  author: string;
+  image: StaticImageData;
+};
+
+// Conteúdo do wireframe (placeholder — você ajusta depois). Imagens: blog/post1-4.
+export const articles: Article[] = [
+  {
+    id: "quando-vale-locar-empilhadeiras",
+    category: "Locação",
+    type: "Guia",
+    title: "Quando vale mais a pena locar empilhadeiras",
+    excerpt:
+      "Cinco cenários operacionais em que locação supera compra — e como calcular o ponto de virada.",
+    date: "22 abr 2026",
+    dateISO: "2026-04-22",
+    readTime: "6 min",
+    author: "Equipe TranspoTech",
+    image: post1,
+  },
+  {
+    id: "nova-unidade-joinville",
+    category: "Locação",
+    type: "Notícia",
+    title: "TranspoTech inaugura nova unidade em Joinville",
+    excerpt:
+      "Operação amplia atendimento e estoque de peças para clientes do norte de Santa Catarina.",
+    date: "04 mai 2026",
+    dateISO: "2026-05-04",
+    readTime: "2 min",
+    author: "Equipe TranspoTech",
+    image: post2,
+  },
+  {
+    id: "linde-e20-e50-x-elite",
+    category: "Empilhadeiras novas",
+    type: "Notícia",
+    title: "Linde lança no Brasil a nova linha elétrica E20–E50 X ELITE",
+    excerpt:
+      "Modelos chegam com bateria de íons de lítio integrada e ganho de até 20% em ciclos por turno.",
+    date: "01 mai 2026",
+    dateISO: "2026-05-01",
+    readTime: "3 min",
+    author: "Equipe TranspoTech",
+    image: post3,
+  },
+  {
+    id: "cimine-2026-automacao",
+    category: "Automação",
+    type: "Notícia",
+    title:
+      "Cimine 2026: TranspoTech apresenta soluções de automação intralogística",
+    excerpt:
+      "Estande integrado mostra AGVs, WMS e empilhadeiras conectadas em ambiente de operação real.",
+    date: "26 abr 2026",
+    dateISO: "2026-04-26",
+    readTime: "2 min",
+    author: "Equipe TranspoTech",
+    image: post4,
+  },
+  {
+    id: "padronizacao-manutencao-cd",
+    category: "Cases de cliente",
+    type: "Case",
+    title: "Padronização de manutenção multimarcas em CD com 60+ equipamentos",
+    excerpt:
+      "Substituição de fornecedor pulverizado por contrato único PM2P, com SLA de 4h e dashboard de disponibilidade.",
+    date: "20 abr 2026",
+    dateISO: "2026-04-20",
+    readTime: "5 min",
+    author: "Equipe TranspoTech",
+    image: post1,
+  },
+  {
+    id: "locacao-flexivel-pico-safra",
+    category: "Cases de cliente",
+    type: "Case",
+    title: "Locação flexível pra absorver pico sazonal de safra",
+    excerpt:
+      "Frota base de 12 equipamentos + 8 sob demanda nos meses de pico, sem comprometer CAPEX.",
+    date: "15 abr 2026",
+    dateISO: "2026-04-15",
+    readTime: "5 min",
+    author: "Equipe TranspoTech",
+    image: post2,
+  },
+];
+
+/** Artigo em destaque (Notícia em destaque). */
+export const featuredArticle = articles[0];

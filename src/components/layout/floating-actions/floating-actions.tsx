@@ -70,7 +70,7 @@ export function FloatingActions() {
   }, [open]);
 
   return (
-    <div ref={ref} className="fixed bottom-8 right-16 z-40">
+    <div ref={ref} className="fixed bottom-6 right-6 z-40 lg:bottom-8 lg:right-16">
       {/* Opções — flutuam acima do botão */}
       <div className="absolute bottom-full right-0 mb-3 flex flex-col items-end gap-3">
         {options.map((option, index) => (

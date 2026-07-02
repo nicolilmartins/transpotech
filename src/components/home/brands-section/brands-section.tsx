@@ -5,7 +5,14 @@ import linde from "@/assets/Logos/Logo Linde.svg";
 import baoli from "@/assets/Logos/Logo Baoli.svg";
 import dematic from "@/assets/Logos/Logo Dematic.svg";
 
-export type Brand = { src: StaticImageData; alt: string };
+export type Brand = {
+  src: StaticImageData;
+  alt: string;
+  /** Quando false, não aplica o filtro monocromático no tom claro. Padrão: true. */
+  mono?: boolean;
+  /** Classes extras para ajuste fino do logo (ex.: escala). */
+  className?: string;
+};
 
 const defaultBrands: Brand[] = [
   { src: still, alt: "STILL" },
@@ -52,7 +59,7 @@ export function BrandsSection({
           </h2>
         ) : (
           <h2
-            className={`w-[520px] max-w-full text-center text-h3 leading-[1.3] ${
+            className={`w-[520px] max-w-full text-center text-h2 leading-[1.3] ${
               isLight ? "text-neutral-800" : "text-neutral-100"
             }`}
           >
@@ -68,8 +75,10 @@ export function BrandsSection({
               src={b.src}
               alt={b.alt}
               className={`h-10 w-auto sm:h-12 lg:h-[83px] ${
-                isLight ? "[filter:brightness(0)_invert(0.35)]" : ""
-              }`}
+                isLight && b.mono !== false
+                  ? "[filter:brightness(0)_invert(0.35)]"
+                  : ""
+              } ${b.className ?? ""}`}
             />
           ))}
         </div>

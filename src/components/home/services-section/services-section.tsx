@@ -1,5 +1,7 @@
 import { ShieldCheck, Wrench, LayoutDashboard, type LucideIcon } from "lucide-react";
 import { Section } from "@/components/ui/section";
+import { TextLink } from "@/components/ui/text-link";
+import { ROUTES } from "@/lib/routes";
 
 type ServiceCard = {
   icon: LucideIcon;
@@ -77,9 +79,12 @@ export function ServicesSection() {
                 </p>
               </div>
             </div>
-            <button className="w-full px-6 py-4 text-left text-body font-semibold leading-[1.35] text-primary-500 transition-colors hover:text-primary-600">
+            <TextLink
+              href={ROUTES.SERVICOS}
+              className="w-full px-6 py-4 text-left"
+            >
               {card.cta}
-            </button>
+            </TextLink>
           </div>
         ))}
       </div>

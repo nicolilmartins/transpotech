@@ -18,13 +18,13 @@ export function LocacaoHeroSection() {
           className="object-cover object-center"
         />
 
-        {/* Gradiente verde (#021D16) da base para o topo, concentrado na base */}
+        {/* Gradiente escuro (#01120E) da base para o topo, concentrado na base */}
         <div
           aria-hidden
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to top, #021D16 0%, rgba(2,29,22,0.85) 28%, rgba(2,29,22,0) 72%)",
+              "linear-gradient(to top, #01120E 0%, rgba(1,18,14,0.85) 28%, rgba(1,18,14,0) 72%)",
           }}
         />
 

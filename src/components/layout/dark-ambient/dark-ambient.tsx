@@ -7,11 +7,16 @@ import { gsap } from "@/lib/gsap";
 const GREEN_OFFSET = 220;
 const FACTOR = 0.6;
 
+type DarkAmbientProps = {
+  /** Deslocamento vertical inicial do blur verde (px). Padrão: 220. */
+  greenOffset?: number;
+};
+
 /**
  * Ambiência das seções dark: blur laranja (direita) e verde (esquerda, abaixo)
  * que "andam" para baixo com o scroll via GSAP ScrollTrigger scrub.
  */
-export function DarkAmbient() {
+export function DarkAmbient({ greenOffset = GREEN_OFFSET }: DarkAmbientProps = {}) {
   const ref = useRef<HTMLDivElement>(null);
   const orangeRef = useRef<HTMLDivElement>(null);
   const greenRef = useRef<HTMLDivElement>(null);
@@ -20,7 +25,7 @@ export function DarkAmbient() {
     const container = ref.current!;
 
     gsap.set(orangeRef.current, { xPercent: 25, y: 0 });
-    gsap.set(greenRef.current, { xPercent: -25, y: GREEN_OFFSET });
+    gsap.set(greenRef.current, { xPercent: -25, y: greenOffset });
 
     gsap.to(orangeRef.current, {
       y: () => container.offsetHeight * FACTOR,
@@ -34,7 +39,7 @@ export function DarkAmbient() {
     });
 
     gsap.to(greenRef.current, {
-      y: () => container.offsetHeight * FACTOR + GREEN_OFFSET,
+      y: () => container.offsetHeight * FACTOR + greenOffset,
       ease: "none",
       scrollTrigger: {
         trigger: container,
@@ -43,7 +48,7 @@ export function DarkAmbient() {
         scrub: true,
       },
     });
-  }, { scope: ref });
+  }, { scope: ref, dependencies: [greenOffset] });
 
   return (
     <div

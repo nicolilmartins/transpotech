@@ -9,6 +9,9 @@ type CtaSectionProps = {
   description?: string;
   ctaLabel?: string;
   ctaHref?: string;
+  /** Botão secundário opcional (quando definido, renderiza ao lado do primário). */
+  secondaryLabel?: string;
+  secondaryHref?: string;
 };
 
 export function CtaSection({
@@ -17,6 +20,8 @@ export function CtaSection({
   description = "Um especialista analisa seu cenário e apresenta a opção mais adequada, sem compromisso.",
   ctaLabel = "Falar com especialistas",
   ctaHref,
+  secondaryLabel,
+  secondaryHref,
 }: CtaSectionProps = {}) {
   return (
     <section className="relative overflow-hidden rounded-t-2xl bg-[#fdfdfd]">
@@ -36,14 +41,26 @@ export function CtaSection({
             {description}
           </p>
         </div>
-        <Button
-          variant="primary"
-          size="lg"
-          href={ctaHref}
-          className="relative w-full justify-center sm:w-auto"
-        >
-          {ctaLabel}
-        </Button>
+        <div className="relative flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+          <Button
+            variant="primary"
+            size="lg"
+            href={ctaHref}
+            className="w-full justify-center sm:w-auto"
+          >
+            {ctaLabel}
+          </Button>
+          {secondaryLabel && (
+            <Button
+              variant="gray"
+              size="lg"
+              href={secondaryHref}
+              className="w-full justify-center sm:w-auto"
+            >
+              {secondaryLabel}
+            </Button>
+          )}
+        </div>
       </div>
     </section>
   );

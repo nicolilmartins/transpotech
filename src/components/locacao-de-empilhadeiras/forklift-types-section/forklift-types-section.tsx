@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { TextLink } from "@/components/ui/text-link";
 import {
   Zap,
   Flame,
@@ -6,7 +6,6 @@ import {
   MoveHorizontal,
   CalendarClock,
   Boxes,
-  ArrowRight,
   type LucideIcon,
 } from "lucide-react";
 import { Section } from "@/components/ui/section";
@@ -73,7 +72,9 @@ export function ForkliftTypesSection() {
           Nós te ajudamos
         </p>
         <h2 className="text-h2 font-normal text-neutral-800">
-          Não sabe qual empilhadeira locar?
+          Não sabe qual
+          <br />
+          empilhadeira locar?
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
           Você não precisa chegar com o modelo definido. A Transpotech avalia
@@ -102,13 +103,12 @@ export function ForkliftTypesSection() {
                 </p>
               </div>
             </div>
-            <Link
+            <TextLink
               href={ROUTES.ORCAMENTO}
-              className="inline-flex w-full items-center gap-1.5 px-6 py-4 text-left text-body font-semibold leading-[1.35] text-primary-500 transition-colors hover:text-primary-600"
+              className="w-full px-6 py-4 text-left"
             >
               {type.cta}
-              <ArrowRight aria-hidden className="size-4" />
-            </Link>
+            </TextLink>
           </div>
         ))}
       </div>

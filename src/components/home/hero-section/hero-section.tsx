@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import forklift from "@/assets/images/hero-image.webp";
+import forkliftMobile from "@/assets/images/hero-image-mobile.webp";
 
 export function HeroSection() {
   return (
@@ -33,12 +34,26 @@ export function HeroSection() {
         </div>
       </div>
 
+      {/* Mobile: empilhadeira full-bleed atrás do texto. A imagem dedicada já tem
+          o "céu" claro no topo (onde fica o texto) e a empilhadeira embaixo, então
+          o texto nunca a sobrepõe. Cobre o overlay → sem tom laranja sobre ela. */}
+      <div aria-hidden className="absolute inset-0 overflow-hidden lg:hidden">
+        <Image
+          src={forkliftMobile}
+          alt=""
+          priority
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+      </div>
+
       {/* Conteúdo */}
       <div className="relative mx-auto flex h-full w-full max-w-[1440px] flex-col">
         {/* Texto + botões: centralizado no mobile, sobreposto à esquerda no desktop */}
         <div className="flex flex-col items-center gap-8 px-5 pt-32 text-center sm:px-6 lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:items-start lg:gap-10 lg:px-16 lg:pt-0 lg:text-left 2xl:px-30">
           <div className="flex flex-col gap-4">
-            <h1 className="text-[48px] leading-[1.1] text-neutral-800 lg:w-max 2xl:text-[54px]">
+            <h1 className="text-[32px] leading-[1.1] text-neutral-800 lg:w-max lg:text-[48px] 2xl:text-[54px]">
               <span className="font-bold">Empilhadeiras,</span>{" "}
               <br className="hidden sm:block" />
               <span className="font-normal">locação e manutenção</span>
@@ -50,7 +65,7 @@ export function HeroSection() {
             </p>
           </div>
 
-          <div className="flex w-full flex-col gap-3 sm:max-w-[400px] lg:w-auto lg:max-w-none lg:flex-row lg:gap-2">
+          <div className="flex w-full max-w-[300px] flex-col gap-3 sm:max-w-[400px] lg:w-auto lg:max-w-none lg:flex-row lg:gap-2">
             <Button
               variant="primary"
               size="lg"
@@ -66,18 +81,6 @@ export function HeroSection() {
               Comprar empilhadeira
             </Button>
           </div>
-        </div>
-
-        {/* Imagem (mobile): abaixo do conteúdo, preenchendo o resto do viewport */}
-        <div className="relative mt-10 min-h-0 w-full flex-1 lg:hidden">
-          <Image
-            src={forklift}
-            alt="Empilhadeira STILL elétrica movimentando carga em centro de distribuição"
-            priority
-            fill
-            sizes="100vw"
-            className="object-cover object-bottom"
-          />
         </div>
       </div>
     </section>
