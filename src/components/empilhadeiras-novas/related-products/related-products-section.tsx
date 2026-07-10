@@ -1,6 +1,5 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { Section } from "@/components/ui/section";
+import { TextLink } from "@/components/ui/text-link";
 import { ProductCard } from "@/components/catalog/product-card/product-card";
 import { ROUTES } from "@/lib/routes";
 import type { Forklift } from "@/types/forklift.types";
@@ -20,13 +19,9 @@ export function RelatedProductsSection({ items }: { items: Forklift[] }) {
           </h2>
         </div>
 
-        <Link
-          href={ROUTES.EMPILHADEIRAS_NOVAS}
-          className="inline-flex shrink-0 items-center gap-2 text-body font-semibold text-primary-600 transition-colors hover:text-primary-500"
-        >
+        <TextLink href={ROUTES.EMPILHADEIRAS_NOVAS} className="shrink-0">
           Ver catálogo completo
-          <ArrowRight aria-hidden className="size-5" />
-        </Link>
+        </TextLink>
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

@@ -4,6 +4,7 @@ import {
   ShoppingCart,
   Truck,
   Boxes,
+  Tractor,
   type LucideIcon,
 } from "lucide-react";
 import { Section } from "@/components/ui/section";
@@ -40,6 +41,12 @@ const segments: Segment[] = [
       "Para quem precisa manter equipamentos comprados em boas condições de uso.",
     Icon: Boxes,
   },
+  {
+    title: "Agroindústria",
+    description:
+      "Para cooperativas, armazenagem de grãos, insumos e movimentação em ambientes agroindustriais.",
+    Icon: Tractor,
+  },
 ];
 
 function SegmentCard({ title, description, Icon }: Segment) {
@@ -47,7 +54,7 @@ function SegmentCard({ title, description, Icon }: Segment) {
     <div className="flex min-h-[240px] flex-col justify-between overflow-hidden rounded-xl bg-[rgba(251,251,251,0.05)] p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.35)] lg:h-[299px]">
       <Icon aria-hidden className="size-7 text-white/50 lg:size-8" />
       <div className="flex flex-col gap-4">
-        <h3 className="w-[242px] max-w-full font-heading text-h6 font-semibold text-neutral-200">
+        <h3 className="whitespace-nowrap font-heading text-h6 font-semibold text-neutral-200">
           {title}
         </h3>
         <p className="text-body leading-[1.35] text-neutral-400">
@@ -59,8 +66,6 @@ function SegmentCard({ title, description, Icon }: Segment) {
 }
 
 export function SegmentsSection() {
-  const [topRow, bottomRow] = [segments.slice(0, 3), segments.slice(3)];
-
   return (
     <Section className="flex flex-col gap-12 lg:gap-16">
       {/* Cabeçalho */}
@@ -73,18 +78,11 @@ export function SegmentsSection() {
         </h2>
       </div>
 
-      {/* Bento — 3 cards em cima, 2 centralizados embaixo */}
-      <div className="flex flex-col gap-4">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {topRow.map((segment) => (
-            <SegmentCard key={segment.title} {...segment} />
-          ))}
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:mx-auto lg:w-2/3">
-          {bottomRow.map((segment) => (
-            <SegmentCard key={segment.title} {...segment} />
-          ))}
-        </div>
+      {/* 6 cards — grade de 3 colunas (3 + 3) */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {segments.map((segment) => (
+          <SegmentCard key={segment.title} {...segment} />
+        ))}
       </div>
     </Section>
   );

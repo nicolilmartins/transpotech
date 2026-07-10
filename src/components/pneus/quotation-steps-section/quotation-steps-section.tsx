@@ -51,9 +51,9 @@ function LineMarkers({ tone }: { tone: "base" | "fill" }) {
       />
       <div className="relative grid h-full grid-cols-4">
         {steps.map((step) => (
-          <div key={step.title} className="flex items-center pl-6">
+          <div key={step.title} className="flex items-center">
             <span
-              className={`size-3 rounded-full ${
+              className={`size-3 -translate-x-1/2 rounded-full ${
                 isFill
                   ? "bg-primary-500 shadow-[0_0_12px_rgba(245,130,32,0.7)]"
                   : "bg-neutral-600"

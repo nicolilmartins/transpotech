@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 
 import { AutomacaoHeroSection } from "@/components/automacao/hero-section/hero-section";
-import { SolutionsSection } from "@/components/automacao/solutions-section/solutions-section";
-import { BenefitsSection } from "@/components/automacao/benefits-section/benefits-section";
-import { ReadinessSection } from "@/components/automacao/readiness-section/readiness-section";
-import { ProcessSection } from "@/components/automacao/process-section/process-section";
-import { PhasedSection } from "@/components/automacao/phased-section/phased-section";
-import { FlowSection } from "@/components/automacao/flow-section/flow-section";
-import { SegmentsSection } from "@/components/automacao/segments-section/segments-section";
 import { PartnershipSection } from "@/components/automacao/partnership-section/partnership-section";
+import { BenefitsSection } from "@/components/automacao/benefits-section/benefits-section";
+import { SolutionsSection } from "@/components/automacao/solutions-section/solutions-section";
+import { ProcessSection } from "@/components/automacao/process-section/process-section";
+import { SegmentsSection } from "@/components/automacao/segments-section/segments-section";
+import { CasesSection } from "@/components/automacao/cases-section/cases-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
 import { faqAutomacao } from "@/data/faq-automacao";
 import { CtaSection } from "@/components/layout/cta/cta-section";
@@ -32,37 +30,35 @@ export default function AutomacaoPage() {
     <main>
       <AutomacaoHeroSection />
 
-      {/* Grupo claro 1 — Soluções */}
-      <div className="relative isolate bg-[#fdfdfd]">
+      {/* Grupo claro 1 — Parceria TranspoTech + Dematic (fundo #FBFBFB) */}
+      <div className="relative isolate bg-[#fbfbfb]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <SolutionsSection />
+        <PartnershipSection />
       </div>
 
-      {/* Bloco dark — Benefícios + Checklist de prontidão */}
+      {/* Bloco dark — Números */}
       <div className="relative isolate bg-[#181616]">
         <DarkAmbient />
         <BenefitsSection />
-        <ReadinessSection />
       </div>
 
-      {/* Grupo claro 2 — Processo */}
+      {/* Grupo claro 2 — Soluções/Sistemas/AGV + Processo */}
       <div className="relative isolate bg-[#fdfdfd]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+        <SolutionsSection />
         <ProcessSection />
       </div>
 
-      {/* Bloco dark — Implantação faseada + Fluxo intralogístico */}
+      {/* Bloco dark — Segmentos + Cases (em continuidade) */}
       <div className="relative isolate bg-[#181616]">
         <DarkAmbient />
-        <PhasedSection />
-        <FlowSection />
+        <SegmentsSection />
+        <CasesSection />
       </div>
 
-      {/* Grupo claro 3 — Segmentos + Parceria + FAQ */}
+      {/* Grupo claro 4 — FAQ */}
       <div className="relative isolate bg-[#fdfdfd]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <SegmentsSection />
-        <PartnershipSection />
         <FaqSection
           titleRegular="Perguntas que sempre recebemos "
           titleAccent="sobre automação"

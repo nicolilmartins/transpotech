@@ -30,6 +30,9 @@ export const ROUTES = {
   // Conversão
   CONTATO: "/contato",
   ORCAMENTO: "/orcamento",
+
+  // Externos
+  GUPY: "https://transpotech.gupy.io/",
 } as const;
 
 export const NAV_PRODUTOS = [
@@ -51,5 +54,5 @@ export const NAV_EMPRESA = [
     ],
   },
   { label: "Portal de Conteúdo", href: ROUTES.PORTAL_CONTEUDO },
-  { label: "Trabalhe Conosco", href: ROUTES.TRABALHE_CONOSCO },
+  { label: "Trabalhe Conosco", href: ROUTES.GUPY },
 ] as const;

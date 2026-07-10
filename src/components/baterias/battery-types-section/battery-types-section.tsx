@@ -79,7 +79,7 @@ function BatteryCard({ title, description, fits, cta }: BatteryType) {
           ))}
         </ul>
 
-        <TextLink href={href} className="w-full pt-6">
+        <TextLink href={href} className="w-full border-t border-white/10 pt-6">
           {cta}
         </TextLink>
       </div>

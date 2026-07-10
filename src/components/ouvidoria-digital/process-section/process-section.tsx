@@ -1,50 +1,36 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import {
-  PackageOpen,
-  Boxes,
-  PackageSearch,
-  PackageCheck,
-  Split,
-  Truck,
-  type LucideIcon,
-} from "lucide-react";
+import { Send, Inbox, Search, Reply, type LucideIcon } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
-type FlowStep = { title: string; description: string; Icon: LucideIcon };
+type Step = { title: string; description: string; Icon: LucideIcon };
 
-const steps: FlowStep[] = [
+const steps: Step[] = [
   {
-    title: "Recebimento",
-    description: "Conferência, paletização e endereçamento automáticos.",
-    Icon: PackageOpen,
+    title: "Você envia sua manifestação",
+    description:
+      "Preencha o formulário com seus dados, tipo de manifestação e mensagem.",
+    Icon: Send,
   },
   {
-    title: "Armazenagem",
-    description: "AS/RS de paletes, Multishuttle e mini-loads de alta densidade.",
-    Icon: Boxes,
+    title: "A demanda é recebida",
+    description:
+      "As informações são direcionadas para análise e encaminhamento interno.",
+    Icon: Inbox,
   },
   {
-    title: "Separação (picking)",
-    description: "Goods-to-person, pick-to-light, voice e robótica colaborativa.",
-    Icon: PackageSearch,
+    title: "A área responsável avalia",
+    description:
+      "A equipe relacionada ao tema analisa o caso e, quando necessário, busca mais informações.",
+    Icon: Search,
   },
   {
-    title: "Conferência e embalagem",
-    description: "Estações ergonômicas, pesagem e cubagem automáticas.",
-    Icon: PackageCheck,
-  },
-  {
-    title: "Sortation",
-    description: "Sorters de bolsas, sliding shoe e cross-belt para alto volume.",
-    Icon: Split,
-  },
-  {
-    title: "Expedição",
-    description: "Sequenciamento de cargas e integração com TMS.",
-    Icon: Truck,
+    title: "O retorno é realizado",
+    description:
+      "Quando houver dados de contato, a TranspoTech poderá retornar conforme o fluxo definido.",
+    Icon: Reply,
   },
 ];
 
@@ -59,11 +45,11 @@ function LineMarkers({ tone }: { tone: "base" | "fill" }) {
           isFill ? "bg-primary-500" : "bg-white/15"
         }`}
       />
-      <div className="relative grid h-full grid-cols-6">
+      <div className="relative grid h-full grid-cols-4">
         {steps.map((step) => (
-          <div key={step.title} className="flex items-center pl-6">
+          <div key={step.title} className="flex items-center">
             <span
-              className={`size-3 rounded-full ${
+              className={`size-3 -translate-x-1/2 rounded-full ${
                 isFill
                   ? "bg-primary-500 shadow-[0_0_12px_rgba(245,130,32,0.7)]"
                   : "bg-neutral-600"
@@ -76,12 +62,13 @@ function LineMarkers({ tone }: { tone: "base" | "fill" }) {
   );
 }
 
-export function FlowSection() {
+export function ProcessSection() {
   const trackRef = useRef<HTMLDivElement>(null);
   const fillRef = useRef<HTMLDivElement>(null);
 
   // A linha laranja começa apagada e "carrega" (esquerda → direita) uma única
-  // vez quando a seção entra na viewport.
+  // vez quando a seção entra na viewport — em sincronia com a entrada dos demais
+  // elementos —, e não atrelada ao scroll.
   useEffect(() => {
     const track = trackRef.current;
     const fill = fillRef.current;
@@ -117,23 +104,22 @@ export function FlowSection() {
 
   return (
     <Section data-header-dark className="flex flex-col gap-10 lg:gap-14">
-      {/* Título + descrição (topo esquerdo) */}
+      {/* Título em duas linhas + descrição (topo esquerdo) */}
       <div className="flex max-w-[560px] flex-col gap-4">
-        <p className="text-body-sm font-semibold uppercase tracking-wide text-primary-500">
-          Fluxo intralogístico
-        </p>
         <h2 className="text-h2 text-neutral-50">
-          <span className="font-normal">Onde aplicamos </span>
-          <span className="font-bold text-primary-500">automação</span>
+          <span className="font-normal">Como funciona a</span>
+          <br />
+          <span className="font-bold text-primary-500">Ouvidoria</span>
         </h2>
         <p className="text-body leading-[1.5] text-neutral-400">
-          Da entrada da carga ao despacho do pedido — em qualquer combinação.
+          Um processo simples e transparente, do envio da manifestação ao
+          retorno da TranspoTech.
         </p>
       </div>
 
       <div className="flex flex-col gap-8">
         {/* Colunas — ícone + título + descrição, divisores entre elas */}
-        <ol className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-6 lg:gap-0">
+        <ol className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
           {steps.map((step, i) => (
             <li
               key={step.title}
@@ -141,7 +127,7 @@ export function FlowSection() {
                 i > 0 ? "lg:border-l lg:border-white/10" : ""
               }`}
             >
-              <step.Icon aria-hidden className="size-7 text-neutral-200 lg:size-8" />
+              <step.Icon aria-hidden className="size-6 text-neutral-200" />
               <h3 className="font-heading text-h6 font-semibold text-neutral-50">
                 {step.title}
               </h3>

@@ -30,6 +30,8 @@ export function Button({
   iconLeft,
   iconRight,
   href,
+  target,
+  rel,
   className = "",
   onClick,
   ...props
@@ -70,6 +72,8 @@ export function Button({
     return (
       <Link
         href={href}
+        target={target}
+        rel={rel}
         className={classes}
         onClick={onClick as unknown as MouseEventHandler<HTMLAnchorElement>}
         onMouseEnter={onEnter}

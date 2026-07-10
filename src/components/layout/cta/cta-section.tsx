@@ -6,6 +6,8 @@ type CtaSectionProps = {
   titleRegular?: string;
   /** Segunda parte do título (destaque laranja, negrito). */
   titleAccent?: string;
+  /** Quebra o título entre a parte normal e o destaque (destaque na 2ª linha). */
+  titleBreak?: boolean;
   description?: string;
   ctaLabel?: string;
   ctaHref?: string;
@@ -17,6 +19,7 @@ type CtaSectionProps = {
 export function CtaSection({
   titleRegular = "Qual é o maior gargalo ",
   titleAccent = "da sua operação?",
+  titleBreak = false,
   description = "Um especialista analisa seu cenário e apresenta a opção mais adequada, sem compromisso.",
   ctaLabel = "Falar com especialistas",
   ctaHref,
@@ -24,7 +27,7 @@ export function CtaSection({
   secondaryHref,
 }: CtaSectionProps = {}) {
   return (
-    <section className="relative overflow-hidden rounded-t-2xl bg-[#fdfdfd]">
+    <section className="relative overflow-hidden bg-[#fdfdfd]">
       {/* Background — cobre a tela toda (full-bleed), atrás do conteúdo */}
       <StateMesh className="pointer-events-none absolute inset-0 -z-10 h-full w-full" />
       <div className="pointer-events-none absolute -right-32 -top-40 size-[700px] -rotate-45 rounded-full bg-primary-500/15 blur-[120px]" />
@@ -35,6 +38,7 @@ export function CtaSection({
         <div className="relative flex flex-col items-center gap-4 text-center">
           <h2 className="w-[700px] max-w-full text-balance text-h2 text-neutral-800">
             <span className="font-normal">{titleRegular}</span>
+            {titleBreak && <br />}
             <span className="font-bold text-primary-500">{titleAccent}</span>
           </h2>
           <p className="w-[420px] max-w-full text-body leading-[1.35] text-neutral-600">

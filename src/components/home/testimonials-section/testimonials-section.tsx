@@ -82,9 +82,10 @@ export function TestimonialsSection() {
         </div>
 
         {/* Carrossel — scroll horizontal no mobile; flex no desktop */}
-        <div className="relative -mx-5 flex w-[calc(100%+40px)] snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:-mx-6 sm:w-[calc(100%+48px)] sm:px-6 lg:mx-0 lg:w-full lg:snap-none lg:items-center lg:overflow-visible lg:px-0 lg:pb-0">
-          {/* Imagem — oculta em mobile, visível no desktop (mesmo tamanho dos cards) */}
-          <div className="relative hidden min-h-[280px] min-w-0 flex-1 overflow-hidden rounded-xl bg-[#d9d9d9] lg:block lg:h-[380px]">
+        <div className="relative -mx-5 flex w-[calc(100%+40px)] snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:-mx-6 sm:w-[calc(100%+48px)] sm:px-6 lg:mx-0 lg:grid lg:w-full lg:grid-cols-4 lg:snap-none lg:items-center lg:overflow-visible lg:px-0 lg:pb-0">
+          {/* Imagem — oculta em mobile, visível no desktop (mesma largura dos cards:
+              flex sizing idêntico ao cardBase → 4 colunas iguais) */}
+          <div className="relative hidden min-h-[280px] overflow-hidden rounded-xl bg-[#d9d9d9] lg:block lg:h-[380px] lg:min-w-0 lg:flex-1 lg:shrink">
             <Image
               src={warehouse}
               alt="Operação em armazém"

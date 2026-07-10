@@ -1,14 +1,13 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/lib/routes";
-// PLACEHOLDER: trocar por imagem de manutenção/técnico quando disponível
-import heroImage from "@/assets/images/operacao-image.webp";
+import heroImage from "@/assets/images/hero-servicos.webp";
 
 export function ServicosHeroSection() {
   return (
     <section data-header-hero className="relative w-full bg-[#fdfdfd] p-4">
       {/* Card de imagem com 16px de padding em volta e bordas de 20px */}
-      <div className="relative flex min-h-[560px] w-full overflow-hidden rounded-[20px] lg:h-[668px] lg:min-h-0">
+      <div className="relative flex h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden rounded-[20px]">
         {/* Imagem de fundo — manutenção / técnico em operação */}
         <Image
           src={heroImage}
@@ -25,7 +24,7 @@ export function ServicosHeroSection() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to top, #181616 0%, rgba(24,22,22,0.85) 28%, rgba(24,22,22,0) 72%)",
+              "linear-gradient(to top, #01120E 0%, rgba(1,18,14,0.85) 28%, rgba(1,18,14,0) 72%)",
           }}
         />
 

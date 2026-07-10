@@ -5,6 +5,7 @@ import { FeaturedSection } from "@/components/portal-conteudo/featured-section/f
 import { ArticleList } from "@/components/portal-conteudo/article-list/article-list";
 import { NewsletterSection } from "@/components/portal-conteudo/newsletter-section/newsletter-section";
 import { HoverMesh } from "@/components/layout/hover-mesh";
+import { MeshBackground } from "@/components/layout/mesh-background/mesh-background";
 
 export const metadata: Metadata = {
   title: "Portal de Conteúdo",
@@ -20,11 +21,14 @@ export const metadata: Metadata = {
 export default function PortalConteudoPage() {
   return (
     <main>
-      <PortalHeroSection />
-
-      {/* Grupo claro — Destaque + Listagem + Newsletter */}
-      <div className="relative isolate bg-[#fdfdfd]">
+      {/* Página inteira num só tom (#f7f6f6) com a malha no fundo, como em
+          empilhadeiras novas: MeshBackground estático visível + HoverMesh
+          reativo ao cursor. Um único wrapper alto faz o fade da malha ficar
+          suave (topo cheio), igual à referência. pt extra → clareira do header. */}
+      <div className="relative isolate bg-[#f7f6f6] pt-[96px]">
+        <MeshBackground className="pointer-events-none absolute inset-0 -z-10" />
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+        <PortalHeroSection />
         <FeaturedSection />
         <ArticleList />
         <NewsletterSection />

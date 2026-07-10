@@ -317,11 +317,20 @@ export function Header() {
                                   <p className="px-2 text-sm font-semibold leading-6 text-neutral-400">
                                     {col.title}
                                   </p>
-                                  {col.items.map((sub) => (
+                                  {col.items.map((sub) => {
+                                    const external =
+                                      sub.href.startsWith("http");
+                                    return (
                                     <Link
                                       key={sub.title}
                                       href={sub.href}
                                       onClick={closeMobileMenu}
+                                      target={external ? "_blank" : undefined}
+                                      rel={
+                                        external
+                                          ? "noopener noreferrer"
+                                          : undefined
+                                      }
                                       className="flex items-center gap-3 rounded-lg p-2 hover:bg-neutral-50"
                                     >
                                       <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-neutral-50 text-primary-500">
@@ -336,7 +345,8 @@ export function Header() {
                                         </span>
                                       </span>
                                     </Link>
-                                  ))}
+                                    );
+                                  })}
                                 </div>
                               ))}
                             </div>

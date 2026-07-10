@@ -7,7 +7,7 @@ export function LocacaoHeroSection() {
   return (
     <section data-header-hero className="relative w-full bg-[#fdfdfd] p-4">
       {/* Card de imagem com 16px de padding em volta e bordas de 20px */}
-      <div className="relative flex min-h-[560px] w-full overflow-hidden rounded-[20px] lg:h-[668px] lg:min-h-0">
+      <div className="relative flex h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden rounded-[20px]">
         {/* Imagem de fundo — empilhadeiras em operação */}
         <Image
           src={forklift}

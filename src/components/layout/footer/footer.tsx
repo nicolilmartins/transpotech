@@ -33,7 +33,7 @@ const linkGroups = [
     links: [
       { label: "Quem somos", href: ROUTES.QUEM_SOMOS },
       { label: "Portal de conteúdo", href: ROUTES.PORTAL_CONTEUDO },
-      { label: "Trabalhe conosco", href: ROUTES.TRABALHE_CONOSCO },
+      { label: "Trabalhe conosco", href: ROUTES.GUPY },
       { label: "Contato", href: ROUTES.CONTATO },
     ],
   },
@@ -47,17 +47,21 @@ const linkGroups = [
   },
 ];
 
+// Ordem por estado (SC > PR > RS > SP > GO). A grade preenche por coluna
+// (grid-flow-col, 2 linhas), então cada coluna agrupa unidades vizinhas —
+// as duas de Blumenau ficam juntas na primeira coluna.
 const units = [
-  { city: "Blumenau - SC", note: " (Hub Técnico e Seminovas)", phone: "(47) 3331-4900" },
+  { city: "Blumenau - SC", note: " (Hub Técnico)", phone: "(47) 3331-4900" },
+  { city: "Blumenau - SC", note: " (Seminovas)", phone: "(47) 3331-4900" },
   { city: "Chapecó - SC", phone: "(49) 3981-9975" },
   { city: "Itajaí - SC", phone: "(47) 3331-4901" },
   { city: "Joinville - SC", phone: "(47) 3419-0033" },
   { city: "Curitiba - PR", phone: "(41) 3377-3303" },
+  { city: "Maringá - PR", phone: "(44) 3200-0414" },
   { city: "Caxias do Sul - RS", phone: "(54) 3771-4129" },
   { city: "Nova Santa Rita - RS", phone: "(51) 3479-6740" },
   { city: "Indaiatuba - SP", phone: "(19) 3825-3370" },
-  { city: "Aparecida de Goiânia - PR", phone: "(62) 3413-8334" },
-  { city: "Maringá - PR", phone: "(44) 3200-0414" },
+  { city: "Aparecida de Goiânia - GO", phone: "(62) 3413-8334" },
 ];
 
 const socials = [Facebook, Instagram, Linkedin, Youtube];
@@ -107,15 +111,20 @@ export function Footer() {
                 <p className="font-semibold leading-[1.35] text-neutral-100">
                   {group.title}
                 </p>
-                {group.links.map((link) => (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    className="leading-[1.35] text-neutral-300 transition-colors hover:text-neutral-50"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {group.links.map((link) => {
+                  const external = link.href.startsWith("http");
+                  return (
+                    <Link
+                      key={link.label}
+                      href={link.href}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noopener noreferrer" : undefined}
+                      className="leading-[1.35] text-neutral-300 transition-colors hover:text-neutral-50"
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -135,9 +144,12 @@ export function Footer() {
           <h3 className="font-heading text-h6 font-semibold text-neutral-100">
             Nossas unidades
           </h3>
-          <div className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-x-[100px]">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-flow-col lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-x-12 lg:gap-y-6">
             {units.map((unit) => (
-              <div key={unit.city} className="flex flex-col gap-[5px] text-body-sm">
+              <div
+                key={`${unit.city}${unit.note ?? ""}`}
+                className="flex flex-col gap-[5px] text-body-sm"
+              >
                 <p className="leading-[1.35] text-neutral-300">
                   <span className="font-semibold">{unit.city}</span>
                   {unit.note && <span className="font-normal">{unit.note}</span>}

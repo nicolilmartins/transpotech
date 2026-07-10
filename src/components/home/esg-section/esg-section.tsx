@@ -3,14 +3,16 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import team from "@/assets/images/esg-team.png";
+import { ROUTES } from "@/lib/routes";
 import { gsap } from "@/lib/gsap";
 
 type EsgItem = {
   title: string;
   description: string;
-  link: string | null;
+  link: { label: string; href: string } | null;
   barGradient: string;
 };
 
@@ -27,7 +29,7 @@ const items: EsgItem[] = [
     title: "Pessoas no centro da operação",
     description:
       "Programas de inclusão e desenvolvimento de talentos na área técnica.",
-    link: "Canal de transparência",
+    link: null,
     barGradient:
       "linear-gradient(180deg, rgba(73,112,74,0.81) 0%, rgba(126,118,63,0.62) 100%)",
   },
@@ -35,7 +37,7 @@ const items: EsgItem[] = [
     title: "Eficiência e operação mais limpa",
     description:
       "Foco em soluções e tecnologias que aumentam eficiência e reduzem impacto na operação.",
-    link: "Saiba mais",
+    link: { label: "Saiba mais", href: ROUTES.SUSTENTABILIDADE },
     barGradient:
       "linear-gradient(180deg, rgba(126,118,63,0.62) 0%, rgba(178,123,51,0.44) 100%)",
   },
@@ -43,7 +45,7 @@ const items: EsgItem[] = [
     title: "Ética, transparência e canais oficiais",
     description:
       "Canal de transparência para relatos e condutas (com seriedade e confidencialidade).",
-    link: "Saiba mais",
+    link: { label: "Canal de transparência", href: ROUTES.CANAL_TRANSPARENCIA },
     barGradient:
       "linear-gradient(180deg, rgba(178,123,51,0.44) 0%, rgba(231,128,40,0.25) 100%)",
   },
@@ -114,16 +116,18 @@ export function EsgSection() {
       </div>
 
       {/* Conteúdo */}
-      <div ref={contentRef} className="flex w-full flex-col gap-8 lg:flex-row lg:items-start lg:gap-20">
-        {/* Imagem */}
+      <div ref={contentRef} className="flex w-full flex-col gap-8 lg:flex-row lg:items-stretch lg:gap-20">
+        {/* Imagem — no desktop acompanha a altura total dos cards ao lado */}
         <div
           ref={imageRef}
-          className="order-last h-[300px] w-full shrink-0 overflow-hidden rounded-xl lg:order-none lg:h-[617px] lg:w-[720px]"
+          className="relative order-last h-[300px] w-full shrink-0 overflow-hidden rounded-xl lg:order-none lg:h-auto lg:w-[720px]"
         >
           <Image
             src={team}
             alt="Equipe TranspoTech"
-            className="h-full w-full object-cover"
+            fill
+            sizes="(min-width: 1024px) 720px, 100vw"
+            className="object-cover"
             placeholder="blur"
           />
         </div>
@@ -158,10 +162,13 @@ export function EsgSection() {
                   </p>
                 </div>
                 {item.link && (
-                  <button className="flex items-center gap-2 text-body font-semibold leading-[1.35] text-neutral-600">
-                    {item.link}
+                  <Link
+                    href={item.link.href}
+                    className="flex items-center gap-2 text-body font-semibold leading-[1.35] text-neutral-600 transition-colors hover:text-primary-500"
+                  >
+                    {item.link.label}
                     <ArrowRight className="size-5" />
-                  </button>
+                  </Link>
                 )}
               </div>
             </div>

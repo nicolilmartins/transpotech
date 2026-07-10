@@ -125,7 +125,7 @@ export const megaMenus: Record<string, MegaMenuConfig> = {
           {
             title: "Trabalhe conosco",
             subtitle: "Faça parte do time",
-            href: ROUTES.TRABALHE_CONOSCO,
+            href: ROUTES.GUPY,
             Icon: Users,
           },
         ],
@@ -232,11 +232,15 @@ export function MegaMenu({
                     {col.title}
                   </p>
                   <ul role="list" className="flex flex-col">
-                    {col.items.map((item) => (
+                    {col.items.map((item) => {
+                      const external = item.href.startsWith("http");
+                      return (
                       <li key={item.title}>
                         <Link
                           href={item.href}
                           onClick={onNavigate}
+                          target={external ? "_blank" : undefined}
+                          rel={external ? "noopener noreferrer" : undefined}
                           className="group/item flex items-center gap-3 rounded-xl p-3 transition-colors hover:bg-neutral-50"
                         >
                           <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-neutral-50 text-neutral-700 shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition-colors group-hover/item:bg-white group-hover/item:text-primary-500">
@@ -252,7 +256,8 @@ export function MegaMenu({
                           </span>
                         </Link>
                       </li>
-                    ))}
+                      );
+                    })}
                   </ul>
                 </div>
               ))}

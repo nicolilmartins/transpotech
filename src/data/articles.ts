@@ -3,6 +3,7 @@ import post1 from "@/assets/images/blog/post1.png";
 import post2 from "@/assets/images/blog/post2.png";
 import post3 from "@/assets/images/blog/post3.jpg";
 import post4 from "@/assets/images/blog/post4.png";
+import locacaoForklift from "@/assets/images/hero-image-locacao-de-empilhadeiras.webp";
 
 export type ArticleCategory =
   | "Locação"
@@ -39,7 +40,7 @@ export const articles: Article[] = [
     dateISO: "2026-04-22",
     readTime: "6 min",
     author: "Equipe TranspoTech",
-    image: post1,
+    image: locacaoForklift,
   },
   {
     id: "nova-unidade-joinville",
@@ -111,3 +112,30 @@ export const articles: Article[] = [
 
 /** Artigo em destaque (Notícia em destaque). */
 export const featuredArticle = articles[0];
+
+/** Busca um artigo pelo id (slug da rota de detalhe). */
+export function getArticleById(id: string): Article | undefined {
+  return articles.find((article) => article.id === id);
+}
+
+/**
+ * Artigos relacionados a um artigo: prioriza a mesma categoria (excluindo o
+ * próprio) e completa com os demais até `limit`.
+ */
+export function getRelatedArticles(article: Article, limit = 3): Article[] {
+  const others = articles.filter((item) => item.id !== article.id);
+  const sameCategory = others.filter(
+    (item) => item.category === article.category
+  );
+  const rest = others.filter((item) => item.category !== article.category);
+  return [...sameCategory, ...rest].slice(0, limit);
+}
+
+/** Data por extenso em pt-BR a partir do ISO (ex.: "22 de abril de 2026"). */
+export function formatLongDate(dateISO: string): string {
+  return new Date(`${dateISO}T00:00:00`).toLocaleDateString("pt-BR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}

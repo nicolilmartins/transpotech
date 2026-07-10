@@ -58,9 +58,11 @@ const categories: Category[] = [
 export function CategoriesSection() {
   return (
     <Section className="flex flex-col gap-12 lg:gap-16">
-      <div className="flex max-w-[560px] flex-col gap-4">
+      <div className="flex max-w-[640px] flex-col gap-4">
         <h2 className="text-h2 font-normal text-neutral-800">
-          Escolha a categoria mais próxima da sua necessidade
+          Escolha a categoria mais
+          <br />
+          próxima da <span className="font-bold">sua necessidade</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
           Os pneus devem ser escolhidos conforme equipamento, ambiente, piso,

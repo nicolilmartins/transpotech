@@ -267,7 +267,7 @@ export function Catalog({ forklifts }: { forklifts: Forklift[] }) {
                   <h2 className="font-heading text-h2 font-normal text-neutral-800">
                     {brandLabel[group.brand]}
                   </h2>
-                  <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {group.items.map((forklift) => (
                       <ProductCard key={forklift.id} forklift={forklift} />
                     ))}

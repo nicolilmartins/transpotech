@@ -12,8 +12,10 @@ const brandLabel: Record<ForkliftBrand, string> = {
 function SpecRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-start justify-between gap-4">
-      <dt className="text-body text-neutral-600">{label}</dt>
-      <dd className="text-right text-body font-semibold text-neutral-800">
+      <dt className="shrink-0 whitespace-nowrap text-body text-neutral-600">
+        {label}
+      </dt>
+      <dd className="min-w-0 truncate text-right text-body font-semibold text-neutral-800">
         {value}
       </dd>
     </div>
@@ -24,7 +26,7 @@ export function ProductCard({ forklift }: { forklift: Forklift }) {
   return (
     // Card com padding simétrico (p-6 = 24px). gap-8 (32px) separa imagem →
     // textos → botões. A imagem fica DENTRO do card, sem exceder o topo.
-    <article className="flex flex-col gap-8 rounded-3xl bg-white p-6 transition duration-300 hover:scale-[1.02] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)]">
+    <article className="flex h-full flex-col gap-8 rounded-3xl bg-white p-6 transition duration-300 hover:scale-[1.02] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)]">
       {/* Imagem do produto — contida dentro do card */}
       <div className="relative h-[200px] w-full">
         <Image
@@ -54,7 +56,7 @@ export function ProductCard({ forklift }: { forklift: Forklift }) {
             <h3 className="line-clamp-2 min-h-[2.4em] font-heading text-[1.25rem] font-medium leading-[1.2] text-neutral-800">
               {forklift.name}
             </h3>
-            <p className="line-clamp-1 text-body text-neutral-500">
+            <p className="line-clamp-1 min-h-[1.35em] text-body text-neutral-500">
               {forklift.application}
             </p>
           </div>
@@ -68,8 +70,9 @@ export function ProductCard({ forklift }: { forklift: Forklift }) {
         </dl>
       </div>
 
-      {/* Botões — 32px do bloco de textos (gap-8 do article) */}
-      <div className="flex flex-col gap-2">
+      {/* Botões — pinados na base do card (mt-auto) para alinhar em todos os
+          cards; 32px do bloco de textos (gap-8 do article) quando não há folga. */}
+      <div className="mt-auto flex flex-col gap-2">
         <Button
           variant="primary"
           size="lg"

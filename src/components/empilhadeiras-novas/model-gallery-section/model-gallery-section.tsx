@@ -24,7 +24,7 @@ export function ModelGallerySection({
           </h2>
         </div>
         <Button
-          variant="gray"
+          variant="primary"
           size="lg"
           href={datasheetHref}
           className="shrink-0 justify-center"

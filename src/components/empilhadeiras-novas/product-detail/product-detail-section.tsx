@@ -17,7 +17,7 @@ export function ProductDetailSection({ forklift }: { forklift: Forklift }) {
   ];
 
   return (
-    <Section className="!pt-6 !pb-6 flex flex-col gap-8 lg:gap-12">
+    <Section className="!pb-6 !pt-11 flex flex-col gap-3 lg:!pt-[60px]">
       <Breadcrumb
         items={[
           { label: "Início", href: ROUTES.HOME },

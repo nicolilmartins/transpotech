@@ -48,13 +48,15 @@ export function PortfolioSection() {
   const [active, setActive] = useState(0);
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Inicializa: card ativo com imagem aberta, demais fechadas
+  // Inicializa: card ativo com imagem aberta (gap fixo de 40px), demais fechadas.
+  // A LARGURA da imagem é controlada por flex (preenche o espaço restante do
+  // card, adaptando-se ao tamanho da tela); aqui só animamos o gap e a opacidade.
   useEffect(() => {
     imageRefs.current.forEach((el, i) => {
       if (!el) return;
       gsap.set(el, i === active
-        ? { width: 270, marginLeft: 25, opacity: 1 }
-        : { width: 0, marginLeft: 0, opacity: 0 }
+        ? { marginLeft: 40, opacity: 1 }
+        : { marginLeft: 0, opacity: 0 }
       );
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,9 +67,9 @@ export function PortfolioSection() {
     imageRefs.current.forEach((el, i) => {
       if (!el) return;
       if (i === active) {
-        gsap.to(el, { width: 270, marginLeft: 25, opacity: 1, duration: 0.3, ease: "power1.out", overwrite: "auto" });
+        gsap.to(el, { marginLeft: 40, opacity: 1, duration: 0.3, ease: "power1.out", overwrite: "auto" });
       } else {
-        gsap.to(el, { width: 0, marginLeft: 0, opacity: 0, duration: 0.3, ease: "power1.out", overwrite: "auto" });
+        gsap.to(el, { marginLeft: 0, opacity: 0, duration: 0.3, ease: "power1.out", overwrite: "auto" });
       }
     });
   }, [active]);
@@ -94,8 +96,10 @@ export function PortfolioSection() {
         </p>
       </div>
 
-      {/* Cards — apenas um aberto por vez */}
-      <div className="flex w-full flex-col gap-4 lg:flex-row lg:items-stretch">
+      {/* Cards — apenas um aberto por vez. Layout horizontal a partir de xl
+          (≥1280px), onde cabe o texto fixo + imagem sem sobrepor; abaixo disso
+          os cards empilham. */}
+      <div className="flex w-full flex-col gap-4 xl:flex-row xl:items-stretch">
         {cards.map((card, index) => {
           const open = index === active;
           return (
@@ -103,13 +107,16 @@ export function PortfolioSection() {
               key={card.title}
               onMouseEnter={() => setActive(index)}
               onFocusCapture={() => setActive(index)}
-              className={`flex items-start overflow-hidden rounded-xl bg-white/5 p-6 transition-[flex-grow] duration-300 ease-out lg:h-[373px] lg:items-center ${
-                open ? "lg:flex-[1_1_315px]" : "lg:flex-[0_0_315px]"
+              className={`flex items-start overflow-hidden rounded-xl bg-white/5 p-6 transition-[flex-grow] duration-300 ease-out xl:h-[373px] xl:items-center ${
+                open ? "xl:flex-[1_1_315px]" : "xl:flex-[0_0_315px]"
               }`}
             >
-              <div className="flex min-w-0 flex-1 flex-col gap-5 lg:h-full lg:justify-between lg:gap-0">
+              {/* Coluna de texto com largura fixa (267px) no desktop: abre igual
+                  a fechada, e a imagem entra sempre a 40px dela. overflow-hidden
+                  como trava para o texto nunca invadir a imagem. */}
+              <div className="flex flex-1 flex-col gap-5 overflow-hidden xl:h-full xl:w-[267px] xl:flex-none xl:justify-between xl:gap-0">
                 <card.icon className="size-6 shrink-0 text-primary-400 lg:size-8" aria-hidden />
-                <div className="flex flex-col gap-4 lg:w-[267px]">
+                <div className="flex flex-col gap-4">
                   <h3 className="min-h-[2.6em] font-heading text-[20px] font-semibold leading-[1.3] text-neutral-100 lg:text-[24px]">
                     {card.title.split("\n").map((line) => (
                       <span key={line} className="block">
@@ -121,20 +128,27 @@ export function PortfolioSection() {
                     {card.description}
                   </p>
                 </div>
-                <TextLink className="text-left">{card.cta}</TextLink>
+                <TextLink className="whitespace-nowrap text-left">
+                  {card.cta}
+                </TextLink>
               </div>
 
-              {/* Imagem — apenas no desktop, animada por GSAP */}
+              {/* Imagem — apenas no desktop largo. flex-1 preenche o espaço
+                  restante do card (fica maior em telas grandes, menor nas
+                  menores); o gap de 40px é o marginLeft animado por GSAP. */}
               <div
                 ref={(node) => { imageRefs.current[index] = node; }}
                 aria-hidden={!open}
-                className="hidden h-[325px] shrink-0 overflow-hidden rounded-lg lg:block"
-                style={{ width: 0, opacity: 0 }}
+                className="hidden h-[325px] min-w-0 items-center justify-center overflow-hidden rounded-lg xl:flex xl:flex-1"
+                style={{ opacity: 0 }}
               >
+                {/* Altura fixa + largura natural (sem object-cover): a escala fica
+                    constante, então a imagem não dá "zoom" ao abrir/encher —
+                    inclusive a do 3º card, que é retrato. */}
                 <Image
                   src={card.image}
                   alt={card.title}
-                  className="h-[325px] w-[270px] max-w-none object-cover"
+                  className="h-full w-auto max-w-none rounded-lg"
                 />
               </div>
             </div>

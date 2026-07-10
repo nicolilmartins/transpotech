@@ -10,5 +10,8 @@ export type ButtonProps = {
   iconLeft?: ReactNode;
   iconRight?: ReactNode;
   href?: string;
+  /** Usados apenas quando `href` está presente (ex.: link externo em nova aba). */
+  target?: string;
+  rel?: string;
   className?: string;
 } & Omit<ComponentProps<"button">, "ref">;
