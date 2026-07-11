@@ -108,7 +108,7 @@ const genericDetail: ForkliftDetail = {
   intro: {
     title: "Tecnologia e suporte de ponta a ponta",
     description:
-      "Equipamentos novos das marcas STILL, Linde e Baoli, com a estrutura técnica da TranspoTech por trás — da especificação ao pós-venda.",
+      "Equipamentos novos das marcas STILL, Linde e Baoli, com a estrutura técnica da TranspoTech por trás, da especificação ao pós-venda.",
   },
   blocks: [
     {

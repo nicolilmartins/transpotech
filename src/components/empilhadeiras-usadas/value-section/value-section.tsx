@@ -76,9 +76,9 @@ export function ValueSection() {
       {/* Cabeçalho */}
       <div className="flex w-full max-w-[560px] flex-col gap-4">
         <h2 className="text-h2 font-normal text-neutral-800">
-          Onde a usada entrega
+          Onde a empilhadeira usada
           <br />
-          <span className="font-bold text-primary-500">mais valor</span>
+          entrega <span className="font-bold text-primary-500">mais valor</span>
         </h2>
       </div>
 

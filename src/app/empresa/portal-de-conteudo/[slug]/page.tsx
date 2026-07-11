@@ -6,10 +6,12 @@ import { Breadcrumb } from "@/components/ui/breadcrumb/breadcrumb";
 import { ArticleHeader } from "@/components/article/article-header/article-header";
 import { ArticleCover } from "@/components/article/article-cover/article-cover";
 import { ArticleBody } from "@/components/article/article-body/article-body";
+import { ArticleShare } from "@/components/article/article-share/article-share";
+import { ArticleToc } from "@/components/article/article-toc/article-toc";
 import { RelatedSection } from "@/components/article/related-section/related-section";
 import { NewsletterSection } from "@/components/portal-conteudo/newsletter-section/newsletter-section";
 import { CtaSection } from "@/components/layout/cta/cta-section";
-import { MeshBackground } from "@/components/layout/mesh-background/mesh-background";
+import { DriftMesh } from "@/components/layout/drift-mesh";
 import {
   articles,
   getArticleById,
@@ -59,14 +61,18 @@ export default async function ArtigoPage({ params }: ArticlePageProps) {
 
   return (
     <main>
-      {/* Início — mesmo fundo da página de detalhe de novas: malha visível no
-          topo (MeshBackground), header em modo hero e clareira do header
+      {/* Início — mesmo fundo da página de detalhe de novas: malha animada no
+          topo (DriftMesh, como na hero do Canal da Transparência — altura de
+          viewport + fade na base), header em modo hero e clareira do header
           flutuante (pt-96). data-header-hero fica só nesta região do topo. */}
       <div
         data-header-hero
         className="relative isolate bg-[#fdfdfd] pt-[96px]"
       >
-        <MeshBackground className="pointer-events-none absolute inset-0 -z-10" />
+        <DriftMesh
+          fade
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-svh"
+        />
 
         <Section className="flex flex-col gap-8">
           <Breadcrumb
@@ -83,17 +89,30 @@ export default async function ArtigoPage({ params }: ArticlePageProps) {
         </Section>
       </div>
 
-      {/* Corpo do artigo */}
+      {/* Corpo do artigo — texto à esquerda, aside (compartilhar + sumário) à direita */}
       <div className="bg-[#fdfdfd]">
-        <Section className="pt-2 lg:pt-4">
+        <Section className="flex flex-col gap-10 pt-2 lg:flex-row lg:items-start lg:justify-between lg:gap-12 lg:pt-4">
           <ArticleBody article={article} />
+
+          <aside className="flex flex-col gap-6 lg:sticky lg:top-28 lg:w-[300px] lg:shrink-0">
+            {/* Caixinha de compartilhar */}
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-neutral-200 p-4">
+              <span className="text-body-sm font-semibold text-neutral-800">
+                Compartilhar
+              </span>
+              <ArticleShare title={article.title} />
+            </div>
+
+            {/* Sumário com os tópicos em link */}
+            <ArticleToc />
+          </aside>
         </Section>
       </div>
 
-      {/* Newsletter + Relacionados — mesmo tom do portal de conteúdo (#f7f6f6) */}
+      {/* Relacionados + Newsletter — mesmo tom do portal de conteúdo (#f7f6f6) */}
       <div className="bg-[#f7f6f6]">
-        <NewsletterSection showGlow={false} />
         <RelatedSection articles={related} />
+        <NewsletterSection />
       </div>
 
       <CtaSection

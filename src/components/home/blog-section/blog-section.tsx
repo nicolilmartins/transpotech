@@ -1,55 +1,26 @@
-import Image, { type StaticImageData } from "next/image";
+import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight, Clock } from "lucide-react";
 import { TextLink } from "@/components/ui/text-link";
-import post1 from "@/assets/images/blog/post1.png";
-import post2 from "@/assets/images/blog/post2.png";
-import post3 from "@/assets/images/blog/post3.jpg";
-import post4 from "@/assets/images/blog/post4.png";
+import { articles } from "@/data/articles";
+import { ROUTES } from "@/lib/routes";
 
-type Post = {
-  img: StaticImageData;
-  category: string;
-  title: string;
-  description: string;
-  readTime: string;
-};
-
-const posts: Post[] = [
-  {
-    img: post1,
-    category: "LOCAÇÃO",
-    title: "TranspoTech inaugura nova unidade em Joinville",
-    description:
-      "Operação amplia atendimentos e estoque de peças para clientes do norte de Santa Catarina.",
-    readTime: "2 min",
-  },
-  {
-    img: post2,
-    category: "EMPILHADEIRAS NOVAS",
-    title: "Linde lança no Brasil a nova linha elétrica E20-E50",
-    description:
-      "Modelos chegam com bateria de íons de lítio integrada e ganha até 20% em ciclos por turno.",
-    readTime: "2 min",
-  },
-  {
-    img: post3,
-    category: "AUTOMAÇÃO",
-    title: "TranspoTech apresenta soluções de automação intralogística",
-    description:
-      "Estande integrado mostra AGVs, WMS e empilhadeiras conectadas em ambiente de operação.",
-    readTime: "2 min",
-  },
-  {
-    img: post4,
-    category: "LOCAÇÃO",
-    title: "TranspoTech apresenta soluções de automação intralogística",
-    description:
-      "Estande integrado mostra AGVs, WMS e empilhadeiras conectadas em ambiente de operação.",
-    readTime: "2 min",
-  },
+// Conteúdos exibidos na home (destaque + 3 menores). Cada card leva ao artigo
+// correspondente no Portal de Conteúdo.
+const SELECTED_IDS = [
+  "nova-unidade-joinville",
+  "linde-e20-e50-x-elite",
+  "cimine-2026-automacao",
+  "quando-vale-locar-empilhadeiras",
 ];
 
-const [featured, ...rest] = posts;
+const selected = SELECTED_IDS.map((id) =>
+  articles.find((article) => article.id === id)
+).filter((article): article is (typeof articles)[number] => Boolean(article));
+
+const [featured, ...rest] = selected;
+
+const articleHref = (id: string) => `${ROUTES.PORTAL_CONTEUDO}/${id}`;
 
 export function BlogSection() {
   return (
@@ -66,41 +37,46 @@ export function BlogSection() {
             automação.
           </p>
         </div>
-        <TextLink className="shrink-0">Ver todos os conteúdos</TextLink>
+        <TextLink href={ROUTES.PORTAL_CONTEUDO} className="shrink-0">
+          Ver todos os conteúdos
+        </TextLink>
       </div>
 
       {/* Grade: artigo principal grande à esquerda + cards menores à direita */}
       <div className="flex w-full flex-col gap-6 lg:flex-row lg:items-stretch">
         {/* Artigo em destaque */}
-        <article className="group relative h-[360px] overflow-hidden rounded-2xl bg-neutral-900 lg:h-[560px] lg:flex-[1.35]">
+        <Link
+          href={articleHref(featured.id)}
+          className="group/card relative block h-[360px] overflow-hidden rounded-2xl bg-neutral-900 transition duration-300 hover:scale-[1.01] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)] lg:h-[560px] lg:flex-[1.35]"
+        >
           <Image
-            src={featured.img}
+            src={featured.image}
             alt={featured.title}
             fill
             sizes="55vw"
             priority
-            className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            className="object-cover transition-transform duration-500 ease-out group-hover/card:scale-105"
           />
           <div
             aria-hidden
             className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent"
           />
           <div className="absolute inset-x-0 bottom-0 flex flex-col gap-4 p-8">
-            <span className="text-body font-semibold leading-[1.35] text-primary-400">
+            <span className="text-body font-semibold uppercase tracking-wide leading-[1.35] text-primary-400">
               {featured.category}
             </span>
             <h3 className="max-w-[560px] font-heading text-[28px] font-bold leading-[1.2] text-neutral-50">
               {featured.title}
             </h3>
             <p className="max-w-[540px] text-body leading-[1.4] text-neutral-200">
-              {featured.description}
+              {featured.excerpt}
             </p>
             {/* Rodapé: ler conteúdo (esquerda) · tempo de leitura (direita) */}
             <div className="flex items-center justify-between pt-2">
-              <button className="flex items-center gap-2 text-body font-semibold leading-[1.35] text-neutral-400 transition-colors hover:text-neutral-200">
+              <span className="flex items-center gap-2 text-body font-semibold leading-[1.35] text-neutral-400 transition-colors group-hover/card:text-neutral-200">
                 Ler conteúdo
                 <ArrowRight className="size-5" aria-hidden />
-              </button>
+              </span>
               <div className="flex items-center gap-2 text-neutral-400">
                 <Clock className="size-4" aria-hidden />
                 <span className="text-body leading-[1.35]">
@@ -109,23 +85,24 @@ export function BlogSection() {
               </div>
             </div>
           </div>
-        </article>
+        </Link>
 
         {/* Cards menores empilhados */}
         <div className="flex flex-1 flex-col gap-6">
-          {rest.map((post, i) => (
-            <article
-              key={i}
-              className="group flex flex-1 gap-4 overflow-hidden rounded-xl bg-neutral-50 p-3"
+          {rest.map((article) => (
+            <Link
+              key={article.id}
+              href={articleHref(article.id)}
+              className="group/card flex flex-1 gap-4 overflow-hidden rounded-xl bg-white p-3 transition duration-300 hover:scale-[1.02] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)]"
             >
               {/* Thumbnail */}
               <div className="relative aspect-[4/3] w-28 shrink-0 overflow-hidden rounded-lg sm:w-36 lg:h-full lg:w-auto">
                 <Image
-                  src={post.img}
-                  alt={post.title}
+                  src={article.image}
+                  alt={article.title}
                   fill
                   sizes="220px"
-                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                  className="object-cover transition-transform duration-500 ease-out group-hover/card:scale-105"
                 />
               </div>
 
@@ -133,27 +110,29 @@ export function BlogSection() {
               <div className="flex min-w-0 flex-1 flex-col justify-between py-1">
                 {/* Topo esquerdo */}
                 <div className="flex flex-col gap-1">
-                  <span className="text-sm font-semibold leading-[1.35] text-primary-500">
-                    {post.category}
+                  <span className="text-sm font-semibold uppercase tracking-wide leading-[1.35] text-primary-500">
+                    {article.category}
                   </span>
                   <h3 className="line-clamp-2 font-heading text-lg font-semibold leading-[1.3] text-neutral-800">
-                    {post.title}
+                    {article.title}
                   </h3>
                 </div>
 
                 {/* Rodapé: ler conteúdo (esquerda) · tempo (direita) */}
                 <div className="flex items-center justify-between">
-                  <button className="flex items-center gap-1.5 text-sm font-semibold leading-[1.35] text-neutral-500 transition-colors hover:text-neutral-700">
+                  <span className="flex items-center gap-1.5 text-sm font-semibold leading-[1.35] text-neutral-500 transition-colors group-hover/card:text-neutral-700">
                     Ler conteúdo
                     <ArrowRight className="size-4" aria-hidden />
-                  </button>
+                  </span>
                   <div className="flex items-center gap-1.5 text-neutral-400">
                     <Clock className="size-4" aria-hidden />
-                    <span className="text-sm leading-[1.35]">{post.readTime}</span>
+                    <span className="text-sm leading-[1.35]">
+                      {article.readTime}
+                    </span>
                   </div>
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>

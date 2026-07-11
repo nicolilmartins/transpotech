@@ -152,7 +152,7 @@ export function TestimonialsSection() {
                     Logística em escala
                   </h3>
                   <p className="text-body leading-[1.35] text-neutral-300">
-                    A Transpotech nos ajudou a reorganizar toda a estrutura de
+                    A TranspoTech nos ajudou a reorganizar toda a estrutura de
                     dados da operação. Em três meses, passamos a enxergar em
                     tempo real onde estava cada carga, onde estavam os atrasos e
                     onde o custo estava vazando.

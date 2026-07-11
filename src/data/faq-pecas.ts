@@ -7,7 +7,7 @@ export const faqPecas: FaqItem[] = [
   {
     question: "Preciso saber o código da peça?",
     answer:
-      "Não. Muitas solicitações começam com uma descrição do problema, uma foto ou os dados do equipamento — a TranspoTech ajuda a identificar a peça certa.",
+      "Não. Muitas solicitações começam com uma descrição do problema, uma foto ou os dados do equipamento. A TranspoTech ajuda a identificar a peça certa.",
   },
   {
     question: "Posso enviar foto do equipamento ou da peça?",
@@ -27,7 +27,7 @@ export const faqPecas: FaqItem[] = [
   {
     question: "Vocês informam preço no site?",
     answer:
-      "Não. O preço depende da peça, do equipamento e da disponibilidade — por isso a cotação é feita conforme as informações da sua solicitação.",
+      "Não. O preço depende da peça, do equipamento e da disponibilidade. Por isso a cotação é feita conforme as informações da sua solicitação.",
   },
   {
     question: "Também posso solicitar assistência técnica?",

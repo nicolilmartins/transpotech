@@ -45,7 +45,7 @@ export function PlansSection() {
         </h2>
         <p className="text-body leading-[1.5] text-neutral-400">
           Do contrato de longo prazo ao short rental para picos sazonais,
-          escolha o modelo que melhor se encaixa na sua operação — sempre com
+          escolha o modelo que melhor se encaixa na sua operação, sempre com
           manutenção e suporte técnico da TranspoTech.
         </p>
       </div>

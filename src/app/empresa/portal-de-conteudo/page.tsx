@@ -5,7 +5,7 @@ import { FeaturedSection } from "@/components/portal-conteudo/featured-section/f
 import { ArticleList } from "@/components/portal-conteudo/article-list/article-list";
 import { NewsletterSection } from "@/components/portal-conteudo/newsletter-section/newsletter-section";
 import { HoverMesh } from "@/components/layout/hover-mesh";
-import { MeshBackground } from "@/components/layout/mesh-background/mesh-background";
+import { DriftMesh } from "@/components/layout/drift-mesh";
 
 export const metadata: Metadata = {
   title: "Portal de Conteúdo",
@@ -22,12 +22,17 @@ export default function PortalConteudoPage() {
   return (
     <main>
       {/* Página inteira num só tom (#f7f6f6) com a malha no fundo, como em
-          empilhadeiras novas: MeshBackground estático visível + HoverMesh
-          reativo ao cursor. Um único wrapper alto faz o fade da malha ficar
-          suave (topo cheio), igual à referência. pt extra → clareira do header. */}
+          empilhadeiras novas: DriftMesh animada na região da hero (altura de
+          viewport + fade na base, como na hero do Canal da Transparência) e
+          HoverMesh reativo ao cursor só no restante da página — onde a malha
+          anda sozinha não há malha de hover (top-[100svh] = altura da Drift).
+          pt extra → clareira do header. */}
       <div className="relative isolate bg-[#f7f6f6] pt-[96px]">
-        <MeshBackground className="pointer-events-none absolute inset-0 -z-10" />
-        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+        <DriftMesh
+          fade
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-svh"
+        />
+        <HoverMesh className="pointer-events-none absolute inset-x-0 bottom-0 top-[100svh] -z-10" />
         <PortalHeroSection />
         <FeaturedSection />
         <ArticleList />

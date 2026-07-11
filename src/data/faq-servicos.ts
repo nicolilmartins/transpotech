@@ -7,7 +7,7 @@ export const faqServicos: FaqItem[] = [
   {
     question: "Vocês atendem apenas empilhadeiras Linde, STILL e Baoli?",
     answer:
-      "Não. A TranspoTech presta serviços multimarcas para empilhadeiras elétricas e a combustão de diferentes fabricantes — equipamentos nacionais, importados e chineses, todas as marcas e modelos.",
+      "Não. A TranspoTech presta serviços multimarcas para empilhadeiras elétricas e a combustão de diferentes fabricantes: equipamentos nacionais, importados e chineses, todas as marcas e modelos.",
   },
   {
     question: "Vocês fazem manutenção preventiva e corretiva?",

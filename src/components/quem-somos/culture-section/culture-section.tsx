@@ -13,12 +13,12 @@ const values = [
   {
     title: "Amamos o negócio dos nossos clientes",
     description:
-      "Atendimento próximo e compromisso real com a operação de cada cliente — o sucesso deles é o nosso.",
+      "Atendimento próximo e compromisso real com a operação de cada cliente, o sucesso deles é o nosso.",
   },
   {
     title: "Não pegamos atalhos",
     description:
-      "Agimos com ética, humildade e respeito em todas as relações — fazemos do jeito certo, mesmo quando é o caminho mais longo.",
+      "Agimos com ética, humildade e respeito em todas as relações, fazemos do jeito certo, mesmo quando é o caminho mais longo.",
   },
   {
     title: "Pensamos no futuro, agindo agora",

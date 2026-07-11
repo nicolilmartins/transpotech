@@ -17,7 +17,7 @@ export const faqAutomacao: FaqItem[] = [
   {
     question: "Quanto tempo leva para implantar?",
     answer:
-      "Varia conforme a solução. O projeto segue etapas claras — diagnóstico, concepção, engenharia, implantação, go-live e operação contínua — para reduzir risco e acelerar a captura de valor.",
+      "Varia conforme a solução. O projeto segue etapas claras: diagnóstico, concepção, engenharia, implantação, go-live e operação contínua, para reduzir risco e acelerar a captura de valor.",
   },
   {
     question: "Preciso parar a operação durante a obra?",

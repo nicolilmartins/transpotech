@@ -41,7 +41,7 @@ export function SdgSection() {
     <Section className="flex flex-col gap-10 lg:gap-14">
       <div className="flex max-w-[720px] flex-col gap-4">
         <p className="text-body-sm font-semibold uppercase tracking-wide text-secondary-600">
-          ODS — ONU
+          ODS, ONU
         </p>
         <h2 className="text-h3 font-normal text-neutral-800">
           Compromisso com impacto positivo

@@ -1,6 +1,7 @@
 import { type CSSProperties } from "react";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import warehouse from "@/assets/images/image_fmx.webp";
 import caseLogo1 from "@/assets/images/depoimentos/case-logo1.png";
 import caseLogo2 from "@/assets/images/depoimentos/case-logo2.png";
@@ -85,7 +86,7 @@ export function CasesSection() {
         <div className="relative -mx-5 flex w-[calc(100%+40px)] snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:-mx-6 sm:w-[calc(100%+48px)] sm:px-6 lg:mx-0 lg:grid lg:w-full lg:grid-cols-4 lg:snap-none lg:items-center lg:overflow-visible lg:px-0 lg:pb-0">
           {/* Imagem — oculta em mobile, visível no desktop (mesma largura dos cards:
               flex sizing idêntico ao cardBase → 4 colunas iguais) */}
-          <div className="relative hidden min-h-[280px] overflow-hidden rounded-xl bg-[#d9d9d9] lg:block lg:h-[380px] lg:min-w-0 lg:flex-1 lg:shrink">
+          <ParallaxFrame className="hidden min-h-[280px] rounded-xl bg-[#d9d9d9] lg:block lg:h-[380px] lg:min-w-0 lg:flex-1 lg:shrink">
             <Image
               src={warehouse}
               alt="Operação em armazém"
@@ -93,7 +94,7 @@ export function CasesSection() {
               sizes="25vw"
               className="object-cover [object-position:35%_center]"
             />
-          </div>
+          </ParallaxFrame>
 
           {/* Case 1 */}
           <article className={cardBase} style={cardGradient}>
@@ -152,7 +153,7 @@ export function CasesSection() {
                     Logística em escala
                   </h3>
                   <p className="text-body leading-[1.35] text-neutral-300">
-                    A Transpotech nos ajudou a reorganizar toda a estrutura de
+                    A TranspoTech nos ajudou a reorganizar toda a estrutura de
                     dados da operação. Em três meses, passamos a enxergar em
                     tempo real onde estava cada carga, onde estavam os atrasos e
                     onde o custo estava vazando.

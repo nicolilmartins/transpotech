@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { Sparkles, CircleDollarSign, Calendar, type LucideIcon } from "lucide-react";
 import { TextLink } from "@/components/ui/text-link";
+import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import novas from "@/assets/images/portfolio-novas.png";
 import egv165 from "@/assets/images/empilhadeiras/egv-16-5.webp";
 import linde from "@/assets/images/empilhadeiras/linde.webp";
@@ -136,21 +137,23 @@ export function PortfolioSection() {
               {/* Imagem — apenas no desktop largo. flex-1 preenche o espaço
                   restante do card (fica maior em telas grandes, menor nas
                   menores); o gap de 40px é o marginLeft animado por GSAP. */}
-              <div
+              <ParallaxFrame
                 ref={(node) => { imageRefs.current[index] = node; }}
                 aria-hidden={!open}
-                className="hidden h-[325px] min-w-0 items-center justify-center overflow-hidden rounded-lg xl:flex xl:flex-1"
+                className="hidden h-[325px] min-w-0 rounded-lg xl:block xl:flex-1"
                 style={{ opacity: 0 }}
               >
-                {/* Altura fixa + largura natural (sem object-cover): a escala fica
-                    constante, então a imagem não dá "zoom" ao abrir/encher —
-                    inclusive a do 3º card, que é retrato. */}
+                {/* A imagem preenche todo o espaço disponível (object-cover),
+                    adaptando-se à largura do card em cada tela — sem faixas finas
+                    nas telas grandes e com o mesmo padding em todos os cards. */}
                 <Image
                   src={card.image}
                   alt={card.title}
-                  className="h-full w-auto max-w-none rounded-lg"
+                  fill
+                  sizes="(min-width: 1280px) 40vw, 100vw"
+                  className="rounded-lg object-cover"
                 />
-              </div>
+              </ParallaxFrame>
             </div>
           );
         })}

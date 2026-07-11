@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import { ROUTES } from "@/lib/routes";
 import heroImage from "@/assets/images/hero-quem-somos.webp";
 
@@ -31,14 +32,20 @@ export function QuemSomosHeroSection() {
         {/* Conteúdo — parte inferior da hero (80px de padding inferior) */}
         <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col items-center justify-end gap-8 px-5 pb-20 text-center sm:px-6 lg:px-16">
           <div className="flex max-w-[820px] flex-col gap-4">
-            <h1 className="text-balance text-h2 text-neutral-50">
-              <span className="font-normal">
-                Especialistas em empilhadeiras para{" "}
-              </span>
-              <span className="font-bold text-primary-500">
-                operações em movimento
-              </span>
-            </h1>
+            <BlurRevealTitle
+              tone="dark"
+              className="text-balance text-h2 text-neutral-50"
+              segments={[
+                {
+                  text: "Especialistas em empilhadeiras para ",
+                  className: "font-normal",
+                },
+                {
+                  text: "operações em movimento",
+                  className: "font-bold text-primary-500",
+                },
+              ]}
+            />
             <p className="mx-auto max-w-[520px] text-h6 font-normal leading-[1.3] text-neutral-50">
               Desde 2001, a TranspoTech atua com soluções para movimentação de
               materiais, apoiando empresas que precisam de disponibilidade,

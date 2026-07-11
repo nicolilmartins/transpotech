@@ -22,7 +22,7 @@ const steps: Step[] = [
   {
     title: "Um especialista avalia sua operação",
     description:
-      "A Transpotech entende o contexto e recomenda o tipo de equipamento e o plano mais adequado.",
+      "A TranspoTech entende o contexto e recomenda o tipo de equipamento e o plano mais adequado.",
     image: illoSearch,
   },
   {
@@ -38,7 +38,7 @@ const steps: Step[] = [
     image: illoTruck,
   },
   {
-    title: "A Transpotech acompanha",
+    title: "A TranspoTech acompanha",
     description:
       "O suporte técnico ajuda sua operação a manter disponibilidade, segurança e produtividade.",
     image: illoShield,

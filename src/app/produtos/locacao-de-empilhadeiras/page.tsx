@@ -84,7 +84,7 @@ export default function LocacaoPage() {
       <CtaSection
         titleRegular="Sua operação precisa de disponibilidade, suporte e "
         titleAccent="previsibilidade?"
-        description="Fale com a Transpotech e receba uma recomendação de locação conforme as necessidades da sua operação."
+        description="Fale com a TranspoTech e receba uma recomendação de locação conforme as necessidades da sua operação."
         ctaLabel="Falar com especialista"
         ctaHref={ROUTES.ORCAMENTO}
       />

@@ -103,7 +103,7 @@ export function UnitsSection() {
             >
               <iframe
                 src={card.embedUrl}
-                title={`Mapa — ${card.title}`}
+                title={`Mapa: ${card.title}`}
                 aria-hidden
                 tabIndex={-1}
                 loading="lazy"

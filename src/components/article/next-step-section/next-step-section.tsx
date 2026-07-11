@@ -35,7 +35,7 @@ export function NextStepSection({ category }: { category: ArticleCategory }) {
         </p>
         <h2 className="text-h4 font-bold text-neutral-800">Pronto pra avançar?</h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          Fale com a equipe TranspoTech sobre o tema deste conteúdo — sem
+          Fale com a equipe TranspoTech sobre o tema deste conteúdo, sem
           compromisso.
         </p>
       </div>

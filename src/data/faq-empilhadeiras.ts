@@ -12,10 +12,10 @@ export const faqEmpilhadeiras: FaqItem[] = [
   {
     question: "Vocês atendem na minha cidade?",
     answer:
-      "A Transpotech tem 11 unidades próprias e estrutura regional de suporte no Sul e Sudeste. Fale com nosso time para confirmar a cobertura e o atendimento técnico na sua região.",
+      "A TranspoTech tem 11 unidades próprias e estrutura regional de suporte no Sul e Sudeste. Fale com nosso time para confirmar a cobertura e o atendimento técnico na sua região.",
   },
   {
-    question: "A Transpotech loca empilhadeiras novas e usadas?",
+    question: "A TranspoTech loca empilhadeiras novas e usadas?",
     answer:
       "Sim. Disponibilizamos empilhadeiras novas e seminovas das marcas STILL, Linde e Baoli, conforme o perfil e o orçamento da sua operação.",
   },
@@ -37,7 +37,7 @@ export const faqEmpilhadeiras: FaqItem[] = [
   {
     question: "Preciso saber qual modelo quero locar?",
     answer:
-      "Não. Você não precisa chegar com o modelo definido. A Transpotech avalia sua operação e indica o equipamento mais adequado.",
+      "Não. Você não precisa chegar com o modelo definido. A TranspoTech avalia sua operação e indica o equipamento mais adequado.",
   },
   {
     question: "Posso testar antes de comprar?",

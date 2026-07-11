@@ -77,7 +77,7 @@ export function ForkliftTypesSection() {
           empilhadeira locar?
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          Você não precisa chegar com o modelo definido. A Transpotech avalia
+          Você não precisa chegar com o modelo definido. A TranspoTech avalia
           sua operação e indica a melhor opção conforme tipo de carga, altura de
           elevação, ambiente, piso, urgência e prazo de locação.
         </p>

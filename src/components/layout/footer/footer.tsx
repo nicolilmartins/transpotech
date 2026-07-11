@@ -168,7 +168,7 @@ export function Footer() {
         {/* Base */}
         <div className="flex items-center justify-between">
           <p className="text-body-sm leading-[1.35] text-neutral-100">
-            © 2026 Transpotech todos os direitos reservados.
+            © 2026 TranspoTech todos os direitos reservados.
           </p>
           <Link
             href="https://www.atom6studio.com/pt-br"

@@ -24,7 +24,22 @@ const BLOBS = [
 // Camada base: malha levemente visível em toda a área, mesmo fora dos blobs.
 const BASE_VISIBILITY = 0.14;
 
-export function DriftMesh({ className }: { className?: string }) {
+// Fade vertical (mesma máscara da MeshBackground em imagem): topo visível →
+// base transparente. Vai num wrapper próprio porque a máscara dos blobs é
+// inline no elemento da malha — camadas extras de mask compõem por união,
+// não por interseção, então o fade não pode entrar na mesma mask.
+const FADE =
+  "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.55) 35%, transparent 75%)";
+
+export function DriftMesh({
+  className,
+  fade = false,
+}: {
+  className?: string;
+  /** Apaga a malha de cima para baixo — para heros em wrappers altos onde a
+      malha deve sumir antes do conteúdo seguinte (substitui a MeshBackground). */
+  fade?: boolean;
+}) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -81,5 +96,13 @@ export function DriftMesh({ className }: { className?: string }) {
     WebkitMaskImage: mask,
   };
 
-  return <div ref={ref} aria-hidden className={className} style={style} />;
+  return (
+    <div
+      aria-hidden
+      className={className}
+      style={fade ? { maskImage: FADE, WebkitMaskImage: FADE } : undefined}
+    >
+      <div ref={ref} className="absolute inset-0" style={style} />
+    </div>
+  );
 }

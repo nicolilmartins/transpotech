@@ -20,7 +20,7 @@ export function PartnershipSection() {
         <div className="pointer-events-none relative order-last w-full select-none lg:absolute lg:left-[39%] lg:top-[-56px] lg:z-0 lg:order-none lg:w-[66%]">
           <Image
             src={illoAutomation}
-            alt="Fluxo de automação intralogística de ponta a ponta — TranspoTech + Dematic"
+            alt="Fluxo de automação intralogística de ponta a ponta, TranspoTech + Dematic"
             sizes="(min-width: 1024px) 66vw, 100vw"
             className="h-auto w-full object-contain"
           />
@@ -40,7 +40,7 @@ export function PartnershipSection() {
               <p className="text-body leading-[1.35] text-neutral-600">
                 A TranspoTech leva ao Brasil a automação intralogística da
                 Dematic, referência mundial e parte do grupo KION. Automatizamos
-                a operação de ponta a ponta — do recebimento à expedição — com
+                a operação de ponta a ponta, do recebimento à expedição, com
                 engenharia local e suporte próprio.
               </p>
             </div>

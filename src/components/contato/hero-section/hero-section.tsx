@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
+import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import {
   contactRequestSchema,
   type ContactRequestValues,
@@ -45,9 +46,10 @@ export function ContatoHeroSection() {
         <p className="text-body-sm font-semibold uppercase tracking-wide text-primary-500">
           Contato
         </p>
-        <h1 className="text-h2 font-bold text-neutral-800">
-          Entre em contato com a TranspoTech
-        </h1>
+        <BlurRevealTitle
+          className="text-h2 font-bold text-neutral-800"
+          segments={[{ text: "Entre em contato com a TranspoTech" }]}
+        />
         <p className="max-w-[520px] text-body leading-[1.5] text-neutral-600">
           Agende uma visita, proponha uma parceria, tire dúvidas ou fale com a
           nossa equipe de imprensa. Preencha o formulário ao lado e retornamos em

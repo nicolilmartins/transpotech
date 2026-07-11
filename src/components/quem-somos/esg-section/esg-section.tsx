@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Section } from "@/components/ui/section";
+import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import { ROUTES } from "@/lib/routes";
 import { gsap } from "@/lib/gsap";
 // PLACEHOLDER: trocar por foto real da equipe/ações ESG TranspoTech.
@@ -121,9 +122,9 @@ export function EsgGovernanceSection() {
       >
         {/* Imagem — no desktop estica até a altura da coluna de cards
             (fill absoluto para os cards definirem a altura da linha) */}
-        <div
+        <ParallaxFrame
           ref={imageRef}
-          className="relative order-last h-[300px] w-full shrink-0 overflow-hidden rounded-xl lg:order-none lg:h-auto lg:w-[720px] lg:self-stretch"
+          className="order-last h-[300px] w-full shrink-0 rounded-xl lg:order-none lg:h-auto lg:w-[720px] lg:self-stretch"
         >
           <Image
             src={team}
@@ -133,7 +134,7 @@ export function EsgGovernanceSection() {
             className="object-cover"
             placeholder="blur"
           />
-        </div>
+        </ParallaxFrame>
 
         <div className="flex flex-1 flex-col gap-4">
           {items.map((item, index) => (

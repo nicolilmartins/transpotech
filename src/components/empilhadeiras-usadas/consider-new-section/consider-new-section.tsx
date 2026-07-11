@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { CircleCheck } from "lucide-react";
 import { Section } from "@/components/ui/section";
+import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/lib/routes";
 import banner from "@/assets/images/RCE 20 + 16.webp";
@@ -49,7 +50,7 @@ export function ConsiderNewSection() {
         </Button>
       </div>
 
-      <div className="relative h-[260px] w-full overflow-hidden rounded-3xl border border-white/10 lg:h-[420px] lg:w-1/2">
+      <ParallaxFrame className="h-[260px] w-full rounded-3xl border border-white/10 lg:h-[420px] lg:w-1/2">
         <Image
           src={banner}
           alt="Empilhadeira nova STILL RCE 20 + 16 em operação"
@@ -57,7 +58,7 @@ export function ConsiderNewSection() {
           sizes="(min-width: 1024px) 50vw, 100vw"
           className="object-cover"
         />
-      </div>
+      </ParallaxFrame>
     </Section>
   );
 }

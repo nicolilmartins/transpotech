@@ -4,6 +4,7 @@ import post2 from "@/assets/images/blog/post2.png";
 import post3 from "@/assets/images/blog/post3.jpg";
 import post4 from "@/assets/images/blog/post4.png";
 import locacaoForklift from "@/assets/images/hero-image-locacao-de-empilhadeiras.webp";
+import heroQuemSomos from "@/assets/images/hero-quem-somos.webp";
 
 export type ArticleCategory =
   | "Locação"
@@ -35,7 +36,7 @@ export const articles: Article[] = [
     type: "Guia",
     title: "Quando vale mais a pena locar empilhadeiras",
     excerpt:
-      "Cinco cenários operacionais em que locação supera compra — e como calcular o ponto de virada.",
+      "Cinco cenários operacionais em que locação supera compra, e como calcular o ponto de virada.",
     date: "22 abr 2026",
     dateISO: "2026-04-22",
     readTime: "6 min",
@@ -53,7 +54,7 @@ export const articles: Article[] = [
     dateISO: "2026-05-04",
     readTime: "2 min",
     author: "Equipe TranspoTech",
-    image: post2,
+    image: heroQuemSomos,
   },
   {
     id: "linde-e20-e50-x-elite",

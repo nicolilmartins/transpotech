@@ -169,7 +169,7 @@ export function Header() {
         >
           {/* Esquerda: Logo + Desktop Nav */}
           <div className="flex items-center gap-4 lg:gap-20">
-            <Link href="/" className="shrink-0" aria-label="TranspoTech — página inicial">
+            <Link href="/" className="shrink-0" aria-label="TranspoTech: página inicial">
               <LogoTranspotech
                 className={[
                   "h-8 w-[174px] transition-colors duration-300",

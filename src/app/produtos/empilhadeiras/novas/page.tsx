@@ -8,13 +8,14 @@ import { FaqSection } from "@/components/layout/faq/faq-section";
 import { faqEmpilhadeiras } from "@/data/faq-empilhadeiras";
 import { CtaSection } from "@/components/layout/cta/cta-section";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
+import { DriftMesh } from "@/components/layout/drift-mesh";
 import { MeshBackground } from "@/components/layout/mesh-background/mesh-background";
 import { ROUTES } from "@/lib/routes";
 
 export const metadata: Metadata = {
   title: "Empilhadeiras Novas",
   description:
-    "Catálogo de empilhadeiras novas STILL, Linde e Baoli — elétricas, a combustão, retráteis e transpaleteiras. Equipamentos zero-hora com garantia de fábrica e configuração sob medida.",
+    "Catálogo de empilhadeiras novas STILL, Linde e Baoli: elétricas, a combustão, retráteis e transpaleteiras. Equipamentos zero-hora com garantia de fábrica e configuração sob medida.",
   alternates: { canonical: ROUTES.EMPILHADEIRAS_NOVAS },
   openGraph: {
     title: "Empilhadeiras Novas | TranspoTech",
@@ -27,9 +28,14 @@ export default function EmpilhadeirasNovasPage() {
   return (
     <main>
       {/* Grupo claro — catálogo.
-          pt extra → clareira do header flutuante (≈80px do título ao header). */}
+          pt extra → clareira do header flutuante (≈80px do título ao header).
+          Malha animada (DriftMesh, como na hero do Canal da Transparência)
+          só na região da hero: altura de viewport + fade na base. */}
       <div className="relative isolate bg-[#f7f6f6] pt-[96px]">
-        <MeshBackground className="pointer-events-none absolute inset-0 -z-10" />
+        <DriftMesh
+          fade
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-svh"
+        />
         <CatalogSection />
       </div>
 
@@ -38,7 +44,7 @@ export default function EmpilhadeirasNovasPage() {
         <CompareSection />
       </div>
 
-      {/* Bloco dark — considere usadas + por que escolher a Transpotech */}
+      {/* Bloco dark — considere usadas + por que escolher a TranspoTech */}
       <div className="relative isolate bg-[#181616]">
         <DarkAmbient />
         <ConsiderUsedSection />

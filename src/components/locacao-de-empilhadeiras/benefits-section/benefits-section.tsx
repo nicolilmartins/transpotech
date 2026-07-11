@@ -34,7 +34,7 @@ export function BenefitsSection() {
       <div className="flex w-full max-w-[620px] flex-col gap-6">
         <h2 className="text-h2 text-neutral-50">
           <span className="font-bold">Benefícios de alugar</span>{" "}
-          <span className="font-normal">com a Transpotech</span>
+          <span className="font-normal">com a TranspoTech</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-400">
           Mais de 80% da frota usa baterias de íons de lítio: tecnologia que

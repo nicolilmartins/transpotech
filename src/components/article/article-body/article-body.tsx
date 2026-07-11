@@ -1,4 +1,5 @@
 import type { Article } from "@/data/articles";
+import { articleSections } from "../article-sections";
 
 // Conteúdo editorial de demonstração (o texto final é publicado via CMS).
 // Escrito com base em conhecimento consolidado do setor de intralogística sobre
@@ -6,7 +7,7 @@ import type { Article } from "@/data/articles";
 // taxa de utilização e ponto de equilíbrio).
 export function ArticleBody({ article }: { article: Article }) {
   return (
-    <article className="flex max-w-[720px] flex-col gap-5 text-body leading-[1.7] text-neutral-700">
+    <article className="flex w-full max-w-[860px] flex-col gap-5 text-body leading-[1.7] text-neutral-700">
       {/* Lead — resumo do artigo */}
       <p className="text-lg font-medium leading-[1.6] text-neutral-800">
         {article.excerpt}
@@ -16,14 +17,17 @@ export function ArticleBody({ article }: { article: Article }) {
         A decisão entre <strong>locar ou comprar uma empilhadeira</strong> raramente
         se resolve olhando só o preço de aquisição. O que separa uma operação
         eficiente de uma frota cara e ociosa é o{" "}
-        <strong>custo total de propriedade (TCO)</strong> — a soma de aquisição,
+        <strong>custo total de propriedade (TCO)</strong>: a soma de aquisição,
         manutenção, peças, energia, mão de obra técnica, tempo parado e o custo do
         capital imobilizado ao longo da vida útil do equipamento. É esse número, e
         não a etiqueta de preço, que revela a alternativa mais vantajosa.
       </p>
 
-      <h2 className="mt-4 font-heading text-h5 font-semibold text-neutral-800">
-        Locação ou compra: a pergunta certa não é o preço
+      <h2
+        id={articleSections[0].id}
+        className="mt-4 scroll-mt-28 font-heading text-h5 font-semibold text-neutral-800"
+      >
+        {articleSections[0].title}
       </h2>
       <p>
         Comprar transforma a empilhadeira em um ativo (CAPEX): há desembolso inicial
@@ -35,8 +39,11 @@ export function ArticleBody({ article }: { article: Article }) {
         operacional.
       </p>
 
-      <h2 className="mt-4 font-heading text-h5 font-semibold text-neutral-800">
-        Cinco cenários em que a locação costuma vencer
+      <h2
+        id={articleSections[1].id}
+        className="mt-4 scroll-mt-28 font-heading text-h5 font-semibold text-neutral-800"
+      >
+        {articleSections[1].title}
       </h2>
       <ul className="flex flex-col gap-3 pl-1">
         {[
@@ -56,14 +63,17 @@ export function ArticleBody({ article }: { article: Article }) {
         ))}
       </ul>
 
-      <h2 className="mt-4 font-heading text-h5 font-semibold text-neutral-800">
-        Como calcular o ponto de virada
+      <h2
+        id={articleSections[2].id}
+        className="mt-4 scroll-mt-28 font-heading text-h5 font-semibold text-neutral-800"
+      >
+        {articleSections[2].title}
       </h2>
       <p>
         O fator decisivo é a <strong>taxa de utilização</strong>. Uma empilhadeira
         própria só dilui bem o investimento quando trabalha muitas horas por ano, de
         forma constante. Abaixo de um determinado volume de uso, o custo por hora de
-        um ativo comprado — somando depreciação, manutenção e ociosidade — supera o
+        um ativo comprado, somando depreciação, manutenção e ociosidade, supera o
         da locação.
       </p>
       <p>
@@ -76,8 +86,11 @@ export function ArticleBody({ article }: { article: Article }) {
         variável, sazonal ou incerto tende à locação.
       </p>
 
-      <h2 className="mt-4 font-heading text-h5 font-semibold text-neutral-800">
-        Quando a compra faz mais sentido
+      <h2
+        id={articleSections[3].id}
+        className="mt-4 scroll-mt-28 font-heading text-h5 font-semibold text-neutral-800"
+      >
+        {articleSections[3].title}
       </h2>
       <p>
         Comprar continua sendo a melhor escolha para operações com{" "}
@@ -88,21 +101,24 @@ export function ArticleBody({ article }: { article: Article }) {
         do ativo passa a compensar.
       </p>
 
-      <h2 className="mt-4 font-heading text-h5 font-semibold text-neutral-800">
-        O custo que não aparece na proposta: disponibilidade
+      <h2
+        id={articleSections[4].id}
+        className="mt-4 scroll-mt-28 font-heading text-h5 font-semibold text-neutral-800"
+      >
+        {articleSections[4].title}
       </h2>
       <p>
         O item mais caro de uma frota raramente está na planilha inicial: é a{" "}
         <strong>empilhadeira parada</strong>. Tempo de máquina indisponível
         significa pedido atrasado, hora extra e produtividade perdida. Por isso,
         avaliar locação x compra exige olhar também para prazo de atendimento
-        técnico, disponibilidade de peças e existência de equipamento reserva —
+        técnico, disponibilidade de peças e existência de equipamento reserva,
         variáveis que, no contrato de locação, costumam ser responsabilidade do
         fornecedor.
       </p>
       <p>
-        Na dúvida, o melhor ponto de partida é mapear a rotina real da operação —
-        turnos, horas por dia, sazonalidade e criticidade — e comparar o custo por
+        Na dúvida, o melhor ponto de partida é mapear a rotina real da operação,
+        turnos, horas por dia, sazonalidade e criticidade, e comparar o custo por
         hora de cada cenário. A equipe da TranspoTech ajuda a levantar esses números
         e a indicar a solução com o menor custo total para a sua operação.
       </p>

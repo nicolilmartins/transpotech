@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import heroImage from "@/assets/images/hero-sustentabilidade.webp";
 
 export function SustentabilidadeHeroSection() {
@@ -32,14 +33,21 @@ export function SustentabilidadeHeroSection() {
         <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col items-center justify-end gap-8 px-5 pb-20 text-center sm:px-6 lg:px-16">
           <div className="flex max-w-[900px] flex-col gap-4">
             {/* Duas linhas: quebra forçada antes de "responsabilidade..." */}
-            <h1 className="text-h2 text-neutral-50">
-              <span className="block font-normal">
-                Sustentabilidade, inclusão e
-              </span>
-              <span className="block font-bold text-primary-500 lg:whitespace-nowrap">
-                responsabilidade na intralogística
-              </span>
-            </h1>
+            <BlurRevealTitle
+              tone="dark"
+              className="text-h2 text-neutral-50"
+              segments={[
+                {
+                  text: "Sustentabilidade, inclusão e",
+                  className: "font-normal",
+                  br: true,
+                },
+                {
+                  text: "responsabilidade na intralogística",
+                  className: "font-bold text-primary-500 lg:whitespace-nowrap",
+                },
+              ]}
+            />
             <p className="mx-auto max-w-[480px] text-h6 font-normal leading-[1.3] text-neutral-50">
               Iniciativas de sustentabilidade, inclusão, comunidade e governança
               para um futuro mais responsável.

@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/ui/section";
+import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import { CircleCheck } from "lucide-react";
 import automacao from "@/assets/images/automacao.png";
 import { gsap } from "@/lib/gsap";
@@ -103,9 +104,9 @@ export function AutomationSection() {
         </div>
 
         {/* Imagem — desliza da direita junto da cascata */}
-        <div
+        <ParallaxFrame
           ref={imageRef}
-          className="relative order-2 min-h-[280px] min-w-0 flex-1 self-stretch overflow-hidden rounded-xl lg:order-none lg:min-h-0"
+          className="order-2 min-h-[280px] min-w-0 flex-1 self-stretch rounded-xl lg:order-none lg:min-h-0"
         >
           <Image
             src={automacao}
@@ -114,7 +115,7 @@ export function AutomationSection() {
             sizes="50vw"
             className="object-cover"
           />
-        </div>
+        </ParallaxFrame>
 
         {/* Botão — após a imagem no mobile */}
         <div className="order-3 self-start lg:hidden">

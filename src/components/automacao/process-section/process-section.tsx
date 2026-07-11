@@ -163,7 +163,7 @@ export function ProcessSection() {
         <p className="text-body leading-[1.35] text-neutral-600">
           Etapas claras para reduzir risco e acelerar a captura de valor. A
           TranspoTech implementa conforme a necessidade de cada cliente, em fases
-          que se adequam à sua operação — da automação parcial à completa.
+          que se adequam à sua operação, da automação parcial à completa.
         </p>
       </div>
 

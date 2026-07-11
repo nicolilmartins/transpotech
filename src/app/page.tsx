@@ -20,7 +20,7 @@ import { HoverMesh } from "@/components/layout/hover-mesh";
 export const metadata: Metadata = {
   title: "TranspoTech | Empilhadeiras, Locação e Manutenção",
   description:
-    "Dealer autorizado Linde, STILL e Baoli no Sul do Brasil. Frota funcionando, custo previsível e atendimento técnico 24h — tudo em um único parceiro.",
+    "Dealer autorizado Linde, STILL e Baoli no Sul do Brasil. Frota funcionando, custo previsível e atendimento técnico 24h, tudo em um único parceiro.",
   openGraph: {
     title: "TranspoTech | Empilhadeiras, Locação e Manutenção",
     description:
@@ -61,8 +61,8 @@ export default function HomePage() {
         <TestimonialsSection />
         <WhyUsSection />
       </div>
-      {/* Grupo claro 3 — Blog */}
-      <div className="relative isolate bg-[#fdfdfd]">
+      {/* Grupo claro 3 — Blog (fundo branco mais escuro) */}
+      <div className="relative isolate bg-[#f7f6f6]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
         <BlogSection />
       </div>

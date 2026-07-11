@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
+import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import type { ForkliftMedia } from "@/data/forklift-details";
 
 export function ModelGallerySection({
@@ -34,8 +35,8 @@ export function ModelGallerySection({
       </div>
 
       <div className="flex flex-col gap-4">
-        {/* Imagem ampla */}
-        <div className="relative h-[240px] w-full overflow-hidden rounded-3xl sm:h-[320px] lg:h-[460px]">
+        {/* Imagem ampla — parallax sutil dentro do frame */}
+        <ParallaxFrame className="h-[240px] w-full rounded-3xl sm:h-[320px] lg:h-[460px]">
           <Image
             src={wide.src}
             alt={wide.alt}
@@ -43,14 +44,14 @@ export function ModelGallerySection({
             sizes="(min-width: 1024px) 1312px, 100vw"
             className="object-cover"
           />
-        </div>
+        </ParallaxFrame>
 
         {/* Par de imagens */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {pair.map((item, i) => (
-            <div
+            <ParallaxFrame
               key={`${item.alt}-${i}`}
-              className="relative h-[220px] w-full overflow-hidden rounded-3xl sm:h-[300px] lg:h-[360px]"
+              className="h-[220px] w-full rounded-3xl sm:h-[300px] lg:h-[360px]"
             >
               <Image
                 src={item.src}
@@ -59,7 +60,7 @@ export function ModelGallerySection({
                 sizes="(min-width: 640px) 50vw, 100vw"
                 className="object-cover"
               />
-            </div>
+            </ParallaxFrame>
           ))}
         </div>
       </div>

@@ -31,24 +31,24 @@ export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
   return (
     <Section>
       {/* Card horizontal — ocupa toda a largura dentro do padding da seção */}
-      <div className="relative isolate flex w-full flex-col gap-10 overflow-hidden rounded-2xl bg-neutral-50 p-8 ring-1 ring-black/5 lg:flex-row lg:items-center lg:gap-16 lg:p-12">
+      <div className="relative isolate flex w-full flex-col gap-10 overflow-hidden rounded-2xl bg-[#181616] p-8 ring-1 ring-white/10 lg:flex-row lg:items-center lg:gap-16 lg:p-12">
         {/* Blur de fundo — laranja à direita, verde à esquerda (dentro do card,
             recortado pelo overflow-hidden). */}
         {showGlow && (
           <>
-            <div className="pointer-events-none absolute -right-24 -top-24 -z-10 size-[420px] -rotate-45 rounded-full bg-primary-500/15 blur-[120px]" />
-            <div className="pointer-events-none absolute -bottom-32 -left-24 -z-10 size-[420px] -rotate-45 rounded-full bg-secondary-500/10 blur-[120px]" />
+            <div className="pointer-events-none absolute -right-24 -top-24 -z-10 size-[420px] -rotate-45 rounded-full bg-primary-500/25 blur-[120px]" />
+            <div className="pointer-events-none absolute -bottom-28 -left-16 -z-10 size-[420px] -rotate-45 rounded-full bg-secondary-500/35 blur-[110px]" />
           </>
         )}
 
         {/* Texto */}
         <div className="flex flex-1 flex-col gap-4">
-        <h2 className="text-h3 text-neutral-800">
+        <h2 className="text-h3 text-neutral-50">
           <span className="font-normal">Inteligência logística</span>
           <br />
           <span className="font-bold text-primary-500">direto no seu e-mail</span>
         </h2>
-        <p className="max-w-[440px] text-body leading-[1.35] text-neutral-600">
+        <p className="max-w-[440px] text-body leading-[1.35] text-neutral-400">
           Guias práticos, cases reais e tendências de intralogística para apoiar
           as decisões da sua operação.
         </p>
@@ -72,7 +72,7 @@ export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
               placeholder="email@empresa.com"
               aria-invalid={!!errors.email}
               {...register("email")}
-              className="h-12 w-full rounded-xl border border-neutral-200 bg-white px-4 text-body text-neutral-800 placeholder:text-neutral-400 focus-visible:border-primary-500 focus-visible:outline-none aria-[invalid=true]:border-error"
+              className="h-12 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-body text-neutral-50 placeholder:text-neutral-500 focus-visible:border-primary-500 focus-visible:outline-none aria-[invalid=true]:border-error"
             />
           </div>
 

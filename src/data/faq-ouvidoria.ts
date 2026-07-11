@@ -10,7 +10,7 @@ export const faqOuvidoria: FaqItem[] = [
   {
     question: "Posso enviar uma reclamação comercial por aqui?",
     answer:
-      "Você pode registrar manifestações sobre sua experiência e relacionamento. Para demandas comerciais ou técnicas (orçamento, locação, peças ou assistência), use os canais de Orçamento, Contato ou Serviços — o atendimento tende a ser mais rápido.",
+      "Você pode registrar manifestações sobre sua experiência e relacionamento. Para demandas comerciais ou técnicas (orçamento, locação, peças ou assistência), use os canais de Orçamento, Contato ou Serviços. O atendimento tende a ser mais rápido.",
   },
   {
     question: "Receberei retorno?",

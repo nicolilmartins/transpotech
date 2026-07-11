@@ -5,7 +5,7 @@ export const faqContato: FaqItem[] = [
   {
     question: "Preciso saber exatamente qual solução quero contratar?",
     answer:
-      "Não. Basta descrever sua operação, o equipamento e a necessidade. A equipe da TranspoTech ajuda a identificar a melhor solução — compra, locação, manutenção ou cotação — conforme o seu cenário.",
+      "Não. Basta descrever sua operação, o equipamento e a necessidade. A equipe da TranspoTech ajuda a identificar a melhor solução: compra, locação, manutenção ou cotação, conforme o seu cenário.",
   },
   {
     question: "Posso solicitar orçamento pelo formulário?",

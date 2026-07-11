@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import team from "@/assets/images/esg-team.png";
 import { ROUTES } from "@/lib/routes";
 import { gsap } from "@/lib/gsap";
@@ -20,7 +21,7 @@ const items: EsgItem[] = [
   {
     title: "Great Place To Work",
     description:
-      "Pelo 4° ano consecutivo, a Transpotech foi reconhecida como Great Place To Work.",
+      "Pelo 4° ano consecutivo, a TranspoTech foi reconhecida como Great Place To Work.",
     link: null,
     barGradient:
       "linear-gradient(180deg, rgba(20,107,85,1) 0%, rgba(73,112,74,0.81) 100%)",
@@ -118,9 +119,9 @@ export function EsgSection() {
       {/* Conteúdo */}
       <div ref={contentRef} className="flex w-full flex-col gap-8 lg:flex-row lg:items-stretch lg:gap-20">
         {/* Imagem — no desktop acompanha a altura total dos cards ao lado */}
-        <div
+        <ParallaxFrame
           ref={imageRef}
-          className="relative order-last h-[300px] w-full shrink-0 overflow-hidden rounded-xl lg:order-none lg:h-auto lg:w-[720px]"
+          className="order-last h-[300px] w-full shrink-0 rounded-xl lg:order-none lg:h-auto lg:w-[720px]"
         >
           <Image
             src={team}
@@ -130,7 +131,7 @@ export function EsgSection() {
             className="object-cover"
             placeholder="blur"
           />
-        </div>
+        </ParallaxFrame>
 
         <div className="flex flex-1 flex-col gap-4">
           {items.map((item, index) => (

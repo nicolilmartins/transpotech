@@ -8,6 +8,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Section } from "@/components/ui/section";
+import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import operacao from "@/assets/images/operacao-image.webp";
 
 type Capability = { label: string; Icon: LucideIcon };
@@ -34,7 +35,7 @@ export function StructureSection() {
           <span className="font-bold text-primary-500">sua operação</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-400">
-          A Transpotech reúne estrutura técnica, frota, peças, unidades e
+          A TranspoTech reúne estrutura técnica, frota, peças, unidades e
           atendimento especializado para apoiar operações de movimentação de
           materiais.
         </p>
@@ -42,7 +43,7 @@ export function StructureSection() {
 
       {/* Imagem + lista de capacidades — imagem acompanha a altura dos tópicos */}
       <div className="flex w-full flex-col gap-10 lg:flex-row lg:items-stretch lg:gap-16">
-        <div className="relative order-2 min-h-[260px] w-full self-stretch overflow-hidden rounded-2xl lg:order-none lg:min-h-0 lg:w-1/2">
+        <ParallaxFrame className="order-2 min-h-[260px] w-full self-stretch rounded-2xl lg:order-none lg:min-h-0 lg:w-1/2">
           <Image
             src={operacao}
             alt="Empilhadeiras Linde, STILL e Baoli enfileiradas em pátio de operação"
@@ -50,7 +51,7 @@ export function StructureSection() {
             sizes="(min-width: 1024px) 50vw, 100vw"
             className="object-cover"
           />
-        </div>
+        </ParallaxFrame>
 
         <ul className="flex flex-1 flex-col">
           {capabilities.map((item) => (

@@ -31,10 +31,15 @@ export default function ServicosPage() {
     <main>
       <ServicosHeroSection />
 
-      {/* Grupo claro 1 — Multimarcas + Portfólio */}
+      {/* Multimarcas — fundo branco, sem malha de fundo (grade própria com linhas
+          finas + bolinhas nas interseções e blur verde no hover). */}
+      <div className="bg-[#fdfdfd]">
+        <MultibrandSection />
+      </div>
+
+      {/* Grupo claro 1 — Portfólio */}
       <div className="relative isolate bg-[#fdfdfd]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <MultibrandSection />
         <PortfolioSection />
       </div>
 

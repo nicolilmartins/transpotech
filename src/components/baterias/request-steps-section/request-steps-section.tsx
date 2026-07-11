@@ -145,7 +145,7 @@ export function RequestStepsSection() {
           <span className="font-bold text-primary-500">a solicitação</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          Um processo simples e rápido — você informa a necessidade e a equipe
+          Um processo simples e rápido, você informa a necessidade e a equipe
           da TranspoTech indica a melhor solução de energia para a sua operação.
         </p>
       </div>

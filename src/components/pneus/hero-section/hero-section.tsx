@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import { ROUTES } from "@/lib/routes";
 import heroImage from "@/assets/images/hero-image-pneus.webp";
 
@@ -31,13 +32,21 @@ export function PneusHeroSection() {
         {/* Conteúdo — parte inferior da hero (80px de padding inferior) */}
         <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col items-center justify-end gap-8 px-5 pb-20 text-center sm:px-6 lg:px-16">
           <div className="flex max-w-[563px] flex-col gap-4">
-            <h1 className="text-h2 text-neutral-50">
-              <span className="font-normal">Pneus para operação</span>
-              <br />
-              <span className="font-bold text-primary-500">
-                segura e produtiva
-              </span>
-            </h1>
+            <BlurRevealTitle
+              tone="dark"
+              className="text-h2 text-neutral-50"
+              segments={[
+                {
+                  text: "Pneus para operação",
+                  className: "font-normal",
+                  br: true,
+                },
+                {
+                  text: "segura e produtiva",
+                  className: "font-bold text-primary-500",
+                },
+              ]}
+            />
             <p className="mx-auto max-w-[420px] text-h6 font-normal leading-[1.3] text-neutral-50">
               A categoria certa para cada piso, aplicação e tipo de operação.
             </p>

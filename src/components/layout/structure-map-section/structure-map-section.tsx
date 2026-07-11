@@ -119,7 +119,7 @@ export function StructureMapSection({
                           >
                             <span>
                               {p.city}
-                              {note && <span> — {note}</span>}
+                              {note && <span>, {note}</span>}
                             </span>
                             {p.time && (
                               <span className="shrink-0">

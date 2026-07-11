@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { CircleCheck } from "lucide-react";
 import { Section } from "@/components/ui/section";
+import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/lib/routes";
 import banner from "@/assets/images/operacao-image.webp";
@@ -20,7 +21,8 @@ export function ConsiderUsedSection() {
       <div className="flex flex-1 flex-col gap-8">
         <div className="flex flex-col gap-4">
           <h2 className="text-h2 text-neutral-50">
-            <span className="font-normal">Considere também </span>
+            <span className="font-normal">Considere também</span>
+            <br />
             <span className="font-bold text-primary-500">
               usadas e seminovas
             </span>
@@ -54,7 +56,7 @@ export function ConsiderUsedSection() {
         </Button>
       </div>
 
-      <div className="relative h-[260px] w-full overflow-hidden rounded-3xl lg:h-[500px] lg:w-1/2">
+      <ParallaxFrame className="h-[260px] w-full rounded-3xl lg:h-[500px] lg:w-1/2">
         <Image
           src={banner}
           alt="Empilhadeira seminova revisada pela TranspoTech em operação"
@@ -62,7 +64,7 @@ export function ConsiderUsedSection() {
           sizes="(min-width: 1024px) 50vw, 100vw"
           className="object-cover"
         />
-      </div>
+      </ParallaxFrame>
     </Section>
   );
 }

@@ -54,7 +54,7 @@ export function WhyChooseSection() {
   return (
     <Section className="flex flex-col items-center gap-12 lg:gap-16">
       <h2 className="max-w-[560px] text-center text-h2 font-normal text-neutral-50">
-        Por que empresas escolhem a Transpotech
+        Por que empresas escolhem a TranspoTech
       </h2>
 
       <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -63,7 +63,7 @@ export function WhyChooseSection() {
             key={reason.title}
             className="flex min-h-[240px] flex-col justify-between overflow-hidden rounded-xl bg-[rgba(251,251,251,0.05)] p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.35)] lg:h-[299px]"
           >
-            <reason.Icon aria-hidden className="size-7 text-white/50 lg:size-8" />
+            <reason.Icon aria-hidden className="size-7 text-[#919090] lg:size-8" />
             <div className="flex flex-col gap-4">
               <h3 className="font-heading text-h6 font-semibold text-neutral-200">
                 {reason.title}

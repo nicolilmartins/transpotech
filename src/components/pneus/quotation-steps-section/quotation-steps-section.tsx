@@ -115,7 +115,7 @@ export function QuotationStepsSection() {
           <span className="font-bold text-primary-500">a cotação de pneus</span>
         </h2>
         <p className="text-body leading-[1.5] text-neutral-400">
-          Um processo simples e rápido — você informa a necessidade e a equipe
+          Um processo simples e rápido, você informa a necessidade e a equipe
           da TranspoTech indica o pneu certo para a sua operação.
         </p>
       </div>

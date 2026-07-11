@@ -45,7 +45,7 @@ export function WhyUsSection() {
 
       <div className="relative w-full">
         <h2 className="w-full text-center text-h2 font-normal text-neutral-200">
-          Por que empresas escolhem a Transpotech
+          Por que empresas escolhem a TranspoTech
         </h2>
       </div>
 
@@ -55,7 +55,7 @@ export function WhyUsSection() {
             key={card.title}
             className="flex min-h-[240px] flex-col justify-between overflow-hidden rounded-xl bg-[rgba(251,251,251,0.05)] p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.35)] lg:h-[299px]"
           >
-            <card.icon className="size-7 text-white/50 lg:size-8" aria-hidden />
+            <card.icon className="size-7 text-[#919090] lg:size-8" aria-hidden />
             <div className="flex flex-col gap-4">
               <h3 className="w-[242px] max-w-full font-heading text-h6 font-semibold text-neutral-200">
                 {card.title}

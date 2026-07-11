@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import Image, { type StaticImageData } from "next/image";
 import { Section } from "@/components/ui/section";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
-import illoBattery from "@/assets/images/stats/illustration-battery.webp";
-import illoChartDown from "@/assets/images/stats/card3.png";
-import illoBatteryRoom from "@/assets/images/stats/illustration-battery-room.webp";
-
-const cardImages = [illoBattery, illoChartDown, illoBatteryRoom];
+import illo1 from "@/assets/images/baterias-tech/illo-1.webp";
+import illo2 from "@/assets/images/baterias-tech/illo-2.webp";
+import illo3 from "@/assets/images/baterias-tech/illo-3.webp";
+import mask1 from "@/assets/images/baterias-tech/mask-1.png";
+import mask2 from "@/assets/images/baterias-tech/mask-2.png";
 
 // Conta o número principal (primeiro grupo de dígitos), preservando sufixos.
 const countValue = (value: string, progress: number) =>
@@ -16,17 +16,31 @@ const countValue = (value: string, progress: number) =>
     String(Math.round(parseInt(digits, 10) * progress))
   );
 
+// Posicionamento da ilustração seguindo o Figma. Todos os valores em `cqw`
+// (1cqw = 1% da largura do card) para que a composição escale com o card,
+// mantendo o objeto ancorado no canto direito, sangrando pelas bordas.
+type Media = {
+  illo: StaticImageData;
+  left: string;
+  // Centro vertical do objeto como fração da ALTURA do card (fiel ao Figma,
+  // independente da altura real do card). A caixa usa -translate-y-1/2.
+  centerY: string;
+  width: string;
+  height: string;
+  // Máscara: pode ser a máscara do Figma (`url(...)` + size/position) ou um
+  // gradiente radial (closest-side garante 0 nas bordas → sem "linha").
+  maskImage: string;
+  maskSize?: string;
+  maskPosition?: string;
+  objectPosition: string;
+};
+
 type Stat = {
   value: string;
   label: string;
   countdownFrom?: number;
-  // Largura máx. do rótulo (força 2 linhas, como no Figma).
   labelWidth: number;
-  // Posicionamento da ilustração (segue o Figma: card 1 centralizado,
-  // cards 2 e 3 à direita, sangrando pela borda direita).
-  imgScale: number;
-  imgPos: string;
-  imgOrigin: string;
+  media: Media;
 };
 
 const stats: Stat[] = [
@@ -34,17 +48,32 @@ const stats: Stat[] = [
     value: "3x mais",
     label: "Mais vida útil do que baterias chumbo-ácidas",
     labelWidth: 185,
-    imgScale: 1.7,
-    imgPos: "92% 50%",
-    imgOrigin: "center",
+    media: {
+      illo: illo1,
+      left: "44.96cqw",
+      centerY: "39.55%",
+      width: "74.68cqw",
+      height: "66.76cqw",
+      maskImage: `url(${mask1.src})`,
+      maskSize: "69.57cqw 69.78cqw",
+      maskPosition: "1.82cqw -1.78cqw",
+      objectPosition: "center",
+    },
   },
   {
     value: "30%",
     label: "Redução no consumo de energia",
     labelWidth: 160,
-    imgScale: 1.15,
-    imgPos: "100% 50%",
-    imgOrigin: "right center",
+    media: {
+      illo: illo2,
+      left: "56.29cqw",
+      centerY: "41.55%",
+      width: "51.78cqw",
+      height: "46.29cqw",
+      maskImage:
+        "radial-gradient(ellipse closest-side at 50% 50%, #000 60%, transparent 100%)",
+      objectPosition: "center",
+    },
   },
   // Contador decrescente: parte de countdownFrom e chega a 0.
   {
@@ -52,11 +81,37 @@ const stats: Stat[] = [
     label: "Salas de baterias necessárias",
     countdownFrom: 10,
     labelWidth: 160,
-    imgScale: 1.6,
-    imgPos: "128% 50%",
-    imgOrigin: "right center",
+    media: {
+      illo: illo3,
+      left: "46.48cqw",
+      centerY: "49.93%",
+      width: "60.85cqw",
+      height: "54.40cqw",
+      maskImage: `url(${mask2.src})`,
+      maskSize: "66.67cqw 60.54cqw",
+      maskPosition: "6.12cqw -1.17cqw",
+      objectPosition: "bottom",
+    },
   },
 ];
+
+// Máscara alpha (Figma) aplicada à caixa da ilustração, para o objeto se fundir
+// ao fundo do card.
+const maskStyle = (m: Media): CSSProperties => ({
+  left: m.left,
+  top: m.centerY,
+  width: m.width,
+  height: m.height,
+  maskImage: m.maskImage,
+  WebkitMaskImage: m.maskImage,
+  maskRepeat: "no-repeat",
+  WebkitMaskRepeat: "no-repeat",
+  maskMode: "alpha",
+  ...(m.maskSize ? { maskSize: m.maskSize, WebkitMaskSize: m.maskSize } : {}),
+  ...(m.maskPosition
+    ? { maskPosition: m.maskPosition, WebkitMaskPosition: m.maskPosition }
+    : {}),
+});
 
 const displayValue = (s: Stat, progress: number) =>
   s.countdownFrom != null
@@ -155,20 +210,22 @@ export function TechSection() {
             }}
             className="group relative flex min-h-[160px] flex-1 flex-col gap-1 overflow-hidden rounded-3xl bg-[#f9f9f9] p-4 lg:h-[172px] lg:p-5"
           >
-            {/* Ilustração à direita — dimensionada como no Figma (canto direito,
-                praticamente completa, com leve sangramento no topo). */}
-            <Image
-              src={cardImages[i]}
-              alt=""
-              fill
-              sizes="(min-width: 640px) 33vw, 100vw"
-              style={{
-                transform: `scale(${s.imgScale})`,
-                transformOrigin: s.imgOrigin,
-                objectPosition: s.imgPos,
-              }}
-              className="pointer-events-none select-none object-contain"
-            />
+            {/* Camada da ilustração — geometria e máscara do Figma. Cresce
+                levemente no hover (igual à home). */}
+            <div className="pointer-events-none absolute inset-0 [container-type:inline-size]">
+              <div className="absolute -translate-y-1/2" style={maskStyle(s.media)}>
+                <div className="relative h-full w-full transition-transform duration-500 ease-out group-hover:scale-105">
+                  <Image
+                    src={s.media.illo}
+                    alt=""
+                    fill
+                    sizes="(min-width: 640px) 33vw, 100vw"
+                    className="select-none object-cover"
+                    style={{ objectPosition: s.media.objectPosition }}
+                  />
+                </div>
+              </div>
+            </div>
 
             {/* Glow laranja radial no rodapé — hover (desktop) / card ativo (mobile) */}
             <div

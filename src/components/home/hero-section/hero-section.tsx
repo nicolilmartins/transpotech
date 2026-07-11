@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import forklift from "@/assets/images/hero-image.webp";
 import forkliftMobile from "@/assets/images/hero-image-mobile.webp";
 
@@ -53,11 +54,17 @@ export function HeroSection() {
         {/* Texto + botões: centralizado no mobile, sobreposto à esquerda no desktop */}
         <div className="flex flex-col items-center gap-8 px-5 pt-32 text-center sm:px-6 lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:items-start lg:gap-10 lg:px-16 lg:pt-0 lg:text-left 2xl:px-30">
           <div className="flex flex-col gap-4">
-            <h1 className="text-[32px] leading-[1.1] text-neutral-800 lg:w-max lg:text-[48px] 2xl:text-[54px]">
-              <span className="font-bold">Empilhadeiras,</span>{" "}
-              <br className="hidden sm:block" />
-              <span className="font-normal">locação e manutenção</span>
-            </h1>
+            <BlurRevealTitle
+              className="text-[32px] leading-[1.1] text-neutral-800 lg:w-max lg:text-[48px] 2xl:text-[54px]"
+              segments={[
+                {
+                  text: "Empilhadeiras, ",
+                  className: "font-bold",
+                  br: "hidden sm:block",
+                },
+                { text: "locação e manutenção", className: "font-normal" },
+              ]}
+            />
             <p className="text-[16px] font-normal text-neutral-800 lg:max-w-[440px] 2xl:text-[18px]">
               Dealer autorizado Linde, STILL e Baoli no Sul do Brasil. Frota
               funcionando, custo previsível e atendimento técnico 24h, tudo em um

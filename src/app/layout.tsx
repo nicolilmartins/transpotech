@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     template: "%s | TranspoTech",
   },
   description:
-    "TranspoTech — locação, assistência técnica e venda de empilhadeiras industriais. Representante oficial STILL, Linde e Baoli. 25 anos de mercado, 11 unidades.",
+    "TranspoTech: locação, assistência técnica e venda de empilhadeiras industriais. Representante oficial STILL, Linde e Baoli. 25 anos de mercado, 11 unidades.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://transpotech.com.br"
   ),

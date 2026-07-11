@@ -45,7 +45,6 @@ export function ModelExperienceSection({
   const rootRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
   const zoomRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
 
   // Um card por atributo do modelo (texto + imagem específica do equipamento).
   const cardImages = detail.media.cards;
@@ -96,9 +95,6 @@ export function ModelExperienceSection({
             Math.max(window.innerWidth / w, window.innerHeight / h)
           );
           gsap.set(zoom, { scale: 1 + p * (target - 1) });
-          gsap.set(titleRef.current, {
-            opacity: gsap.utils.clamp(0, 1, 1 - p * 2),
-          });
         },
       });
 
@@ -173,20 +169,11 @@ export function ModelExperienceSection({
             sizes="100vw"
             className="object-cover object-bottom"
           />
-          {/* Overlay para legibilidade do título na base */}
+          {/* Overlay para legibilidade na base */}
           <div
             aria-hidden
             className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent"
           />
-          {/* Título alinhado na base, a 48px da extremidade */}
-          <h2
-            ref={titleRef}
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-6 text-center sm:p-10 lg:p-12"
-          >
-            <span className="font-heading text-h2 font-bold leading-[1.15] text-neutral-50">
-              {detail.intro.title}
-            </span>
-          </h2>
         </div>
       </div>
 

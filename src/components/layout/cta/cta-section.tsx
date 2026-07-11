@@ -33,8 +33,8 @@ export function CtaSection({
       <div className="pointer-events-none absolute -right-32 -top-40 size-[700px] -rotate-45 rounded-full bg-primary-500/15 blur-[120px]" />
       <div className="pointer-events-none absolute -left-40 top-0 size-[700px] -rotate-45 rounded-full bg-secondary-600/15 blur-[120px]" />
 
-      {/* Conteúdo — limitado a 1440px */}
-      <div className="relative mx-auto flex min-h-[360px] w-full max-w-[1440px] flex-col items-center justify-center gap-10 px-5 py-16 sm:px-6 lg:h-[419px] lg:px-16 lg:py-20 2xl:px-30">
+      {/* Conteúdo — limitado a 1440px, com 80px de padding vertical */}
+      <div className="relative mx-auto flex min-h-[360px] w-full max-w-[1440px] flex-col items-center justify-center gap-10 px-5 py-20 sm:px-6 lg:px-16 2xl:px-30">
         <div className="relative flex flex-col items-center gap-4 text-center">
           <h2 className="w-[700px] max-w-full text-balance text-h2 text-neutral-800">
             <span className="font-normal">{titleRegular}</span>

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 /**
  * Blur verde de fundo (mobile) que "anda" conforme a seção é rolada — dá o
- * efeito de blur no fundo da seção "Por que escolhem a Transpotech" no mobile.
+ * efeito de blur no fundo da seção "Por que escolhem a TranspoTech" no mobile.
  * No desktop quem cuida da ambiência é o DarkAmbient (lg:hidden aqui).
  */
 export function WhyUsGlow() {

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import { ROUTES } from "@/lib/routes";
 // PLACEHOLDER: trocar por render de armazém automatizado (Dematic)
 import heroImage from "@/assets/images/operacao-image.webp";
@@ -32,13 +33,21 @@ export function AutomacaoHeroSection() {
         {/* Conteúdo — parte inferior da hero (80px de padding inferior) */}
         <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col items-center justify-end gap-8 px-5 pb-20 text-center sm:px-6 lg:px-16">
           <div className="flex max-w-[563px] flex-col gap-4">
-            <h1 className="text-h2 text-neutral-50">
-              <span className="font-normal">Operação logística</span>
-              <br />
-              <span className="font-bold text-primary-500">
-                automatizada com Dematic
-              </span>
-            </h1>
+            <BlurRevealTitle
+              tone="dark"
+              className="text-h2 text-neutral-50"
+              segments={[
+                {
+                  text: "Operação logística",
+                  className: "font-normal",
+                  br: true,
+                },
+                {
+                  text: "automatizada com Dematic",
+                  className: "font-bold text-primary-500",
+                },
+              ]}
+            />
             <p className="mx-auto max-w-[440px] text-h6 font-normal leading-[1.3] text-neutral-50">
               Soluções escaláveis para indústrias, e-commerces e centros de
               distribuição.

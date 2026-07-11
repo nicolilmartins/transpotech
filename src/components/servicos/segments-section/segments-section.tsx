@@ -52,7 +52,7 @@ const segments: Segment[] = [
 function SegmentCard({ title, description, Icon }: Segment) {
   return (
     <div className="flex min-h-[240px] flex-col justify-between overflow-hidden rounded-xl bg-[rgba(251,251,251,0.05)] p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.35)] lg:h-[299px]">
-      <Icon aria-hidden className="size-7 text-white/50 lg:size-8" />
+      <Icon aria-hidden className="size-7 text-[#919090] lg:size-8" />
       <div className="flex flex-col gap-4">
         <h3 className="whitespace-nowrap font-heading text-h6 font-semibold text-neutral-200">
           {title}

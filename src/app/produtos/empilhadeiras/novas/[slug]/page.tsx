@@ -6,7 +6,7 @@ import { ModelExperienceSection } from "@/components/empilhadeiras-novas/model-e
 import { ModelGallerySection } from "@/components/empilhadeiras-novas/model-gallery-section/model-gallery-section";
 import { RelatedProductsSection } from "@/components/empilhadeiras-novas/related-products/related-products-section";
 import { BackToCatalog } from "@/components/empilhadeiras-novas/back-to-catalog/back-to-catalog";
-import { MeshBackground } from "@/components/layout/mesh-background/mesh-background";
+import { DriftMesh } from "@/components/layout/drift-mesh";
 import {
   forkliftsNovas,
   getForkliftBySlug,
@@ -40,11 +40,11 @@ export async function generateMetadata({
 
   return {
     title: forklift.name,
-    description: `${forklift.name} — ${detail.tagline} ${forklift.application}. Solicite seu orçamento com a TranspoTech.`,
+    description: `${forklift.name}: ${detail.tagline} ${forklift.application}. Solicite seu orçamento com a TranspoTech.`,
     alternates: { canonical: `${ROUTES.EMPILHADEIRAS_NOVAS}/${forklift.id}` },
     openGraph: {
       title: `${forklift.name} | TranspoTech`,
-      description: `${forklift.name} — ${forklift.application}.`,
+      description: `${forklift.name}: ${forklift.application}.`,
     },
   };
 }
@@ -63,14 +63,18 @@ export default async function EmpilhadeiraNovaDetalhePage({
   return (
     <main>
       {/* Grupo claro — hero (pt extra → clareira do header flutuante).
-          Malha no topo, no mesmo tamanho da hero do catálogo de novas
-          (MeshBackground: largura 100%, altura natural, ancorada no topo).
+          Malha animada no topo (DriftMesh, como na hero do Canal da
+          Transparência), no mesmo tamanho da hero do catálogo de novas:
+          altura de viewport + fade na base.
           data-header-hero → header laranja sobre a hero (igual à home). */}
       <div
         data-header-hero
         className="relative isolate bg-[#fdfdfd] pt-[96px]"
       >
-        <MeshBackground className="pointer-events-none absolute inset-0 -z-10" />
+        <DriftMesh
+          fade
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-svh"
+        />
         <ProductDetailSection forklift={forklift} />
       </div>
 

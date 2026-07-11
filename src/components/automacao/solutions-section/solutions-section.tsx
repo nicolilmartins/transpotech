@@ -23,6 +23,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Section } from "@/components/ui/section";
+import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/lib/routes";
 import imgSolucoes from "@/assets/images/image-solucoes.webp";
@@ -174,8 +175,8 @@ export function SolutionsSection() {
           <span className="font-bold text-primary-500">sua intralogística</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          O portfólio Dematic cobre a operação de ponta a ponta — do recebimento
-          à expedição — combinando equipamentos, software e robótica.
+          O portfólio Dematic cobre a operação de ponta a ponta, do recebimento
+          à expedição, combinando equipamentos, software e robótica.
         </p>
       </div>
 
@@ -245,7 +246,7 @@ export function SolutionsSection() {
         </div>
 
         {/* Imagem à direita — altura total do card, com bordinha (padding + cantos). */}
-        <div className="relative order-first min-h-[240px] w-full overflow-hidden rounded-xl bg-neutral-100 lg:order-none lg:min-h-full">
+        <ParallaxFrame className="order-first min-h-[240px] w-full rounded-xl bg-neutral-100 lg:order-none lg:min-h-full">
           <Image
             key={current.name}
             src={current.image}
@@ -255,7 +256,7 @@ export function SolutionsSection() {
             className="object-cover"
             style={{ objectPosition: current.imagePosition ?? "center" }}
           />
-        </div>
+        </ParallaxFrame>
       </div>
 
       {/* Botão fora do card, centralizado */}

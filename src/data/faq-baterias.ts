@@ -27,7 +27,7 @@ export const faqBaterias: FaqItem[] = [
   {
     question: "Vocês informam preço no site?",
     answer:
-      "Não. O preço depende de tecnologia, especificação, equipamento e disponibilidade — por isso a cotação é feita conforme a sua operação.",
+      "Não. O preço depende de tecnologia, especificação, equipamento e disponibilidade. Por isso a cotação é feita conforme a sua operação.",
   },
   {
     question: "Vocês também prestam suporte técnico?",

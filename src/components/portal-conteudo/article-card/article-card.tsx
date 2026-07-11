@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Clock } from "lucide-react";
 import type { Article } from "@/data/articles";
 import { ROUTES } from "@/lib/routes";
 
@@ -34,21 +33,9 @@ export function ArticleCard({ article }: { article: Article }) {
             {article.excerpt}
           </p>
 
-          <div className="flex items-center justify-between gap-3 text-body-sm text-neutral-500">
-            <span>{article.date}</span>
-            <span className="inline-flex items-center gap-1">
-              <Clock aria-hidden className="size-4" />
-              {article.readTime}
-            </span>
-          </div>
-
-          <span className="mt-1 inline-flex items-center gap-1.5 text-body-sm font-semibold text-neutral-800">
-            Ler conteúdo
-            <ArrowRight
-              aria-hidden
-              className="size-4 transition-transform duration-200 group-hover/card:translate-x-1"
-            />
-          </span>
+          {/* Linha fina divisória acima da data */}
+          <div className="border-t border-neutral-200" />
+          <span className="text-body-sm text-neutral-500">{article.date}</span>
         </div>
       </article>
     </Link>

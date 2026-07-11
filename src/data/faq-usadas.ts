@@ -27,6 +27,6 @@ export const faqUsadas: FaqItem[] = [
   {
     question: "Tem apoio de financiamento?",
     answer:
-      "Sim. Trabalhamos com programas de financiamento e leasing — fale com um especialista para encontrar a melhor condição.",
+      "Sim. Trabalhamos com programas de financiamento e leasing. Fale com um especialista para encontrar a melhor condição.",
   },
 ];

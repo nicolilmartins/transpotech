@@ -10,7 +10,7 @@ export const faqCanalTransparencia: FaqItem[] = [
   {
     question: "Quais temas devem ser enviados por este canal?",
     answer:
-      "Situações relacionadas a ética, integridade e conduta — como assédio, discriminação, fraude ou corrupção, conflito de interesses, descumprimento de políticas internas, uso indevido de recursos e condutas antiéticas.",
+      "Situações relacionadas a ética, integridade e conduta, como assédio, discriminação, fraude ou corrupção, conflito de interesses, descumprimento de políticas internas, uso indevido de recursos e condutas antiéticas.",
   },
   {
     question: "Esse canal é para reclamações comerciais?",

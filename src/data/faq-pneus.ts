@@ -22,7 +22,7 @@ export const faqPneus: FaqItem[] = [
   {
     question: "Vocês informam preço no site?",
     answer:
-      "Não. O preço depende de categoria, medida, equipamento e disponibilidade — por isso a cotação é feita conforme as informações da sua operação.",
+      "Não. O preço depende de categoria, medida, equipamento e disponibilidade. Por isso a cotação é feita conforme as informações da sua operação.",
   },
   {
     question: "Vocês também fazem manutenção ou troca?",
