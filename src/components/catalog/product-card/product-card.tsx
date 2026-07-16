@@ -22,7 +22,14 @@ function SpecRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function ProductCard({ forklift }: { forklift: Forklift }) {
+export function ProductCard({
+  forklift,
+  onRequestQuote,
+}: {
+  forklift: Forklift;
+  /** Quando definido, "Solicitar orçamento" abre o modal em vez de navegar. */
+  onRequestQuote?: (forklift: Forklift) => void;
+}) {
   return (
     // Card com padding simétrico (p-6 = 24px). gap-8 (32px) separa imagem →
     // textos → botões. A imagem fica DENTRO do card, sem exceder o topo.
@@ -66,21 +73,33 @@ export function ProductCard({ forklift }: { forklift: Forklift }) {
         <dl className="flex flex-col gap-2">
           <SpecRow label="Capacidade" value={forklift.capacity} />
           <SpecRow label="Energia" value={forklift.energy} />
-          <SpecRow label="Disponibilidade" value={forklift.availability} />
+          <SpecRow label="Elevação" value={forklift.liftHeight} />
+          <SpecRow label="Corredor operacional" value={forklift.aisleWidth} />
         </dl>
       </div>
 
       {/* Botões — pinados na base do card (mt-auto) para alinhar em todos os
           cards; 32px do bloco de textos (gap-8 do article) quando não há folga. */}
       <div className="mt-auto flex flex-col gap-2">
-        <Button
-          variant="primary"
-          size="lg"
-          href={ROUTES.ORCAMENTO}
-          className="w-full justify-center"
-        >
-          Solicitar orçamento
-        </Button>
+        {onRequestQuote ? (
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={() => onRequestQuote(forklift)}
+            className="w-full justify-center"
+          >
+            Solicitar orçamento
+          </Button>
+        ) : (
+          <Button
+            variant="primary"
+            size="lg"
+            href={ROUTES.ORCAMENTO}
+            className="w-full justify-center"
+          >
+            Solicitar orçamento
+          </Button>
+        )}
         <Button
           variant="gray"
           size="lg"

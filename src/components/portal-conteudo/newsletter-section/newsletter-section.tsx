@@ -44,8 +44,8 @@ export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
         {/* Texto */}
         <div className="flex flex-1 flex-col gap-4">
         <h2 className="text-h3 text-neutral-50">
-          <span className="font-normal">Inteligência logística</span>
-          <br />
+          <span className="font-normal">Inteligência logística</span>{" "}
+          <br className="hidden lg:inline" />
           <span className="font-bold text-primary-500">direto no seu e-mail</span>
         </h2>
         <p className="max-w-[440px] text-body leading-[1.35] text-neutral-400">

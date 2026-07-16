@@ -58,6 +58,7 @@ export default function BateriasPage() {
         titleRegular="Precisa melhorar a disponibilidade dos seus "
         titleAccent="equipamentos elétricos?"
         description="Fale com a TranspoTech e receba orientação para cotar baterias, carregadores ou avaliar a rotina de energia da operação."
+        descriptionWidth="560px"
         ctaLabel="Solicitar cotação"
         ctaHref={ROUTES.ORCAMENTO}
       />

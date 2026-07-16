@@ -3,12 +3,21 @@
 import { Fragment, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
+import {
+  Factory,
+  Warehouse,
+  Store,
+  Truck,
+  type LucideIcon,
+} from "lucide-react";
 import illustration from "@/assets/images/stats/illustration-segment.webp";
 import { gsap } from "@/lib/gsap";
 
 type Marker = {
   title: string;
   description: string;
+  /** Ícone exibido no card mobile (desktop usa os marcadores na ilustração) */
+  icon: LucideIcon;
   color: "green" | "orange";
   side: "left" | "right";
   label: { left: string; top: string };
@@ -22,6 +31,7 @@ const markers: Marker[] = [
     title: "Indústria",
     description:
       "Suporte para abastecimento de linha, movimentação interna e continuidade de produção.",
+    icon: Factory,
     color: "green",
     side: "left",
     label: { left: "6.1%", top: "5.67%" },
@@ -33,6 +43,7 @@ const markers: Marker[] = [
     title: "Distribuição",
     description:
       "Soluções para armazenagem, fluxo, picking, expedição e produtividade operacional.",
+    icon: Warehouse,
     color: "green",
     side: "left",
     label: { left: "2.16%", top: "58.16%" },
@@ -44,6 +55,7 @@ const markers: Marker[] = [
     title: "Varejo e atacado",
     description:
       "Apoio para movimentação eficiente em operações com alto giro e necessidade de ritmo constante.",
+    icon: Store,
     color: "orange",
     side: "right",
     label: { left: "78.96%", top: "24.72%" },
@@ -55,6 +67,7 @@ const markers: Marker[] = [
     title: "Logística",
     description:
       "Estrutura para operações que precisam de disponibilidade, resposta rápida e previsibilidade.",
+    icon: Truck,
     color: "orange",
     side: "right",
     label: { left: "78.18%", top: "64.02%" },
@@ -95,21 +108,53 @@ export function SegmentsSection() {
       tl.from(illustrationRef.current, { opacity: 0, duration: 0.7, ease: "power1.out" }, 0.24);
     }
 
-    // Marcadores (desktop) — cada um no seu delay original
+    // Marcadores (desktop) — cada um no seu delay original. O ponto nasce
+    // pequeno e cresce até o tamanho final; a linha é "desenhada" a partir do
+    // ponto em direção ao rótulo (clip-path preserva o gradiente exato).
     markers.forEach((m, i) => {
       const d = m.delay / 1000;
       const line = lineRefs.current[i];
       const dot = dotRefs.current[i];
       const label = markerLabelRefs.current[i];
 
-      if (line) tl.from(line, { opacity: 0, duration: 0.7, ease: "power1.out" }, d);
-      if (dot) tl.from(dot, { opacity: 0, duration: 0.7, ease: "power1.out" }, d);
-      if (label) tl.from(label, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, d);
+      if (dot) {
+        tl.from(
+          dot,
+          { scale: 0, opacity: 0, duration: 0.45, ease: "back.out(1.6)" },
+          d
+        );
+      }
+      if (line) {
+        // Nos marcadores da esquerda o ponto fica na ponta DIREITA da linha
+        // (revela da direita para a esquerda); nos da direita, o inverso.
+        tl.fromTo(
+          line,
+          {
+            clipPath:
+              m.side === "left"
+                ? "inset(0% 0% 0% 100%)"
+                : "inset(0% 100% 0% 0%)",
+          },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: 0.6,
+            ease: "power2.out",
+          },
+          d + 0.15
+        );
+      }
+      if (label) {
+        tl.from(
+          label,
+          { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" },
+          d + 0.3
+        );
+      }
     });
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} data-reveal-skip className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-5 py-16 sm:px-6 lg:gap-16 lg:px-16 lg:py-20 2xl:px-30">
+    <section ref={sectionRef} data-reveal-skip className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-5 py-12 sm:px-6 lg:gap-16 lg:px-16 lg:py-20">
       {/* Cabeçalho */}
       <div className="flex flex-col items-center gap-6 text-center">
         <div className="flex w-[626px] max-w-full flex-col items-center gap-4">
@@ -149,13 +194,9 @@ export function SegmentsSection() {
         {markers.map((m) => (
           <div
             key={m.title}
-            className="flex flex-col gap-3 rounded-xl border border-neutral-200 p-5"
+            className="flex flex-col gap-3 rounded-xl bg-neutral-50 p-5"
           >
-            <span
-              className={`h-2 w-8 rounded-full ${
-                m.color === "green" ? "bg-secondary-500" : "bg-primary-500"
-              }`}
-            />
+            <m.icon className="size-6 text-secondary-500" aria-hidden />
             <h3 className="font-heading text-lg font-bold text-neutral-800">
               {m.title}
             </h3>

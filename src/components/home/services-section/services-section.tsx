@@ -67,7 +67,7 @@ export function ServicesSection() {
               </div>
               <div className="flex flex-col gap-4">
                 {/* Reserva 2 linhas de título e 2 de texto → cards uniformes */}
-                <h3 className="min-h-[2.6em] font-heading text-h5 font-semibold leading-[1.3] text-neutral-800">
+                <h3 className="min-h-[2.6em] font-heading text-[20px] font-semibold leading-[1.3] text-neutral-800">
                   {card.title.split("\n").map((line) => (
                     <span key={line} className="block">
                       {line}

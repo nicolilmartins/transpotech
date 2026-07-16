@@ -2,8 +2,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import { ROUTES } from "@/lib/routes";
-// PLACEHOLDER: trocar por render de armazém automatizado (Dematic)
-import heroImage from "@/assets/images/operacao-image.webp";
+import heroImage from "@/assets/images/hero-automacao.webp";
 
 export function AutomacaoHeroSection() {
   return (
@@ -31,7 +30,7 @@ export function AutomacaoHeroSection() {
         />
 
         {/* Conteúdo — parte inferior da hero (80px de padding inferior) */}
-        <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col items-center justify-end gap-8 px-5 pb-20 text-center sm:px-6 lg:px-16">
+        <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col items-center justify-end gap-10 px-5 pb-20 text-center sm:px-6 lg:gap-8 lg:px-16">
           <div className="flex max-w-[563px] flex-col gap-4">
             <BlurRevealTitle
               tone="dark"
@@ -58,7 +57,6 @@ export function AutomacaoHeroSection() {
             variant="primary"
             size="lg"
             href={ROUTES.ORCAMENTO}
-            className="w-full justify-center sm:w-auto"
           >
             Avaliar minha operação
           </Button>

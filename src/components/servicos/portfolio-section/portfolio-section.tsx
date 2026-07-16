@@ -72,7 +72,8 @@ export function PortfolioSection() {
             Portfólio de serviços
           </p>
           <h2 className="text-h3 font-normal text-neutral-800">
-            Serviços para manter sua frota disponível
+            <span className="lg:block">Serviços para manter</span>{" "}
+            <span className="lg:block font-bold">sua frota disponível</span>
           </h2>
           <p className="text-body leading-[1.35] text-neutral-600">
             A TranspoTech apoia empresas que precisam reduzir paradas, aumentar
@@ -96,7 +97,7 @@ export function PortfolioSection() {
                 <service.Icon className="size-6 text-white lg:size-7" aria-hidden />
               </div>
               <div className="flex flex-col gap-4">
-                <h3 className="font-heading text-h5 font-semibold leading-[1.3] text-neutral-800">
+                <h3 className="font-heading text-[20px] font-semibold leading-[1.3] text-neutral-800">
                   {service.title}
                 </h3>
                 <p className="text-body leading-[1.35] text-neutral-600">

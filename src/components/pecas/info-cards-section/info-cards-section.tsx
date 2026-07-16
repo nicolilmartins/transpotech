@@ -33,8 +33,8 @@ export function InfoCardsSection() {
       {/* Cabeçalho — alinhado à esquerda */}
       <div className="flex max-w-[640px] flex-col gap-4">
         <h2 className="text-h2 font-normal text-neutral-50">
-          Informações que ajudam a
-          <br />
+          Informações que ajudam a{" "}
+          <br className="hidden lg:inline" />
           encontrar a <span className="text-primary-500">peça certa</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-400">

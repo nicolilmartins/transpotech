@@ -5,7 +5,6 @@ import { ScopeSection } from "@/components/canal-transparencia/scope-section/sco
 import { RedirectSection } from "@/components/canal-transparencia/redirect-section/redirect-section";
 import { ProcessSection } from "@/components/canal-transparencia/process-section/process-section";
 import { CommitmentsSection } from "@/components/canal-transparencia/commitments-section/commitments-section";
-import { ReportForm } from "@/components/canal-transparencia/report-form/report-form";
 import { CtaSection } from "@/components/layout/cta/cta-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
 import { HoverMesh } from "@/components/layout/hover-mesh";
@@ -52,7 +51,6 @@ export default function CanalTransparenciaPage() {
       {/* Grupo claro 2 */}
       <div className="relative isolate bg-[#fdfdfd]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <ReportForm />
         <FaqSection
           titleRegular="Perguntas "
           titleAccent="frequentes"

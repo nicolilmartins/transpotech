@@ -7,6 +7,7 @@ export function TechStructureSection() {
     <StructureMapSection
       titleTop="Estrutura técnica para"
       titleBottom="apoiar sua operação"
+      accentBottom
       description="Escolha um estado e veja onde atuamos."
     />
   );

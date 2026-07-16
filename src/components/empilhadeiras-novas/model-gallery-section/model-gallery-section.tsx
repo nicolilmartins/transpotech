@@ -19,8 +19,8 @@ export function ModelGallerySection({
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex max-w-[560px] flex-col gap-4">
           <h2 className="text-h2 text-neutral-800">
-            <span className="font-normal">Veja o equipamento</span>
-            <br />
+            <span className="font-normal">Veja o equipamento</span>{" "}
+            <br className="hidden lg:inline" />
             <span className="font-bold text-primary-500">de perto</span>
           </h2>
         </div>

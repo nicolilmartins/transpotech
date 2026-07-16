@@ -33,6 +33,8 @@ type Media = {
   maskSize?: string;
   maskPosition?: string;
   objectPosition: string;
+  // Filtro opcional na imagem (ex.: reforço de saturação).
+  filter?: string;
 };
 
 type Stat = {
@@ -67,7 +69,7 @@ const stats: Stat[] = [
     media: {
       illo: illo2,
       left: "56.29cqw",
-      centerY: "41.55%",
+      centerY: "48%",
       width: "51.78cqw",
       height: "46.29cqw",
       maskImage:
@@ -88,9 +90,10 @@ const stats: Stat[] = [
       width: "60.85cqw",
       height: "54.40cqw",
       maskImage: `url(${mask2.src})`,
-      maskSize: "66.67cqw 60.54cqw",
-      maskPosition: "6.12cqw -1.17cqw",
+      maskSize: "78cqw 70.8cqw",
+      maskPosition: "0.5cqw -6.5cqw",
       objectPosition: "bottom",
+      filter: "saturate(1.2)",
     },
   },
 ];
@@ -189,9 +192,9 @@ export function TechSection() {
           Tecnologia
         </p>
         <h2 className="text-h2 font-normal text-neutral-800">
-          Especialistas em baterias
-          <br />
-          de Íons de Lítio
+          Especialistas em baterias{" "}
+          <br className="hidden lg:inline" />
+          <span className="font-bold text-primary-500">de Íons de Lítio</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
           Distribuidores autorizados das marcas líderes em carregadores e
@@ -221,7 +224,10 @@ export function TechSection() {
                     fill
                     sizes="(min-width: 640px) 33vw, 100vw"
                     className="select-none object-cover"
-                    style={{ objectPosition: s.media.objectPosition }}
+                    style={{
+                      objectPosition: s.media.objectPosition,
+                      ...(s.media.filter ? { filter: s.media.filter } : {}),
+                    }}
                   />
                 </div>
               </div>

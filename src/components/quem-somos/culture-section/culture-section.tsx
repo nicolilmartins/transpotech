@@ -35,9 +35,9 @@ export function CultureSection() {
       {/* Cabeçalho — alinhado à esquerda */}
       <div className="flex max-w-[640px] flex-col gap-4">
         <h2 className="text-h2 font-normal text-neutral-800">
-          Uma cultura feita por pessoas
-          <br />
-          que <span className="text-primary-500">fazem acontecer</span>
+          Uma cultura feita por pessoas{" "}
+          <br className="hidden lg:inline" />
+          que <span className="font-bold text-primary-500">fazem acontecer</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
           A TranspoTech acredita em relações de longo prazo, atendimento próximo

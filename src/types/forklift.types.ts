@@ -19,6 +19,10 @@ export type Forklift = {
   capacity: string;
   /** Spec "Energia" detalhada (placeholder até dados reais). */
   energy: string;
+  /** Spec "Elevação" — altura máx. que a máquina levanta (PLACEHOLDER). */
+  liftHeight: string;
+  /** Spec "Corredor operacional" — largura mín. de corredor para operar/girar (PLACEHOLDER). */
+  aisleWidth: string;
   /** Spec/facet "Disponibilidade" (placeholder). */
   availability: string;
   /** Facet "Localização" (placeholder). */

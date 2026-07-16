@@ -44,7 +44,7 @@ export function SdgSection() {
           ODS, ONU
         </p>
         <h2 className="text-h3 font-normal text-neutral-800">
-          Compromisso com impacto positivo
+          Compromisso com <span className="font-bold">impacto positivo</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
           A TranspoTech contribui com 11 dos 17 Objetivos de Desenvolvimento

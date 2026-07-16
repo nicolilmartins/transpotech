@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Section } from "@/components/ui/section";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
@@ -23,6 +23,29 @@ const stats: Stat[] = [
 export function BenefitsSection() {
   const gridRef = useRef<HTMLDivElement>(null);
   const numberRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const cardElRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // Card "ativo" no mobile: o que está passando pelo centro da viewport.
+  // No desktop o blur segue o hover (este estado é ignorado em lg+).
+  const [activeCard, setActiveCard] = useState(-1);
+
+  // No mobile, o blur verde acende no card conforme o usuário o vê (scroll).
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const idx = cardElRefs.current.indexOf(
+              entry.target as HTMLDivElement
+            );
+            if (idx >= 0) setActiveCard(idx);
+          }
+        }
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+    );
+    cardElRefs.current.forEach((el) => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const el = gridRef.current;
@@ -87,12 +110,17 @@ export function BenefitsSection() {
         {stats.map((s, i) => (
           <div
             key={s.label}
-            className="group relative flex min-h-[150px] flex-col gap-1 overflow-hidden rounded-xl bg-[rgba(251,251,251,0.05)] p-8"
+            ref={(node) => {
+              cardElRefs.current[i] = node;
+            }}
+            className="group relative flex flex-col gap-1 overflow-hidden rounded-xl bg-[rgba(251,251,251,0.05)] p-6"
           >
-            {/* Blur laranja no canto — aparece no hover */}
+            {/* Blur verde no canto — hover (desktop) / card visível (mobile) */}
             <div
               aria-hidden
-              className="pointer-events-none absolute -right-8 -top-8 size-40 rounded-full bg-primary-500 opacity-0 blur-[70px] transition-opacity duration-500 group-hover:opacity-50"
+              className={`pointer-events-none absolute -right-8 -top-8 size-40 rounded-full bg-secondary-500 blur-[70px] transition-opacity duration-500 lg:opacity-0 lg:group-hover:opacity-50 ${
+                activeCard === i ? "opacity-50" : "opacity-0"
+              }`}
             />
             <div className="relative z-10 flex flex-col gap-1">
               <span

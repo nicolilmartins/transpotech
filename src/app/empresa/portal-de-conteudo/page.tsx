@@ -27,7 +27,7 @@ export default function PortalConteudoPage() {
           HoverMesh reativo ao cursor só no restante da página — onde a malha
           anda sozinha não há malha de hover (top-[100svh] = altura da Drift).
           pt extra → clareira do header. */}
-      <div className="relative isolate bg-[#f7f6f6] pt-[96px]">
+      <div className="relative isolate bg-[#f7f6f6] pb-6 pt-[96px]">
         <DriftMesh
           fade
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-svh"

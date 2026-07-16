@@ -155,7 +155,7 @@ export function Header() {
       {/* Wrapper de largura — padding lateral responsivo igual ao do primitivo
           Section (20/24/64/120px) com cap em 1440px, alinhando o header ao
           conteúdo das páginas: a 1440px o pill mede 1312px. */}
-      <div className="mx-auto mt-[30px] w-full max-w-[1440px] px-5 sm:px-6 lg:px-16 2xl:px-30">
+      <div className="mx-auto mt-[30px] w-full max-w-[1440px] px-5 sm:px-6 lg:px-16">
         {/* Caixa de conteúdo — contexto de posicionamento do megamenu/menu mobile */}
         <div className="relative">
           {/* Pill */}
@@ -366,13 +366,12 @@ export function Header() {
                 })}
               </ul>
             </nav>
-            <div className="flex flex-col gap-2 border-t border-neutral-100 pt-4">
+            <div className="flex flex-col items-center gap-2 border-t border-neutral-100 pt-4">
               <Button
                 variant="gray"
                 size="lg"
                 href={ROUTES.ORCAMENTO}
                 onClick={closeMobileMenu}
-                className="w-full justify-center"
               >
                 Calcular orçamento
               </Button>
@@ -381,7 +380,6 @@ export function Header() {
                 size="lg"
                 href={ROUTES.CONTATO}
                 onClick={closeMobileMenu}
-                className="w-full justify-center"
               >
                 Fale com vendas
               </Button>

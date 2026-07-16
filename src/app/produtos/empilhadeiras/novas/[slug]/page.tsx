@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { ProductDetailSection } from "@/components/empilhadeiras-novas/product-detail/product-detail-section";
 import { ModelExperienceSection } from "@/components/empilhadeiras-novas/model-experience-section/model-experience-section";
-import { ModelGallerySection } from "@/components/empilhadeiras-novas/model-gallery-section/model-gallery-section";
+import { ModelHighlightsSection } from "@/components/empilhadeiras-novas/model-highlights-section/model-highlights-section";
 import { RelatedProductsSection } from "@/components/empilhadeiras-novas/related-products/related-products-section";
 import { BackToCatalog } from "@/components/empilhadeiras-novas/back-to-catalog/back-to-catalog";
 import { DriftMesh } from "@/components/layout/drift-mesh";
@@ -78,17 +78,17 @@ export default async function EmpilhadeiraNovaDetalhePage({
         <ProductDetailSection forklift={forklift} />
       </div>
 
-      {/* Experiência do modelo — gerencia o próprio fundo (claro → dark no scroll) */}
+      {/* Palco do modelo — imagem full-bleed com zoom (fundo claro) */}
       <div className="relative isolate bg-[#fdfdfd]">
         <ModelExperienceSection detail={detail} />
       </div>
 
-      {/* Grupo claro — galeria + relacionados */}
+      {/* Destaques do modelo — layout de lista (Planos de locação), dark mode,
+          com o botão "Ver ficha técnica" no cabeçalho */}
+      <ModelHighlightsSection detail={detail} />
+
+      {/* Relacionados */}
       <div className="relative isolate bg-[#f7f6f6]">
-        <ModelGallerySection
-          gallery={detail.media.gallery}
-          datasheetHref={detail.datasheetHref}
-        />
         <RelatedProductsSection items={related} />
       </div>
 

@@ -1,46 +1,44 @@
-import Image, { type StaticImageData } from "next/image";
 import { Section } from "@/components/ui/section";
-import illoForklift from "@/assets/images/stats/illustration-emp.webp";
-import illoCart from "@/assets/images/stats/illustration-transpalet.webp";
 
 type CompareItem = {
   title: string;
   description: string;
   points: string[];
-  image: StaticImageData;
   accent: "primary" | "secondary";
 };
 
+// Comparativo elétrica × GLP — copy baseada no posicionamento TranspoTech,
+// Linde (E20–E50) e STILL (RX 60 / linhas a combustão). Elétrica com acento
+// verde (cor de eletrificação/ESG da identidade) e GLP em laranja.
 const items: CompareItem[] = [
   {
-    title: "Empilhadeira",
+    title: "Elétrica",
     description:
-      "Eleva e estoca em altura. Ideal para armazenagem vertical, carga/descarga em prateleiras e operações em CDs e indústrias.",
+      "Zero emissões e operação silenciosa. Ideal para ambientes internos e setores exigentes como alimentício, farmacêutico e eletrônico.",
     points: [
-      "Capacidade de 1,0 a 7,0 toneladas",
-      "Eleva pallets em prateleiras de 3 a 13 metros",
-      "Combustão (diesel/GLP) ou elétrica (chumbo-ácida ou lítio)",
-      "Mastros standard, duplex ou triplex conforme a operação",
+      "Desempenho no nível das empilhadeiras a combustão",
+      "Zero emissões locais — segura para operação indoor",
+      "Menos ruído e vibração, mais conforto para o operador",
+      "Opção de íons de lítio, com carga de oportunidade entre turnos",
+      "Menor custo de energia e manutenção",
     ],
-    image: illoForklift,
-    accent: "primary",
+    accent: "secondary",
   },
   {
-    title: "Transpaleteira",
+    title: "GLP",
     description:
-      "Movimenta pallet rente ao chão. Ideal para carga/descarga de caminhão, picking e transporte interno horizontal.",
+      "Robustez e disponibilidade contínua para uso intensivo. Ideal para operações pesadas, áreas externas e múltiplos turnos.",
     points: [
-      "Capacidade de até 2,5 toneladas",
-      "Eleva apenas o necessário para movimentar (pallet rasante)",
-      "Versão elétrica ou manual",
-      "Operação leve, geralmente indoor e em pisos planos",
+      "Autonomia contínua — troca rápida de cilindro, sem pausa para recarga",
+      "Desempenho constante em jornadas intensas e múltiplos turnos",
+      "Robustez para rampas, pisos irregulares e áreas externas",
+      "Capacidades maiores para cargas pesadas",
     ],
-    image: illoCart,
-    accent: "secondary",
+    accent: "primary",
   },
 ];
 
-function CompareCard({ title, description, points, image, accent }: CompareItem) {
+function CompareCard({ title, description, points, accent }: CompareItem) {
   const isPrimary = accent === "primary";
   const accentText = isPrimary ? "text-primary-500" : "text-secondary-600";
   const glowBg = isPrimary ? "bg-primary-500" : "bg-secondary-600";
@@ -57,27 +55,21 @@ function CompareCard({ title, description, points, image, accent }: CompareItem)
         <h3 className={`relative text-h6 font-semibold ${accentText}`}>
           {title}
         </h3>
-        <p className="relative mt-3 max-w-[88%] text-body leading-[1.35] text-neutral-600">
+        <p className="relative mt-3 text-body leading-[1.35] text-neutral-600">
           {description}
         </p>
       </div>
 
       {/* Zona dos tópicos — mesmo #F7F6F6 a 40% (divisão) + leve linha */}
       <div className="relative flex-1 border-t border-black/[0.04] bg-[#f7f6f6]/40 px-6 pb-8 pt-6 lg:px-8">
-        {/* Ilustração — grande, no canto inferior direito */}
-        <Image
-          src={image}
-          alt=""
-          className="pointer-events-none absolute bottom-0 right-0 z-0 h-[200px] w-auto max-w-[48%] select-none object-contain object-right-bottom lg:h-[262px]"
-        />
-        <ul className="relative z-10 flex flex-col gap-4">
+        <ul className="relative z-10 flex flex-col gap-2.5">
           {points.map((point) => (
             <li key={point} className="flex items-start gap-3">
               <span
                 aria-hidden
                 className={`mt-2 size-1.5 shrink-0 rounded-full ${bulletBg}`}
               />
-              <span className="max-w-[88%] text-body leading-[1.35] text-neutral-700">
+              <span className="text-body leading-[1.35] text-neutral-700">
                 {point}
               </span>
             </li>
@@ -91,14 +83,19 @@ function CompareCard({ title, description, points, image, accent }: CompareItem)
 export function CompareSection() {
   return (
     <Section className="flex flex-col items-center gap-12 lg:gap-16">
-      <div className="flex max-w-[560px] flex-col gap-4 text-center">
+      <div className="flex max-w-[640px] flex-col gap-4 text-center">
         <h2 className="text-h2 text-neutral-800">
-          <span className="font-normal">Empilhadeira ou transpaleteira: </span>
-          <span className="font-bold text-primary-500">qual escolher?</span>
+          <span className="lg:block font-normal">
+            Empilhadeira elétrica ou GLP:
+          </span>{" "}
+          <span className="lg:block font-bold text-primary-500">
+            qual escolher?
+          </span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          Os dois movimentam pallets, mas cobrem operações diferentes. Veja qual
-          encaixa melhor na sua rotina antes de filtrar o catálogo.
+          As duas movimentam as mesmas cargas, mas brilham em operações
+          diferentes. Veja qual encaixa melhor na sua rotina antes de escolher
+          o modelo.
         </p>
       </div>
 

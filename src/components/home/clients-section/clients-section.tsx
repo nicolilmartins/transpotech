@@ -58,7 +58,7 @@ export function ClientsSection() {
     <section
       ref={sectionRef}
       data-reveal-skip
-      className="relative isolate mx-auto flex w-full max-w-[1440px] flex-col items-center gap-8 overflow-hidden py-16"
+      className="relative isolate mx-auto flex w-full max-w-[1440px] flex-col items-center gap-8 overflow-hidden py-12 lg:py-16"
     >
       <p
         ref={titleRef}

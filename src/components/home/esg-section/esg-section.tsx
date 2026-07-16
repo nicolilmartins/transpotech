@@ -14,7 +14,6 @@ type EsgItem = {
   title: string;
   description: string;
   link: { label: string; href: string } | null;
-  barGradient: string;
 };
 
 const items: EsgItem[] = [
@@ -23,32 +22,24 @@ const items: EsgItem[] = [
     description:
       "Pelo 4° ano consecutivo, a TranspoTech foi reconhecida como Great Place To Work.",
     link: null,
-    barGradient:
-      "linear-gradient(180deg, rgba(20,107,85,1) 0%, rgba(73,112,74,0.81) 100%)",
   },
   {
     title: "Pessoas no centro da operação",
     description:
       "Programas de inclusão e desenvolvimento de talentos na área técnica.",
     link: null,
-    barGradient:
-      "linear-gradient(180deg, rgba(73,112,74,0.81) 0%, rgba(126,118,63,0.62) 100%)",
   },
   {
     title: "Eficiência e operação mais limpa",
     description:
       "Foco em soluções e tecnologias que aumentam eficiência e reduzem impacto na operação.",
     link: { label: "Saiba mais", href: ROUTES.SUSTENTABILIDADE },
-    barGradient:
-      "linear-gradient(180deg, rgba(126,118,63,0.62) 0%, rgba(178,123,51,0.44) 100%)",
   },
   {
     title: "Ética, transparência e canais oficiais",
     description:
       "Canal de transparência para relatos e condutas (com seriedade e confidencialidade).",
     link: { label: "Canal de transparência", href: ROUTES.CANAL_TRANSPARENCIA },
-    barGradient:
-      "linear-gradient(180deg, rgba(178,123,51,0.44) 0%, rgba(231,128,40,0.25) 100%)",
   },
 ];
 
@@ -95,7 +86,7 @@ export function EsgSection() {
   return (
     <section
       data-reveal-skip
-      className="relative isolate mx-auto flex w-full max-w-[1440px] flex-col items-start gap-10 overflow-hidden px-5 py-16 sm:px-6 lg:gap-[67px] lg:px-16 lg:py-20 2xl:px-30"
+      className="relative isolate mx-auto flex w-full max-w-[1440px] flex-col items-start gap-10 overflow-hidden px-5 py-12 sm:px-6 lg:gap-[67px] lg:px-16 lg:py-20"
     >
       {/* Cabeçalho */}
       <div className="flex w-[641px] max-w-full flex-col gap-6">
@@ -133,27 +124,29 @@ export function EsgSection() {
           />
         </ParallaxFrame>
 
-        <div className="flex flex-1 flex-col gap-4">
+        {/* Mobile: sem py nos itens (barra = altura exata do texto), então o
+            gap da lista compensa para manter o mesmo ritmo visual */}
+        <div className="flex flex-1 flex-col gap-10 lg:gap-4">
           {items.map((item, index) => (
             <div
               key={item.title}
               ref={(node) => {
                 if (node) itemContainerRefs.current[index] = node;
               }}
-              className="flex items-stretch gap-2 lg:gap-8"
+              className="flex items-stretch gap-4 lg:gap-8"
             >
-              {/* Barra: fundo neutro + overlay do gradiente animado por opacidade */}
+              {/* Barra: começa cinza (apagada) e "acende" em laranja — overlay
+                  laranja revelado por opacidade quando a seção entra na viewport. */}
               <div className="relative w-2 shrink-0 rounded-full bg-neutral-200">
                 <div
                   ref={(node) => {
                     if (node) gradientBarRefs.current[index] = node;
                   }}
-                  className="absolute inset-0 rounded-full"
-                  style={{ backgroundImage: item.barGradient }}
+                  className="absolute inset-0 rounded-full bg-primary-500"
                 />
               </div>
 
-              <div className="flex flex-col gap-5 py-3">
+              <div className="flex flex-col gap-5 lg:py-3">
                 <div className="flex flex-col gap-4">
                   <h3 className="font-heading text-h6 font-semibold text-neutral-800">
                     {item.title}

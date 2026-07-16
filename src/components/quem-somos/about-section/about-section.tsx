@@ -4,8 +4,8 @@ export function AboutSection() {
   return (
     <Section data-header-dark className="flex flex-col gap-6">
       <h2 className="max-w-[820px] text-h2 text-neutral-50">
-        <span className="font-normal">O que sua operação de</span>
-        <br />
+        <span className="font-normal">O que sua operação de</span>{" "}
+        <br className="hidden lg:inline" />
         <span className="font-bold text-primary-500">
           intralogística precisa
         </span>

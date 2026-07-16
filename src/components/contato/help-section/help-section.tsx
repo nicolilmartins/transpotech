@@ -22,7 +22,7 @@ const cards: HelpCard[] = [
   {
     title: "Comprar empilhadeira",
     description:
-      "Empilhadeiras novas e usadas para diferentes aplicações, capacidades e ambientes operacionais.",
+      "Empilhadeiras novas e seminovas para diferentes aplicações, capacidades e ambientes operacionais.",
     ctaLabel: "Solicitar orçamento",
     href: ROUTES.ORCAMENTO,
     Icon: Forklift,
@@ -69,7 +69,8 @@ export function HelpSection() {
           Atendimento
         </p>
         <h2 className="text-h3 font-normal text-neutral-800">
-          Escolha sua demanda e fale com o time certo
+          <span className="lg:block">Escolha sua demanda</span>{" "}
+          <span className="lg:block font-bold">e fale com o time certo</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
           Cada necessidade tem um time dedicado na TranspoTech. Se você já sabe
@@ -89,7 +90,7 @@ export function HelpSection() {
                 <card.Icon className="size-6 text-white lg:size-7" aria-hidden />
               </div>
               <div className="flex flex-col gap-4">
-                <h3 className="font-heading text-h5 font-semibold leading-[1.3] text-neutral-800">
+                <h3 className="font-heading text-[20px] font-semibold leading-[1.3] text-neutral-800">
                   {card.title}
                 </h3>
                 <p className="text-body leading-[1.35] text-neutral-600">

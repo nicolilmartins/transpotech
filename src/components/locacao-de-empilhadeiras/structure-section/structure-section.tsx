@@ -30,8 +30,8 @@ export function StructureSection() {
       {/* Cabeçalho centralizado */}
       <div className="flex max-w-[560px] flex-col gap-4 text-center">
         <h2 className="text-h2 text-neutral-50">
-          <span className="font-normal">Estrutura para atender</span>
-          <br />
+          <span className="font-normal">Estrutura para atender</span>{" "}
+          <br className="hidden lg:inline" />
           <span className="font-bold text-primary-500">sua operação</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-400">

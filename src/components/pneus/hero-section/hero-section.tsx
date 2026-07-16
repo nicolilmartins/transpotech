@@ -6,9 +6,9 @@ import heroImage from "@/assets/images/hero-image-pneus.webp";
 
 export function PneusHeroSection() {
   return (
-    <section data-header-hero className="relative w-full bg-[#fdfdfd] p-4">
-      {/* Card de imagem com 16px de padding em volta e bordas de 20px */}
-      <div className="relative flex h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden rounded-[20px]">
+    <section data-header-hero className="relative w-full bg-[#fdfdfd] md:p-4">
+      {/* Card de imagem — full-bleed no mobile; de md em diante, 16px de padding em volta e bordas de 20px */}
+      <div className="relative flex h-svh md:h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden md:rounded-[20px]">
         {/* Imagem de fundo — pneus em operação */}
         <Image
           src={heroImage}
@@ -30,7 +30,7 @@ export function PneusHeroSection() {
         />
 
         {/* Conteúdo — parte inferior da hero (80px de padding inferior) */}
-        <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col items-center justify-end gap-8 px-5 pb-20 text-center sm:px-6 lg:px-16">
+        <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col items-center justify-end gap-10 px-5 pb-20 text-center sm:px-6 lg:gap-8 lg:px-16">
           <div className="flex max-w-[563px] flex-col gap-4">
             <BlurRevealTitle
               tone="dark"
@@ -56,7 +56,6 @@ export function PneusHeroSection() {
             variant="primary"
             size="lg"
             href={ROUTES.ORCAMENTO}
-            className="w-full justify-center sm:w-auto"
           >
             Solicitar cotação de pneus
           </Button>

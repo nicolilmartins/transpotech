@@ -45,7 +45,7 @@ export function NextStepSection({ category }: { category: ArticleCategory }) {
         size="lg"
         href={cta.href}
         iconRight={<ArrowRight aria-hidden className="size-5" />}
-        className="w-full justify-center sm:w-auto"
+        className="self-start lg:self-center"
       >
         {cta.label}
       </Button>

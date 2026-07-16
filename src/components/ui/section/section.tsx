@@ -7,7 +7,7 @@ import type { SectionProps } from "./section.types";
 //   2xl (>1440)   → 120px lateral (desktop maior)
 // max-w-[1440px] trava o conteúdo em telas largas; o fundo full-bleed fica nas
 // divs pai (page.tsx), então o cap só afeta o conteúdo, não a cor de fundo.
-const PADDING = "px-5 py-12 sm:px-6 lg:px-16 lg:py-20 2xl:px-30";
+const PADDING = "px-5 py-12 sm:px-6 lg:px-16 lg:py-20";
 const WRAP = "mx-auto w-full max-w-[1440px]";
 const BLEED = "py-12 lg:py-20";
 

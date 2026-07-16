@@ -10,6 +10,21 @@ import { Section } from "@/components/ui/section";
 // PLACEHOLDER: confirmar a URL real do portal de carreiras (Gupy).
 const GUPY_URL = "https://transpotech.gupy.io";
 
+// Botão do portal de carreiras — renderizado no cabeçalho (desktop) e após os
+// cards (mobile), via `className` de visibilidade.
+function GupyButton({ className = "" }: { className?: string }) {
+  return (
+    <a
+      href={GUPY_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`h-12 w-fit items-center justify-center rounded-full bg-primary-500 px-6 py-3 text-body font-semibold text-neutral-50 transition-colors duration-200 hover:bg-primary-600 ${className}`}
+    >
+      Ver vagas no Gupy
+    </a>
+  );
+}
+
 type Perk = { title: string; description: string; Icon: LucideIcon };
 
 const perks: Perk[] = [
@@ -38,14 +53,16 @@ const perks: Perk[] = [
 export function CareersSection() {
   return (
     <Section className="flex flex-col gap-10 lg:flex-row lg:gap-16">
-      {/* Cabeçalho + botão — à esquerda */}
-      <div className="flex flex-col gap-6 lg:w-[400px] lg:shrink-0">
+      {/* Cabeçalho + botão — à esquerda. No mobile o botão é ocultado aqui e
+          reaparece depois dos cards. */}
+      <div className="flex flex-col gap-10 lg:w-[400px] lg:shrink-0 lg:gap-16">
         <div className="flex flex-col gap-4">
           <p className="text-body-sm font-semibold uppercase tracking-wide text-secondary-600">
             Trabalhe conosco
           </p>
           <h2 className="text-h3 font-normal text-neutral-800">
-            Faça parte do time TranspoTech
+            Faça parte do time{" "}
+            <span className="font-bold">TranspoTech</span>
           </h2>
           <p className="text-body leading-[1.35] text-neutral-600">
             Somos uma das empresas certificadas Great Place to Work, com mais de
@@ -54,14 +71,7 @@ export function CareersSection() {
           </p>
         </div>
 
-        <a
-          href={GUPY_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex h-12 w-fit items-center justify-center rounded-full bg-primary-500 px-6 py-3 text-body font-semibold text-neutral-50 transition-colors duration-200 hover:bg-primary-600"
-        >
-          Ver vagas no Gupy
-        </a>
+        <GupyButton className="hidden lg:inline-flex" />
       </div>
 
       {/* Diferenciais — 2 colunas x 2 linhas, no estilo dos cards "Por que
@@ -87,6 +97,9 @@ export function CareersSection() {
           </div>
         ))}
       </div>
+
+      {/* Botão no mobile — depois dos cards */}
+      <GupyButton className="inline-flex lg:hidden" />
     </Section>
   );
 }

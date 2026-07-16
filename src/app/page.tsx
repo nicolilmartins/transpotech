@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { HeroSection } from "@/components/home/hero-section/hero-section";
-import { ClientsSection } from "@/components/home/clients-section/clients-section";
 import { ExperienceSection } from "@/components/home/experience-section/experience-section";
 import { SolutionsSection } from "@/components/home/solutions-section/solutions-section";
 import { PortfolioSection } from "@/components/home/portfolio-section/portfolio-section";
@@ -33,11 +32,10 @@ export default function HomePage() {
   return (
     <main>
       <HeroSection />
-      {/* Grupo claro 1 — Clients + Experiência. Malha livre cobrindo todo o
-          fundo (sem silhueta): o hover revela a malha em qualquer área. */}
+      {/* Grupo claro 1 — Experiência. Malha livre cobrindo todo o fundo (sem
+          silhueta): o hover revela a malha em qualquer área. */}
       <div className="relative isolate bg-[#fdfdfd]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <ClientsSection />
         <ExperienceSection />
       </div>
       {/* Bloco dark 1 — fundo #181616 + ambiência (blurs que andam no scroll) */}

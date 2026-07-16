@@ -47,7 +47,7 @@ export default function OuvidoriaPage() {
       </div>
 
       {/* Grupo claro 2 */}
-      <div className="relative isolate bg-[#fdfdfd]">
+      <div className="relative isolate bg-[#fdfdfd] pb-6">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
         <ManifestacaoForm />
         <CommercialRedirectSection />

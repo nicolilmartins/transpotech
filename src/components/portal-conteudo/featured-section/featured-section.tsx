@@ -21,15 +21,16 @@ export function FeaturedSection() {
   const article = featured;
 
   return (
-    <Section className="-mt-6 flex flex-col gap-8 pt-0 lg:-mt-10">
-      {/* Linha divisória fina — mesmo tom dos filtros do catálogo */}
+    <Section className="flex flex-col pt-0">
+      {/* Linha divisória fina — mesmo tom dos filtros do catálogo. 20px acima
+          (padding inferior da hero) e 48px abaixo até a tag da notícia. */}
       <div className="border-t border-neutral-200" />
 
-      <p className="text-body-sm font-semibold uppercase tracking-wide text-secondary-600">
+      <p className="mt-12 text-body-sm font-semibold uppercase tracking-wide text-secondary-600">
         Notícia em destaque
       </p>
 
-      <article className="grid grid-cols-1 items-stretch gap-4 overflow-hidden rounded-2xl bg-white p-3 transition duration-300 hover:scale-[1.01] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)] lg:grid-cols-2 lg:gap-8">
+      <article className="mt-5 grid grid-cols-1 items-stretch gap-4 overflow-hidden rounded-2xl bg-white p-3 transition duration-300 hover:scale-[1.01] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)] lg:grid-cols-2 lg:gap-8">
         {/* Imagem com pequena borda do card ao redor (padding do article + cantos). */}
         <div className="relative h-[248px] w-full overflow-hidden rounded-xl bg-neutral-100 lg:h-full lg:min-h-[404px]">
           <Image
@@ -48,7 +49,7 @@ export function FeaturedSection() {
               {article.category}
             </span>
 
-            <h2 className="text-h3 font-bold text-neutral-800">
+            <h2 className="text-[24px] font-bold leading-[1.3] text-neutral-800 lg:text-h3">
               {article.title}
             </h2>
 

@@ -28,7 +28,7 @@ export function OuvidoriaHeroSection() {
         ouvir você para melhorar nossos processos, atendimento e relacionamento.
       </p>
 
-      <Button variant="primary" size="lg" href="#manifestacao">
+      <Button variant="primary" size="lg" href="#manifestacao" className="mt-4 lg:mt-0">
         Fazer manifestação
       </Button>
     </Section>

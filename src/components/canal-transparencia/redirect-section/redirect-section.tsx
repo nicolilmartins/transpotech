@@ -45,7 +45,8 @@ export function RedirectSection() {
           Direcionamento
         </p>
         <h2 className="text-h3 font-normal text-neutral-800">
-          Este não é o melhor canal para todos os assuntos
+          <span className="lg:block">Este não é o melhor canal</span>{" "}
+          <span className="lg:block font-bold">para todos os assuntos</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
           Para temas comerciais, dúvidas, orçamento, reclamações de atendimento
@@ -55,7 +56,7 @@ export function RedirectSection() {
       </div>
 
       {/* Cards no padrão da "Governança, escuta e transparência" */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
         {redirects.map((item) => (
           <div
             key={item.title}
@@ -66,7 +67,7 @@ export function RedirectSection() {
                 <item.Icon className="size-6 text-white lg:size-7" aria-hidden />
               </div>
               <div className="flex flex-col gap-4">
-                <h3 className="font-heading text-h5 font-semibold leading-[1.3] text-neutral-800">
+                <h3 className="font-heading text-[20px] font-semibold leading-[1.3] text-neutral-800">
                   {item.title}
                 </h3>
                 <p className="text-body leading-[1.35] text-neutral-600">

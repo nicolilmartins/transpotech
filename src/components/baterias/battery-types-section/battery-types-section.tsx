@@ -65,7 +65,7 @@ function BatteryCard({ title, description, fits, cta }: BatteryType) {
 
       {/* Zona dos tópicos — divisão por linha sutil + bullets de acento */}
       <div className="relative flex flex-1 flex-col gap-8 bg-white/[0.07] px-6 pb-8 pt-6 lg:px-8">
-        <ul className="flex flex-1 flex-col gap-4">
+        <ul className="flex flex-1 flex-col gap-2.5">
           {fits.map((fit) => (
             <li key={fit} className="flex items-start gap-3">
               <span
@@ -92,9 +92,9 @@ export function BatteryTypesSection() {
     <Section data-header-dark className="flex flex-col gap-10 lg:gap-12">
       <div className="flex max-w-[720px] flex-col gap-4">
         <h2 className="text-h2 font-normal text-neutral-50">
-          Tipos de baterias
-          <br />
-          para empilhadeiras
+          Tipos de baterias{" "}
+          <br className="hidden lg:inline" />
+          <span className="font-bold text-primary-500">para empilhadeiras</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-300">
           A escolha entre tecnologias depende da rotina de uso, turnos, espaço
@@ -110,7 +110,7 @@ export function BatteryTypesSection() {
       </div>
 
       {/* Faixa — dúvida entre tecnologias */}
-      <div className="flex flex-col gap-6 rounded-2xl bg-white/5 p-6 ring-1 ring-white/10 sm:flex-row sm:items-center sm:justify-between lg:p-8">
+      <div className="flex flex-col gap-10 rounded-2xl bg-white/5 sm:gap-6 p-6 ring-1 ring-white/10 sm:flex-row sm:items-center sm:justify-between lg:p-8">
         <p className="max-w-[640px] text-body leading-[1.35] text-neutral-300">
           Em dúvida entre tecnologias? A equipe TranspoTech avalia rotina, turnos
           e disponibilidade pra recomendar a melhor opção.

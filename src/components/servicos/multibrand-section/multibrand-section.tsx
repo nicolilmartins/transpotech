@@ -15,17 +15,17 @@ import logoCrown from "@/assets/Logos/logo-crown.webp";
 
 type Brand = { name: string; logo: StaticImageData; heightClass?: string };
 
-// Altura padrão dos logos = h-9. Yale e Crown vêm com menos margem interna, então
-// aparentam maiores — reduzimos a altura para equilibrar visualmente.
+// Altura padrão dos logos = h-7 (mobile) / h-9 (sm+). Yale e Crown vêm com menos
+// margem interna, então aparentam maiores — reduzimos a altura para equilibrar.
 const brands: Brand[] = [
-  { name: "Yale", logo: logoYale, heightClass: "h-7" },
+  { name: "Yale", logo: logoYale, heightClass: "h-5 sm:h-7" },
   { name: "Clark", logo: logoClark },
   { name: "Hyster", logo: logoHyster },
   { name: "Toyota", logo: logoToyota },
   { name: "Linde", logo: logoLinde },
   { name: "Paletrans", logo: logoPaletrans },
   { name: "Jungheinrich", logo: logoJungheinrich },
-  { name: "Crown", logo: logoCrown, heightClass: "h-7" },
+  { name: "Crown", logo: logoCrown, heightClass: "h-5 sm:h-7" },
 ];
 
 // Bolinhas nos quatro cantos de cada célula — cantos compartilhados se sobrepõem
@@ -151,7 +151,7 @@ export function MultibrandSection() {
             <div
               key={brand.name}
               data-cell
-              className="group relative isolate flex min-h-[140px] items-center justify-center border-b border-r border-primary-500/10 px-4 py-8"
+              className="group relative isolate flex min-h-[104px] items-center justify-center border-b border-r border-primary-500/10 px-3 py-5 sm:min-h-[140px] sm:px-4 sm:py-8"
             >
               {/* Glow laranja suave subindo da base no hover (padrão dos cards de
                   números da home). Recortado à célula para não invadir a linha. */}
@@ -176,7 +176,7 @@ export function MultibrandSection() {
                 <Image
                   src={brand.logo}
                   alt={brand.name}
-                  className={`${brand.heightClass ?? "h-9"} w-auto max-w-[150px] object-contain transition-transform duration-300 group-hover:scale-105`}
+                  className={`${brand.heightClass ?? "h-7 sm:h-9"} w-auto max-w-[105px] object-contain transition-transform duration-300 group-hover:scale-105 sm:max-w-[150px]`}
                 />
               </span>
             </div>

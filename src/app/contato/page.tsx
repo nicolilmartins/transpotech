@@ -30,7 +30,7 @@ export default function ContatoPage() {
       </div>
 
       {/* Grupo claro — ajuda, unidades e FAQ */}
-      <div className="relative isolate bg-[#fdfdfd]">
+      <div className="relative isolate bg-[#fdfdfd] pb-6">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
         <HelpSection />
         <UnitsSection />

@@ -19,7 +19,7 @@ export function Pm2pSection() {
     <Section data-header-dark className="flex flex-col items-start">
       <div className="flex w-full flex-col gap-8 lg:flex-row lg:items-center lg:gap-16">
         {/* Coluna de texto */}
-        <div className="flex flex-col gap-14 lg:flex-[1.35]">
+        <div className="flex flex-col gap-10 lg:flex-[1.35] lg:gap-14">
           <div className="flex flex-col gap-10">
             <div className="flex flex-col gap-4">
               <p className="text-body-sm font-semibold uppercase tracking-wide text-primary-500">
@@ -28,8 +28,8 @@ export function Pm2pSection() {
               <h2 className="text-h2 text-neutral-50">
                 <span className="font-normal">
                   PM2P: manutenção programada
-                </span>
-                <br />
+                </span>{" "}
+                <br className="hidden lg:inline" />
                 <span className="font-bold text-primary-500">
                   para reduzir paradas
                 </span>

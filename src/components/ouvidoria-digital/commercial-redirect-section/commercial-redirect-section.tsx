@@ -44,7 +44,8 @@ export function CommercialRedirectSection() {
           Direcionamento comercial
         </p>
         <h2 className="text-h3 font-normal text-neutral-800">
-          Precisa de orçamento, locação ou assistência técnica?
+          <span className="lg:block">Precisa de orçamento, locação</span>{" "}
+          <span className="lg:block font-bold">ou assistência técnica?</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
           Se sua demanda for comercial ou técnica, use os canais abaixo para
@@ -65,7 +66,7 @@ export function CommercialRedirectSection() {
               </div>
               <div className="flex flex-col gap-4">
                 {/* Reserva 2 linhas de título e 2 de texto → cards uniformes */}
-                <h3 className="min-h-[2.6em] font-heading text-h5 font-semibold leading-[1.3] text-neutral-800">
+                <h3 className="min-h-[2.6em] font-heading text-[20px] font-semibold leading-[1.3] text-neutral-800">
                   {item.title}
                 </h3>
                 <p className="line-clamp-2 min-h-[2.7em] text-body leading-[1.35] text-neutral-600">

@@ -4,7 +4,7 @@ import { Facebook, Instagram, Linkedin, Youtube } from "@/components/ui/icons";
 import { ROUTES } from "@/lib/routes";
 import { FooterGlow } from "./footer-glow";
 import logoLight from "@/assets/images/logo-transpotech-light.svg";
-import gptw from "@/assets/images/gptw-badge.png";
+import gptw from "@/assets/images/gptw-badge.webp";
 import atomsix from "@/assets/images/atomsix-symbol.svg";
 
 const logoWatermark = logoLight;
@@ -15,7 +15,7 @@ const linkGroups = [
     links: [
       { label: "Locação de empilhadeiras", href: ROUTES.LOCACAO },
       { label: "Empilhadeiras novas", href: ROUTES.EMPILHADEIRAS_NOVAS },
-      { label: "Empilhadeiras usadas", href: ROUTES.EMPILHADEIRAS_USADAS },
+      { label: "Empilhadeiras seminovas", href: ROUTES.EMPILHADEIRAS_SEMINOVAS },
       { label: "Pneus", href: ROUTES.PNEUS },
       { label: "Baterias e carregadores", href: ROUTES.BATERIAS },
       { label: "Peças", href: ROUTES.PECAS },
@@ -84,7 +84,7 @@ export function Footer() {
       {/* Blur radial verde no rodapé (#218F73) — acompanha o cursor na horizontal */}
       <FooterGlow />
 
-      <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-5 pb-10 pt-14 sm:px-6 lg:px-16 lg:pb-16 lg:pt-20 2xl:px-30">
+      <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-5 pb-10 pt-14 sm:px-6 lg:px-16 lg:pb-16 lg:pt-20">
         {/* Topo: logo + social + links + selo */}
         <div className="flex flex-col gap-8 lg:flex-row lg:justify-between">
           <div className="flex flex-col gap-9">
@@ -131,7 +131,7 @@ export function Footer() {
 
           <Image
             src={gptw}
-            alt="Great Place To Work Certificada"
+            alt="Great Place To Work Certificada — 4 anos consecutivos"
             className="h-[90px] w-auto shrink-0 self-start lg:h-[115px] lg:self-auto"
           />
         </div>
@@ -144,7 +144,7 @@ export function Footer() {
           <h3 className="font-heading text-h6 font-semibold text-neutral-100">
             Nossas unidades
           </h3>
-          <div className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-flow-col lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-x-12 lg:gap-y-6">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:gap-x-8 lg:grid-flow-col lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-x-12 lg:gap-y-6">
             {units.map((unit) => (
               <div
                 key={`${unit.city}${unit.note ?? ""}`}

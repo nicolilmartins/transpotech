@@ -28,13 +28,13 @@ export function CatalogSection() {
           </p>
         </div>
 
-        <div className="flex items-center gap-8 sm:gap-12 lg:gap-16">
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-5 sm:gap-x-12 lg:gap-16">
           {brandLogos.map((logo) => (
             <Image
               key={logo.alt}
               src={logo.src}
               alt={logo.alt}
-              className="h-14 w-auto [filter:brightness(0)_invert(0.35)]"
+              className="h-10 w-auto [filter:brightness(0)_invert(0.35)] sm:h-12"
             />
           ))}
         </div>

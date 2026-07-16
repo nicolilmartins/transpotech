@@ -41,11 +41,11 @@ const solutions: Solution[] = [
     cta: "Ver novas",
   },
   {
-    title: "Empilhadeiras usadas",
+    title: "Empilhadeiras seminovas",
     icon: CircleDollarSign,
     description:
-      "Seminovos revisados, com garantia e o melhor custo-benefício para sua operação.",
-    cta: "Ver usadas",
+      "Seminovas revisadas, com garantia e o melhor custo-benefício para sua operação.",
+    cta: "Ver seminovas",
   },
   {
     title: "Assistência multimarcas",
@@ -133,6 +133,10 @@ export function SolutionsSection() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const rotationDeg = useRef(0);
+  // Espelho do ativo para o guard de rotação: mouseenter + click disparam
+  // handleSelect em sequência antes do re-render, e o state ainda antigo
+  // deixaria o giro somar dois passos.
+  const activeRef = useRef(0);
   const gearRef = useRef<HTMLDivElement>(null);
   const solutionContentRef = useRef<HTMLDivElement>(null);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -163,6 +167,7 @@ export function SolutionsSection() {
     const id = setInterval(() => {
       setActive((a) => {
         const next = (a + 1) % N;
+        activeRef.current = next;
         rotationDeg.current += STEP_DEG;
         rotateGear(rotationDeg.current);
         return next;
@@ -190,8 +195,15 @@ export function SolutionsSection() {
   };
 
   const handleSelect = (i: number) => {
-    rotationDeg.current += ((i - active + N) % N) * STEP_DEG;
-    rotateGear(rotationDeg.current);
+    // Sempre 1 passo por clique (como no auto-cycle): a engrenagem tem 9
+    // dentes idênticos e o passo é 40°, então um passo único é visualmente
+    // indistinguível da contagem real — e o giro fica com velocidade
+    // constante para qualquer bolinha.
+    if (i !== activeRef.current) {
+      activeRef.current = i;
+      rotationDeg.current += STEP_DEG;
+      rotateGear(rotationDeg.current);
+    }
     setActive(i);
     setPaused(true);
     scheduleResume();
@@ -218,13 +230,13 @@ export function SolutionsSection() {
           scroll) — sem glow próprio para manter o mesmo tom das outras seções. */}
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <div className="mx-auto w-full max-w-[1440px] px-5 pt-12 sm:px-6 lg:px-16 lg:pt-20 2xl:px-30">
+      <div className="mx-auto w-full max-w-[1440px] px-5 pt-12 sm:px-6 lg:px-16 lg:pt-20">
         <div className="mx-auto flex max-w-[640px] flex-col items-center gap-5 text-center">
           <p className="font-heading text-[16px] font-medium uppercase leading-[1.1] text-primary-300">
             solução 360°
           </p>
           <h2 className="text-balance text-h2 text-neutral-100">
-            <span className="block font-normal">Soluções em</span>
+            <span className="lg:block font-normal">Soluções em</span>{" "}
             <span className="font-bold">movimentação de cargas</span>
           </h2>
           <p className="max-w-[474px] text-body leading-6 text-neutral-300">
@@ -235,13 +247,38 @@ export function SolutionsSection() {
       </div>
 
       {/* ── Engrenagem centralizada ────────────────────────────────────────── */}
-      <div className="px-5 pb-16 pt-10 sm:px-6 lg:pb-24 lg:pt-14 2xl:px-30">
+      <div className="px-5 pb-12 pt-10 sm:px-6 lg:pb-24 lg:pt-14">
+        {/* Mobile: pills com os 9 tipos de solução acima do círculo — todas
+            visíveis, com quebra de linha */}
+        <div className="mx-auto mb-8 flex max-w-[560px] flex-wrap justify-center gap-1.5 lg:hidden">
+          {solutions.map((solution, i) => {
+            const act = i === active;
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => handleSelect(i)}
+                aria-pressed={act}
+                className={`shrink-0 cursor-pointer whitespace-nowrap rounded-full border px-3 py-1.5 text-[12px] transition-all duration-300 ${
+                  act
+                    ? "border-white/15 bg-white/10 font-semibold text-white backdrop-blur-sm"
+                    : "border-white/10 font-medium text-white/60"
+                }`}
+              >
+                {solution.title}
+              </button>
+            );
+          })}
+        </div>
+
         <div className="relative mx-auto aspect-square w-full max-w-[560px]">
 
           {/* Anel segmentado do Figma — gira de ponto em ponto via GSAP */}
+          {/* Mobile (sem labels ao redor): engrenagem e anéis ganham escala
+              extra; como tudo é percentual, segue cabendo em qualquer largura */}
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-[1.12] lg:scale-100"
             style={{ width: `${(GEAR_D / VB) * 100}%` }}
           >
             <div ref={gearRef} style={gearStyle}>
@@ -252,7 +289,7 @@ export function SolutionsSection() {
           {/* SVG: anéis sutis + bolinhas + títulos */}
           <svg
             viewBox={`0 0 ${VB} ${VB}`}
-            className="relative h-auto w-full"
+            className="relative h-auto w-full scale-[1.12] lg:scale-100"
             aria-hidden="true"
             style={{ overflow: "visible" }}
           >
@@ -260,13 +297,15 @@ export function SolutionsSection() {
             <circle cx={CX} cy={CY} r={ORBIT_R} fill="none" stroke="white" strokeOpacity="0.10" strokeWidth="1" />
             <circle cx={CX} cy={CY} r={245} fill="none" stroke="white" strokeOpacity="0.05" strokeWidth="1" />
 
-            {/* Bolinhas — laranja; a do ponto aceso em destaque */}
+            {/* Bolinhas — laranja; a do ponto aceso em destaque (só desktop —
+                no mobile a seleção é pelas pills acima do círculo) */}
             {solutions.map((_, i) => {
               const dot = dotPos(i);
               const act = i === active;
               return (
                 <circle
                   key={i}
+                  className="hidden lg:block"
                   cx={dot.x.toFixed(2)} cy={dot.y.toFixed(2)}
                   r={act ? 6.5 : 4.5}
                   fill={act ? "#ff9448" : "rgba(245,130,32,0.5)"}
@@ -298,7 +337,7 @@ export function SolutionsSection() {
                   top: `${(lbl.y / VB) * 100}%`,
                   transform: `translate(${tx}, -50%)`,
                 }}
-                className={`absolute cursor-pointer whitespace-nowrap rounded-full border px-3 py-1.5 text-[14px] transition-all duration-300 ${
+                className={`absolute hidden cursor-pointer whitespace-nowrap rounded-full border px-3 py-1.5 text-[14px] transition-all duration-300 lg:block ${
                   act
                     ? "border-white/15 bg-white/10 font-semibold text-white backdrop-blur-sm"
                     : "border-transparent font-medium text-white/60"
@@ -316,8 +355,15 @@ export function SolutionsSection() {
               key={active}
               className="flex flex-col items-center gap-3"
             >
-              {/* Ícone da solução — laranja (mesma cor do label do botão) */}
-              <SolIcon className="size-8 text-primary-300" aria-hidden />
+              {/* Ícone da solução — laranja (mesma cor do label do botão),
+                  com leve glow laranja atrás sem comprometer a leitura */}
+              <div className="relative">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute left-1/2 top-1/2 size-20 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-500 opacity-30 blur-[32px]"
+                />
+                <SolIcon className="relative size-8 text-primary-300" aria-hidden />
+              </div>
               <p className="text-body leading-[1.5] text-neutral-300">
                 {sol.description}
               </p>
@@ -338,7 +384,7 @@ export function SolutionsSection() {
               <button
                 key={i}
                 style={{ left: `${left}%`, top: `${top}%` }}
-                className="absolute -translate-x-1/2 -translate-y-1/2 size-9 cursor-pointer rounded-full"
+                className="absolute hidden -translate-x-1/2 -translate-y-1/2 size-9 cursor-pointer rounded-full lg:block"
                 onMouseEnter={() => handleSelect(i)}
                 onClick={() => handleSelect(i)}
                 aria-label={solution.title}

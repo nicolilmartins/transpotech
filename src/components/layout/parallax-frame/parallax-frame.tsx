@@ -23,12 +23,15 @@ type ParallaxFrameProps = {
   className?: string;
   /** Ref externa para a moldura (ex.: animações de entrada da seção). */
   ref?: Ref<HTMLDivElement>;
+  /** Desativa o parallax/zoom: a imagem fica estática dentro da moldura. */
+  noParallax?: boolean;
   children: ReactNode;
 } & Omit<ComponentProps<"div">, "className" | "children" | "ref">;
 
 export function ParallaxFrame({
   className = "",
   ref,
+  noParallax = false,
   children,
   ...rest
 }: ParallaxFrameProps) {
@@ -42,6 +45,7 @@ export function ParallaxFrame({
   };
 
   useEffect(() => {
+    if (noParallax) return;
     const frame = frameRef.current;
     const inner = innerRef.current;
     if (!frame || !inner) return;
@@ -74,7 +78,7 @@ export function ParallaxFrame({
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
     };
-  }, []);
+  }, [noParallax]);
 
   return (
     <div
@@ -82,13 +86,18 @@ export function ParallaxFrame({
       ref={setRefs}
       className={`relative overflow-hidden ${className}`}
     >
-      {/* scale cobre o deslocamento de ±6% sem expor as bordas do frame */}
-      <div
-        ref={innerRef}
-        className="absolute inset-0 scale-[1.13] will-change-transform"
-      >
-        {children}
-      </div>
+      {noParallax ? (
+        // Estático: a imagem preenche a moldura sem zoom nem deslocamento.
+        children
+      ) : (
+        // scale cobre o deslocamento de ±6% sem expor as bordas do frame
+        <div
+          ref={innerRef}
+          className="absolute inset-0 scale-[1.13] will-change-transform"
+        >
+          {children}
+        </div>
+      )}
     </div>
   );
 }

@@ -14,7 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url(ROUTES.LOCACAO), lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
     { url: url(ROUTES.EMPILHADEIRAS), lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: url(ROUTES.EMPILHADEIRAS_NOVAS), lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-    { url: url(ROUTES.EMPILHADEIRAS_USADAS), lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
+    { url: url(ROUTES.EMPILHADEIRAS_SEMINOVAS), lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: url(ROUTES.PNEUS), lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: url(ROUTES.BATERIAS), lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: url(ROUTES.PECAS), lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },

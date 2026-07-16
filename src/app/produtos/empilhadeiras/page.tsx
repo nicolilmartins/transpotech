@@ -4,11 +4,11 @@ import { UnderConstruction } from "@/components/layout/under-construction/under-
 export const metadata: Metadata = {
   title: "Venda de Empilhadeiras",
   description:
-    "Catálogo completo de empilhadeiras novas e usadas. Representante oficial STILL, Linde e Baoli (grupo KION). Encontre o equipamento ideal para sua operação.",
+    "Catálogo completo de empilhadeiras novas e seminovas. Representante oficial STILL, Linde e Baoli (grupo KION). Encontre o equipamento ideal para sua operação.",
   openGraph: {
     title: "Venda de Empilhadeiras | TranspoTech",
     description:
-      "Catálogo de empilhadeiras novas e usadas. Representante oficial STILL, Linde e Baoli.",
+      "Catálogo de empilhadeiras novas e seminovas. Representante oficial STILL, Linde e Baoli.",
   },
 };
 

@@ -73,7 +73,7 @@ export function NeedsSection() {
                 <need.Icon className="size-6 text-white lg:size-7" aria-hidden />
               </div>
               <div className="flex flex-col gap-4">
-                <h3 className="font-heading text-h5 font-semibold leading-[1.3] text-neutral-800">
+                <h3 className="font-heading text-[20px] font-semibold leading-[1.3] text-neutral-800">
                   {need.title}
                 </h3>
                 <p className="line-clamp-2 min-h-[2.7em] text-body leading-[1.35] text-neutral-600">

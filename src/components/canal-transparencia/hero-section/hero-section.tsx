@@ -30,7 +30,7 @@ export function CanalHeroSection() {
         internas.
       </p>
 
-      <Button variant="primary" size="lg" href="#relato">
+      <Button variant="primary" size="lg" href="#processo" className="mt-4 lg:mt-0">
         Fazer um relato
       </Button>
     </Section>

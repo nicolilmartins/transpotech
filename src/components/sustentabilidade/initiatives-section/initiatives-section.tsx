@@ -54,7 +54,8 @@ export function InitiativesSection() {
           Inclusão
         </p>
         <h2 className="text-h3 font-normal text-neutral-800">
-          Inclusão que movimenta o futuro
+          Inclusão que{" "}
+          <span className="font-bold text-primary-500">movimenta o futuro</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
           A TranspoTech acredita no desenvolvimento de pessoas e na construção
@@ -63,14 +64,14 @@ export function InitiativesSection() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
         {initiatives.map((initiative) => (
           <Link
             key={initiative.title}
             href={initiative.href}
             className="group/card block h-full rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
           >
-            <article className="flex h-full flex-col rounded-xl bg-white p-2 transition duration-300 group-hover/card:scale-[1.02] group-hover/card:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)]">
+            <article className="flex h-full flex-col rounded-xl bg-[#f7f6f6] p-2 transition duration-300 group-hover/card:scale-[1.02] group-hover/card:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)]">
               {/* Imagem com pequena borda do card ao redor (padding do article + cantos). */}
               <div className="relative h-[196px] w-full overflow-hidden rounded-lg bg-neutral-100">
                 <Image

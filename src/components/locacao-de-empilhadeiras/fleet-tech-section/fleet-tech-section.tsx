@@ -67,8 +67,11 @@ export function FleetTechSection() {
         <p className="text-body-sm font-semibold uppercase tracking-wide text-secondary-600">
           Frota e tecnologia
         </p>
-        <h2 className="text-h2 font-normal text-neutral-800">
-          Frota pronta para qualquer perfil de operação
+        <h2 className="text-h2 text-neutral-800">
+          <span className="font-normal">Frota pronta para qualquer </span>
+          <span className="font-bold text-primary-500">
+            perfil de operação
+          </span>
         </h2>
       </div>
 

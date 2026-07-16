@@ -47,8 +47,11 @@ export function ContatoHeroSection() {
           Contato
         </p>
         <BlurRevealTitle
-          className="text-h2 font-bold text-neutral-800"
-          segments={[{ text: "Entre em contato com a TranspoTech" }]}
+          className="text-h2 text-neutral-800"
+          segments={[
+            { text: "Entre em contato", className: "font-normal", br: true },
+            { text: "com a TranspoTech", className: "font-bold" },
+          ]}
         />
         <p className="max-w-[520px] text-body leading-[1.5] text-neutral-600">
           Agende uma visita, proponha uma parceria, tire dúvidas ou fale com a

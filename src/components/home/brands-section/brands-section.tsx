@@ -68,7 +68,7 @@ export function BrandsSection({
           </h2>
         )}
 
-        <div className="grid w-full grid-cols-2 place-items-center gap-x-8 gap-y-10 sm:gap-8 lg:flex lg:h-auto lg:flex-nowrap lg:items-center lg:justify-center lg:gap-[90px]">
+        <div className="flex w-full flex-wrap items-center justify-center gap-x-4 gap-y-8 sm:gap-x-8 lg:flex-nowrap lg:gap-[90px]">
           {brands.map((b) => (
             <Image
               key={b.alt}

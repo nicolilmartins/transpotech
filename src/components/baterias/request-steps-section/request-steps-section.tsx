@@ -9,7 +9,13 @@ import illoSearch from "@/assets/images/stats/illustration-search.webp";
 import illoBattery from "@/assets/images/stats/illustration-battery.webp";
 import illoFolder from "@/assets/images/stats/illustration-folder.webp";
 
-type Step = { title: string; description: string; image: StaticImageData };
+type Step = {
+  title: string;
+  description: string;
+  image: StaticImageData;
+  /** Espelha a imagem horizontalmente (apenas nesta seção). */
+  flip?: boolean;
+};
 
 const steps: Step[] = [
   {
@@ -33,6 +39,7 @@ const steps: Step[] = [
     title: "Você recebe orientação ou cotação",
     description: "O time retorna com informações e próximos passos.",
     image: illoFolder,
+    flip: true,
   },
 ];
 
@@ -85,8 +92,8 @@ export function RequestStepsSection() {
       const W = wrapRect.width;
       const H = wrapRect.height;
       if (W === 0) return;
-      const railL = 20;
-      const railR = W - 20;
+      const railL = 2;
+      const railR = W - 2;
       const railFor = (i: number) => (i % 2 === 0 ? railL : railR);
       const pts: Pt[] = [];
       stepRefs.current.forEach((el, i) => {
@@ -140,8 +147,8 @@ export function RequestStepsSection() {
       {/* Cabeçalho centralizado */}
       <div className="flex max-w-[560px] flex-col gap-4 text-center">
         <h2 className="text-h2 text-neutral-800">
-          <span className="font-normal">Como funciona</span>
-          <br />
+          <span className="font-normal">Como funciona</span>{" "}
+          <br className="hidden lg:inline" />
           <span className="font-bold text-primary-500">a solicitação</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
@@ -155,7 +162,7 @@ export function RequestStepsSection() {
         {dims.w > 0 && (
           <svg
             aria-hidden
-            className="pointer-events-none absolute inset-0 hidden h-full w-full lg:block"
+            className="pointer-events-none absolute inset-0 h-full w-full"
             viewBox={`0 0 ${dims.w} ${dims.h}`}
             fill="none"
           >
@@ -204,8 +211,10 @@ export function RequestStepsSection() {
                 ref={(el) => {
                   stepRefs.current[i] = el;
                 }}
-                className={`flex flex-col gap-6 lg:h-[300px] lg:flex-row lg:items-center lg:gap-5 ${
-                  left ? "lg:pl-[100px]" : "lg:flex-row-reverse lg:pr-[100px]"
+                className={`flex flex-col gap-4 px-10 lg:h-[300px] lg:flex-row lg:items-center lg:gap-5 ${
+                  left
+                    ? "lg:pl-[100px] lg:pr-0"
+                    : "lg:flex-row-reverse lg:pl-0 lg:pr-[100px]"
                 }`}
               >
                 <div className="flex flex-1 flex-col gap-3">
@@ -224,6 +233,7 @@ export function RequestStepsSection() {
                   <Image
                     src={step.image}
                     alt=""
+                    style={{ transform: step.flip ? "scaleX(-1)" : undefined }}
                     className="h-[200px] w-auto select-none object-contain lg:h-[300px]"
                   />
                 </div>

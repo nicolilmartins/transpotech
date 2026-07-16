@@ -96,8 +96,8 @@ export function ProcessSection() {
       const W = wrapRect.width;
       const H = wrapRect.height;
       if (W === 0) return;
-      const railL = 20;
-      const railR = W - 20;
+      const railL = 2;
+      const railR = W - 2;
       const railFor = (i: number) => (i % 2 === 0 ? railL : railR);
       const pts: Pt[] = [];
       stepRefs.current.forEach((el, i) => {
@@ -154,8 +154,8 @@ export function ProcessSection() {
           Processo
         </p>
         <h2 className="text-h2 text-neutral-800">
-          <span className="font-normal">Como funciona </span>
-          <span className="font-bold text-primary-500">o atendimento</span>
+          <span className="font-normal">Como funciona o </span>
+          <span className="font-bold text-primary-500">atendimento</span>
         </h2>
       </div>
 
@@ -164,7 +164,7 @@ export function ProcessSection() {
         {dims.w > 0 && (
           <svg
             aria-hidden
-            className="pointer-events-none absolute inset-0 hidden h-full w-full lg:block"
+            className="pointer-events-none absolute inset-0 h-full w-full"
             viewBox={`0 0 ${dims.w} ${dims.h}`}
             fill="none"
           >
@@ -213,8 +213,10 @@ export function ProcessSection() {
                 ref={(el) => {
                   stepRefs.current[i] = el;
                 }}
-                className={`flex flex-col gap-6 lg:h-[300px] lg:flex-row lg:items-center lg:gap-5 ${
-                  left ? "lg:pl-[100px]" : "lg:flex-row-reverse lg:pr-[100px]"
+                className={`flex flex-col gap-4 px-10 lg:h-[300px] lg:flex-row lg:items-center lg:gap-5 ${
+                  left
+                    ? "lg:pl-[100px] lg:pr-0"
+                    : "lg:flex-row-reverse lg:pl-0 lg:pr-[100px]"
                 }`}
               >
                 <div className="flex flex-1 flex-col gap-3">

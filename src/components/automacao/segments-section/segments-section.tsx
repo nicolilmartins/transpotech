@@ -23,26 +23,24 @@ export function SegmentsSection() {
       <div className="flex flex-1 flex-col gap-6">
         <div className="flex flex-col gap-4">
           <h2 className="text-h2 font-normal text-neutral-50">
-            Operações que
-            <br />
-            automatizamos
+            Operações que{" "}
+            <br className="hidden lg:inline" />
+            <span className="font-bold">automatizamos</span>
           </h2>
           <p className="max-w-[460px] text-body leading-[1.35] text-neutral-400">
             Adaptamos a solução ao perfil do seu negócio.
           </p>
         </div>
 
-        <Button
-          variant="primary"
-          size="lg"
-          href={ROUTES.ORCAMENTO}
-          className="self-start"
-        >
-          Avaliar minha operação
-        </Button>
+        {/* Desktop: botão na coluna do texto */}
+        <div className="hidden lg:block">
+          <Button variant="primary" size="lg" href={ROUTES.ORCAMENTO}>
+            Avaliar minha operação
+          </Button>
+        </div>
       </div>
 
-      <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:flex-[1.3]">
+      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-3 lg:flex-[1.3]">
         {segments.map((segment) => (
           <li
             key={segment}
@@ -53,6 +51,13 @@ export function SegmentsSection() {
           </li>
         ))}
       </ul>
+
+      {/* Mobile: botão abaixo dos segmentos */}
+      <div className="lg:hidden">
+        <Button variant="primary" size="lg" href={ROUTES.ORCAMENTO}>
+          Avaliar minha operação
+        </Button>
+      </div>
     </Section>
   );
 }

@@ -18,6 +18,8 @@ const pillars: Pillar[] = [
       "Soluções elétricas e baterias",
       "Uso responsável de recursos",
       "Apoio a operações mais sustentáveis",
+      "Logística reversa, descarte correto de materiais e fluidos",
+      "Produção de 172 mil kWh/ano",
     ],
     Icon: Leaf,
   },
@@ -69,7 +71,7 @@ function PillarCard({ title, description, items, Icon }: Pillar) {
 
       {/* Zona dos tópicos — mesmo #F7F6F6 a 40% (divisão) + leve linha */}
       <div className="relative flex-1 border-t border-black/[0.04] bg-[#f7f6f6]/40 px-6 pb-8 pt-6 lg:px-8">
-        <ul className="relative z-10 flex flex-col gap-4">
+        <ul className="relative z-10 flex flex-col gap-2.5">
           {items.map((item) => (
             <li key={item} className="flex items-start gap-3">
               <span
@@ -92,8 +94,8 @@ export function PillarsSection() {
     <Section className="flex flex-col items-start gap-10 lg:gap-14">
       <div className="flex max-w-[720px] flex-col gap-4">
         <h2 className="text-h3 text-neutral-800">
-          <span className="block font-normal">Comprometidos com</span>
-          <span className="block font-bold text-primary-500">
+          <span className="lg:block font-normal">Comprometidos com</span>{" "}
+          <span className="lg:block font-bold text-primary-500">
             um futuro mais sustentável
           </span>
         </h2>

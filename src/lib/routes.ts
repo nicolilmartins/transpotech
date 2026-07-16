@@ -5,7 +5,7 @@ export const ROUTES = {
   LOCACAO: "/produtos/locacao-de-empilhadeiras",
   EMPILHADEIRAS: "/produtos/empilhadeiras",
   EMPILHADEIRAS_NOVAS: "/produtos/empilhadeiras/novas",
-  EMPILHADEIRAS_USADAS: "/produtos/empilhadeiras/usadas",
+  EMPILHADEIRAS_SEMINOVAS: "/produtos/empilhadeiras/seminovas",
   PNEUS: "/produtos/pneus",
   BATERIAS: "/produtos/baterias-e-carregadores",
   PECAS: "/produtos/pecas",

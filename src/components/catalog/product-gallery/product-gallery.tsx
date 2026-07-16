@@ -53,8 +53,9 @@ export function ProductGallery({ images, alt }: ProductGalleryProps) {
         </ul>
       )}
 
-      {/* Imagem principal */}
-      <div className="relative h-[300px] flex-1 overflow-hidden rounded-2xl bg-neutral-50 sm:h-[440px] lg:h-[504px]">
+      {/* Imagem principal — no mobile a altura fixa vale (sem flex-1, que zeraria
+          a base e colapsaria a imagem); do sm+ o flex-1 preenche a linha. */}
+      <div className="relative h-[300px] overflow-hidden rounded-2xl bg-neutral-50 sm:h-[440px] sm:flex-1 lg:h-[504px]">
         <Image
           src={images[selected]}
           alt={alt}

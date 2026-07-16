@@ -74,7 +74,7 @@ function ChannelCard({
 
       {/* Zona dos tópicos — bullets de acento + CTA com divisória sutil */}
       <div className="relative flex flex-1 flex-col gap-8 bg-white/[0.07] px-6 pb-8 pt-6 lg:px-8">
-        <ul className="flex flex-1 flex-col gap-4">
+        <ul className="flex flex-1 flex-col gap-2.5">
           {quotes.map((quote) => (
             <li key={quote} className="flex items-start gap-3">
               <span

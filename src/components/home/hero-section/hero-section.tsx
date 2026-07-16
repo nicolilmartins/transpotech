@@ -52,7 +52,7 @@ export function HeroSection() {
       {/* Conteúdo */}
       <div className="relative mx-auto flex h-full w-full max-w-[1440px] flex-col">
         {/* Texto + botões: centralizado no mobile, sobreposto à esquerda no desktop */}
-        <div className="flex flex-col items-center gap-8 px-5 pt-32 text-center sm:px-6 lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:items-start lg:gap-10 lg:px-16 lg:pt-0 lg:text-left 2xl:px-30">
+        <div className="flex flex-col items-center gap-10 px-5 pt-38 text-center sm:px-6 lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:items-start lg:gap-10 lg:px-16 lg:pt-0 lg:text-left">
           <div className="flex flex-col gap-4">
             <BlurRevealTitle
               className="text-[32px] leading-[1.1] text-neutral-800 lg:w-max lg:text-[48px] 2xl:text-[54px]"
@@ -72,19 +72,11 @@ export function HeroSection() {
             </p>
           </div>
 
-          <div className="flex w-full max-w-[300px] flex-col gap-3 sm:max-w-[400px] lg:w-auto lg:max-w-none lg:flex-row lg:gap-2">
-            <Button
-              variant="primary"
-              size="lg"
-              className="w-full justify-center lg:w-auto"
-            >
+          <div className="flex w-full flex-col items-center gap-3 lg:w-auto lg:flex-row lg:gap-2">
+            <Button variant="primary" size="lg">
               Locar empilhadeira
             </Button>
-            <Button
-              variant="gray"
-              size="lg"
-              className="w-full justify-center lg:w-auto"
-            >
+            <Button variant="gray" size="lg">
               Comprar empilhadeira
             </Button>
           </div>

@@ -1,7 +1,4 @@
-import Image, { type StaticImageData } from "next/image";
 import { Section } from "@/components/ui/section";
-import illoForklift from "@/assets/images/stats/illustration-emp.webp";
-import illoCart from "@/assets/images/stats/illustration-transpalet.webp";
 
 const rentReasons = [
   "A demanda varia ao longo do ano",
@@ -22,11 +19,10 @@ const buyReasons = [
 type CompareCardProps = {
   title: string;
   reasons: string[];
-  image: StaticImageData;
   accent: "rent" | "buy";
 };
 
-function CompareCard({ title, reasons, image, accent }: CompareCardProps) {
+function CompareCard({ title, reasons, accent }: CompareCardProps) {
   const isRent = accent === "rent";
   const accentText = isRent ? "text-primary-500" : "text-secondary-600";
   const glowBg = isRent ? "bg-primary-500" : "bg-secondary-600";
@@ -47,20 +43,14 @@ function CompareCard({ title, reasons, image, accent }: CompareCardProps) {
 
       {/* Zona dos tópicos — mesmo #F7F6F6 a 50% (divisão) + leve linha */}
       <div className="relative flex-1 border-t border-black/[0.04] bg-[#f7f6f6]/50 px-6 pb-8 pt-6 lg:px-8">
-        {/* Ilustração — grande, no canto direito */}
-        <Image
-          src={image}
-          alt=""
-          className="pointer-events-none absolute bottom-0 right-0 z-0 h-[200px] w-auto max-w-[48%] select-none object-contain object-right-bottom lg:h-[262px]"
-        />
-        <ul className="relative z-10 flex flex-col gap-4">
+        <ul className="relative z-10 flex flex-col gap-2.5">
           {reasons.map((reason) => (
-            <li key={reason} className="flex items-center gap-3">
+            <li key={reason} className="flex items-start gap-3">
               <span
                 aria-hidden
-                className={`size-1.5 shrink-0 rounded-full ${bulletBg}`}
+                className={`mt-[9px] size-1.5 shrink-0 rounded-full ${bulletBg}`}
               />
-              <span className="whitespace-nowrap text-body leading-[1.35] text-neutral-700">
+              <span className="text-body leading-[1.35] text-neutral-700">
                 {reason}
               </span>
             </li>
@@ -77,8 +67,10 @@ export function RentVsBuySection() {
       {/* Cabeçalho centralizado */}
       <div className="flex max-w-[560px] flex-col gap-4 text-center">
         <h2 className="text-h2 text-neutral-800">
-          <span className="font-normal">Vale a pena </span>
-          <span className="font-bold text-primary-500">locar ou comprar?</span>
+          <span className="lg:block font-normal">Vale a pena</span>{" "}
+          <span className="lg:block font-bold text-primary-500">
+            locar ou comprar?
+          </span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
           Cada uma com seus benefícios próprios. A escolha certa deve sempre se
@@ -91,13 +83,11 @@ export function RentVsBuySection() {
         <CompareCard
           title="Locar pode ser melhor quando:"
           reasons={rentReasons}
-          image={illoForklift}
           accent="rent"
         />
         <CompareCard
           title="Comprar pode ser melhor quando:"
           reasons={buyReasons}
-          image={illoCart}
           accent="buy"
         />
       </div>

@@ -60,13 +60,14 @@ export function CategoriesSection() {
     <Section className="flex flex-col gap-12 lg:gap-16">
       <div className="flex max-w-[640px] flex-col gap-4">
         <h2 className="text-h2 font-normal text-neutral-800">
-          Escolha a categoria mais
-          <br />
+          Escolha a categoria mais{" "}
+          <br className="hidden lg:block" />
           próxima da <span className="font-bold">sua necessidade</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          Os pneus devem ser escolhidos conforme equipamento, ambiente, piso,
-          carga e intensidade de uso.
+          Os pneus devem ser escolhidos conforme equipamento, ambiente,{" "}
+          <br className="hidden lg:block" />
+          piso, carga e intensidade de uso.
         </p>
       </div>
 
@@ -81,10 +82,10 @@ export function CategoriesSection() {
                 <category.Icon className="size-6 text-white lg:size-7" aria-hidden />
               </div>
               <div className="flex flex-col gap-4">
-                <h3 className="font-heading text-h5 font-semibold leading-[1.3] text-neutral-800">
+                <h3 className="font-heading text-[20px] font-semibold leading-[1.3] text-neutral-800">
                   {category.title}
                 </h3>
-                <p className="min-h-[86px] text-body leading-[1.35] text-neutral-600">
+                <p className="min-h-[2.7em] text-body leading-[1.35] text-neutral-600">
                   {category.description}
                 </p>
               </div>

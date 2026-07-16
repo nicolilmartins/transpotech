@@ -65,9 +65,9 @@ export const megaMenus: Record<string, MegaMenuConfig> = {
             Icon: Sparkles,
           },
           {
-            title: "Empilhadeiras usadas",
-            subtitle: "Seminovos revisados com garantia",
-            href: ROUTES.EMPILHADEIRAS_USADAS,
+            title: "Empilhadeiras seminovas",
+            subtitle: "Seminovas revisadas com garantia",
+            href: ROUTES.EMPILHADEIRAS_SEMINOVAS,
             Icon: Tag,
           },
         ],

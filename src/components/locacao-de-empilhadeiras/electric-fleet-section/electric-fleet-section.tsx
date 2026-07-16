@@ -30,8 +30,8 @@ export function ElectricFleetSection() {
       {/* Cabeçalho — à esquerda, no topo */}
       <div className="flex flex-col gap-4 lg:w-[420px] lg:shrink-0">
         <h2 className="text-h3 text-neutral-800">
-          <span className="font-normal">Por que a maior parte da</span>
-          <br />
+          <span className="font-normal">Por que a maior parte da</span>{" "}
+          <br className="hidden lg:inline" />
           <span className="font-normal">nossa frota </span>
           <span className="font-bold text-primary-500">é elétrica</span>
         </h2>
@@ -42,7 +42,7 @@ export function ElectricFleetSection() {
       </div>
 
       {/* Cards — ícone verde + tópico (uma linha); todos do mesmo tamanho */}
-      <ul className="grid w-full flex-1 grid-cols-1 gap-3 sm:grid-cols-2">
+      <ul className="grid w-full flex-1 grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-3">
         {benefits.map((item) => (
           <li
             key={item.title}

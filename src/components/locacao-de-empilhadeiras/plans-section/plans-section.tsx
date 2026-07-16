@@ -37,8 +37,8 @@ export function PlansSection() {
       {/* Cabeçalho — alinhado à esquerda */}
       <div className="flex max-w-[640px] flex-col gap-4">
         <h2 className="text-h2 text-neutral-50">
-          <span className="font-normal">Planos de locação para</span>
-          <br />
+          <span className="font-normal">Planos de locação para</span>{" "}
+          <br className="hidden lg:inline" />
           <span className="font-bold text-primary-500">
             diferentes demandas
           </span>

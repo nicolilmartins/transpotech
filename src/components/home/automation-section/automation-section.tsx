@@ -49,7 +49,9 @@ export function AutomationSection() {
       data-reveal-skip
       className="flex flex-col items-start"
     >
-      <div className="flex w-full flex-col gap-8 lg:flex-row lg:items-center lg:gap-16">
+      {/* overflow-x-clip: a imagem entra com offset x:28 (GSAP) e, até o
+          ScrollTrigger disparar, esse deslocamento alargava a página no mobile */}
+      <div className="flex w-full flex-col gap-8 overflow-x-clip lg:flex-row lg:items-center lg:gap-16">
         {/* Coluna de texto */}
         <div className="flex flex-col gap-14">
           <div className="flex flex-col gap-10">

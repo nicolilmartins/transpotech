@@ -72,8 +72,8 @@ export function ForkliftTypesSection() {
           Nós te ajudamos
         </p>
         <h2 className="text-h2 font-normal text-neutral-800">
-          Não sabe qual
-          <br />
+          Não sabe qual{" "}
+          <br className="hidden lg:inline" />
           empilhadeira locar?
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
@@ -95,7 +95,7 @@ export function ForkliftTypesSection() {
                 <type.Icon className="size-6 text-white lg:size-7" aria-hidden />
               </div>
               <div className="flex flex-col gap-4">
-                <h3 className="font-heading text-h5 font-semibold leading-[1.3] text-neutral-800">
+                <h3 className="font-heading text-[20px] font-semibold leading-[1.3] text-neutral-800">
                   {type.title}
                 </h3>
                 <p className="text-body leading-[1.35] text-neutral-600">

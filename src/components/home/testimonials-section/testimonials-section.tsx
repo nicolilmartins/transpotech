@@ -45,14 +45,15 @@ export function TestimonialsSection() {
   return (
     <section
       data-header-dark
-      className="mx-auto flex w-full max-w-[1440px] flex-col items-center px-5 py-16 sm:px-6 lg:px-16 lg:py-20 2xl:px-30"
+      className="mx-auto flex w-full max-w-[1440px] flex-col items-center px-5 py-12 sm:px-6 lg:px-16 lg:py-20"
     >
-      <div className="flex w-full max-w-[1312px] flex-col items-center gap-16">
+      <div className="flex w-full max-w-[1312px] flex-col items-center gap-10 lg:gap-16">
         {/* Cabeçalho */}
         <div className="relative flex w-full flex-col items-start gap-4">
           <div className="w-[626px] max-w-full">
-            <h2 className="text-h2 font-normal text-neutral-100">
-              O que nossos clientes dizem
+            <h2 className="text-h2 text-neutral-100">
+              <span className="font-normal">O que nossos </span>
+              <span className="font-bold">clientes dizem</span>
             </h2>
           </div>
           <div className="flex w-full items-center justify-between gap-4">
@@ -82,7 +83,7 @@ export function TestimonialsSection() {
         </div>
 
         {/* Carrossel — scroll horizontal no mobile; flex no desktop */}
-        <div className="relative -mx-5 flex w-[calc(100%+40px)] snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:-mx-6 sm:w-[calc(100%+48px)] sm:px-6 lg:mx-0 lg:grid lg:w-full lg:grid-cols-4 lg:snap-none lg:items-center lg:overflow-visible lg:px-0 lg:pb-0">
+        <div className="relative flex w-full snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] lg:grid lg:grid-cols-4 lg:snap-none lg:items-center lg:overflow-visible lg:pb-0">
           {/* Imagem — oculta em mobile, visível no desktop (mesma largura dos cards:
               flex sizing idêntico ao cardBase → 4 colunas iguais) */}
           <div className="relative hidden min-h-[280px] overflow-hidden rounded-xl bg-[#d9d9d9] lg:block lg:h-[380px] lg:min-w-0 lg:flex-1 lg:shrink">

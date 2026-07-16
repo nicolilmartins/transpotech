@@ -15,13 +15,19 @@ type StructureMapSectionProps = {
   titleTop: string;
   /** Segunda linha do título (negrito). */
   titleBottom: string;
+  /** Destaca a segunda linha do título em laranja (primary). */
+  accentBottom?: boolean;
   description: string;
+  /** Largura máx. da descrição (controla a quebra de linhas). Ex.: "540px". */
+  descriptionWidth?: string;
 };
 
 export function StructureMapSection({
   titleTop,
   titleBottom,
+  accentBottom = false,
   description,
+  descriptionWidth = "760px",
 }: StructureMapSectionProps) {
   const [active, setActive] = useState(0);
   const [inView, setInView] = useState(false);
@@ -51,29 +57,36 @@ export function StructureMapSection({
     <Section
       ref={sectionRef}
       data-header-dark
-      className="flex flex-col gap-8 pb-8 pt-8 lg:gap-10 lg:pb-12 lg:pt-12"
+      className="flex flex-col gap-8 lg:gap-10 lg:pb-12 lg:pt-12"
     >
       {/* Linha do título — largura total, só o título e a descrição */}
       <div className="flex flex-col gap-4">
         <h2 className="text-h3 text-neutral-50">
-          <span className="block whitespace-nowrap font-normal">
+          <span className="lg:block lg:whitespace-nowrap font-normal">
             {titleTop}
-          </span>
-          <span className="block whitespace-nowrap font-bold">
+          </span>{" "}
+          <span
+            className={`lg:block lg:whitespace-nowrap font-bold ${
+              accentBottom ? "text-primary-500" : ""
+            }`}
+          >
             {titleBottom}
           </span>
         </h2>
-        <p className="max-w-[760px] text-body leading-[1.35] text-neutral-400">
+        <p
+          className="text-balance text-body leading-[1.35] text-neutral-400"
+          style={{ maxWidth: descriptionWidth }}
+        >
           {description}
         </p>
       </div>
 
       {/* Linha cards + mapa — o mapa alinha com a região dos cards */}
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[440px_1fr] lg:items-stretch lg:gap-8">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[440px_1fr] lg:items-stretch lg:gap-8">
         {/* Lista de estados — cards com stroke igual ao contorno do mapa.
             Ativo = nome do estado em laranja + acordeão com as unidades e a
             distância aproximada desde a capital (tudo em branco). */}
-        <ul className="flex flex-col gap-3">
+        <ul className="flex flex-col gap-4 lg:gap-3">
           {STATE_MAPS.map((s, i) => {
             const isActive = i === active;
             const units = countStateUnits(s.uf);
@@ -137,16 +150,17 @@ export function StructureMapSection({
           })}
         </ul>
 
-        {/* Mapa grande do estado selecionado — acompanha a altura dos cards.
-            O SVG fica absolute para a proporção do viewBox não definir a
-            altura da linha do grid (estados "quadrados" estourariam o
-            viewport). */}
-        <div className="relative h-[360px] sm:h-[440px] lg:h-auto lg:min-h-[480px] lg:self-stretch">
+        {/* Mapa grande do estado selecionado. No mobile a altura segue a
+            proporção real do viewBox (sem caixa fixa — estados "largos" como
+            SC não deixam sobra vazia embaixo). No desktop o SVG fica absolute
+            para a proporção não definir a altura da linha do grid (estados
+            "quadrados" estourariam o viewport). */}
+        <div className="relative lg:min-h-[480px] lg:self-stretch">
           <StateMap
             key={current.uf}
             state={current}
             active={inView}
-            className="absolute inset-0 h-full w-full"
+            className="h-auto w-full lg:absolute lg:inset-0 lg:h-full"
           />
         </div>
       </div>

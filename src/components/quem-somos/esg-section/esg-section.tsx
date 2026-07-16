@@ -10,13 +10,12 @@ import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import { ROUTES } from "@/lib/routes";
 import { gsap } from "@/lib/gsap";
 // PLACEHOLDER: trocar por foto real da equipe/ações ESG TranspoTech.
-import team from "@/assets/images/esg-team.png";
+import team from "@/assets/images/transpotech-team.webp";
 
 type EsgItem = {
   title: string;
   description: string;
   link: { label: string; href: string } | null;
-  barGradient: string;
 };
 
 const items: EsgItem[] = [
@@ -25,32 +24,24 @@ const items: EsgItem[] = [
     description:
       "Soluções e práticas que apoiam operações mais eficientes e conscientes.",
     link: { label: "Saiba mais", href: ROUTES.SUSTENTABILIDADE },
-    barGradient:
-      "linear-gradient(180deg, rgba(20,107,85,1) 0%, rgba(73,112,74,0.81) 100%)",
   },
   {
     title: "Inclusão",
     description:
       "Iniciativas voltadas à equidade, diversidade e desenvolvimento de pessoas.",
     link: { label: "Conheça as iniciativas", href: ROUTES.SUSTENTABILIDADE },
-    barGradient:
-      "linear-gradient(180deg, rgba(73,112,74,0.81) 0%, rgba(126,118,63,0.62) 100%)",
   },
   {
     title: "Comunidade",
     description:
       "Apoio a projetos sociais, esporte, educação e desenvolvimento comunitário.",
     link: { label: "Conheça os projetos", href: ROUTES.SUSTENTABILIDADE },
-    barGradient:
-      "linear-gradient(180deg, rgba(126,118,63,0.62) 0%, rgba(178,123,51,0.44) 100%)",
   },
   {
     title: "Governança",
     description:
       "Canais de transparência, ouvidoria digital e práticas de responsabilidade corporativa.",
     link: { label: "Canal de transparência", href: ROUTES.CANAL_TRANSPARENCIA },
-    barGradient:
-      "linear-gradient(180deg, rgba(178,123,51,0.44) 0%, rgba(231,128,40,0.25) 100%)",
   },
 ];
 
@@ -104,8 +95,8 @@ export function EsgGovernanceSection() {
             ESG E GOVERNANÇA
           </p>
           <h2 className="text-h2 text-neutral-800">
-            <span className="font-bold">Crescimento</span>{" "}
-            <span className="font-normal">com responsabilidade</span>
+            <span className="font-normal">Crescimento com</span>{" "}
+            <span className="font-bold">responsabilidade</span>
           </h2>
         </div>
         <p className="text-body leading-[1.35] text-neutral-600">
@@ -136,14 +127,16 @@ export function EsgGovernanceSection() {
           />
         </ParallaxFrame>
 
-        <div className="flex flex-1 flex-col gap-4">
+        {/* Mobile: sem py nos itens (barra = altura exata do texto), então o
+            gap da lista compensa para manter o mesmo ritmo visual */}
+        <div className="flex flex-1 flex-col gap-10 lg:gap-4">
           {items.map((item, index) => (
             <div
               key={item.title}
               ref={(node) => {
                 if (node) itemContainerRefs.current[index] = node;
               }}
-              className="flex items-stretch gap-2 lg:gap-8"
+              className="flex items-stretch gap-4 lg:gap-8"
             >
               {/* Barra: fundo neutro + overlay do gradiente animado por opacidade */}
               <div className="relative w-2 shrink-0 rounded-full bg-neutral-200">
@@ -151,12 +144,11 @@ export function EsgGovernanceSection() {
                   ref={(node) => {
                     if (node) gradientBarRefs.current[index] = node;
                   }}
-                  className="absolute inset-0 rounded-full"
-                  style={{ backgroundImage: item.barGradient }}
+                  className="absolute inset-0 rounded-full bg-primary-500"
                 />
               </div>
 
-              <div className="flex flex-col gap-5 py-3">
+              <div className="flex flex-col gap-5 lg:py-3">
                 <div className="flex flex-col gap-4">
                   <h3 className="font-heading text-h6 font-semibold text-neutral-800">
                     {item.title}

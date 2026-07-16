@@ -47,47 +47,27 @@ export function UnitsSection() {
 
   return (
     <Section className="flex flex-col items-start gap-10 lg:gap-14">
-      <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex flex-col gap-4">
-          <h2 className="text-h3 text-neutral-800">
-            <span className="font-normal">Encontre a unidade</span>
-            <br />
-            <span className="font-bold text-primary-500">mais próxima</span>
-          </h2>
-          <p className="text-body leading-[1.35] text-neutral-600">
-            A TranspoTech conta com unidades e estrutura regional
-            <br className="hidden sm:block" /> para atender empresas em diferentes
-            localidades.
-          </p>
-        </div>
-
-        {/* Setas — no topo, para navegar por todos os cards */}
-        <div className="flex shrink-0 items-center gap-2">
-          <button
-            type="button"
-            aria-label="Ver unidades anteriores"
-            onClick={() => scrollByCard(-1)}
-            className="flex size-12 items-center justify-center rounded-full border border-neutral-300 text-primary-500 transition-colors hover:bg-neutral-100"
-          >
-            <ArrowLeft className="size-6" aria-hidden />
-          </button>
-          <button
-            type="button"
-            aria-label="Ver próximas unidades"
-            onClick={() => scrollByCard(1)}
-            className="flex size-12 items-center justify-center rounded-full border border-neutral-300 text-primary-500 transition-colors hover:bg-neutral-100"
-          >
-            <ArrowRight className="size-6" aria-hidden />
-          </button>
-        </div>
+      <div className="flex flex-col gap-4">
+        <h2 className="text-h3 text-neutral-800">
+          <span className="font-normal">Encontre a unidade</span>{" "}
+          <br className="hidden lg:inline" />
+          <span className="font-bold text-primary-500">mais próxima</span>
+        </h2>
+        <p className="text-body leading-[1.35] text-neutral-600">
+          A TranspoTech conta com unidades e estrutura regional
+          <br className="hidden sm:block" /> para atender empresas em diferentes
+          localidades.
+        </p>
       </div>
 
-      {/* Carrossel horizontal — todos os cards lado a lado */}
-      <div
-        ref={trackRef}
-        className="-mx-5 flex w-[calc(100%+40px)] snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:-mx-6 sm:w-[calc(100%+48px)] sm:px-6 lg:mx-0 lg:w-full lg:px-0"
-      >
-        {cards.map((card) => (
+      <div className="flex w-full flex-col gap-6">
+        {/* Carrossel horizontal — dentro do padding da seção (sem sangrar
+            até a borda da tela) */}
+        <div
+          ref={trackRef}
+          className="flex w-full snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none]"
+        >
+          {cards.map((card) => (
           <article
             key={card.key}
             className="group flex w-[264px] shrink-0 snap-start flex-col overflow-hidden rounded-xl bg-white p-2 shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(0,0,0,0.10)]"
@@ -121,7 +101,28 @@ export function UnitsSection() {
               </p>
             </div>
           </article>
-        ))}
+          ))}
+        </div>
+
+        {/* Setas — abaixo dos cards */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            aria-label="Ver unidades anteriores"
+            onClick={() => scrollByCard(-1)}
+            className="flex size-12 items-center justify-center rounded-full border border-neutral-300 text-primary-500 transition-colors hover:bg-neutral-100"
+          >
+            <ArrowLeft className="size-6" aria-hidden />
+          </button>
+          <button
+            type="button"
+            aria-label="Ver próximas unidades"
+            onClick={() => scrollByCard(1)}
+            className="flex size-12 items-center justify-center rounded-full border border-neutral-300 text-primary-500 transition-colors hover:bg-neutral-100"
+          >
+            <ArrowRight className="size-6" aria-hidden />
+          </button>
+        </div>
       </div>
 
       <Button variant="primary" size="lg" href="#solicitacao">

@@ -49,8 +49,9 @@ export function NeedsSection() {
           Qual é a sua necessidade?
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          A solicitação pode começar pelo problema, tipo de manutenção ou
-          urgência da operação.
+          A solicitação pode começar pelo problema, tipo de manutenção{" "}
+          <br className="hidden lg:inline" />
+          ou urgência da operação.
         </p>
       </div>
 
@@ -65,7 +66,7 @@ export function NeedsSection() {
                 <need.Icon className="size-6 text-white lg:size-7" aria-hidden />
               </div>
               <div className="flex flex-col gap-4">
-                <h3 className="font-heading text-h5 font-semibold leading-[1.3] text-neutral-800">
+                <h3 className="font-heading text-[20px] font-semibold leading-[1.3] text-neutral-800">
                   {need.title}
                 </h3>
                 <p className="text-body leading-[1.35] text-neutral-600">

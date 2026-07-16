@@ -18,14 +18,12 @@ export function ConsiderUsedSection() {
       data-header-dark
       className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-16"
     >
-      <div className="flex flex-1 flex-col gap-8">
+      <div className="flex flex-1 flex-col gap-10 lg:gap-8">
         <div className="flex flex-col gap-4">
           <h2 className="text-h2 text-neutral-50">
-            <span className="font-normal">Considere também</span>
-            <br />
-            <span className="font-bold text-primary-500">
-              usadas e seminovas
-            </span>
+            <span className="font-normal">Considere também</span>{" "}
+            <br className="hidden lg:inline" />
+            <span className="font-bold text-primary-500">seminovas</span>
           </h2>
           <p className="max-w-[520px] text-body leading-[1.35] text-neutral-300">
             Equipamentos com revisão técnica TranspoTech, garantia e pronta
@@ -49,10 +47,10 @@ export function ConsiderUsedSection() {
         <Button
           variant="primary"
           size="lg"
-          href={ROUTES.EMPILHADEIRAS_USADAS}
+          href={ROUTES.EMPILHADEIRAS_SEMINOVAS}
           className="self-start"
         >
-          Ver catálogo de usadas e seminovas
+          Ver catálogo de seminovas
         </Button>
       </div>
 

@@ -44,7 +44,7 @@ export default function EmpilhadeirasNovasPage() {
         <CompareSection />
       </div>
 
-      {/* Bloco dark — considere usadas + por que escolher a TranspoTech */}
+      {/* Bloco dark — considere seminovas + por que escolher a TranspoTech */}
       <div className="relative isolate bg-[#181616]">
         <DarkAmbient />
         <ConsiderUsedSection />

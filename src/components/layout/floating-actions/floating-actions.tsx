@@ -103,7 +103,7 @@ export function FloatingActions() {
         onClick={() => setOpen((value) => !value)}
         aria-label={open ? "Fechar ações rápidas" : "Abrir ações rápidas"}
         aria-expanded={open}
-        className="flex size-14 items-center justify-center rounded-full bg-gradient-to-b from-primary-300 to-primary-500 text-neutral-50 shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95"
+        className="flex size-14 items-center justify-center rounded-full bg-primary-500 text-neutral-50 shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95"
       >
         <Plus ref={iconRef} className="size-6" />
       </button>

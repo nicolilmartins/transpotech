@@ -24,11 +24,13 @@ const articleHref = (id: string) => `${ROUTES.PORTAL_CONTEUDO}/${id}`;
 
 export function BlogSection() {
   return (
-    <section className="relative isolate mx-auto flex w-full max-w-[1440px] flex-col items-start gap-10 overflow-hidden px-5 py-16 sm:px-6 lg:gap-16 lg:px-16 lg:py-20 2xl:px-30">
+    <section className="relative isolate mx-auto flex w-full max-w-[1440px] flex-col items-start gap-10 overflow-hidden px-5 py-12 sm:px-6 lg:gap-16 lg:px-16 lg:py-20">
       {/* Cabeçalho — texto à esquerda, link "ver todos" à direita */}
-      <div className="flex w-full items-end justify-between gap-4">
-        <div className="flex flex-1 flex-col gap-4">
-          <h2 className="w-[613px] max-w-full text-h2 text-neutral-800">
+      {/* Mobile empilhado (link abaixo); desktop lado a lado. Largura do h2
+          fluida (max-w) para nunca estourar o viewport. */}
+      <div className="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex min-w-0 flex-col gap-4 lg:flex-1">
+          <h2 className="w-full max-w-[613px] text-h2 text-neutral-800">
             <span className="font-normal">Conteúdo prático para apoiar </span>
             <span className="font-bold text-primary-500">suas decisões</span>
           </h2>
@@ -43,11 +45,11 @@ export function BlogSection() {
       </div>
 
       {/* Grade: artigo principal grande à esquerda + cards menores à direita */}
-      <div className="flex w-full flex-col gap-6 lg:flex-row lg:items-stretch">
+      <div className="flex w-full flex-col gap-4 lg:flex-row lg:items-stretch lg:gap-6">
         {/* Artigo em destaque */}
         <Link
           href={articleHref(featured.id)}
-          className="group/card relative block h-[360px] overflow-hidden rounded-2xl bg-neutral-900 transition duration-300 hover:scale-[1.01] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)] lg:h-[560px] lg:flex-[1.35]"
+          className="group/card relative flex min-h-[360px] flex-col justify-end overflow-hidden rounded-2xl bg-neutral-900 transition duration-300 hover:scale-[1.01] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)] lg:min-h-[560px] lg:flex-[1.35]"
         >
           <Image
             src={featured.image}
@@ -59,9 +61,11 @@ export function BlogSection() {
           />
           <div
             aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent"
+            className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/65 via-85% to-black/15"
           />
-          <div className="absolute inset-x-0 bottom-0 flex flex-col gap-4 p-8">
+          {/* Conteúdo em fluxo (não absoluto): a altura do card acompanha o
+              texto e nada é cortado em viewports estreitos */}
+          <div className="relative flex flex-col gap-4 p-8">
             <span className="text-body font-semibold uppercase tracking-wide leading-[1.35] text-primary-400">
               {featured.category}
             </span>
@@ -88,12 +92,12 @@ export function BlogSection() {
         </Link>
 
         {/* Cards menores empilhados */}
-        <div className="flex flex-1 flex-col gap-6">
+        <div className="flex flex-1 flex-col gap-4 lg:gap-6">
           {rest.map((article) => (
             <Link
               key={article.id}
               href={articleHref(article.id)}
-              className="group/card flex flex-1 gap-4 overflow-hidden rounded-xl bg-white p-3 transition duration-300 hover:scale-[1.02] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)]"
+              className="group/card flex min-h-[140px] flex-1 gap-4 overflow-hidden rounded-xl bg-white p-3 transition duration-300 hover:scale-[1.02] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)]"
             >
               {/* Thumbnail */}
               <div className="relative aspect-[4/3] w-28 shrink-0 overflow-hidden rounded-lg sm:w-36 lg:h-full lg:w-auto">

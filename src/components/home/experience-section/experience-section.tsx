@@ -111,13 +111,18 @@ export function ExperienceSection() {
   return (
     <Section className="relative isolate flex flex-col items-start gap-10 overflow-hidden lg:gap-16">
       {/* Cabeçalho */}
-      <div className="flex w-[641px] max-w-full flex-col gap-6">
-        <div className="flex w-[400px] max-w-full flex-col gap-4">
+      <div className="flex w-[680px] max-w-full flex-col gap-6">
+        <div className="flex w-[660px] max-w-full flex-col gap-4">
           <p className="text-body font-semibold leading-[1.35] text-secondary-600">
             EXPERIÊNCIA
           </p>
           <h2 className="text-h2 font-normal text-neutral-800">
-            Frota, equipe e cobertura nacional
+            Mais de 86% do Brasil{" "}
+            <br className="hidden lg:inline" />
+            já conta{" "}
+            <span className="font-bold text-primary-500">
+              com a TranspoTech
+            </span>
           </h2>
         </div>
         <p className="w-[510px] max-w-full text-body leading-[1.35] text-neutral-600">
@@ -160,7 +165,7 @@ export function ExperienceSection() {
                 activeCard === i ? "opacity-100" : "opacity-0"
               }`}
             />
-            <div className="relative flex flex-col gap-2">
+            <div className="relative flex flex-col gap-0.5">
               <span
                 ref={(node) => {
                   numberRefs.current[i] = node;

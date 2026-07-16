@@ -47,7 +47,7 @@ export function GovernanceSection() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
         {channels.map((channel) => (
           <div
             key={channel.title}
@@ -58,7 +58,7 @@ export function GovernanceSection() {
                 <channel.Icon className="size-6 text-white lg:size-7" aria-hidden />
               </div>
               <div className="flex flex-col gap-4">
-                <h3 className="font-heading text-h5 font-semibold leading-[1.3] text-neutral-800">
+                <h3 className="font-heading text-[20px] font-semibold leading-[1.3] text-neutral-800">
                   {channel.title}
                 </h3>
                 <p className="text-body leading-[1.35] text-neutral-600">

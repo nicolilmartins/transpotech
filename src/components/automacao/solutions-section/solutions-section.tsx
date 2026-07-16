@@ -170,8 +170,8 @@ export function SolutionsSection() {
           Soluções em automação
         </p>
         <h2 className="text-h3 font-normal text-neutral-800">
-          Automação de ponta a ponta para
-          <br />
+          Automação de ponta a ponta para{" "}
+          <br className="hidden lg:inline" />
           <span className="font-bold text-primary-500">sua intralogística</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
@@ -219,7 +219,7 @@ export function SolutionsSection() {
             current.name === "Soluções" ? "lg:justify-start" : "lg:justify-center"
           }`}
         >
-          <h3 className="text-center font-heading text-h5 font-semibold leading-[1.2] text-neutral-800">
+          <h3 className="text-center font-heading text-[20px] font-semibold leading-[1.2] text-neutral-800">
             {current.headline[0]}
             <br />
             {current.headline[1]}
