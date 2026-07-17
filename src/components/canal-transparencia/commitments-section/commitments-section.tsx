@@ -1,7 +1,7 @@
 import { type StaticImageData } from "next/image";
 import { Section } from "@/components/ui/section";
 import { CardImageIcon } from "@/components/ui/card-image-icon";
-import iconSelo from "@/assets/images/stats/ct-icon-selo.webp";
+import iconSelo from "@/assets/images/stats/card-selo.webp";
 import iconEscudo from "@/assets/images/stats/ct-icon-escudo.webp";
 import iconPessoa from "@/assets/images/stats/ct-icon-pessoa.webp";
 import iconCadeado from "@/assets/images/stats/ct-icon-cadeado.webp";
@@ -93,7 +93,7 @@ export function CommitmentsSection() {
     >
       <div className="flex flex-col gap-4">
         <h2 className="text-h3 font-normal text-neutral-50">
-          Nossos compromissos
+          Nossos <span className="font-bold">compromissos</span>
         </h2>
       </div>
 
@@ -101,7 +101,7 @@ export function CommitmentsSection() {
         {commitments.map((item) => (
           <div
             key={item.title}
-            className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-[#222221] p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.35)] lg:h-[299px]"
+            className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-[#222221] p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.35)] lg:min-h-[299px]"
           >
             <CardImageIcon
               src={item.art.src}
@@ -115,7 +115,7 @@ export function CommitmentsSection() {
               plateau={false}
               blendMode="lighten"
             />
-            <div className="relative flex flex-col gap-4">
+            <div className="relative mt-[124px] lg:mt-[140px] flex flex-col gap-4">
               <h3 className="font-heading text-h6 font-semibold text-neutral-200">
                 {item.title}
               </h3>

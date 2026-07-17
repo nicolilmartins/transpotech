@@ -46,9 +46,7 @@ export function FaqSection({ titleRegular, titleAccent, items }: FaqSectionProps
         <span className="font-bold text-primary-500">{titleAccent}</span>
       </h2>
 
-      {/* bg opaco (= fundo da seção) cobre a malha SÓ atrás das perguntas, sem
-          removê-la do título à esquerda nem das demais seções. */}
-      <ul className="flex flex-1 flex-col bg-[#fdfdfd]">
+      <ul className="flex flex-1 flex-col">
         {items.map((faq, i) => {
           const isOpen = i === openIndex;
           return (

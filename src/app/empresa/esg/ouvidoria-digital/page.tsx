@@ -46,11 +46,13 @@ export default function OuvidoriaPage() {
         <ProcessSection />
       </div>
 
-      {/* Grupo claro 2 */}
+      {/* Grupo claro 2 (malha só até o redirecionamento comercial) */}
       <div className="relative isolate bg-[#fdfdfd] pb-6">
-        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <ManifestacaoForm />
-        <CommercialRedirectSection />
+        <div className="relative">
+          <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+          <ManifestacaoForm />
+          <CommercialRedirectSection />
+        </div>
         <FaqSection
           titleRegular="Perguntas "
           titleAccent="frequentes"

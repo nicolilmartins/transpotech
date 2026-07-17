@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 
 /**
- * Blur verde no rodapé do footer — acompanha o cursor horizontalmente
+ * Blur laranja no rodapé do footer — acompanha o cursor horizontalmente
  * com lerp (fator 0.12) via gsap.ticker + quickSetter.
  */
 export function FooterGlow() {
@@ -43,7 +43,7 @@ export function FooterGlow() {
     <div
       ref={ref}
       aria-hidden
-      className="pointer-events-none absolute -bottom-60 size-[520px] -translate-x-1/2 rounded-full bg-secondary-500/30 blur-[160px]"
+      className="pointer-events-none absolute -bottom-60 size-[520px] -translate-x-1/2 rounded-full bg-primary-500/60 blur-[160px]"
       style={{ left: "50%" }}
     />
   );

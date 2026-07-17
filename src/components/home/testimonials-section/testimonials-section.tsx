@@ -1,6 +1,7 @@
 import { type CSSProperties } from "react";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { SnapCarousel } from "@/components/layout/snap-carousel";
 import warehouse from "@/assets/images/depoimentos/warehouse.png";
 import caseLogo1 from "@/assets/images/depoimentos/case-logo1.png";
 import caseLogo2 from "@/assets/images/depoimentos/case-logo2.png";
@@ -82,8 +83,15 @@ export function TestimonialsSection() {
           </div>
         </div>
 
-        {/* Carrossel — scroll horizontal no mobile; flex no desktop */}
-        <div className="relative flex w-full snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] lg:grid lg:grid-cols-4 lg:snap-none lg:items-center lg:overflow-visible lg:pb-0">
+        {/* Carrossel — scroll horizontal no mobile; flex no desktop. Bolinhas
+            sincronizadas ao scroll (e clicáveis) via SnapCarousel. No mobile o
+            trilho sangra até a borda da tela (margem negativa + padding
+            interno + scroll-px), para o padding da seção não cortar os cards. */}
+        <SnapCarousel
+          count={3}
+          dotLabel="Ir para o case"
+          trackClassName="relative -mx-5 flex w-[calc(100%+2.5rem)] snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 scroll-px-5 [scrollbar-width:none] sm:-mx-6 sm:w-[calc(100%+3rem)] sm:px-6 sm:scroll-px-6 lg:mx-0 lg:grid lg:w-full lg:grid-cols-4 lg:snap-none lg:items-center lg:overflow-visible lg:px-0 lg:pb-0 lg:scroll-px-0"
+        >
           {/* Imagem — oculta em mobile, visível no desktop (mesma largura dos cards:
               flex sizing idêntico ao cardBase → 4 colunas iguais) */}
           <div className="relative hidden min-h-[280px] overflow-hidden rounded-xl bg-[#d9d9d9] lg:block lg:h-[380px] lg:min-w-0 lg:flex-1 lg:shrink">
@@ -97,7 +105,7 @@ export function TestimonialsSection() {
           </div>
 
           {/* Case 1 */}
-          <article className={cardBase} style={cardGradient}>
+          <article data-snap-item className={cardBase} style={cardGradient}>
             <CardGlow />
             <div className="relative z-10 flex h-full flex-col justify-between">
               <div className="flex flex-col gap-2">
@@ -118,7 +126,7 @@ export function TestimonialsSection() {
           </article>
 
           {/* Case 2 */}
-          <article className={cardBase} style={cardGradient}>
+          <article data-snap-item className={cardBase} style={cardGradient}>
             <CardGlow />
             <div className="relative z-10 flex h-full flex-col justify-between">
               <div className="flex flex-col gap-2">
@@ -139,7 +147,7 @@ export function TestimonialsSection() {
           </article>
 
           {/* Depoimento */}
-          <article className={cardBase} style={cardGradient}>
+          <article data-snap-item className={cardBase} style={cardGradient}>
             <CardGlow />
             <div className="relative z-10 flex h-full flex-col justify-between">
               <div className="flex flex-col gap-5">
@@ -175,14 +183,7 @@ export function TestimonialsSection() {
               </div>
             </div>
           </article>
-        </div>
-
-        {/* Paginação */}
-        <div className="relative flex items-center gap-1.5">
-          <span className="h-2 w-4 rounded-full bg-neutral-100" />
-          <span className="size-2 rounded-full bg-neutral-600" />
-          <span className="size-2 rounded-full bg-neutral-600" />
-        </div>
+        </SnapCarousel>
       </div>
     </section>
   );

@@ -57,7 +57,7 @@ export function StructureMapSection({
     <Section
       ref={sectionRef}
       data-header-dark
-      className="flex flex-col gap-8 lg:gap-10 lg:pb-12 lg:pt-12"
+      className="flex flex-col gap-8 lg:gap-10"
     >
       {/* Linha do título — largura total, só o título e a descrição */}
       <div className="flex flex-col gap-4">
@@ -150,12 +150,13 @@ export function StructureMapSection({
           })}
         </ul>
 
-        {/* Mapa grande do estado selecionado. No mobile a altura segue a
-            proporção real do viewBox (sem caixa fixa — estados "largos" como
-            SC não deixam sobra vazia embaixo). No desktop o SVG fica absolute
-            para a proporção não definir a altura da linha do grid (estados
+        {/* Mapa grande do estado selecionado — no mobile fica acima dos cards
+            de estado (order-first). No mobile a altura segue a proporção real
+            do viewBox (sem caixa fixa — estados "largos" como SC não deixam
+            sobra vazia embaixo). No desktop o SVG fica absolute para a
+            proporção não definir a altura da linha do grid (estados
             "quadrados" estourariam o viewport). */}
-        <div className="relative lg:min-h-[480px] lg:self-stretch">
+        <div className="relative order-first lg:order-none lg:min-h-[480px] lg:self-stretch">
           <StateMap
             key={current.uf}
             state={current}

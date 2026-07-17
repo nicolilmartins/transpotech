@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { CardImageIcon } from "@/components/ui/card-image-icon";
 import { ROUTES } from "@/lib/routes";
 import iconRevisao from "@/assets/images/stats/why-buy-icon-revisao.webp";
-import iconGarantia from "@/assets/images/stats/why-buy-icon-garantia.webp";
+import iconGarantia from "@/assets/images/stats/card-shield.webp";
 import iconEntrega from "@/assets/images/stats/why-buy-icon-entrega.webp";
-import iconCobertura from "@/assets/images/stats/why-buy-icon-cobertura.webp";
+import iconCobertura from "@/assets/images/stats/card-pin-light.webp";
 
 // Arte do card (Figma node 3603:3158): imagem + máscara radial. Valores por
 // card conforme o Figma (mask-size/position e flip).
@@ -163,7 +163,7 @@ export function WhyBuySection() {
         {cards.map((card) => (
           <div
             key={card.title.join(" ")}
-            className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-neutral-50 p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.18)] lg:h-[280px]"
+            className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-neutral-50 p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.18)] lg:min-h-[280px]"
           >
             <CardImageIcon
               src={card.art.src}
@@ -181,7 +181,7 @@ export function WhyBuySection() {
               scale={card.art.scale}
               mask={card.art.mask}
             />
-            <div className="relative flex flex-col gap-4">
+            <div className="relative mt-[124px] lg:mt-[140px] flex flex-col gap-4">
               <h3 className="font-heading text-h6 font-semibold leading-[1.3] text-neutral-800">
                 {card.title[0]}
                 {twoLines ? <br /> : <Fragment> </Fragment>}

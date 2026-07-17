@@ -34,6 +34,9 @@ export function Button({
   rel,
   className = "",
   onClick,
+  // Padrão HTML é "submit", o que faz botões de ação dentro (ou associados) a
+  // formulários dispararem validação sem querer — aqui o padrão é "button".
+  type = "button",
   ...props
 }: ButtonProps) {
   const textRef = useRef<HTMLSpanElement>(null);
@@ -87,6 +90,7 @@ export function Button({
 
   return (
     <button
+      type={type}
       className={classes}
       onClick={onClick}
       onMouseEnter={onEnter}

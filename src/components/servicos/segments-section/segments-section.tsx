@@ -1,10 +1,10 @@
 import { type StaticImageData } from "next/image";
 import { Section } from "@/components/ui/section";
 import { CardImageIcon } from "@/components/ui/card-image-icon";
-import iconGalpao from "@/assets/images/stats/serv-icon-galpao.webp";
-import iconFabrica from "@/assets/images/stats/serv-icon-fabrica.webp";
-import iconCarrinho from "@/assets/images/stats/serv-icon-carrinho.webp";
-import iconCaminhao from "@/assets/images/stats/serv-icon-caminhao.webp";
+import iconGalpao from "@/assets/images/stats/card-galpao.webp";
+import iconFabrica from "@/assets/images/stats/card-fabrica.webp";
+import iconCarrinho from "@/assets/images/stats/card-carrinho.webp";
+import iconCaminhao from "@/assets/images/stats/card-caminhao.webp";
 import iconEmpilhadeira from "@/assets/images/stats/serv-icon-empilhadeira.webp";
 import iconTrator from "@/assets/images/stats/serv-icon-trator.webp";
 
@@ -111,7 +111,7 @@ const segments: Segment[] = [
 
 function SegmentCard({ title, description, art }: Segment) {
   return (
-    <div className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-[#222221] p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.35)] lg:h-[299px]">
+    <div className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-[#222221] p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.35)] lg:min-h-[299px]">
       <CardImageIcon
         src={art.src}
         width={art.width}
@@ -124,7 +124,7 @@ function SegmentCard({ title, description, art }: Segment) {
         plateau={false}
         blendMode="lighten"
       />
-      <div className="relative flex flex-col gap-4">
+      <div className="relative mt-[124px] lg:mt-[140px] flex flex-col gap-4">
         <h3 className="whitespace-nowrap font-heading text-h6 font-semibold text-neutral-200">
           {title}
         </h3>

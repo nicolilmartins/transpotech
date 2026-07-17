@@ -27,8 +27,8 @@ export function ProductCard({
   onRequestQuote,
 }: {
   forklift: Forklift;
-  /** Quando definido, "Solicitar orçamento" abre o modal em vez de navegar. */
-  onRequestQuote?: (forklift: Forklift) => void;
+  /** "Solicitar orçamento" abre o modal de orçamento com este equipamento. */
+  onRequestQuote: (forklift: Forklift) => void;
 }) {
   return (
     // Card com padding simétrico (p-6 = 24px). gap-8 (32px) separa imagem →
@@ -81,25 +81,14 @@ export function ProductCard({
       {/* Botões — pinados na base do card (mt-auto) para alinhar em todos os
           cards; 32px do bloco de textos (gap-8 do article) quando não há folga. */}
       <div className="mt-auto flex flex-col gap-2">
-        {onRequestQuote ? (
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={() => onRequestQuote(forklift)}
-            className="w-full justify-center"
-          >
-            Solicitar orçamento
-          </Button>
-        ) : (
-          <Button
-            variant="primary"
-            size="lg"
-            href={ROUTES.ORCAMENTO}
-            className="w-full justify-center"
-          >
-            Solicitar orçamento
-          </Button>
-        )}
+        <Button
+          variant="primary"
+          size="lg"
+          onClick={() => onRequestQuote(forklift)}
+          className="w-full justify-center"
+        >
+          Solicitar orçamento
+        </Button>
         <Button
           variant="gray"
           size="lg"

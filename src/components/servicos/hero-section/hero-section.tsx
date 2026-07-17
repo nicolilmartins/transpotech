@@ -3,20 +3,31 @@ import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import { ROUTES } from "@/lib/routes";
 import heroImage from "@/assets/images/hero-servicos.webp";
+import heroImageMobile from "@/assets/images/hero-servicos-mobile.webp";
 
 export function ServicosHeroSection() {
   return (
-    <section data-header-hero className="relative w-full bg-[#fdfdfd] p-4">
-      {/* Card de imagem com 16px de padding em volta e bordas de 20px */}
-      <div className="relative flex h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden rounded-[20px]">
-        {/* Imagem de fundo — manutenção / técnico em operação */}
+    <section data-header-hero className="relative w-full bg-[#fdfdfd] md:p-4">
+      {/* Card de imagem — full-bleed no mobile; de md em diante, 16px de padding em volta e bordas de 20px */}
+      <div className="relative flex h-svh md:h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden md:rounded-[20px]">
+        {/* Imagem de fundo (mobile) — recorte exato do Figma (node 3640:3253):
+            técnico na empilhadeira retrátil em destaque. */}
+        <Image
+          src={heroImageMobile}
+          alt=""
+          priority
+          fill
+          sizes="100vw"
+          className="object-cover object-center md:hidden"
+        />
+        {/* Imagem de fundo (desktop) — manutenção / técnico em operação */}
         <Image
           src={heroImage}
           alt=""
           priority
           fill
           sizes="100vw"
-          className="object-cover object-center"
+          className="hidden object-cover object-center md:block"
         />
 
         {/* Gradiente escuro da base para o topo, concentrado na base */}
@@ -37,9 +48,11 @@ export function ServicosHeroSection() {
               className="text-h2 text-neutral-50"
               segments={[
                 {
-                  text: "Manutenção para manter",
+                  // Espaço no fim: no mobile o <br> some e o título flui
+                  // preenchendo as linhas (sem "manter" sozinho na segunda).
+                  text: "Manutenção para manter ",
                   className: "font-normal",
-                  br: true,
+                  br: "hidden lg:inline",
                 },
                 {
                   text: "sua frota em operação",
@@ -57,6 +70,7 @@ export function ServicosHeroSection() {
             variant="primary"
             size="lg"
             href={ROUTES.ORCAMENTO}
+            className="w-full lg:w-auto"
           >
             Solicitar assistência técnica
           </Button>

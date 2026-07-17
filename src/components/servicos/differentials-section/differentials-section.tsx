@@ -3,13 +3,13 @@ import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { CardImageIcon } from "@/components/ui/card-image-icon";
 import { ROUTES } from "@/lib/routes";
-import iconPessoa from "@/assets/images/stats/serv-icon-pessoa.webp";
-import iconEscudo from "@/assets/images/stats/serv-icon-escudo.webp";
-import iconMoeda from "@/assets/images/stats/serv-icon-moeda.webp";
-import iconBateria from "@/assets/images/stats/serv-icon-bateria.webp";
-import iconFerramentas from "@/assets/images/stats/serv-icon-ferramentas.webp";
+import iconPessoa from "@/assets/images/stats/card-person.webp";
+import iconEscudo from "@/assets/images/stats/card-shield.webp";
+import iconRaio from "@/assets/images/stats/serv-icon-raio.webp";
+import iconBateria from "@/assets/images/stats/card-bateria.webp";
+import iconFerramentas from "@/assets/images/stats/card-toolbox.webp";
 // Card 6 reusa o selo/check do card 3 da Quem Somos (sem 6ª imagem no Figma).
-import iconSelo from "@/assets/images/stats/qs-icon-selo.webp";
+import iconSelo from "@/assets/images/stats/card-badge.webp";
 
 // Geometria por card conforme o Figma (node 3603:3264). Padrão: caixa
 // 178.49×133.867 com flip. Moeda e selo têm caixa maior sem flip.
@@ -21,6 +21,8 @@ type Art = {
   top: number;
   maskX: number;
   maskY: number;
+  maskW?: number;
+  maskH?: number;
   flip: boolean;
 };
 
@@ -54,13 +56,15 @@ const cards: Card[] = [
     description:
       "A manutenção programada permite planejar intervenções e evitar gastos emergenciais recorrentes.",
     art: {
-      src: iconMoeda,
-      width: 210.402,
-      height: 157.801,
-      left: -51,
-      top: -30,
-      maskX: 30.442,
-      maskY: 10.726,
+      src: iconRaio,
+      width: 178.49,
+      height: 133.867,
+      left: -35,
+      top: -18,
+      maskX: 22.484,
+      maskY: 0,
+      maskW: 130.737,
+      maskH: 133.868,
       flip: false,
     },
   },
@@ -68,7 +72,7 @@ const cards: Card[] = [
     title: "Vida útil da frota",
     description:
       "O cuidado preventivo ajuda a preservar componentes e prolongar a utilização dos equipamentos.",
-    art: { ...STD, src: iconBateria },
+    art: { ...STD, src: iconBateria, flip: false },
   },
   {
     title: "Suporte técnico especializado",
@@ -112,7 +116,7 @@ export function DifferentialsSection() {
         {cards.map((card) => (
           <div
             key={card.title}
-            className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-neutral-50 p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.18)] lg:h-[280px]"
+            className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-neutral-50 p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.18)] lg:min-h-[280px]"
           >
             <CardImageIcon
               src={card.art.src}
@@ -122,9 +126,11 @@ export function DifferentialsSection() {
               top={card.art.top}
               maskX={card.art.maskX}
               maskY={card.art.maskY}
+              maskW={card.art.maskW}
+              maskH={card.art.maskH}
               flip={card.art.flip}
             />
-            <div className="relative flex flex-col gap-4">
+            <div className="relative mt-[124px] lg:mt-[140px] flex flex-col gap-4">
               <h3 className="font-heading text-h6 font-semibold text-neutral-800">
                 {card.title}
               </h3>

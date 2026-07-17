@@ -9,6 +9,7 @@ import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import { CircleCheck } from "lucide-react";
 import automacao from "@/assets/images/automacao.png";
 import { gsap } from "@/lib/gsap";
+import { ROUTES } from "@/lib/routes";
 
 const bullets = [
   "Menos gargalos entre o recebimento, armazenagem e expedição",
@@ -99,7 +100,7 @@ export function AutomationSection() {
           </div>
 
           <div ref={buttonRef} className="hidden self-start lg:block">
-            <Button variant="primary" size="lg">
+            <Button variant="primary" size="lg" href={ROUTES.LOCACAO}>
               Locar empilhadeira
             </Button>
           </div>
@@ -121,7 +122,7 @@ export function AutomationSection() {
 
         {/* Botão — após a imagem no mobile */}
         <div className="order-3 self-start lg:hidden">
-          <Button variant="primary" size="lg">
+          <Button variant="primary" size="lg" href={ROUTES.LOCACAO}>
             Locar empilhadeira
           </Button>
         </div>

@@ -95,7 +95,11 @@ export function BenefitsSection() {
           Benefícios
         </p>
         <h2 className="text-h2 font-normal text-neutral-50">
-          O que muda quando a operação é automatizada
+          O que muda quando a{" "}
+          <br className="hidden lg:inline" />
+          <span className="font-bold text-primary-500">
+            operação é automatizada
+          </span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-400">
           Indicadores típicos observados em projetos Dematic ao redor do mundo.

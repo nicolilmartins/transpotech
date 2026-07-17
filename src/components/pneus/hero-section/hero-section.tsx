@@ -56,6 +56,7 @@ export function PneusHeroSection() {
             variant="primary"
             size="lg"
             href={ROUTES.ORCAMENTO}
+            className="w-full lg:w-auto"
           >
             Solicitar cotação de pneus
           </Button>

@@ -1,23 +1,25 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-toastify";
+import { CircleCheck } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import {
   contactRequestSchema,
   type ContactRequestValues,
 } from "@/lib/contact-request.schema";
 
-// Inputs em estilo "linha": fundo transparente, sem caixa, apenas uma linha
-// embaixo (borda inferior) que fica laranja no foco.
-const inputBase =
-  "h-11 rounded-none border-0 border-b border-neutral-300 bg-transparent px-0 text-body text-neutral-800 placeholder:text-neutral-400 focus-visible:border-primary-500 focus-visible:outline-none aria-[invalid=true]:border-error";
 const labelBase = "text-body-sm font-semibold text-neutral-700";
 
 export function ContatoHeroSection() {
+  const [sent, setSent] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -30,8 +32,8 @@ export function ContatoHeroSection() {
   const onSubmit = async (data: ContactRequestValues) => {
     // Sem backend — simula o envio (padrão dos demais formulários).
     await new Promise((r) => setTimeout(r, 500));
-    toast.success("Solicitação enviada! A equipe TranspoTech entrará em contato.");
     reset();
+    setSent(true);
     void data;
   };
 
@@ -64,20 +66,20 @@ export function ContatoHeroSection() {
       <form
         noValidate
         onSubmit={handleSubmit(onSubmit)}
+        onChange={() => sent && setSent(false)}
         className="flex flex-col gap-5 rounded-2xl border border-neutral-200 bg-white p-6 lg:p-8"
       >
         <div className="flex flex-col gap-1.5">
           <label htmlFor="ct-name" className={labelBase}>
             Nome *
           </label>
-          <input
+          <Input
             id="ct-name"
             type="text"
             autoComplete="name"
             placeholder="Digite seu nome completo."
-            aria-invalid={!!errors.name}
+            invalid={!!errors.name}
             {...register("name")}
-            className={inputBase}
           />
           {errors.name && (
             <p className="text-body-sm text-error">{errors.name.message}</p>
@@ -89,14 +91,13 @@ export function ContatoHeroSection() {
             <label htmlFor="ct-company" className={labelBase}>
               Empresa *
             </label>
-            <input
+            <Input
               id="ct-company"
               type="text"
               autoComplete="organization"
               placeholder="Informe o nome da empresa."
-              aria-invalid={!!errors.company}
+              invalid={!!errors.company}
               {...register("company")}
-              className={inputBase}
             />
             {errors.company && (
               <p className="text-body-sm text-error">{errors.company.message}</p>
@@ -106,13 +107,12 @@ export function ContatoHeroSection() {
             <label htmlFor="ct-contact" className={labelBase}>
               Contato *
             </label>
-            <input
+            <Input
               id="ct-contact"
               type="text"
               placeholder="Telefone, WhatsApp ou e-mail."
-              aria-invalid={!!errors.contact}
+              invalid={!!errors.contact}
               {...register("contact")}
-              className={inputBase}
             />
             {errors.contact && (
               <p className="text-body-sm text-error">{errors.contact.message}</p>
@@ -124,13 +124,12 @@ export function ContatoHeroSection() {
           <label htmlFor="ct-city" className={labelBase}>
             Cidade/UF *
           </label>
-          <input
+          <Input
             id="ct-city"
             type="text"
             placeholder="Informe onde sua operação está localizada"
-            aria-invalid={!!errors.cityUf}
+            invalid={!!errors.cityUf}
             {...register("cityUf")}
-            className={inputBase}
           />
           {errors.cityUf && (
             <p className="text-body-sm text-error">{errors.cityUf.message}</p>
@@ -141,25 +140,23 @@ export function ContatoHeroSection() {
           <label htmlFor="ct-message" className={labelBase}>
             Mensagem *
           </label>
-          <textarea
+          <Textarea
             id="ct-message"
             rows={3}
             placeholder="Descreva sua operação, equipamento, urgência, cidade ou o que você precisa resolver."
-            aria-invalid={!!errors.message}
+            invalid={!!errors.message}
             {...register("message")}
-            className="min-h-[72px] rounded-none border-0 border-b border-neutral-300 bg-transparent px-0 py-2 text-body text-neutral-800 placeholder:text-neutral-400 focus-visible:border-primary-500 focus-visible:outline-none aria-[invalid=true]:border-error"
           />
           {errors.message && (
             <p className="text-body-sm text-error">{errors.message.message}</p>
           )}
         </div>
 
-        <label className="flex items-start gap-3">
-          <input
-            type="checkbox"
-            aria-invalid={!!errors.consent}
+        <label className="flex cursor-pointer items-start gap-3">
+          <Checkbox
+            invalid={!!errors.consent}
             {...register("consent")}
-            className="mt-1 size-5 shrink-0 rounded border-neutral-300 accent-primary-500"
+            className="mt-1"
           />
           <span className="text-body-sm leading-[1.35] text-neutral-600">
             Concordo com o tratamento dos meus dados conforme a Política de
@@ -172,15 +169,27 @@ export function ContatoHeroSection() {
           </p>
         )}
 
-        <Button
-          type="submit"
-          variant="primary"
-          size="lg"
-          disabled={isSubmitting}
-          className="self-start"
-        >
-          Enviar solicitação
-        </Button>
+        <div className="flex flex-col gap-3">
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            disabled={isSubmitting}
+            className="w-full self-start lg:w-auto"
+          >
+            Enviar solicitação
+          </Button>
+          {sent && (
+            <p
+              role="status"
+              className="inline-flex items-start gap-2 text-body-sm font-semibold text-success"
+            >
+              <CircleCheck aria-hidden className="mt-0.5 size-5 shrink-0" />
+              Sua solicitação foi enviada! Em breve retornaremos com sua
+              proposta.
+            </p>
+          )}
+        </div>
       </form>
     </Section>
   );

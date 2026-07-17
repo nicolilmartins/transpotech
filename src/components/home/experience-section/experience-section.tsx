@@ -9,6 +9,7 @@ import card2 from "@/assets/images/stats/card2.png";
 import card3 from "@/assets/images/stats/card3.png";
 import illoMap from "@/assets/images/stats/map-illustration.webp";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { ROUTES } from "@/lib/routes";
 
 const cardImages = [card1, card2, card3, illoMap];
 
@@ -185,7 +186,7 @@ export function ExperienceSection() {
         ))}
       </div>
 
-      <Button variant="primary" size="lg">
+      <Button variant="primary" size="lg" href={ROUTES.CONTATO}>
         Quero reduzir meus custos
       </Button>
     </Section>

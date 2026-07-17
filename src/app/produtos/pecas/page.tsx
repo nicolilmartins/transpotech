@@ -43,10 +43,12 @@ export default function PecasPage() {
         <InfoCardsSection />
       </div>
 
-      {/* Grupo claro 3 — Por que TranspoTech + FAQ */}
+      {/* Grupo claro 3 — Por que TranspoTech + FAQ (malha só no Por que) */}
       <div className="relative isolate bg-[#fdfdfd]">
-        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <WhyTranspotechSection />
+        <div className="relative">
+          <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+          <WhyTranspotechSection />
+        </div>
         <FaqSection
           titleRegular="Dúvidas frequentes sobre "
           titleAccent="peças"

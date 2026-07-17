@@ -237,7 +237,9 @@ export function SolutionsSection() {
           </p>
           <h2 className="text-balance text-h2 text-neutral-100">
             <span className="lg:block font-normal">Soluções em</span>{" "}
-            <span className="font-bold">movimentação de cargas</span>
+            <span className="lg:block font-bold text-primary-500">
+              Intralogística
+            </span>
           </h2>
           <p className="max-w-[474px] text-body leading-6 text-neutral-300">
             Escolha a necessidade mais próxima do seu momento e encontre a
@@ -261,7 +263,7 @@ export function SolutionsSection() {
                 aria-pressed={act}
                 className={`shrink-0 cursor-pointer whitespace-nowrap rounded-full border px-3 py-1.5 text-[12px] transition-all duration-300 ${
                   act
-                    ? "border-white/15 bg-white/10 font-semibold text-white backdrop-blur-sm"
+                    ? "border-primary-400 bg-white/10 font-semibold text-white backdrop-blur-sm"
                     : "border-white/10 font-medium text-white/60"
                 }`}
               >
@@ -339,7 +341,7 @@ export function SolutionsSection() {
                 }}
                 className={`absolute hidden cursor-pointer whitespace-nowrap rounded-full border px-3 py-1.5 text-[14px] transition-all duration-300 lg:block ${
                   act
-                    ? "border-white/15 bg-white/10 font-semibold text-white backdrop-blur-sm"
+                    ? "border-primary-400 bg-white/10 font-semibold text-white backdrop-blur-sm"
                     : "border-transparent font-medium text-white/60"
                 }`}
               >

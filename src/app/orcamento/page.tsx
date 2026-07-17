@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { UnderConstruction } from "@/components/layout/under-construction/under-construction";
+import { ROUTES } from "@/lib/routes";
 
 export const metadata: Metadata = {
   title: "Solicitar Orçamento",
@@ -15,7 +16,11 @@ export const metadata: Metadata = {
 export default function OrcamentoPage() {
   return (
     <main>
-      <UnderConstruction title="Solicitar Orçamento" />
+      <UnderConstruction
+        title="Solicitar Orçamento"
+        backLabel="Voltar para catálogo de empilhadeiras"
+        backHref={ROUTES.EMPILHADEIRAS_NOVAS}
+      />
     </main>
   );
 }

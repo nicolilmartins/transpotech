@@ -70,9 +70,8 @@ export default function ServicosPage() {
         <SegmentsSection />
       </div>
 
-      {/* Grupo claro 4 — FAQ */}
-      <div className="relative isolate bg-[#fdfdfd]">
-        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+      {/* Grupo claro 4 — FAQ (sem malha) */}
+      <div className="bg-[#fdfdfd]">
         <FaqSection
           titleRegular="Perguntas frequentes sobre "
           titleAccent="serviços e manutenção"

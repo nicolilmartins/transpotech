@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown, Paperclip, CheckCircle2 } from "lucide-react";
-import { toast } from "react-toastify";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import {
   manifestacaoSchema,
   manifestacaoRelations,
@@ -14,10 +16,6 @@ import {
   type ManifestacaoFormValues,
 } from "@/lib/manifestacao.schema";
 
-// Inputs em estilo "linha" (padrão do formulário da página Contato): fundo
-// transparente, sem caixa, apenas uma linha embaixo que fica laranja no foco.
-const inputBase =
-  "h-11 rounded-none border-0 border-b border-neutral-300 bg-transparent px-0 text-body text-neutral-800 placeholder:text-neutral-400 focus-visible:border-primary-500 focus-visible:outline-none aria-[invalid=true]:border-error";
 const labelBase = "text-body-sm font-semibold text-neutral-700";
 
 function generateProtocol(): string {
@@ -34,6 +32,7 @@ export function ManifestacaoForm() {
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
@@ -45,7 +44,6 @@ export function ManifestacaoForm() {
     // Sem backend — simula o envio e gera um número de protocolo (placeholder).
     await new Promise((r) => setTimeout(r, 500));
     setProtocol(generateProtocol());
-    toast.success("Manifestação enviada. Guarde seu número de protocolo.");
     reset();
     void data;
   };
@@ -96,13 +94,12 @@ export function ManifestacaoForm() {
               <label htmlFor="mf-name" className={labelBase}>
                 Nome *
               </label>
-              <input
+              <Input
                 id="mf-name"
                 type="text"
                 autoComplete="name"
-                aria-invalid={!!errors.name}
+                invalid={!!errors.name}
                 {...register("name")}
-                className={inputBase}
               />
               {errors.name && (
                 <p className="text-body-sm text-error">{errors.name.message}</p>
@@ -112,13 +109,12 @@ export function ManifestacaoForm() {
               <label htmlFor="mf-contact" className={labelBase}>
                 E-mail ou telefone *
               </label>
-              <input
+              <Input
                 id="mf-contact"
                 type="text"
                 placeholder="email@empresa.com ou (00) 00000-0000"
-                aria-invalid={!!errors.contact}
+                invalid={!!errors.contact}
                 {...register("contact")}
-                className={inputBase}
               />
               {errors.contact && (
                 <p className="text-body-sm text-error">
@@ -134,28 +130,21 @@ export function ManifestacaoForm() {
               <label htmlFor="mf-relation" className={labelBase}>
                 Relação com a TranspoTech *
               </label>
-              <div className="relative">
-                <select
-                  id="mf-relation"
-                  defaultValue=""
-                  aria-invalid={!!errors.relation}
-                  {...register("relation")}
-                  className={`${inputBase} w-full appearance-none pr-10`}
-                >
-                  <option value="" disabled>
-                    Selecione
-                  </option>
-                  {manifestacaoRelations.map((relation) => (
-                    <option key={relation} value={relation}>
-                      {relation}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  aria-hidden
-                  className="pointer-events-none absolute right-3 top-1/2 size-5 -translate-y-1/2 text-neutral-500"
-                />
-              </div>
+              <Controller
+                control={control}
+                name="relation"
+                render={({ field }) => (
+                  <Select
+                    id="mf-relation"
+                    placeholder="Selecione"
+                    options={manifestacaoRelations}
+                    invalid={!!errors.relation}
+                    value={field.value ?? ""}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                  />
+                )}
+              />
               {errors.relation && (
                 <p className="text-body-sm text-error">
                   {errors.relation.message}
@@ -167,28 +156,21 @@ export function ManifestacaoForm() {
               <label htmlFor="mf-type" className={labelBase}>
                 Tipo de manifestação *
               </label>
-              <div className="relative">
-                <select
-                  id="mf-type"
-                  defaultValue=""
-                  aria-invalid={!!errors.type}
-                  {...register("type")}
-                  className={`${inputBase} w-full appearance-none pr-10`}
-                >
-                  <option value="" disabled>
-                    Selecione
-                  </option>
-                  {manifestacaoTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  aria-hidden
-                  className="pointer-events-none absolute right-3 top-1/2 size-5 -translate-y-1/2 text-neutral-500"
-                />
-              </div>
+              <Controller
+                control={control}
+                name="type"
+                render={({ field }) => (
+                  <Select
+                    id="mf-type"
+                    placeholder="Selecione"
+                    options={manifestacaoTypes}
+                    invalid={!!errors.type}
+                    value={field.value ?? ""}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                  />
+                )}
+              />
               {errors.type && (
                 <p className="text-body-sm text-error">{errors.type.message}</p>
               )}
@@ -200,13 +182,12 @@ export function ManifestacaoForm() {
             <label htmlFor="mf-location" className={labelBase}>
               Unidade ou cidade relacionada *
             </label>
-            <input
+            <Input
               id="mf-location"
               type="text"
               placeholder="Ex.: Curitiba/PR"
-              aria-invalid={!!errors.location}
+              invalid={!!errors.location}
               {...register("location")}
-              className={inputBase}
             />
             {errors.location && (
               <p className="text-body-sm text-error">
@@ -220,13 +201,13 @@ export function ManifestacaoForm() {
             <label htmlFor="mf-message" className={labelBase}>
               Mensagem *
             </label>
-            <textarea
+            <Textarea
               id="mf-message"
               rows={5}
               placeholder="Descreva sua manifestação com o máximo de detalhes possível."
-              aria-invalid={!!errors.message}
+              invalid={!!errors.message}
               {...register("message")}
-              className="min-h-[140px] rounded-none border-0 border-b border-neutral-300 bg-transparent px-0 py-2 text-body text-neutral-800 placeholder:text-neutral-400 focus-visible:border-primary-500 focus-visible:outline-none aria-[invalid=true]:border-error"
+              className="min-h-[140px]"
             />
             {errors.message && (
               <p className="text-body-sm text-error">{errors.message.message}</p>
@@ -248,23 +229,21 @@ export function ManifestacaoForm() {
                   <label htmlFor="mf-company" className={labelBase}>
                     Empresa
                   </label>
-                  <input
+                  <Input
                     id="mf-company"
                     type="text"
                     autoComplete="organization"
                     {...register("company")}
-                    className={inputBase}
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="mf-order" className={labelBase}>
                     Número de pedido
                   </label>
-                  <input
+                  <Input
                     id="mf-order"
                     type="text"
                     {...register("orderNumber")}
-                    className={inputBase}
                   />
                 </div>
               </div>

@@ -61,11 +61,12 @@ export function UnitsSection() {
       </div>
 
       <div className="flex w-full flex-col gap-6">
-        {/* Carrossel horizontal — dentro do padding da seção (sem sangrar
-            até a borda da tela) */}
+        {/* Carrossel horizontal — no mobile sangra até a borda da tela
+            (margem negativa + padding interno + scroll-px), para o padding da
+            seção não cortar os cards; no desktop volta ao padding normal. */}
         <div
           ref={trackRef}
-          className="flex w-full snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none]"
+          className="-mx-5 flex w-[calc(100%+2.5rem)] snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 scroll-px-5 [scrollbar-width:none] sm:-mx-6 sm:w-[calc(100%+3rem)] sm:px-6 sm:scroll-px-6 lg:mx-0 lg:w-full lg:px-0 lg:scroll-px-0"
         >
           {cards.map((card) => (
           <article

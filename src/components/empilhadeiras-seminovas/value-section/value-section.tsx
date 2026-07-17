@@ -52,21 +52,21 @@ const cards: Card[] = [
 ];
 
 function ValueCard({ title, description, Icon }: Card) {
+  // Mesma superfície dos cards brancos da seção "Por que comprar seminova
+  // com a TranspoTech" (bg-neutral-50 + sombra esverdeada no hover).
   return (
-    <div className="flex flex-1 flex-col overflow-hidden rounded-xl bg-primary-50 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(245,130,32,0.3)]">
-      <div className="flex min-h-[280px] flex-1 flex-col rounded-xl bg-[#fbfbfb] p-6">
-        <div className="flex size-10 items-center justify-center rounded-full bg-primary-500 lg:size-12">
-          <Icon className="size-6 text-white lg:size-7" aria-hidden />
-        </div>
-        {/* Bloco de texto ancorado na base do card (mt-auto) */}
-        <div className="mt-auto flex flex-col gap-4">
-          <h3 className="line-clamp-1 font-heading text-[20px] font-semibold leading-[1.3] text-neutral-800">
-            {title}
-          </h3>
-          <p className="line-clamp-2 min-h-[2.7em] whitespace-pre-line text-body leading-[1.35] text-neutral-600">
-            {description}
-          </p>
-        </div>
+    <div className="flex min-h-[280px] flex-1 flex-col rounded-xl bg-neutral-50 p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.18)]">
+      <div className="flex size-10 items-center justify-center rounded-full bg-primary-500 lg:size-12">
+        <Icon className="size-6 text-white lg:size-7" aria-hidden />
+      </div>
+      {/* Bloco de texto ancorado na base do card (mt-auto) */}
+      <div className="mt-auto flex flex-col gap-4">
+        <h3 className="line-clamp-1 font-heading text-[20px] font-semibold leading-[1.3] text-neutral-800">
+          {title}
+        </h3>
+        <p className="line-clamp-2 min-h-[2.7em] whitespace-pre-line text-body leading-[1.35] text-neutral-600">
+          {description}
+        </p>
       </div>
     </div>
   );

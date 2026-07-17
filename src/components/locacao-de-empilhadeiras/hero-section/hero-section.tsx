@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import { ROUTES } from "@/lib/routes";
 import forklift from "@/assets/images/hero-image-locacao-de-empilhadeiras.webp";
+import forkliftMobile from "@/assets/images/hero-image-locacao-de-empilhadeiras-mobile.webp";
 
 export function LocacaoHeroSection() {
   return (
@@ -10,13 +11,24 @@ export function LocacaoHeroSection() {
       {/* Card de imagem — full-bleed no mobile; de md em diante, 16px de padding em volta e bordas de 20px */}
       <div className="relative flex h-svh md:h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden md:rounded-[20px]">
         {/* Imagem de fundo — empilhadeiras em operação */}
+        {/* Mobile: recorte exato do Figma (node 3321:3289) — empilhadeira
+            central em destaque; o arquivo já é a janela do design (669x1336). */}
+        <Image
+          src={forkliftMobile}
+          alt=""
+          priority
+          fill
+          sizes="100vw"
+          className="object-cover object-center md:hidden"
+        />
+        {/* Desktop (md+): recorte landscape padrão, cobrindo a hero inteira. */}
         <Image
           src={forklift}
           alt=""
           priority
           fill
           sizes="100vw"
-          className="object-cover object-center"
+          className="hidden object-cover object-center md:block"
         />
 
         {/* Gradiente escuro (#01120E) da base para o topo, concentrado na base */}
@@ -57,6 +69,7 @@ export function LocacaoHeroSection() {
             variant="primary"
             size="lg"
             href={ROUTES.ORCAMENTO}
+            className="w-full lg:w-auto"
           >
             Locar empilhadeira
           </Button>

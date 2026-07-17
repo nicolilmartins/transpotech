@@ -58,6 +58,7 @@ export function SustentabilidadeHeroSection() {
             variant="primary"
             size="lg"
             href="#destaques"
+            className="w-full lg:w-auto"
           >
             Conhecer iniciativas ESG
           </Button>

@@ -3,10 +3,10 @@ import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { CardImageIcon } from "@/components/ui/card-image-icon";
 import { ROUTES } from "@/lib/routes";
-import iconBateria from "@/assets/images/stats/baterias-icon-bateria.webp";
-import iconLupa from "@/assets/images/stats/baterias-icon-lupa.webp";
+import iconBateria from "@/assets/images/stats/card-bateria.webp";
+import iconLupa from "@/assets/images/stats/card-magnifier.webp";
 import iconRaio from "@/assets/images/stats/baterias-icon-raio.webp";
-import iconFerramentas from "@/assets/images/stats/baterias-icon-ferramentas.webp";
+import iconFerramentas from "@/assets/images/stats/card-toolbox.webp";
 import iconDocumento from "@/assets/images/stats/card-document.webp";
 import iconMoeda from "@/assets/images/stats/baterias-icon-moeda.webp";
 
@@ -113,7 +113,7 @@ export function WhyTranspotechSection() {
         {cards.map((card) => (
           <div
             key={card.title}
-            className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-neutral-50 p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.18)] lg:h-[280px]"
+            className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-neutral-50 p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.18)] lg:min-h-[280px]"
           >
             <CardImageIcon
               src={card.art.src}
@@ -128,7 +128,7 @@ export function WhyTranspotechSection() {
               flip={card.art.flip}
               scale={card.art.scale}
             />
-            <div className="relative flex flex-col gap-4">
+            <div className="relative mt-[124px] lg:mt-[140px] flex flex-col gap-4">
               <h3 className="font-heading text-h6 font-semibold text-neutral-800">
                 {card.title}
               </h3>

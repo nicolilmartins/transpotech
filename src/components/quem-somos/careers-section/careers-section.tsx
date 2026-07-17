@@ -62,7 +62,7 @@ export function CareersSection() {
           </p>
           <h2 className="text-h3 font-normal text-neutral-800">
             Faça parte do time{" "}
-            <span className="font-bold">TranspoTech</span>
+            <span className="font-bold text-primary-500">TranspoTech</span>
           </h2>
           <p className="text-body leading-[1.35] text-neutral-600">
             Somos uma das empresas certificadas Great Place to Work, com mais de

@@ -1,16 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-toastify";
+import { CircleCheck } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   newsletterSchema,
   type NewsletterFormValues,
 } from "@/lib/newsletter.schema";
 
 export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
+  const [sent, setSent] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -23,8 +27,8 @@ export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
   const onSubmit = async (data: NewsletterFormValues) => {
     // Sem backend por ora — confirma o cadastro localmente (padrão use-submit-lead).
     await new Promise((r) => setTimeout(r, 400));
-    toast.success("Pronto! Você vai receber nossos conteúdos por e-mail.");
     reset();
+    setSent(true);
     void data;
   };
 
@@ -58,6 +62,7 @@ export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
       <form
         noValidate
         onSubmit={handleSubmit(onSubmit)}
+        onChange={() => sent && setSent(false)}
         className="relative flex flex-1 flex-col gap-3 lg:justify-center"
       >
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -65,14 +70,14 @@ export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
             <label htmlFor="nl-email" className="sr-only">
               E-mail
             </label>
-            <input
+            <Input
+              tone="dark"
               id="nl-email"
               type="email"
               autoComplete="email"
               placeholder="email@empresa.com"
-              aria-invalid={!!errors.email}
+              invalid={!!errors.email}
               {...register("email")}
-              className="h-12 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-body text-neutral-50 placeholder:text-neutral-500 focus-visible:border-primary-500 focus-visible:outline-none aria-[invalid=true]:border-error"
             />
           </div>
 
@@ -88,6 +93,16 @@ export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
         </div>
           {errors.email && (
             <p className="text-body-sm text-error">{errors.email.message}</p>
+          )}
+          {sent && !errors.email && (
+            <p
+              role="status"
+              className="inline-flex items-start gap-2 text-body-sm font-semibold text-accent"
+            >
+              <CircleCheck aria-hidden className="mt-0.5 size-5 shrink-0" />
+              Inscrição confirmada! Em breve nossos conteúdos chegam ao seu
+              e-mail.
+            </p>
           )}
         </form>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
 import {
   Boxes,
@@ -25,6 +25,7 @@ import {
 import { Section } from "@/components/ui/section";
 import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import { Button } from "@/components/ui/button";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { ROUTES } from "@/lib/routes";
 import imgSolucoes from "@/assets/images/image-solucoes.webp";
 import imgSistemas from "@/assets/images/image_sistemas.webp";
@@ -37,6 +38,8 @@ type Category = {
   Icon: LucideIcon;
   // Título do card em duas linhas (ao menos duas palavras em cada).
   headline: [string, string];
+  // Descrição curta e atrativa da aba, abaixo do título.
+  description: string;
   image: StaticImageData;
   // Ancoragem do crop da imagem (object-position). Default: center.
   imagePosition?: string;
@@ -48,6 +51,8 @@ const categories: Category[] = [
     name: "Soluções",
     Icon: Boxes,
     headline: ["Soluções para atender pedidos", "com velocidade"],
+    description:
+      "Fluxos automatizados que aceleram o atendimento e entregam o pedido certo, na hora certa, sem retrabalho.",
     image: imgSolucoes,
     items: [
       {
@@ -66,6 +71,8 @@ const categories: Category[] = [
     name: "Sistemas",
     Icon: Workflow,
     headline: ["Sistemas que cobrem", "toda a operação"],
+    description:
+      "Do recebimento à expedição, cada etapa conectada em um só fluxo: rastreável, integrado e pronto para escalar.",
     image: imgSistemas,
     items: [
       {
@@ -99,8 +106,10 @@ const categories: Category[] = [
     name: "AGV & Robótica",
     Icon: Bot,
     headline: ["AGV e robótica", "para operações autônomas"],
+    description:
+      "Robôs e veículos autônomos que trabalham lado a lado com a sua equipe, elevando a produtividade e reduzindo o esforço manual.",
     image: imgAgv,
-    imagePosition: "70% center",
+    imagePosition: "70% 30%",
     items: [
       {
         Icon: Navigation,
@@ -159,10 +168,41 @@ const categories: Category[] = [
 export function SolutionsSection() {
   const [active, setActive] = useState(0);
   const current = categories[active];
+  const listRef = useRef<HTMLUListElement>(null);
+
+  // Sem barra de rolagem: os tópicos surgem no scroll (fade + slide por item)
+  // enquanto a imagem fica fixa (sticky). Reexecuta ao trocar de aba para os
+  // novos tópicos entrarem com a mesma animação. `data-reveal-skip` evita que o
+  // ScrollReveal global também mexa nesses itens.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const ul = listRef.current;
+    if (!ul) return;
+    const items = Array.from(ul.children) as HTMLElement[];
+    gsap.set(items, { opacity: 0, y: 16 });
+    const triggers = ScrollTrigger.batch(items, {
+      start: "top 92%",
+      onEnter: (els) =>
+        gsap.to(els, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power2.out",
+          stagger: 0.08,
+          overwrite: "auto",
+        }),
+    });
+    ScrollTrigger.refresh();
+    return () => {
+      triggers.forEach((t) => t.kill());
+      gsap.set(items, { clearProps: "opacity,transform" });
+    };
+  }, [active]);
 
   return (
     <Section
       id="solucoes"
+      data-reveal-skip
       className="flex scroll-mt-24 flex-col gap-10 lg:gap-12"
     >
       <div className="mx-auto flex max-w-[640px] flex-col items-center gap-4 text-center">
@@ -208,28 +248,28 @@ export function SolutionsSection() {
         })}
       </div>
 
-      {/* Banner no estilo do card de referência: tópicos com ícone (título +
-          descrição) em duas colunas à esquerda e a imagem à direita, ocupando
-          toda a altura do card — como o bloco escuro da referência. */}
-      <div className="grid grid-cols-1 gap-8 rounded-2xl bg-neutral-50 p-6 lg:grid-cols-[1.55fr_1fr] lg:min-h-[334px] lg:items-stretch lg:gap-10 lg:p-8">
-        {/* Tópicos — cada um com ícone em caixa, título e descrição.
-            No card "Soluções" o título fica no topo e os 2 tópicos lado a lado. */}
-        <div
-          className={`flex flex-col gap-8 ${
-            current.name === "Soluções" ? "lg:justify-start" : "lg:justify-center"
-          }`}
-        >
-          <h3 className="text-center font-heading text-[20px] font-semibold leading-[1.2] text-neutral-800">
-            {current.headline[0]}
-            <br />
-            {current.headline[1]}
-          </h3>
+      {/* Conteúdo (sem box): título (2 linhas) + descrição + tópicos em uma
+          coluna à esquerda; imagem larga à direita, que fica fixa (sticky) no
+          desktop. Mobile: tudo empilhado, com a imagem no fim da seção. */}
+      <div className="grid grid-cols-1 gap-8 px-6 lg:grid-cols-[440px_1fr] lg:gap-[100px] lg:px-8">
+        {/* Tópicos — título à esquerda (2 linhas) + descrição + lista em coluna */}
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <h3 className="font-heading text-[22px] font-semibold leading-[1.2] text-neutral-800">
+              {current.headline[0]}
+              <br />
+              {current.headline[1]}
+            </h3>
+            <p className="max-w-[440px] text-balance text-body-sm leading-[1.4] text-neutral-600">
+              {current.description}
+            </p>
+          </div>
 
-          <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-
+          {/* Uma coluna sempre; sem barra — os itens surgem no scroll */}
+          <ul ref={listRef} className="flex flex-col gap-5">
             {current.items.map((item) => (
-              <div key={item.title} className="flex items-start gap-4">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-white text-primary-500">
+              <li key={item.title} className="flex items-start gap-4">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-primary-500">
                   <item.Icon aria-hidden className="size-5" />
                 </span>
                 <div className="flex flex-col gap-1">
@@ -240,26 +280,30 @@ export function SolutionsSection() {
                     {item.description}
                   </span>
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
 
-        {/* Imagem à direita — altura total do card, com bordinha (padding + cantos). */}
-        <ParallaxFrame className="order-first min-h-[240px] w-full rounded-xl bg-neutral-100 lg:order-none lg:min-h-full">
-          <Image
-            key={current.name}
-            src={current.image}
-            alt={`${current.headline[0]} ${current.headline[1]}`}
-            fill
-            sizes="(min-width: 1024px) 40vw, 100vw"
-            className="object-cover"
-            style={{ objectPosition: current.imagePosition ?? "center" }}
-          />
-        </ParallaxFrame>
+        {/* Imagem — larga; desktop fica fixa (sticky) enquanto os tópicos rolam;
+            mobile no fim da seção (ordem natural do DOM). O wrapper estica na
+            altura da coluna de tópicos para o sticky ter espaço de movimento. */}
+        <div className="lg:h-full">
+          <ParallaxFrame className="min-h-[240px] w-full overflow-hidden rounded-xl bg-neutral-100 lg:sticky lg:top-24 lg:h-[420px] lg:min-h-0">
+            <Image
+              key={current.name}
+              src={current.image}
+              alt={`${current.headline[0]} ${current.headline[1]}`}
+              fill
+              sizes="(min-width: 1024px) 55vw, 100vw"
+              className="object-cover"
+              style={{ objectPosition: current.imagePosition ?? "center" }}
+            />
+          </ParallaxFrame>
+        </div>
       </div>
 
-      {/* Botão fora do card, centralizado */}
+      {/* Botão sempre no fim da seção */}
       <Button
         variant="primary"
         size="lg"

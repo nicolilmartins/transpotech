@@ -66,9 +66,8 @@ export default function PneusPage() {
       </div>
 
 
-      {/* Grupo claro 3 — FAQ */}
-      <div className="relative isolate bg-[#fdfdfd]">
-        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+      {/* Grupo claro 3 — FAQ (sem malha) */}
+      <div className="bg-[#fdfdfd]">
         <FaqSection
           titleRegular="Dúvidas frequentes sobre "
           titleAccent="pneus"

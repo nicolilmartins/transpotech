@@ -1,10 +1,10 @@
 import { type StaticImageData } from "next/image";
 import { Section } from "@/components/ui/section";
 import { CardImageIcon } from "@/components/ui/card-image-icon";
-import iconGalpao from "@/assets/images/stats/loc-icon-galpao.webp";
-import iconCarrinho from "@/assets/images/stats/loc-icon-carrinho.webp";
-import iconFabrica from "@/assets/images/stats/loc-icon-fabrica.webp";
-import iconCaminhao from "@/assets/images/stats/loc-icon-caminhao.webp";
+import iconGalpao from "@/assets/images/stats/card-galpao.webp";
+import iconCarrinho from "@/assets/images/stats/card-carrinho.webp";
+import iconFabrica from "@/assets/images/stats/card-fabrica.webp";
+import iconCaminhao from "@/assets/images/stats/card-caminhao.webp";
 import iconFloco from "@/assets/images/stats/loc-icon-floco.webp";
 
 // Geometria por card conforme o Figma (node 3603:3365). flip=false em todos.
@@ -97,7 +97,7 @@ const segments: Segment[] = [
 
 function SegmentCard({ title, description, art }: Segment) {
   return (
-    <div className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-[#222221] p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.35)] lg:h-[299px]">
+    <div className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-[#222221] p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.35)] lg:min-h-[299px]">
       <CardImageIcon
         src={art.src}
         width={art.width}
@@ -110,7 +110,7 @@ function SegmentCard({ title, description, art }: Segment) {
         plateau={false}
         blendMode="lighten"
       />
-      <div className="relative flex flex-col gap-4">
+      <div className="relative mt-[124px] lg:mt-[140px] flex flex-col gap-4">
         <h3 className="w-[242px] max-w-full font-heading text-h6 font-semibold text-neutral-200">
           {title}
         </h3>

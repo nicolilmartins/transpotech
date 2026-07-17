@@ -24,6 +24,17 @@ h6 {
   outline-offset: 2px;
 }
 
+/* Campos de formulário indicam foco pela própria borda laranja (padrão dos
+   primitivos Input/Select/Textarea) — sem o outline global, que somaria uma
+   segunda linha. Precisa ficar aqui (fora de @layer) para vencer a regra
+   acima; [data-field] cobre gatilhos custom, como o botão do Select. */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[data-field]:focus-visible {
+  outline: none;
+}
+
 /* Stroke em gradiente que apaga no canto inferior direito (cards de depoimento).
    Usa máscara para respeitar o border-radius do card. */
 .stroke-fade {

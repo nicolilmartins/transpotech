@@ -66,9 +66,11 @@ export function RentVsBuySection() {
     <Section className="flex flex-col items-center gap-12 lg:gap-16">
       {/* Cabeçalho centralizado */}
       <div className="flex max-w-[560px] flex-col gap-4 text-center">
+        {/* Duas linhas fixas em todos os tamanhos: "Vale a pena" /
+            "locar ou comprar?" (block também no mobile). */}
         <h2 className="text-h2 text-neutral-800">
-          <span className="lg:block font-normal">Vale a pena</span>{" "}
-          <span className="lg:block font-bold text-primary-500">
+          <span className="block font-normal">Vale a pena</span>{" "}
+          <span className="block font-bold text-primary-500">
             locar ou comprar?
           </span>
         </h2>

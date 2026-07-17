@@ -9,14 +9,16 @@ export function BateriasHeroSection() {
     <section data-header-hero className="relative w-full bg-[#fdfdfd] md:p-4">
       {/* Card de imagem — full-bleed no mobile; de md em diante, 16px de padding em volta e bordas de 20px */}
       <div className="relative flex h-svh md:h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden md:rounded-[20px]">
-        {/* Imagem de fundo — equipamentos elétricos em operação */}
+        {/* Imagem de fundo — equipamentos elétricos em operação. Posição x em
+            65% desloca a cena para a esquerda em telas estreitas, mantendo o
+            técnico carregando a empilhadeira dentro do enquadramento. */}
         <Image
           src={heroImage}
           alt=""
           priority
           fill
           sizes="100vw"
-          className="object-cover object-[center_70%]"
+          className="object-cover object-[65%_70%]"
         />
 
         {/* Gradiente escuro da base para o topo, concentrado na base */}
@@ -53,6 +55,7 @@ export function BateriasHeroSection() {
             variant="primary"
             size="lg"
             href={ROUTES.ORCAMENTO}
+            className="w-full lg:w-auto"
           >
             Solicitar cotação
           </Button>

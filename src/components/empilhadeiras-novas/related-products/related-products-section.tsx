@@ -1,10 +1,17 @@
+"use client";
+
+import { useState } from "react";
 import { Section } from "@/components/ui/section";
 import { TextLink } from "@/components/ui/text-link";
 import { ProductCard } from "@/components/catalog/product-card/product-card";
+import { QuoteModal } from "@/components/catalog/quote-modal/quote-modal";
+import { forkliftsNovas } from "@/data/forklifts-novas";
 import { ROUTES } from "@/lib/routes";
 import type { Forklift } from "@/types/forklift.types";
 
 export function RelatedProductsSection({ items }: { items: Forklift[] }) {
+  const [quoteForId, setQuoteForId] = useState<string | null>(null);
+
   if (items.length === 0) return null;
 
   return (
@@ -26,9 +33,21 @@ export function RelatedProductsSection({ items }: { items: Forklift[] }) {
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((forklift) => (
-          <ProductCard key={forklift.id} forklift={forklift} />
+          <ProductCard
+            key={forklift.id}
+            forklift={forklift}
+            onRequestQuote={(f) => setQuoteForId(f.id)}
+          />
         ))}
       </div>
+
+      {quoteForId && (
+        <QuoteModal
+          onClose={() => setQuoteForId(null)}
+          forklifts={forkliftsNovas}
+          initialSelectedId={quoteForId}
+        />
+      )}
     </Section>
   );
 }

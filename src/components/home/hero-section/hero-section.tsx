@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
+import { ROUTES } from "@/lib/routes";
 import forklift from "@/assets/images/hero-image.webp";
 import forkliftMobile from "@/assets/images/hero-image-mobile.webp";
 
@@ -10,12 +11,6 @@ export function HeroSection() {
       data-header-hero
       className="relative h-[100svh] w-full overflow-hidden"
     >
-      {/* Gradiente base (verde transparente → laranja 25%, Figma) */}
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-[image:var(--hero-overlay)]"
-      />
-
       {/* Desktop: empilhadeira full-bleed atrás do conteúdo. Wrapper escalado
           proporcionalmente mantém a empilhadeira a ~66% em qualquer largura;
           `object-bottom` recorta só o topo (céu), nunca a base. */}
@@ -73,10 +68,20 @@ export function HeroSection() {
           </div>
 
           <div className="flex w-full flex-col items-center gap-3 lg:w-auto lg:flex-row lg:gap-2">
-            <Button variant="primary" size="lg">
+            <Button
+              variant="primary"
+              size="lg"
+              href={ROUTES.LOCACAO}
+              className="w-full lg:w-auto"
+            >
               Locar empilhadeira
             </Button>
-            <Button variant="gray" size="lg">
+            <Button
+              variant="gray"
+              size="lg"
+              href={ROUTES.EMPILHADEIRAS_NOVAS}
+              className="w-full lg:w-auto"
+            >
               Comprar empilhadeira
             </Button>
           </div>

@@ -57,6 +57,7 @@ export function QuemSomosHeroSection() {
             variant="primary"
             size="lg"
             href={ROUTES.CONTATO}
+            className="w-full lg:w-auto"
           >
             Fale com um especialista
           </Button>

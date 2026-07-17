@@ -5,8 +5,10 @@ import post3 from "@/assets/images/blog/post3.jpg";
 import post4 from "@/assets/images/blog/post4.png";
 import locacaoForklift from "@/assets/images/hero-image-locacao-de-empilhadeiras.webp";
 import heroQuemSomos from "@/assets/images/hero-quem-somos.webp";
+import fachada from "@/assets/images/fachada-transpotech.webp";
 
 export type ArticleCategory =
+  | "Institucional"
   | "Locação"
   | "Empilhadeiras novas"
   | "Automação"
@@ -30,6 +32,20 @@ export type Article = {
 
 // Conteúdo do wireframe (placeholder — você ajusta depois). Imagens: blog/post1-4.
 export const articles: Article[] = [
+  {
+    id: "premio-pos-vendas-linde-still",
+    category: "Institucional",
+    type: "Notícia",
+    title:
+      "TranspoTech conquista prêmio nacional de pós-vendas da Linde e STILL",
+    excerpt:
+      "Reconhecimento coloca a operação de pós-vendas da TranspoTech entre as melhores da rede autorizada Linde e STILL no Brasil.",
+    date: "12 mai 2026",
+    dateISO: "2026-05-12",
+    readTime: "3 min",
+    author: "Equipe TranspoTech",
+    image: fachada,
+  },
   {
     id: "quando-vale-locar-empilhadeiras",
     category: "Locação",
@@ -111,7 +127,7 @@ export const articles: Article[] = [
   },
 ];
 
-/** Artigo em destaque (Notícia em destaque). */
+/** Artigo em destaque (Notícia em destaque do Portal de Conteúdo). */
 export const featuredArticle = articles[0];
 
 /** Busca um artigo pelo id (slug da rota de detalhe). */

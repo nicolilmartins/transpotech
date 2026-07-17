@@ -1,9 +1,9 @@
 import Image, { type StaticImageData } from "next/image";
 import { Section } from "@/components/ui/section";
-import iconTecnicos from "@/assets/images/stats/why-icon-tecnicos.webp";
-import iconMultimarcas from "@/assets/images/stats/why-icon-multimarcas.webp";
-import iconPresenca from "@/assets/images/stats/why-icon-presenca.webp";
-import iconEstoque from "@/assets/images/stats/why-icon-estoque.webp";
+import iconTecnicos from "@/assets/images/stats/card-selo.webp";
+import iconMultimarcas from "@/assets/images/stats/card-loja.webp";
+import iconPresenca from "@/assets/images/stats/card-pin.webp";
+import iconEstoque from "@/assets/images/stats/card-engrenagem.webp";
 
 // Ícone 3D (imagem) posicionado exatamente como no Figma (node 3593:3243).
 // A caixa da arte é 204.438×153.328 e uma máscara radial (equivalente ao SVG
@@ -171,10 +171,10 @@ export function WhyUsSection() {
         {cards.map((card) => (
           <div
             key={card.title}
-            className="relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-[#222221] p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.35)] lg:h-[299px]"
+            className="relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-[#222221] p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.35)] lg:min-h-[299px]"
           >
             <CardIcon icon={card.icon} />
-            <div className="relative flex flex-col gap-4">
+            <div className="relative mt-[124px] lg:mt-[140px] flex flex-col gap-4">
               <h3 className="w-full font-heading text-h6 font-semibold text-neutral-200 lg:w-[242px]">
                 {card.title}
               </h3>

@@ -53,6 +53,7 @@ export function PecasHeroSection() {
             variant="primary"
             size="lg"
             href={ROUTES.ORCAMENTO}
+            className="w-full lg:w-auto"
           >
             Solicitar cotação de peças
           </Button>

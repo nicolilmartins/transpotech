@@ -1,24 +1,12 @@
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
-import fachada from "@/assets/images/fachada-transpotech.webp";
-
-// Notícia em destaque — matéria externa (Informe Blumenau).
-const featured = {
-  category: "Notícia",
-  title:
-    "TranspoTech recebe prêmio de melhor pós-vendas do Brasil da Linde Still, líder mundial em empilhadeiras elétricas",
-  excerpt:
-    "A empresa venceu o programa Top Service da Linde Still e foi reconhecida como o melhor serviço de pós-vendas do Brasil, entre 46 centros autorizados.",
-  date: "22 ago 2016",
-  source: "Informe Blumenau",
-  href: "https://www.informeblumenau.com/transpotech-recebe-premio-de-melhor-pos-vendas-do-brasil-da-linde-still-lider-mundial-em-empilhadeiras-eletricas/",
-  image: fachada,
-};
+import { featuredArticle } from "@/data/articles";
+import { ROUTES } from "@/lib/routes";
 
 export function FeaturedSection() {
-  const article = featured;
+  const article = featuredArticle;
 
   return (
     <Section className="flex flex-col pt-0">
@@ -46,7 +34,7 @@ export function FeaturedSection() {
           {/* Bloco no topo: tag, título, descrição, data e tempo de leitura */}
           <div className="flex flex-col gap-4">
             <span className="inline-flex w-fit items-center rounded-full bg-primary-50 px-3.5 py-1.5 text-body-sm font-semibold text-primary-600">
-              {article.category}
+              {article.type}
             </span>
 
             <h2 className="text-[24px] font-bold leading-[1.3] text-neutral-800 lg:text-h3">
@@ -60,17 +48,18 @@ export function FeaturedSection() {
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-body-sm text-neutral-500">
               <span>{article.date}</span>
               <span aria-hidden>·</span>
-              <span>{article.source}</span>
+              <span className="inline-flex items-center gap-1">
+                <Clock aria-hidden className="size-4" />
+                {article.readTime}
+              </span>
             </div>
           </div>
 
-          {/* Botão na base — abre a matéria externa em nova aba */}
+          {/* Botão na base — abre a página interna do artigo */}
           <Button
             variant="primary"
             size="lg"
-            href={article.href}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={`${ROUTES.PORTAL_CONTEUDO}/${article.id}`}
             iconRight={<ArrowRight aria-hidden className="size-5" />}
             className="self-start"
           >

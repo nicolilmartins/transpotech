@@ -372,6 +372,7 @@ export function Header() {
                 size="lg"
                 href={ROUTES.ORCAMENTO}
                 onClick={closeMobileMenu}
+                className="w-full"
               >
                 Calcular orçamento
               </Button>
@@ -380,6 +381,7 @@ export function Header() {
                 size="lg"
                 href={ROUTES.CONTATO}
                 onClick={closeMobileMenu}
+                className="w-full"
               >
                 Fale com vendas
               </Button>

@@ -3,11 +3,11 @@ import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { CardImageIcon } from "@/components/ui/card-image-icon";
 import { ROUTES } from "@/lib/routes";
-import iconFerramentas from "@/assets/images/stats/qs-icon-ferramentas.webp";
+import iconFerramentas from "@/assets/images/stats/card-toolbox.webp";
 import iconRevisao from "@/assets/images/stats/why-buy-icon-revisao.webp";
-import iconSelo from "@/assets/images/stats/qs-icon-selo.webp";
-import iconPessoa from "@/assets/images/stats/qs-icon-pessoa.webp";
-import iconPin from "@/assets/images/stats/qs-icon-pin.webp";
+import iconSelo from "@/assets/images/stats/card-badge.webp";
+import iconPessoa from "@/assets/images/stats/card-person.webp";
+import iconPin from "@/assets/images/stats/card-pin-light.webp";
 import iconGalpao from "@/assets/images/stats/card-house.webp";
 
 // Geometria por card conforme o Figma (node 3603:3301). Padrão: caixa
@@ -101,7 +101,7 @@ export function WhyChooseSection() {
         {cards.map((card) => (
           <div
             key={card.title}
-            className="group relative flex min-h-[220px] flex-col justify-end overflow-hidden rounded-xl bg-neutral-50 p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.18)] lg:h-[260px]"
+            className="group relative flex min-h-[220px] flex-col justify-end overflow-hidden rounded-xl bg-neutral-50 p-6 transition-shadow duration-300 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.18)] lg:min-h-[260px]"
           >
             <CardImageIcon
               src={card.art.src}
@@ -115,7 +115,7 @@ export function WhyChooseSection() {
               maskH={card.art.maskH}
               flip={card.art.flip}
             />
-            <div className="relative flex flex-col gap-3">
+            <div className="relative mt-[124px] lg:mt-[140px] flex flex-col gap-3">
               <h3 className="font-heading text-h6 font-semibold text-neutral-800">
                 {card.title}
               </h3>

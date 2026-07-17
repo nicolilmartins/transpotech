@@ -3,6 +3,7 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { Search, SearchX } from "lucide-react";
 import { Section } from "@/components/ui/section";
+import { Input } from "@/components/ui/input";
 import { articles as allArticles } from "@/data/articles";
 import { ArticleCard } from "../article-card/article-card";
 
@@ -81,23 +82,17 @@ export function ArticleList() {
 
       {/* Busca + tags de filtro (logo abaixo da busca) */}
       <div className="flex flex-col gap-4">
-        <div className="relative">
-          <input
-            type="search"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
-            placeholder="Buscar por título, autor ou tema"
-            aria-label="Buscar publicações"
-            className="h-12 w-full rounded-xl border border-neutral-200 bg-white pl-4 pr-10 text-body text-neutral-800 placeholder:text-neutral-400 focus-visible:border-primary-500 focus-visible:outline-none"
-          />
-          <Search
-            aria-hidden
-            className="pointer-events-none absolute right-3 top-1/2 size-5 -translate-y-1/2 text-neutral-400"
-          />
-        </div>
+        <Input
+          type="search"
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
+          placeholder="Buscar por título, autor ou tema"
+          aria-label="Buscar publicações"
+          iconEnd={<Search className="size-5" />}
+        />
 
         <div className="flex flex-wrap gap-2">
           <TagFilter active={category === ""} onClick={() => selectCategory("")}>

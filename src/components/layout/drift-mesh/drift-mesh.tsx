@@ -34,11 +34,14 @@ const FADE =
 export function DriftMesh({
   className,
   fade = false,
+  speed = 1,
 }: {
   className?: string;
   /** Apaga a malha de cima para baixo — para heros em wrappers altos onde a
       malha deve sumir antes do conteúdo seguinte (substitui a MeshBackground). */
   fade?: boolean;
+  /** Multiplicador da velocidade dos blobs (1 = padrão das heros). */
+  speed?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -61,7 +64,7 @@ export function DriftMesh({
         gsap.to(el, {
           [`--bx${i}`]: `${gsap.utils.random(5, 95, 1)}%`,
           [`--by${i}`]: `${gsap.utils.random(8, 92, 1)}%`,
-          duration: gsap.utils.random(3, 6),
+          duration: gsap.utils.random(3, 6) / speed,
           ease: "sine.inOut",
           onComplete: move,
         });
@@ -72,7 +75,7 @@ export function DriftMesh({
     return () => {
       gsap.killTweensOf(el);
     };
-  }, []);
+  }, [speed]);
 
   const mask = [
     // União (default de múltiplas camadas de mask): base fraca + blobs.

@@ -70,10 +70,12 @@ export default function LocacaoPage() {
         <SegmentsSection />
       </div>
 
-      {/* Grupo claro 3 — Locar vs. comprar + FAQ */}
+      {/* Grupo claro 3 — Locar vs. comprar + FAQ (malha só no Locar vs. comprar) */}
       <div className="relative isolate bg-[#fdfdfd]">
-        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <RentVsBuySection />
+        <div className="relative">
+          <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+          <RentVsBuySection />
+        </div>
         <FaqSection
           titleRegular="Perguntas frequentes sobre "
           titleAccent="locação de empilhadeiras"
@@ -82,7 +84,9 @@ export default function LocacaoPage() {
       </div>
 
       <CtaSection
-        titleRegular="Sua operação precisa de disponibilidade, suporte e "
+        // Espaço não-quebrável entre "suporte" e "e" para o "e" não ficar órfão
+        // no início de linha no mobile (fica "suporte e" / "previsibilidade?").
+        titleRegular={"Sua operação precisa de disponibilidade, suporte e "}
         titleAccent="previsibilidade?"
         description="Fale com a TranspoTech e receba uma recomendação de locação conforme as necessidades da sua operação."
         ctaLabel="Falar com especialista"

@@ -152,7 +152,8 @@ export function Catalog({ forklifts }: { forklifts: Forklift[] }) {
   const [selected, setSelected] = useState<SelectedFacets>(emptySelection);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Modal de orçamento (dois passos): equipamentos + dados de contato.
+  // Modal de orçamento: dados de contato, com o equipamento clicado já
+  // selecionado (e botão "+" para incluir outros).
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [quoteForId, setQuoteForId] = useState<string | null>(null);
   const openQuote = (forklift: Forklift) => {

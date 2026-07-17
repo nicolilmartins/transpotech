@@ -38,10 +38,14 @@ export function IncludedSection() {
     >
       {/* Cabeçalho — alinhado à esquerda */}
       <div className="flex max-w-[640px] flex-col gap-4">
+        {/* Mobile: "O que está incluso" / "na compra"; desktop mantém
+            "O que está" / "incluso na compra" (breaks por breakpoint). */}
         <h2 className="text-h2 text-neutral-50">
           <span className="font-normal">O que está</span>{" "}
           <br className="hidden lg:inline" />
-          <span className="font-bold text-primary-500">incluso na compra</span>
+          <span className="font-bold text-primary-500">incluso</span>
+          <br className="lg:hidden" />{" "}
+          <span className="font-bold text-primary-500">na compra</span>
         </h2>
         <p className="text-body leading-[1.5] text-neutral-400">
           Cada empilhadeira seminova já vem com a estrutura da TranspoTech por trás,

@@ -56,10 +56,9 @@ export default function EmpilhadeirasSeminovasPage() {
         <ConsiderNewSection />
       </div>
 
-      {/* Grupo claro 4 — FAQ. pb-6 compensa o -mt-6 do footer (topo
+      {/* Grupo claro 4 — FAQ (sem malha). pb-6 compensa o -mt-6 do footer (topo
           arredondado sobreposto), mantendo os 48/80px visuais da diretriz. */}
-      <div className="relative isolate bg-[#fdfdfd] pb-6">
-        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+      <div className="bg-[#fdfdfd] pb-6">
         <FaqSection
           titleRegular="Dúvidas frequentes sobre "
           titleAccent="seminovas"

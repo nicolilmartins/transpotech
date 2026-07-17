@@ -42,11 +42,14 @@ export default function BateriasPage() {
         <BatteryTypesSection />
       </div>
 
-      {/* Grupo claro 3 — Como funciona + Por que TranspoTech + FAQ */}
+      {/* Grupo claro 3 — Como funciona + Por que TranspoTech + FAQ (malha só até
+          o Por que) */}
       <div className="relative isolate bg-[#fdfdfd]">
-        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <RequestStepsSection />
-        <WhyTranspotechSection />
+        <div className="relative">
+          <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+          <RequestStepsSection />
+          <WhyTranspotechSection />
+        </div>
         <FaqSection
           titleRegular="Dúvidas frequentes sobre "
           titleAccent="baterias e carregadores"

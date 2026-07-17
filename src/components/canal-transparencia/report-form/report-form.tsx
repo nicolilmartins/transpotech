@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDown, Paperclip, CheckCircle2 } from "lucide-react";
-import { toast } from "react-toastify";
+import { Paperclip, CheckCircle2 } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import {
   reportSchema,
   reportRelations,
@@ -14,10 +16,6 @@ import {
   type ReportFormValues,
 } from "@/lib/report.schema";
 
-// Inputs em estilo "linha" (padrão do formulário da página Contato): fundo
-// transparente, sem caixa, apenas uma linha embaixo que fica laranja no foco.
-const inputBase =
-  "h-11 rounded-none border-0 border-b border-neutral-300 bg-transparent px-0 text-body text-neutral-800 placeholder:text-neutral-400 focus-visible:border-primary-500 focus-visible:outline-none aria-[invalid=true]:border-error";
 const labelBase = "text-body-sm font-semibold text-neutral-700";
 
 function generateProtocol(): string {
@@ -34,6 +32,7 @@ export function ReportForm() {
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     watch,
@@ -50,7 +49,6 @@ export function ReportForm() {
     await new Promise((r) => setTimeout(r, 500));
     const code = generateProtocol();
     setProtocol(code);
-    toast.success("Relato enviado. Guarde seu número de protocolo.");
     reset({ identify: "anonimo" });
     void data;
   };
@@ -128,28 +126,21 @@ export function ReportForm() {
               <label htmlFor="rf-relation" className={labelBase}>
                 Relação com a TranspoTech *
               </label>
-              <div className="relative">
-                <select
-                  id="rf-relation"
-                  defaultValue=""
-                  aria-invalid={!!errors.relation}
-                  {...register("relation")}
-                  className={`${inputBase} w-full appearance-none pr-10`}
-                >
-                  <option value="" disabled>
-                    Selecione
-                  </option>
-                  {reportRelations.map((relation) => (
-                    <option key={relation} value={relation}>
-                      {relation}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  aria-hidden
-                  className="pointer-events-none absolute right-3 top-1/2 size-5 -translate-y-1/2 text-neutral-500"
-                />
-              </div>
+              <Controller
+                control={control}
+                name="relation"
+                render={({ field }) => (
+                  <Select
+                    id="rf-relation"
+                    placeholder="Selecione"
+                    options={reportRelations}
+                    invalid={!!errors.relation}
+                    value={field.value ?? ""}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                  />
+                )}
+              />
               {errors.relation && (
                 <p className="text-body-sm text-error">
                   {errors.relation.message}
@@ -161,28 +152,21 @@ export function ReportForm() {
               <label htmlFor="rf-type" className={labelBase}>
                 Tipo de relato *
               </label>
-              <div className="relative">
-                <select
-                  id="rf-type"
-                  defaultValue=""
-                  aria-invalid={!!errors.type}
-                  {...register("type")}
-                  className={`${inputBase} w-full appearance-none pr-10`}
-                >
-                  <option value="" disabled>
-                    Selecione
-                  </option>
-                  {reportTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  aria-hidden
-                  className="pointer-events-none absolute right-3 top-1/2 size-5 -translate-y-1/2 text-neutral-500"
-                />
-              </div>
+              <Controller
+                control={control}
+                name="type"
+                render={({ field }) => (
+                  <Select
+                    id="rf-type"
+                    placeholder="Selecione"
+                    options={reportTypes}
+                    invalid={!!errors.type}
+                    value={field.value ?? ""}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                  />
+                )}
+              />
               {errors.type && (
                 <p className="text-body-sm text-error">{errors.type.message}</p>
               )}
@@ -195,24 +179,18 @@ export function ReportForm() {
               <label htmlFor="rf-location" className={labelBase}>
                 Local ou unidade relacionada
               </label>
-              <input
+              <Input
                 id="rf-location"
                 type="text"
                 placeholder="Ex.: Curitiba/PR, unidade SC"
                 {...register("location")}
-                className={inputBase}
               />
             </div>
             <div className="flex flex-col gap-1.5">
               <label htmlFor="rf-date" className={labelBase}>
                 Data aproximada do ocorrido
               </label>
-              <input
-                id="rf-date"
-                type="date"
-                {...register("occurredAt")}
-                className={inputBase}
-              />
+              <Input id="rf-date" type="date" {...register("occurredAt")} />
             </div>
           </div>
 
@@ -221,12 +199,11 @@ export function ReportForm() {
             <label htmlFor="rf-people" className={labelBase}>
               Pessoas envolvidas (se souber)
             </label>
-            <input
+            <Input
               id="rf-people"
               type="text"
               placeholder="Nomes, cargos ou áreas envolvidas"
               {...register("people")}
-              className={inputBase}
             />
           </div>
 
@@ -235,13 +212,13 @@ export function ReportForm() {
             <label htmlFor="rf-description" className={labelBase}>
               Descrição do relato *
             </label>
-            <textarea
+            <Textarea
               id="rf-description"
               rows={5}
               placeholder="Descreva o ocorrido com o máximo de detalhes possível."
-              aria-invalid={!!errors.description}
+              invalid={!!errors.description}
               {...register("description")}
-              className="min-h-[140px] rounded-none border-0 border-b border-neutral-300 bg-transparent px-0 py-2 text-body text-neutral-800 placeholder:text-neutral-400 focus-visible:border-primary-500 focus-visible:outline-none aria-[invalid=true]:border-error"
+              className="min-h-[140px]"
             />
             {errors.description && (
               <p className="text-body-sm text-error">

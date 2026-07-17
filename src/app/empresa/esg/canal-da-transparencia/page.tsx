@@ -48,9 +48,8 @@ export default function CanalTransparenciaPage() {
         <CommitmentsSection />
       </div>
 
-      {/* Grupo claro 2 */}
-      <div className="relative isolate bg-[#fdfdfd]">
-        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+      {/* Grupo claro 2 — FAQ (sem malha) */}
+      <div className="bg-[#fdfdfd]">
         <FaqSection
           titleRegular="Perguntas "
           titleAccent="frequentes"

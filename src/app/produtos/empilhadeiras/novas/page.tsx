@@ -9,7 +9,6 @@ import { faqEmpilhadeiras } from "@/data/faq-empilhadeiras";
 import { CtaSection } from "@/components/layout/cta/cta-section";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
 import { DriftMesh } from "@/components/layout/drift-mesh";
-import { MeshBackground } from "@/components/layout/mesh-background/mesh-background";
 import { ROUTES } from "@/lib/routes";
 
 export const metadata: Metadata = {
@@ -51,9 +50,8 @@ export default function EmpilhadeirasNovasPage() {
         <WhyChooseSection />
       </div>
 
-      {/* Grupo claro — FAQ */}
-      <div className="relative isolate bg-[#fdfdfd]">
-        <MeshBackground className="pointer-events-none absolute inset-0 -z-10" />
+      {/* Grupo claro — FAQ (sem malha) */}
+      <div className="bg-[#fdfdfd]">
         <FaqSection
           titleRegular="Perguntas frequentes sobre "
           titleAccent="locação de empilhadeiras"

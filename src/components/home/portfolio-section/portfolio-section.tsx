@@ -182,7 +182,7 @@ export function PortfolioSection() {
               de frota" (nowrap só no desktop; no mobile flui natural) */}
           <h2 className="text-h2 font-normal text-neutral-100">
             <span className="lg:block">Equipamentos novos,</span>{" "}
-            <span className="lg:block font-bold lg:whitespace-nowrap">
+            <span className="lg:block font-bold text-primary-500 lg:whitespace-nowrap">
               seminovos e locação de frota
             </span>
           </h2>

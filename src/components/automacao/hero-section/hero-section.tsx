@@ -3,20 +3,31 @@ import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import { ROUTES } from "@/lib/routes";
 import heroImage from "@/assets/images/hero-automacao.webp";
+import heroImageMobile from "@/assets/images/hero-automacao-mobile.webp";
 
 export function AutomacaoHeroSection() {
   return (
-    <section data-header-hero className="relative w-full bg-[#fdfdfd] p-4">
-      {/* Card de imagem com 16px de padding em volta e bordas de 20px */}
-      <div className="relative flex h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden rounded-[20px]">
-        {/* Imagem de fundo — armazém automatizado */}
+    <section data-header-hero className="relative w-full bg-[#fdfdfd] md:p-4">
+      {/* Card de imagem — full-bleed no mobile; de md em diante, 16px de padding em volta e bordas de 20px */}
+      <div className="relative flex h-svh md:h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden md:rounded-[20px]">
+        {/* Imagem de fundo (mobile) — recorte exato do Figma (node 3640:3262):
+            técnica com laptop diante da linha automatizada. */}
+        <Image
+          src={heroImageMobile}
+          alt=""
+          priority
+          fill
+          sizes="100vw"
+          className="object-cover object-center md:hidden"
+        />
+        {/* Imagem de fundo (desktop) — armazém automatizado */}
         <Image
           src={heroImage}
           alt=""
           priority
           fill
           sizes="100vw"
-          className="object-cover object-center"
+          className="hidden object-cover object-center md:block"
         />
 
         {/* Gradiente escuro da base para o topo, concentrado na base */}
@@ -57,6 +68,7 @@ export function AutomacaoHeroSection() {
             variant="primary"
             size="lg"
             href={ROUTES.ORCAMENTO}
+            className="w-full lg:w-auto"
           >
             Avaliar minha operação
           </Button>

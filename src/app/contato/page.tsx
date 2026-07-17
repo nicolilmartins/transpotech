@@ -29,11 +29,13 @@ export default function ContatoPage() {
         <ContatoHeroSection />
       </div>
 
-      {/* Grupo claro — ajuda, unidades e FAQ */}
+      {/* Grupo claro — ajuda, unidades e FAQ (malha só até as unidades) */}
       <div className="relative isolate bg-[#fdfdfd] pb-6">
-        <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <HelpSection />
-        <UnitsSection />
+        <div className="relative">
+          <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+          <HelpSection />
+          <UnitsSection />
+        </div>
         <FaqSection
           titleRegular="Perguntas "
           titleAccent="frequentes"

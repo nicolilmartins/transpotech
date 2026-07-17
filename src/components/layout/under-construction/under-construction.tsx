@@ -9,9 +9,18 @@ type UnderConstructionProps = {
   title: string;
   /** Mensagem opcional; usa um texto padrão quando ausente. */
   description?: string;
+  /** Rótulo do botão principal; padrão "Voltar para o início". */
+  backLabel?: string;
+  /** Destino do botão principal; padrão home. */
+  backHref?: string;
 };
 
-export function UnderConstruction({ title, description }: UnderConstructionProps) {
+export function UnderConstruction({
+  title,
+  description,
+  backLabel = "Voltar para o início",
+  backHref = ROUTES.HOME,
+}: UnderConstructionProps) {
   return (
     <section className="relative isolate flex min-h-[70vh] items-center bg-[#fdfdfd]">
       <MeshBackground className="pointer-events-none absolute inset-0 -z-10" />
@@ -32,12 +41,15 @@ export function UnderConstruction({ title, description }: UnderConstructionProps
         </p>
 
         <div className="flex flex-col gap-3 sm:flex-row">
-          <Button variant="primary" size="lg" href={ROUTES.HOME}>
-            Voltar para o início
+          <Button variant="primary" size="lg" href={backHref}>
+            {backLabel}
           </Button>
-          <Button variant="gray" size="lg" href={ROUTES.EMPILHADEIRAS_NOVAS}>
-            Ver empilhadeiras novas
-          </Button>
+          {/* Some quando o botão principal já leva para o mesmo destino. */}
+          {backHref !== ROUTES.EMPILHADEIRAS_NOVAS && (
+            <Button variant="gray" size="lg" href={ROUTES.EMPILHADEIRAS_NOVAS}>
+              Ver empilhadeiras novas
+            </Button>
+          )}
         </div>
       </Section>
     </section>

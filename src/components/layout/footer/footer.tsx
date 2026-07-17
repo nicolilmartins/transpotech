@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Facebook, Instagram, Linkedin, Youtube } from "@/components/ui/icons";
 import { ROUTES } from "@/lib/routes";
 import { FooterGlow } from "./footer-glow";
+import { DriftMesh } from "@/components/layout/drift-mesh";
 import logoLight from "@/assets/images/logo-transpotech-light.svg";
 import gptw from "@/assets/images/gptw-badge.webp";
 import atomsix from "@/assets/images/atomsix-symbol.svg";
@@ -81,7 +82,7 @@ export function Footer() {
         className="pointer-events-none absolute -bottom-10 left-1/2 w-[1200px] max-w-none -translate-x-1/2 opacity-[0.03] blur-2xl"
       />
 
-      {/* Blur radial verde no rodapé (#218F73) — acompanha o cursor na horizontal */}
+      {/* Blur radial laranja no rodapé — acompanha o cursor na horizontal */}
       <FooterGlow />
 
       <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-5 pb-10 pt-14 sm:px-6 lg:px-16 lg:pb-16 lg:pt-20">
@@ -139,48 +140,59 @@ export function Footer() {
         {/* Divisor */}
         <div className="h-px w-full bg-white/10" />
 
-        {/* Unidades */}
-        <div className="flex flex-col gap-8">
-          <h3 className="font-heading text-h6 font-semibold text-neutral-100">
-            Nossas unidades
-          </h3>
-          <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:gap-x-8 lg:grid-flow-col lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-x-12 lg:gap-y-6">
-            {units.map((unit) => (
-              <div
-                key={`${unit.city}${unit.note ?? ""}`}
-                className="flex flex-col gap-[5px] text-body-sm"
-              >
-                <p className="leading-[1.35] text-neutral-300">
-                  <span className="font-semibold">{unit.city}</span>
-                  {unit.note && <span className="font-normal">{unit.note}</span>}
-                </p>
-                <p className="font-normal leading-[1.35] text-neutral-100">
-                  {unit.phone}
-                </p>
-              </div>
-            ))}
+        {/* Unidades + base — malha que anda sozinha (DriftMesh, como nas
+            heros) bem suave nesta região; isolate mantém a malha acima do bg
+            do footer e atrás do texto. A máscara elíptica esvanece as bordas
+            para a malha não terminar num corte reto. */}
+        <div className="relative isolate flex flex-col gap-8">
+          <DriftMesh
+            speed={1.6}
+            className="pointer-events-none absolute inset-0 -z-10 opacity-60 [mask-image:radial-gradient(ellipse_85%_90%_at_50%_50%,#000_45%,transparent_95%)]"
+          />
+
+          {/* Unidades */}
+          <div className="flex flex-col gap-8">
+            <h3 className="font-heading text-h6 font-semibold text-neutral-100">
+              Nossas unidades
+            </h3>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:gap-x-8 lg:grid-flow-col lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-x-12 lg:gap-y-6">
+              {units.map((unit) => (
+                <div
+                  key={`${unit.city}${unit.note ?? ""}`}
+                  className="flex flex-col gap-[5px] text-body-sm"
+                >
+                  <p className="leading-[1.35] text-neutral-300">
+                    <span className="font-semibold">{unit.city}</span>
+                    {unit.note && <span className="font-normal">{unit.note}</span>}
+                  </p>
+                  <p className="font-normal leading-[1.35] text-neutral-100">
+                    {unit.phone}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Divisor */}
-        <div className="h-px w-full bg-white/10" />
+          {/* Divisor */}
+          <div className="h-px w-full bg-white/10" />
 
-        {/* Base */}
-        <div className="flex items-center justify-between">
-          <p className="text-body-sm leading-[1.35] text-neutral-100">
-            © 2026 TranspoTech todos os direitos reservados.
-          </p>
-          <Link
-            href="https://www.atom6studio.com/pt-br"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2.5 text-neutral-300 transition-colors hover:text-neutral-50"
-          >
-            <span className="text-[8px] font-medium uppercase tracking-[0.1em]">
-              Criado por
-            </span>
-            <Image src={atomsix} alt="Atom6 Studio" className="size-6" />
-          </Link>
+          {/* Base */}
+          <div className="flex items-center justify-between">
+            <p className="text-body-sm leading-[1.35] text-neutral-100">
+              © 2026 TranspoTech todos os direitos reservados.
+            </p>
+            <Link
+              href="https://www.atom6studio.com/pt-br"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2.5 text-neutral-300 transition-colors hover:text-neutral-50"
+            >
+              <span className="text-[8px] font-medium uppercase tracking-[0.1em]">
+                Criado por
+              </span>
+              <Image src={atomsix} alt="Atom6 Studio" className="size-6" />
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

@@ -9,6 +9,7 @@ type NextStep = { label: string; href: string };
 // CTA contextual por categoria do artigo (conforme wireframe: Locação →
 // "Quero locar uma empilhadeira").
 const ctaByCategory: Record<ArticleCategory, NextStep> = {
+  Institucional: { label: "Conhecer a TranspoTech", href: ROUTES.QUEM_SOMOS },
   Locação: { label: "Quero locar uma empilhadeira", href: ROUTES.LOCACAO },
   "Empilhadeiras novas": {
     label: "Ver empilhadeiras novas",

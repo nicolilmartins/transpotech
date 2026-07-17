@@ -3,8 +3,9 @@ import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/ui/breadcrumb/breadcrumb";
 import { ProductGallery } from "@/components/catalog/product-gallery/product-gallery";
+import { ProductQuoteButton } from "./product-quote-button";
 import { ROUTES } from "@/lib/routes";
-import { stateFromLocation } from "@/data/forklifts-novas";
+import { forkliftsNovas, stateFromLocation } from "@/data/forklifts-novas";
 import type { Forklift } from "@/types/forklift.types";
 
 export function ProductDetailSection({ forklift }: { forklift: Forklift }) {
@@ -77,14 +78,7 @@ export function ProductDetailSection({ forklift }: { forklift: Forklift }) {
 
           {/* Ações */}
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button
-              variant="primary"
-              size="lg"
-              href={ROUTES.ORCAMENTO}
-              className="justify-center"
-            >
-              Solicitar orçamento deste modelo
-            </Button>
+            <ProductQuoteButton forklift={forklift} forklifts={forkliftsNovas} />
             <Button
               variant="gray"
               size="lg"
