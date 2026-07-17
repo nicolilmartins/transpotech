@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { CatalogSection } from "@/components/empilhadeiras-novas/catalog-section/catalog-section";
-import { CompareSection } from "@/components/empilhadeiras-novas/compare-section/compare-section";
+import { CompareSection } from "@/components/layout/compare-section/compare-section";
 import { ConsiderUsedSection } from "@/components/empilhadeiras-novas/consider-used-section/consider-used-section";
 import { WhyChooseSection } from "@/components/empilhadeiras-novas/why-choose-section/why-choose-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";

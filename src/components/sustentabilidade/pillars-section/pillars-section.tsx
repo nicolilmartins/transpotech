@@ -49,7 +49,7 @@ const pillars: Pillar[] = [
   },
 ];
 
-// Card no estilo do CompareCard (empilhadeiras-novas/compare-section), sem
+// Card no estilo do CompareCard (layout/compare-section), sem
 // ilustração e com acento verde (secondary) em todos.
 function PillarCard({ title, description, items, Icon }: Pillar) {
   return (

@@ -9,6 +9,7 @@ import { ProcessSection } from "@/components/locacao-de-empilhadeiras/process-se
 import { StructureSection } from "@/components/locacao-de-empilhadeiras/structure-section/structure-section";
 import { SegmentsSection } from "@/components/locacao-de-empilhadeiras/segments-section/segments-section";
 import { RentVsBuySection } from "@/components/locacao-de-empilhadeiras/rent-vs-buy-section/rent-vs-buy-section";
+import { CompareSection } from "@/components/layout/compare-section/compare-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
 import { faqEmpilhadeiras } from "@/data/faq-empilhadeiras";
 import { BrandsSection } from "@/components/home/brands-section/brands-section";
@@ -47,6 +48,7 @@ export default function LocacaoPage() {
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
         <BrandsSection tone="light" eyebrow="Dealer oficial" brands={dealerBrands} />
         <FleetTechSection />
+        <CompareSection />
         <ElectricFleetSection />
         <ForkliftTypesSection />
       </div>

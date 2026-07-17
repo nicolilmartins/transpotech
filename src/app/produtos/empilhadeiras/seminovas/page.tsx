@@ -7,6 +7,7 @@ import { IncludedSection } from "@/components/empilhadeiras-seminovas/included-s
 import { ValueSection } from "@/components/empilhadeiras-seminovas/value-section/value-section";
 import { PurchaseStepsSection } from "@/components/empilhadeiras-seminovas/purchase-steps-section/purchase-steps-section";
 import { ConsiderNewSection } from "@/components/empilhadeiras-seminovas/consider-new-section/consider-new-section";
+import { CompareSection } from "@/components/layout/compare-section/compare-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
 import { faqSeminovas } from "@/data/faq-seminovas";
 import { HoverMesh } from "@/components/layout/hover-mesh";
@@ -41,10 +42,11 @@ export default function EmpilhadeirasSeminovasPage() {
         <IncludedSection />
       </div>
 
-      {/* Grupo claro 2 — Onde entrega valor */}
+      {/* Grupo claro 2 — Onde entrega valor + Comparativo elétrica × GLP */}
       <div className="relative isolate bg-[#fdfdfd]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
         <ValueSection />
+        <CompareSection />
       </div>
 
       {/* Bloco dark único — Como funciona + Considere novas.

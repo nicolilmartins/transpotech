@@ -29,7 +29,7 @@ export const ROUTES = {
 
   // Conversão
   CONTATO: "/contato",
-  ORCAMENTO: "/orcamento",
+  ORCAMENTO: "/simular-economia",
 
   // Externos
   GUPY: "https://transpotech.gupy.io/",

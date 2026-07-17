@@ -243,7 +243,7 @@ export function Header() {
                   darkPill ? "!bg-white/15 !text-neutral-50 hover:!bg-white/25" : ""
                 }
               >
-                Calcular orçamento
+                Simular economia
               </Button>
               <Button variant="primary" size="lg" href={ROUTES.CONTATO}>
                 Fale com vendas
@@ -374,7 +374,7 @@ export function Header() {
                 onClick={closeMobileMenu}
                 className="w-full"
               >
-                Calcular orçamento
+                Simular economia
               </Button>
               <Button
                 variant="primary"

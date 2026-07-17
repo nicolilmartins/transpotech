@@ -109,16 +109,25 @@ export function ScrollReveal() {
     //
     // A hidratação do React roda como tasks de prioridade normal no scheduler e
     // ocupa a thread principal. requestIdleCallback só dispara quando a thread
-    // fica ociosa, ou seja, depois que a hidratação termina — sinal mais
-    // confiável que load/rAF (que podem ocorrer antes da página hidratar).
+    // fica ociosa, ou seja, depois que a hidratação termina.
+    //
+    // IMPORTANTE: sem `timeout`. Um timeout forçaria o callback a rodar mesmo
+    // com a thread ocupada — e em dev (Turbopack a compilar + hidratar páginas
+    // pesadas) a hidratação passa fácil de 1,5s, disparando o GSAP no meio dela
+    // (hydration mismatch). Sem timeout, se a página nunca ficar ociosa o init
+    // simplesmente não roda e o conteúdo aparece sem animação (degradação
+    // segura — nunca fica oculto nem quebra a hidratação). Dois rAF após o load
+    // dão margem extra para a hidratação assíncrona do App Router concluir.
     const start = () => {
-      if (typeof window.requestIdleCallback === "function") {
-        idle = window.requestIdleCallback(() => init(), { timeout: 1500 });
-      } else {
+      raf = requestAnimationFrame(() => {
         raf = requestAnimationFrame(() => {
-          raf = requestAnimationFrame(init);
+          if (typeof window.requestIdleCallback === "function") {
+            idle = window.requestIdleCallback(() => init());
+          } else {
+            init();
+          }
         });
-      }
+      });
     };
 
     if (document.readyState === "complete") {

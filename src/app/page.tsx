@@ -12,9 +12,11 @@ import { SegmentsSection } from "@/components/home/segments-section/segments-sec
 import { TestimonialsSection } from "@/components/home/testimonials-section/testimonials-section";
 import { WhyUsSection } from "@/components/home/why-us-section/why-us-section";
 import { BlogSection } from "@/components/home/blog-section/blog-section";
+import { CompareSection } from "@/components/layout/compare-section/compare-section";
 import { CtaSection } from "@/components/layout/cta/cta-section";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
 import { HoverMesh } from "@/components/layout/hover-mesh";
+import { ROUTES } from "@/lib/routes";
 
 export const metadata: Metadata = {
   title: "TranspoTech | Empilhadeiras, Locação e Manutenção",
@@ -45,9 +47,10 @@ export default function HomePage() {
         <PortfolioSection />
         <BrandsSection />
       </div>
-      {/* Grupo claro 2 — ESG + Serviços + Automação + Segmentos */}
+      {/* Grupo claro 2 — Comparativo + ESG + Serviços + Automação + Segmentos */}
       <div className="relative isolate bg-[#fdfdfd]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+        <CompareSection ctaLabel="Simular economia" ctaHref={ROUTES.ORCAMENTO} />
         <EsgSection />
         <ServicesSection />
         <AutomationSection />
