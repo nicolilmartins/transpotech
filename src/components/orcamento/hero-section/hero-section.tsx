@@ -14,7 +14,7 @@ export function OrcamentoHeroSection() {
         className="pointer-events-none absolute inset-0 -z-10"
       />
 
-      <Section className="flex flex-col items-center gap-4 pt-[128px] text-center lg:pt-[152px]">
+      <Section className="flex flex-col items-center gap-4 pb-[36px] pt-[168px] text-center lg:pb-[48px] lg:pt-[196px]">
         <p className="text-body-sm font-semibold uppercase tracking-wide text-primary-500">
           Simulador de economia
         </p>

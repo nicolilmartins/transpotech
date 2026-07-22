@@ -103,6 +103,7 @@ export function BenefitsSection() {
         </h2>
         <p className="text-body leading-[1.35] text-neutral-400">
           Indicadores típicos observados em projetos Dematic ao redor do mundo.
+          <br />
           Resultados variam por operação.
         </p>
       </div>

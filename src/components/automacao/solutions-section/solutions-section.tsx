@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image, { type StaticImageData } from "next/image";
 import {
   Boxes,
   Workflow,
@@ -23,13 +22,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Section } from "@/components/ui/section";
-import { ParallaxFrame } from "@/components/layout/parallax-frame";
-import { Button } from "@/components/ui/button";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
-import { ROUTES } from "@/lib/routes";
-import imgSolucoes from "@/assets/images/image-solucoes.webp";
-import imgSistemas from "@/assets/images/image_sistemas.webp";
-import imgAgv from "@/assets/images/image_agv.webp";
 
 type Item = { title: string; description: string; Icon: LucideIcon };
 
@@ -40,9 +33,6 @@ type Category = {
   headline: [string, string];
   // Descrição curta e atrativa da aba, abaixo do título.
   description: string;
-  image: StaticImageData;
-  // Ancoragem do crop da imagem (object-position). Default: center.
-  imagePosition?: string;
   items: Item[];
 };
 
@@ -53,7 +43,6 @@ const categories: Category[] = [
     headline: ["Soluções para atender pedidos", "com velocidade"],
     description:
       "Fluxos automatizados que aceleram o atendimento e entregam o pedido certo, na hora certa, sem retrabalho.",
-    image: imgSolucoes,
     items: [
       {
         Icon: Zap,
@@ -73,7 +62,6 @@ const categories: Category[] = [
     headline: ["Sistemas que cobrem", "toda a operação"],
     description:
       "Do recebimento à expedição, cada etapa conectada em um só fluxo: rastreável, integrado e pronto para escalar.",
-    image: imgSistemas,
     items: [
       {
         Icon: Inbox,
@@ -108,8 +96,6 @@ const categories: Category[] = [
     headline: ["AGV e robótica", "para operações autônomas"],
     description:
       "Robôs e veículos autônomos que trabalham lado a lado com a sua equipe, elevando a produtividade e reduzindo o esforço manual.",
-    image: imgAgv,
-    imagePosition: "70% 30%",
     items: [
       {
         Icon: Navigation,
@@ -165,9 +151,19 @@ const categories: Category[] = [
   },
 ];
 
+// A aba "Todos" (ativa por padrão) reúne os tópicos de todas as categorias;
+// as demais filtram por categoria.
+const tabs: { name: string; items: Item[] }[] = [
+  { name: "Todos", items: categories.flatMap((c) => c.items) },
+  ...categories.map((c) => ({ name: c.name, items: c.items })),
+];
+
 export function SolutionsSection() {
   const [active, setActive] = useState(0);
-  const current = categories[active];
+  const current = tabs[active];
+  // Abas com poucos itens (ex.: Soluções, 2) são centralizadas; as demais usam
+  // a grade de 4 colunas que preenche o container.
+  const few = current.items.length <= 2;
   const listRef = useRef<HTMLUListElement>(null);
 
   // Sem barra de rolagem: os tópicos surgem no scroll (fade + slide por item)
@@ -220,98 +216,64 @@ export function SolutionsSection() {
         </p>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs — estilo sublinhado (aba ativa em laranja) com divisor inferior */}
       <div
         role="tablist"
         aria-label="Categorias de solução"
-        className="flex flex-wrap justify-center gap-2"
+        className="mx-auto flex w-full flex-col sm:w-fit sm:max-w-full sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-10 sm:border-b sm:border-neutral-200"
       >
-        {categories.map((category, i) => {
+        {tabs.map((tab, i) => {
           const isActive = i === active;
           return (
             <button
-              key={category.name}
+              key={tab.name}
               role="tab"
               type="button"
               aria-selected={isActive}
               onClick={() => setActive(i)}
-              className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-body font-semibold transition-colors ${
+              className={`border-b-2 px-1 py-3 text-body font-semibold transition-colors sm:-mb-px sm:py-0 sm:pb-3 ${
                 isActive
-                  ? "bg-primary-500 text-neutral-50"
-                  : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
+                  ? "border-primary-500 text-primary-500"
+                  : "border-neutral-200 text-neutral-500 hover:text-neutral-800 sm:border-transparent"
               }`}
             >
-              <category.Icon aria-hidden className="size-5" />
-              {category.name}
+              {tab.name}
             </button>
           );
         })}
       </div>
 
-      {/* Conteúdo (sem box): título (2 linhas) + descrição + tópicos em uma
-          coluna à esquerda; imagem larga à direita, que fica fixa (sticky) no
-          desktop. Mobile: tudo empilhado, com a imagem no fim da seção. */}
-      <div className="grid grid-cols-1 gap-8 px-6 lg:grid-cols-[440px_1fr] lg:gap-[100px] lg:px-8">
-        {/* Tópicos — título à esquerda (2 linhas) + descrição + lista em coluna */}
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-2">
-            <h3 className="font-heading text-[22px] font-semibold leading-[1.2] text-neutral-800">
-              {current.headline[0]}
-              <br />
-              {current.headline[1]}
-            </h3>
-            <p className="max-w-[440px] text-balance text-body-sm leading-[1.4] text-neutral-600">
-              {current.description}
-            </p>
-          </div>
-
-          {/* Uma coluna sempre; sem barra — os itens surgem no scroll */}
-          <ul ref={listRef} className="flex flex-col gap-5">
-            {current.items.map((item) => (
-              <li key={item.title} className="flex items-start gap-4">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-primary-500">
-                  <item.Icon aria-hidden className="size-5" />
-                </span>
-                <div className="flex flex-col gap-1">
-                  <span className="text-body font-semibold leading-[1.3] text-neutral-800">
-                    {item.title}
-                  </span>
-                  <span className="text-body-sm leading-[1.35] text-neutral-600">
-                    {item.description}
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Imagem — larga; desktop fica fixa (sticky) enquanto os tópicos rolam;
-            mobile no fim da seção (ordem natural do DOM). O wrapper estica na
-            altura da coluna de tópicos para o sticky ter espaço de movimento. */}
-        <div className="lg:h-full">
-          <ParallaxFrame className="min-h-[240px] w-full overflow-hidden rounded-xl bg-neutral-100 lg:sticky lg:top-24 lg:h-[420px] lg:min-h-0">
-            <Image
-              key={current.name}
-              src={current.image}
-              alt={`${current.headline[0]} ${current.headline[1]}`}
-              fill
-              sizes="(min-width: 1024px) 55vw, 100vw"
-              className="object-cover"
-              style={{ objectPosition: current.imagePosition ?? "center" }}
-            />
-          </ParallaxFrame>
-        </div>
-      </div>
-
-      {/* Botão sempre no fim da seção */}
-      <Button
-        variant="primary"
-        size="lg"
-        href={ROUTES.ORCAMENTO}
-        className="self-center"
+      {/* Tópicos — grade estilo "features": ícone + título e descrição abaixo.
+          Itens surgem no scroll (fade + slide por item). */}
+      {/* Colunas de largura fixa (não 1fr) com o BLOCO da grade centralizado
+          (justify-center): as margens dos dois lados ficam iguais e não sobra
+          o vão à direita da última coluna. O tópico que sobra fica nas colunas
+          da esquerda. Aba com poucos itens (Soluções) usa 2 colunas. */}
+      <ul
+        ref={listRef}
+        className={
+          few
+            ? "grid grid-cols-1 justify-center gap-x-10 gap-y-9 sm:grid-cols-[repeat(2,minmax(0,250px))]"
+            : "grid grid-cols-1 justify-center gap-x-10 gap-y-9 sm:grid-cols-[repeat(2,minmax(0,250px))] lg:grid-cols-[repeat(4,minmax(0,250px))]"
+        }
       >
-        Avaliar minha operação
-      </Button>
+        {current.items.map((item) => (
+          <li key={item.title} className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-2.5">
+              <item.Icon
+                aria-hidden
+                className="size-5 shrink-0 text-secondary-600"
+              />
+              <span className="text-body font-semibold leading-[1.3] text-neutral-800">
+                {item.title}
+              </span>
+            </div>
+            <p className="text-body-sm leading-[1.4] text-neutral-500">
+              {item.description}
+            </p>
+          </li>
+        ))}
+      </ul>
     </Section>
   );
 }
