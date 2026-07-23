@@ -13,7 +13,7 @@ type ServiceCard = {
 const cards: ServiceCard[] = [
   {
     icon: ShieldCheck,
-    title: "Planos de manutenção preventiva",
+    title: "Planos de manutenção\npreventiva",
     description:
       "Cronograma de visitas técnicas para identificar falhas antes que parem sua frota.",
     cta: "Solicitar plano preventivo",

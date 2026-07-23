@@ -13,7 +13,7 @@ const values = [
   {
     title: "Amamos o negócio dos nossos clientes",
     description:
-      "Atendimento próximo e compromisso real com a operação de cada cliente, o sucesso deles é o nosso.",
+      "Atendimento próximo e compromisso real com a operação de cada cliente: o sucesso deles é o nosso.",
   },
   {
     title: "Não pegamos atalhos",

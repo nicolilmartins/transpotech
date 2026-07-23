@@ -38,7 +38,7 @@ export function QuotationStepsSection() {
           <span className="font-bold text-primary-500">a cotação de pneus</span>
         </>
       }
-      description="Um processo simples e rápido, você informa a necessidade e a equipe da TranspoTech indica o pneu certo para a sua operação."
+      description="Um processo simples e rápido: você informa a necessidade e a equipe da TranspoTech indica o pneu certo para a sua operação."
       steps={steps}
     />
   );
