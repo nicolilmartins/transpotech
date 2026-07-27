@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
+import { HeroHotspots } from "./hero-hotspots";
 import { ROUTES } from "@/lib/routes";
 import forklift from "@/assets/images/hero-image.webp";
 import forkliftMobile from "@/assets/images/hero-image-mobile.webp";
@@ -43,6 +44,9 @@ export function HeroSection() {
           className="object-cover object-center"
         />
       </div>
+
+      {/* Bolinhas interativas sobre a empilhadeira (só desktop) */}
+      <HeroHotspots />
 
       {/* Conteúdo */}
       <div className="relative mx-auto flex h-full w-full max-w-[1440px] flex-col">

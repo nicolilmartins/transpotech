@@ -59,3 +59,22 @@ select:focus-visible,
   mask-composite: exclude;
   pointer-events: none;
 }
+
+/* Pulso sutil das bolinhas da hero (piscar antes da interação). */
+@keyframes heroDotPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.28);
+  }
+}
+.hero-dot-pulse {
+  animation: heroDotPulse 1.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-dot-pulse {
+    animation: none;
+  }
+}
