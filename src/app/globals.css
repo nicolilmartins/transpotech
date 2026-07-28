@@ -2,6 +2,12 @@
 @import "../styles/tokens.css";
 @import "../styles/theme.css";
 
+/* Viewports mobile de baixa altura (ex.: Safari iOS com a barra de ferramentas
+   visível, ou aparelhos curtos), onde a hero full-bleed da home encavalaria os
+   botões sobre a empilhadeira. Restrito a mobile (max-width < lg) para nunca
+   afetar o desktop. */
+@custom-variant hero-short (@media (max-height: 820px) and (max-width: 1023px));
+
 body {
   background: var(--background);
   color: var(--foreground);

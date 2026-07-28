@@ -10,7 +10,7 @@ export function HeroSection() {
   return (
     <section
       data-header-hero
-      className="relative h-[100svh] w-full overflow-hidden"
+      className="relative h-[100dvh] w-full overflow-hidden hero-short:flex hero-short:flex-col"
     >
       {/* Desktop: empilhadeira full-bleed atrás do conteúdo. Wrapper escalado
           proporcionalmente mantém a empilhadeira a ~66% em qualquer largura;
@@ -31,10 +31,13 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Mobile: empilhadeira full-bleed atrás do texto. A imagem dedicada já tem
-          o "céu" claro no topo (onde fica o texto) e a empilhadeira embaixo, então
-          o texto nunca a sobrepõe. Cobre o overlay → sem tom laranja sobre ela. */}
-      <div aria-hidden className="absolute inset-0 overflow-hidden lg:hidden">
+      {/* Mobile (altura normal): empilhadeira full-bleed atrás do texto — layout
+          original. Em telas curtas (hero-short) some, dando lugar à faixa no
+          rodapé, para os botões nunca ficarem sobre a empilhadeira. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 overflow-hidden hero-short:hidden lg:hidden"
+      >
         <Image
           src={forkliftMobile}
           alt=""
@@ -48,10 +51,13 @@ export function HeroSection() {
       {/* Bolinhas interativas sobre a empilhadeira (só desktop) */}
       <HeroHotspots />
 
-      {/* Conteúdo */}
-      <div className="relative mx-auto flex h-full w-full max-w-[1440px] flex-col">
+      {/* Conteúdo — altura normal: sobreposto à imagem full-bleed (h-full).
+          Em telas curtas: coluna de altura natural no topo, com a faixa da foto
+          logo abaixo (hero-short:h-auto). O mx-0 evita o encolhimento do wrapper
+          quando a section vira flex. */}
+      <div className="relative mx-auto flex h-full w-full max-w-[1440px] flex-col hero-short:mx-0 hero-short:h-auto">
         {/* Texto + botões: centralizado no mobile, sobreposto à esquerda no desktop */}
-        <div className="flex flex-col items-center gap-10 px-5 pt-38 text-center sm:px-6 lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:items-start lg:gap-10 lg:px-16 lg:pt-0 lg:text-left">
+        <div className="flex flex-col items-center gap-10 px-5 pt-38 text-center hero-short:gap-6 sm:px-6 lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:items-start lg:gap-10 lg:px-16 lg:pt-0 lg:text-left">
           <div className="flex flex-col gap-4">
             <BlurRevealTitle
               className="text-[32px] leading-[1.1] text-neutral-800 lg:w-max lg:text-[48px] 2xl:text-[54px]"
@@ -64,7 +70,7 @@ export function HeroSection() {
                 { text: "locação e manutenção", className: "font-normal" },
               ]}
             />
-            <p className="text-[16px] font-normal text-neutral-800 lg:max-w-[440px] 2xl:text-[18px]">
+            <p className="text-[16px] font-normal text-neutral-800 hero-short:text-[14px] hero-short:leading-[1.35] lg:max-w-[440px] lg:text-[16px] 2xl:text-[18px]">
               Dealer autorizado Linde, STILL e Baoli no Sul do Brasil. Frota
               funcionando, custo previsível e atendimento técnico 24h, tudo em um
               único parceiro.
@@ -89,6 +95,25 @@ export function HeroSection() {
               Comprar empilhadeira
             </Button>
           </div>
+        </div>
+      </div>
+
+      {/* Faixa da empilhadeira — só em telas curtas (hero-short). Ocupa o espaço
+          abaixo dos botões (flex-1, irmã do conteúdo), com wrapper interno
+          ampliado e ancorado na base para manter a empilhadeira grande e apoiada,
+          sem o chão. Nas alturas normais não existe (a full-bleed acima cuida). */}
+      <div
+        aria-hidden
+        className="relative mt-6 hidden w-full flex-1 overflow-hidden hero-short:block lg:hidden"
+      >
+        <div className="absolute inset-x-0 bottom-0 h-[215%]">
+          <Image
+            src={forkliftMobile}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-[center_88%]"
+          />
         </div>
       </div>
     </section>
