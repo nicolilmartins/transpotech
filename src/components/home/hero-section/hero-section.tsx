@@ -38,18 +38,14 @@ export function HeroSection() {
         aria-hidden
         className="absolute inset-0 overflow-hidden hero-short:hidden lg:hidden"
       >
-        {/* Wrapper ancorado na base e ampliado: a empilhadeira fica um pouco
-            maior e sempre apoiada embaixo, longe dos botões no topo. */}
-        <div className="absolute inset-x-0 bottom-0 h-[116%]">
-          <Image
-            src={forkliftMobile}
-            alt=""
-            priority
-            fill
-            sizes="100vw"
-            className="object-cover object-[center_82%]"
-          />
-        </div>
+        <Image
+          src={forkliftMobile}
+          alt=""
+          priority
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+        />
       </div>
 
       {/* Bolinhas interativas sobre a empilhadeira (só desktop) */}
@@ -110,7 +106,7 @@ export function HeroSection() {
         aria-hidden
         className="relative mt-6 hidden w-full flex-1 overflow-hidden hero-short:block lg:hidden"
       >
-        <div className="absolute inset-x-0 bottom-0 h-[240%]">
+        <div className="absolute inset-x-0 bottom-0 h-[275%]">
           <Image
             src={forkliftMobile}
             alt=""
