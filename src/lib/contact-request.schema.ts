@@ -3,9 +3,8 @@ import { z } from "zod";
 export const contactRequestSchema = z.object({
   name: z.string().min(2, "Informe seu nome completo"),
   company: z.string().min(2, "Informe o nome da empresa"),
-  contact: z
-    .string()
-    .min(5, "Informe um telefone, WhatsApp ou e-mail para contato"),
+  phone: z.string().min(8, "Informe um telefone ou WhatsApp para contato"),
+  email: z.string().email("Informe um e-mail válido"),
   cityUf: z.string().min(2, "Informe a cidade e o estado"),
   message: z
     .string()

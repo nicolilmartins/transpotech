@@ -189,36 +189,54 @@ export function LeadFormSection({
           )}
         </div>
 
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor={`${uid}-company`} className={labelBase}>
+            Empresa *
+          </label>
+          <Input
+            id={`${uid}-company`}
+            type="text"
+            autoComplete="organization"
+            placeholder="Informe o nome da empresa."
+            invalid={!!errors.company}
+            {...register("company")}
+          />
+          {errors.company && (
+            <p className="text-body-sm text-error">{errors.company.message}</p>
+          )}
+        </div>
+
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor={`${uid}-company`} className={labelBase}>
-              Empresa *
+            <label htmlFor={`${uid}-phone`} className={labelBase}>
+              Telefone *
             </label>
             <Input
-              id={`${uid}-company`}
-              type="text"
-              autoComplete="organization"
-              placeholder="Informe o nome da empresa."
-              invalid={!!errors.company}
-              {...register("company")}
+              id={`${uid}-phone`}
+              type="tel"
+              autoComplete="tel"
+              placeholder="Telefone ou WhatsApp."
+              invalid={!!errors.phone}
+              {...register("phone")}
             />
-            {errors.company && (
-              <p className="text-body-sm text-error">{errors.company.message}</p>
+            {errors.phone && (
+              <p className="text-body-sm text-error">{errors.phone.message}</p>
             )}
           </div>
           <div className="flex flex-col gap-1.5">
-            <label htmlFor={`${uid}-contact`} className={labelBase}>
-              Contato *
+            <label htmlFor={`${uid}-email`} className={labelBase}>
+              E-mail *
             </label>
             <Input
-              id={`${uid}-contact`}
-              type="text"
-              placeholder="Telefone, WhatsApp ou e-mail."
-              invalid={!!errors.contact}
-              {...register("contact")}
+              id={`${uid}-email`}
+              type="email"
+              autoComplete="email"
+              placeholder="nome@empresa.com.br"
+              invalid={!!errors.email}
+              {...register("email")}
             />
-            {errors.contact && (
-              <p className="text-body-sm text-error">{errors.contact.message}</p>
+            {errors.email && (
+              <p className="text-body-sm text-error">{errors.email.message}</p>
             )}
           </div>
         </div>

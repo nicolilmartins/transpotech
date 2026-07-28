@@ -266,39 +266,59 @@ export function QuoteModal({
               )}
             </div>
 
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="q-company" className={labelBase}>
+                Empresa *
+              </label>
+              <Input
+                id="q-company"
+                type="text"
+                autoComplete="organization"
+                placeholder="Informe o nome da empresa."
+                invalid={!!errors.company}
+                {...register("company")}
+              />
+              {errors.company && (
+                <p className="text-body-sm text-error">
+                  {errors.company.message}
+                </p>
+              )}
+            </div>
+
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="q-company" className={labelBase}>
-                  Empresa *
+                <label htmlFor="q-phone" className={labelBase}>
+                  Telefone *
                 </label>
                 <Input
-                  id="q-company"
-                  type="text"
-                  autoComplete="organization"
-                  placeholder="Informe o nome da empresa."
-                  invalid={!!errors.company}
-                  {...register("company")}
+                  id="q-phone"
+                  type="tel"
+                  autoComplete="tel"
+                  placeholder="Telefone ou WhatsApp."
+                  invalid={!!errors.phone}
+                  {...register("phone")}
                 />
-                {errors.company && (
+                {errors.phone && (
                   <p className="text-body-sm text-error">
-                    {errors.company.message}
+                    {errors.phone.message}
                   </p>
                 )}
               </div>
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="q-contact" className={labelBase}>
-                  Contato *
+                <label htmlFor="q-email" className={labelBase}>
+                  E-mail *
                 </label>
                 <Input
-                  id="q-contact"
-                  type="text"
-                  placeholder="Telefone, WhatsApp ou e-mail."
-                  invalid={!!errors.contact}
-                  {...register("contact")}
+                  id="q-email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="nome@empresa.com.br"
+                  invalid={!!errors.email}
+                  {...register("email")}
                 />
-                {errors.contact && (
+                {errors.email && (
                   <p className="text-body-sm text-error">
-                    {errors.contact.message}
+                    {errors.email.message}
                   </p>
                 )}
               </div>
