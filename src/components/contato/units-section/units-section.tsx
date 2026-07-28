@@ -47,17 +47,39 @@ export function UnitsSection() {
 
   return (
     <Section className="flex flex-col items-start gap-10 lg:gap-14">
-      <div className="flex flex-col gap-4">
-        <h2 className="text-h3 text-neutral-800">
-          <span className="font-normal">Encontre a unidade</span>{" "}
-          <br className="hidden lg:inline" />
-          <span className="font-bold text-primary-500">mais próxima</span>
-        </h2>
-        <p className="text-body leading-[1.35] text-neutral-600">
-          A TranspoTech conta com unidades e estrutura regional
-          <br className="hidden sm:block" /> para atender empresas em diferentes
-          localidades.
-        </p>
+      <div className="flex w-full flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
+        <div className="flex flex-col gap-4">
+          <h2 className="text-h3 text-neutral-800">
+            <span className="font-normal">Encontre a unidade</span>{" "}
+            <br className="hidden lg:inline" />
+            <span className="font-bold text-primary-500">mais próxima</span>
+          </h2>
+          <p className="text-body leading-[1.35] text-neutral-600">
+            A TranspoTech conta com unidades e estrutura regional
+            <br className="hidden sm:block" /> para atender empresas em
+            diferentes localidades.
+          </p>
+        </div>
+
+        {/* Setas — na linha do texto, alinhadas à direita (ocultas no mobile) */}
+        <div className="hidden shrink-0 items-center gap-2 lg:flex">
+          <button
+            type="button"
+            aria-label="Ver unidades anteriores"
+            onClick={() => scrollByCard(-1)}
+            className="flex size-12 items-center justify-center rounded-full border border-neutral-300 text-primary-500 transition-colors hover:bg-neutral-100"
+          >
+            <ArrowLeft className="size-6" aria-hidden />
+          </button>
+          <button
+            type="button"
+            aria-label="Ver próximas unidades"
+            onClick={() => scrollByCard(1)}
+            className="flex size-12 items-center justify-center rounded-full border border-neutral-300 text-primary-500 transition-colors hover:bg-neutral-100"
+          >
+            <ArrowRight className="size-6" aria-hidden />
+          </button>
+        </div>
       </div>
 
       <div className="flex w-full flex-col gap-6">
@@ -105,30 +127,16 @@ export function UnitsSection() {
           ))}
         </div>
 
-        {/* Setas — abaixo dos cards */}
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            aria-label="Ver unidades anteriores"
-            onClick={() => scrollByCard(-1)}
-            className="flex size-12 items-center justify-center rounded-full border border-neutral-300 text-primary-500 transition-colors hover:bg-neutral-100"
-          >
-            <ArrowLeft className="size-6" aria-hidden />
-          </button>
-          <button
-            type="button"
-            aria-label="Ver próximas unidades"
-            onClick={() => scrollByCard(1)}
-            className="flex size-12 items-center justify-center rounded-full border border-neutral-300 text-primary-500 transition-colors hover:bg-neutral-100"
-          >
-            <ArrowRight className="size-6" aria-hidden />
-          </button>
-        </div>
+        {/* Botão — abaixo dos cards */}
+        <Button
+          variant="primary"
+          size="lg"
+          href="#solicitacao"
+          className="self-start"
+        >
+          Encontrar atendimento na minha região
+        </Button>
       </div>
-
-      <Button variant="primary" size="lg" href="#solicitacao">
-        Encontrar atendimento na minha região
-      </Button>
     </Section>
   );
 }

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useGSAP } from "@gsap/react";
 import { X, Check, Plus } from "lucide-react";
@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { CardImageIcon } from "@/components/ui/card-image-icon";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { CityAutocomplete } from "@/components/ui/city-autocomplete";
 import { Textarea } from "@/components/ui/textarea";
 import {
   contactRequestSchema,
@@ -46,6 +47,7 @@ export function QuoteModal({
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
@@ -306,12 +308,19 @@ export function QuoteModal({
               <label htmlFor="q-city" className={labelBase}>
                 Cidade/UF *
               </label>
-              <Input
-                id="q-city"
-                type="text"
-                placeholder="Informe onde sua operação está localizada"
-                invalid={!!errors.cityUf}
-                {...register("cityUf")}
+              <Controller
+                control={control}
+                name="cityUf"
+                render={({ field }) => (
+                  <CityAutocomplete
+                    id="q-city"
+                    name={field.name}
+                    value={field.value ?? ""}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    invalid={!!errors.cityUf}
+                  />
+                )}
               />
               {errors.cityUf && (
                 <p className="text-body-sm text-error">

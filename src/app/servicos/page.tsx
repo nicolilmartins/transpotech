@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { ServicosHeroSection } from "@/components/servicos/hero-section/hero-section";
+import { LeadFormSection } from "@/components/layout/lead-form-section/lead-form-section";
 import { MultibrandSection } from "@/components/servicos/multibrand-section/multibrand-section";
 import { PortfolioSection } from "@/components/servicos/portfolio-section/portfolio-section";
 import { Pm2pSection } from "@/components/servicos/pm2p-section/pm2p-section";
@@ -13,7 +14,6 @@ import { faqServicos } from "@/data/faq-servicos";
 import { CtaSection } from "@/components/layout/cta/cta-section";
 import { HoverMesh } from "@/components/layout/hover-mesh";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
-import { ROUTES } from "@/lib/routes";
 
 export const metadata: Metadata = {
   title: "Serviços",
@@ -37,9 +37,18 @@ export default function ServicosPage() {
         <MultibrandSection />
       </div>
 
-      {/* Grupo claro 1 — Portfólio */}
+      {/* Grupo claro 1 — Captação (após a Assistência multimarcas) + Portfólio.
+          Malha única, sem cortes. */}
       <div className="relative isolate bg-[#fdfdfd]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+        <LeadFormSection
+          id="solicitar-servico"
+          titleTop="Atendimento técnico"
+          titleBottom="especializado"
+          description="Descreva a necessidade da sua frota e um especialista da TranspoTech direciona o atendimento: preventivo, corretivo ou multimarcas."
+          messagePlaceholder="Tipo de serviço, equipamento, urgência e cidade da operação."
+          submitLabel="Solicitar atendimento"
+        />
         <PortfolioSection />
       </div>
 
@@ -84,7 +93,7 @@ export default function ServicosPage() {
         titleAccent="atendimento técnico"
         description="Preencha os dados e um especialista da TranspoTech entrará em contato para entender sua necessidade e direcionar o atendimento."
         ctaLabel="Solicitar atendimento técnico"
-        ctaHref={ROUTES.ORCAMENTO}
+        ctaHref="#solicitar-servico"
       />
     </main>
   );

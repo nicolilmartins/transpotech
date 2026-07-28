@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { PneusHeroSection } from "@/components/pneus/hero-section/hero-section";
+import { LeadFormSection } from "@/components/layout/lead-form-section/lead-form-section";
 import { CategoriesSection } from "@/components/pneus/categories-section/categories-section";
 import { ConsiderSection } from "@/components/pneus/consider-section/consider-section";
 import { QuotationStepsSection } from "@/components/pneus/quotation-steps-section/quotation-steps-section";
@@ -11,7 +12,6 @@ import { faqPneus } from "@/data/faq-pneus";
 import { CtaSection } from "@/components/layout/cta/cta-section";
 import { HoverMesh } from "@/components/layout/hover-mesh";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
-import { ROUTES } from "@/lib/routes";
 import michelin from "@/assets/Logos/logo-michelin.webp";
 import camso from "@/assets/Logos/logo-camso.webp";
 
@@ -36,13 +36,21 @@ export default function PneusPage() {
     <main>
       <PneusHeroSection />
 
-      {/* Marcas parceiras */}
+      {/* Grupo claro — Marcas parceiras + Captação. Malha única, sem cortes. */}
       <div className="relative isolate bg-[#fdfdfd]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
         <BrandsSection
           tone="light"
           eyebrow="Marcas parceiras"
           brands={partnerBrands}
+        />
+        <LeadFormSection
+          id="solicitar-pneus"
+          titleTop="O pneu certo para"
+          titleBottom="cada operação"
+          description="Do uso interno ao mais severo, indicamos o pneu ideal para o seu equipamento e aplicação. Envie os dados e receba a melhor condição."
+          messagePlaceholder="Modelo do equipamento, medida do pneu e aplicação (interna, externa, etc.)."
+          submitLabel="Solicitar cotação de pneus"
         />
       </div>
 
@@ -80,7 +88,7 @@ export default function PneusPage() {
         titleAccent="sua operação?"
         description="Fale com a TranspoTech, envie os dados do equipamento e receba orientação para solicitar a cotação correta."
         ctaLabel="Solicitar cotação de pneus"
-        ctaHref={ROUTES.ORCAMENTO}
+        ctaHref="#solicitar-pneus"
       />
     </main>
   );

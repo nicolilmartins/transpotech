@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { SeminovasHeroSection } from "@/components/empilhadeiras-seminovas/hero-section/hero-section";
+import { LeadFormSection } from "@/components/layout/lead-form-section/lead-form-section";
 import { WhyBuySection } from "@/components/empilhadeiras-seminovas/why-buy-section/why-buy-section";
 import { EvaluationSection } from "@/components/empilhadeiras-seminovas/evaluation-section/evaluation-section";
 import { IncludedSection } from "@/components/empilhadeiras-seminovas/included-section/included-section";
@@ -29,9 +30,18 @@ export default function EmpilhadeirasSeminovasPage() {
     <main>
       <SeminovasHeroSection />
 
-      {/* Grupo claro 1 — Por que comprar + Como avaliamos */}
+      {/* Grupo claro 1 — Captação (logo após a hero) + Por que comprar + Como
+          avaliamos. Uma única malha cobre tudo, sem cortes. */}
       <div className="relative isolate bg-[#fdfdfd]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
+        <LeadFormSection
+          id="consultar-seminovas"
+          titleTop="Encontre a seminova ideal"
+          titleBottom="para sua operação"
+          description="Diga o que você precisa e retornamos com opções de empilhadeiras seminovas revisadas, com procedência e garantia."
+          messagePlaceholder="Capacidade, tipo de empilhadeira, aplicação e cidade da operação."
+          submitLabel="Consultar seminovas"
+        />
         <WhyBuySection />
         <EvaluationSection />
       </div>

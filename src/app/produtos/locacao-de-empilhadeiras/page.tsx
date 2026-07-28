@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { LocacaoHeroSection } from "@/components/locacao-de-empilhadeiras/hero-section/hero-section";
+import { LeadFormSection } from "@/components/layout/lead-form-section/lead-form-section";
 import { FleetTechSection } from "@/components/locacao-de-empilhadeiras/fleet-tech-section/fleet-tech-section";
 import { ForkliftTypesSection } from "@/components/locacao-de-empilhadeiras/forklift-types-section/forklift-types-section";
 import { ElectricFleetSection } from "@/components/locacao-de-empilhadeiras/electric-fleet-section/electric-fleet-section";
@@ -16,7 +17,6 @@ import { BrandsSection } from "@/components/home/brands-section/brands-section";
 import { CtaSection } from "@/components/layout/cta/cta-section";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
 import { HoverMesh } from "@/components/layout/hover-mesh";
-import { ROUTES } from "@/lib/routes";
 import still from "@/assets/Logos/Logo still.svg";
 import linde from "@/assets/Logos/Logo Linde.svg";
 import baoli from "@/assets/Logos/Logo Baoli.svg";
@@ -43,10 +43,20 @@ export default function LocacaoPage() {
     <main>
       <LocacaoHeroSection />
 
-      {/* Grupo claro 1 — Marcas + Frota & Tecnologia + Tipos de empilhadeira */}
+      {/* Grupo claro 1 — Marcas (Dealer oficial) + Captação + Frota & Tecnologia.
+          Uma única malha cobre tudo, sem cortes. */}
       <div className="relative isolate bg-[#fdfdfd]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
         <BrandsSection tone="light" eyebrow="Dealer oficial" brands={dealerBrands} />
+        <LeadFormSection
+          id="solicitar-locacao"
+          titleTop="Proposta de locação"
+          titleBottom="sob medida"
+          description="Conte sobre sua operação e a TranspoTech monta um plano de locação com manutenção preventiva inclusa e disponibilidade garantida."
+          messagePlaceholder="Quantidade de equipamentos, aplicação, prazo e cidade da operação."
+          submitLabel="Solicitar proposta de locação"
+          withRentalPeriod
+        />
         <FleetTechSection />
         <CompareSection />
         <ElectricFleetSection />
@@ -92,7 +102,7 @@ export default function LocacaoPage() {
         titleAccent="previsibilidade?"
         description="Fale com a TranspoTech e receba uma recomendação de locação conforme as necessidades da sua operação."
         ctaLabel="Falar com especialista"
-        ctaHref={ROUTES.ORCAMENTO}
+        ctaHref="#solicitar-locacao"
       />
     </main>
   );

@@ -118,17 +118,22 @@ export function ScrollReveal() {
     // simplesmente não roda e o conteúdo aparece sem animação (degradação
     // segura — nunca fica oculto nem quebra a hidratação). Dois rAF após o load
     // dão margem extra para a hidratação assíncrona do App Router concluir.
-    const start = () => {
-      raf = requestAnimationFrame(() => {
+    // Espera DOIS períodos ociosos consecutivos antes de mexer no DOM. A
+    // hidratação do App Router (páginas dentro de Suspense boundaries) roda em
+    // vários chunks, cedendo a thread entre eles; um único requestIdleCallback
+    // pode cair numa dessas brechas e disparar o GSAP no meio da hidratação
+    // (hydration mismatch). Dois "idle" seguidos indicam a thread realmente
+    // livre — hidratação concluída. Fallback: rAF duplo onde não há idle.
+    const whenIdle = (fn: () => void) => {
+      if (typeof window.requestIdleCallback === "function") {
+        idle = window.requestIdleCallback(() => fn());
+      } else {
         raf = requestAnimationFrame(() => {
-          if (typeof window.requestIdleCallback === "function") {
-            idle = window.requestIdleCallback(() => init());
-          } else {
-            init();
-          }
+          raf = requestAnimationFrame(fn);
         });
-      });
+      }
     };
+    const start = () => whenIdle(() => whenIdle(init));
 
     if (document.readyState === "complete") {
       start();

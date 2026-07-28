@@ -138,6 +138,9 @@ export function HeroHotspots() {
       {positions &&
         hotspots.map((spot, i) => {
           const isActive = active === i;
+          // Quando alguma bolinha está ativa (pill aberta), as outras ficam
+          // mais clarinhas (esmaecidas) para destacar a ativa.
+          const dimmed = active >= 0 && !isActive;
           const openRight = spot.side === "right";
           const pos = positions[i];
           return (
@@ -157,13 +160,12 @@ export function HeroHotspots() {
                 onClick={() => engage(i)}
                 className="group/hotspot relative flex size-9 items-center justify-center rounded-full outline-none"
               >
-                {/* Wrapper que pulsa (piscar) enquanto o usuário não interage;
-                    depois fica estático (leve scale só no ativo). O atraso por
-                    índice desencontra o pulso das bolinhas. */}
+                {/* Wrapper das bolinhas — pulsa sempre (piscar). O atraso por
+                    índice desencontra o pulso. Esmaece quando outra está ativa. */}
                 <span
-                  style={engaged ? undefined : { animationDelay: `${i * 0.3}s` }}
-                  className={`relative flex items-center justify-center transition-transform duration-300 ${
-                    engaged ? (isActive ? "scale-110" : "") : "hero-dot-pulse"
+                  style={{ animationDelay: `${i * 0.3}s` }}
+                  className={`hero-dot-pulse relative flex items-center justify-center transition-opacity duration-300 ${
+                    dimmed ? "opacity-70" : "opacity-100"
                   }`}
                 >
                   {/* Bolinha maior e transparente atrás — cresce no hover */}

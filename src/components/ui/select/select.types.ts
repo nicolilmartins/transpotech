@@ -20,4 +20,8 @@ export type SelectProps = {
   id?: string;
   disabled?: boolean;
   className?: string;
+  /** Habilita um campo de busca no topo do painel (filtra as opções). */
+  searchable?: boolean;
+  /** Placeholder do campo de busca (quando `searchable`). */
+  searchPlaceholder?: string;
 };

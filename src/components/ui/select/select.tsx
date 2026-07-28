@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import {
   fieldBase,
   fieldIconTones,
@@ -13,7 +13,8 @@ import type { SelectOption, SelectProps } from "./select.types";
 // Dropdown custom no lugar do <select> nativo: gatilho no padrão dos campos
 // (borda arredondada, foco laranja) + painel flutuante estilizado. O foco
 // permanece no gatilho (padrão APG "select-only combobox"); as opções são
-// navegadas por aria-activedescendant.
+// navegadas por aria-activedescendant. Com `searchable`, o painel ganha um
+// campo de busca que filtra as opções (o foco vai para a busca ao abrir).
 const panelTones: Record<FieldTone, string> = {
   light: "border-neutral-200 bg-white shadow-lg",
   dark: "border-white/10 bg-[#181616] shadow-[0_16px_40px_-12px_rgba(0,0,0,0.6)]",
@@ -40,11 +41,15 @@ export function Select({
   id,
   disabled,
   className = "",
+  searchable = false,
+  searchPlaceholder = "Buscar…",
 }: SelectProps) {
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [query, setQuery] = useState("");
   const rootRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
   const listboxId = useId();
 
   const opts = useMemo<SelectOption[]>(
@@ -56,7 +61,15 @@ export function Select({
   );
   const selected = opts.find((option) => option.value === value);
 
+  // Lista exibida: filtrada pela busca quando `searchable`.
+  const shown = useMemo(() => {
+    if (!searchable || !query.trim()) return opts;
+    const q = query.trim().toLowerCase();
+    return opts.filter((option) => option.label.toLowerCase().includes(q));
+  }, [opts, searchable, query]);
+
   const openList = () => {
+    setQuery("");
     const selectedIndex = opts.findIndex((option) => option.value === value);
     setActiveIndex(selectedIndex >= 0 ? selectedIndex : 0);
     setOpen(true);
@@ -71,6 +84,11 @@ export function Select({
     onChange?.(option.value);
     close();
   };
+
+  // Foca a busca ao abrir (quando searchable).
+  useEffect(() => {
+    if (open && searchable) searchRef.current?.focus();
+  }, [open, searchable]);
 
   // Fecha ao clicar fora (e marca touched via onBlur).
   useEffect(() => {
@@ -95,7 +113,8 @@ export function Select({
     });
   }, [open, activeIndex]);
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+  // Navegação por teclado — compartilhada pelo gatilho e pela busca.
+  const handleNavKey = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       if (open) {
         e.preventDefault();
@@ -103,30 +122,43 @@ export function Select({
       }
       return;
     }
-    if (e.key === "Tab") {
-      if (open) close();
-      return;
-    }
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       e.preventDefault();
       if (!open) return openList();
       const delta = e.key === "ArrowDown" ? 1 : -1;
-      setActiveIndex((i) =>
-        Math.min(Math.max(i + delta, 0), opts.length - 1)
-      );
+      setActiveIndex((i) => Math.min(Math.max(i + delta, 0), shown.length - 1));
       return;
     }
     if (e.key === "Home" || e.key === "End") {
       if (!open) return;
       e.preventDefault();
-      setActiveIndex(e.key === "Home" ? 0 : opts.length - 1);
+      setActiveIndex(e.key === "Home" ? 0 : shown.length - 1);
       return;
     }
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      if (!open) return openList();
-      selectOption(opts[activeIndex]);
+    if (e.key === "Enter") {
+      if (!open) {
+        e.preventDefault();
+        return openList();
+      }
+      if (shown[activeIndex]) {
+        e.preventDefault();
+        selectOption(shown[activeIndex]);
+      }
     }
+  };
+
+  const onButtonKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "Tab") {
+      if (open) close();
+      return;
+    }
+    // No modo searchable, a navegação acontece no campo de busca.
+    if (open && searchable) return;
+    if (e.key === " ") {
+      e.preventDefault();
+      return open ? selectOption(shown[activeIndex]) : openList();
+    }
+    handleNavKey(e);
   };
 
   return (
@@ -140,17 +172,17 @@ export function Select({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? listboxId : undefined}
-        aria-activedescendant={open ? `${listboxId}-${activeIndex}` : undefined}
+        aria-activedescendant={
+          open && !searchable ? `${listboxId}-${activeIndex}` : undefined
+        }
         aria-invalid={invalid || undefined}
         onClick={() => (open ? close() : openList())}
-        onKeyDown={onKeyDown}
+        onKeyDown={onButtonKeyDown}
         className={`${fieldBase} ${fieldTones[tone]} flex h-12 items-center justify-between gap-3 pl-4 pr-3 text-left ${
           open ? "border-primary-500" : ""
         } ${className}`}
       >
-        <span
-          className={`truncate ${selected ? "" : placeholderTones[tone]}`}
-        >
+        <span className={`truncate ${selected ? "" : placeholderTones[tone]}`}>
           {selected ? selected.label : placeholder}
         </span>
         <ChevronDown
@@ -162,33 +194,67 @@ export function Select({
       </button>
 
       {open && (
-        <ul
-          ref={listRef}
-          id={listboxId}
-          role="listbox"
-          aria-labelledby={id}
-          className={`absolute left-0 right-0 top-[calc(100%+0.5rem)] z-20 max-h-80 overflow-y-auto rounded-xl border p-2 ${panelTones[tone]}`}
+        <div
+          className={`absolute left-0 right-0 top-[calc(100%+0.5rem)] z-20 overflow-hidden rounded-xl border ${panelTones[tone]}`}
         >
-          {opts.map((option, index) => (
-            <li
-              key={option.value}
-              id={`${listboxId}-${index}`}
-              role="option"
-              aria-selected={option.value === value}
-              // preventDefault no mousedown mantém o foco no gatilho.
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={() => selectOption(option)}
-              onMouseEnter={() => setActiveIndex(index)}
-              className={`cursor-pointer rounded-lg px-4 py-3 text-body transition-colors ${
-                optionTones[tone].base
-              } ${index === activeIndex ? optionTones[tone].active : ""} ${
-                option.value === value ? "font-semibold" : ""
-              }`}
-            >
-              {option.label}
-            </li>
-          ))}
-        </ul>
+          {searchable && (
+            <div className="relative border-b border-neutral-100 p-2">
+              <Search
+                aria-hidden
+                className={`pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 ${fieldIconTones[tone]}`}
+              />
+              <input
+                ref={searchRef}
+                type="text"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setActiveIndex(0);
+                }}
+                onKeyDown={handleNavKey}
+                placeholder={searchPlaceholder}
+                aria-label="Buscar opção"
+                aria-controls={listboxId}
+                aria-activedescendant={`${listboxId}-${activeIndex}`}
+                className={`h-9 w-full rounded-lg bg-transparent pl-8 pr-2 text-body outline-none ${optionTones[tone].base} placeholder:${placeholderTones[tone]}`}
+              />
+            </div>
+          )}
+
+          <ul
+            ref={listRef}
+            id={listboxId}
+            role="listbox"
+            aria-labelledby={id}
+            className="max-h-72 overflow-y-auto p-2"
+          >
+            {shown.length === 0 ? (
+              <li className={`px-4 py-3 text-body ${placeholderTones[tone]}`}>
+                Nenhuma opção encontrada.
+              </li>
+            ) : (
+              shown.map((option, index) => (
+                <li
+                  key={option.value}
+                  id={`${listboxId}-${index}`}
+                  role="option"
+                  aria-selected={option.value === value}
+                  // preventDefault no mousedown mantém o foco no gatilho/busca.
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => selectOption(option)}
+                  onMouseEnter={() => setActiveIndex(index)}
+                  className={`cursor-pointer rounded-lg px-4 py-3 text-body transition-colors ${
+                    optionTones[tone].base
+                  } ${index === activeIndex ? optionTones[tone].active : ""} ${
+                    option.value === value ? "font-semibold" : ""
+                  }`}
+                >
+                  {option.label}
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
       )}
     </div>
   );

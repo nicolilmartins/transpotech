@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { BateriasHeroSection } from "@/components/baterias/hero-section/hero-section";
+import { LeadFormSection } from "@/components/layout/lead-form-section/lead-form-section";
 import { TechSection } from "@/components/baterias/tech-section/tech-section";
 import { NeedsSection } from "@/components/baterias/needs-section/needs-section";
 import { BatteryTypesSection } from "@/components/baterias/battery-types-section/battery-types-section";
@@ -11,7 +12,6 @@ import { faqBaterias } from "@/data/faq-baterias";
 import { CtaSection } from "@/components/layout/cta/cta-section";
 import { HoverMesh } from "@/components/layout/hover-mesh";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
-import { ROUTES } from "@/lib/routes";
 
 export const metadata: Metadata = {
   title: "Baterias e Carregadores para Empilhadeiras",
@@ -29,10 +29,19 @@ export default function BateriasPage() {
     <main>
       <BateriasHeroSection />
 
-      {/* Grupo claro 1 — Tecnologia + O que sua operação precisa */}
+      {/* Grupo claro 1 — Especialistas em baterias (Tecnologia) + Captação +
+          O que sua operação precisa. Uma única malha cobre tudo, sem cortes. */}
       <div className="relative isolate bg-[#fdfdfd]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
         <TechSection />
+        <LeadFormSection
+          id="solicitar-baterias"
+          titleTop="Energia para a frota"
+          titleBottom="trabalhar sem parar"
+          description="Baterias de lítio e carregadores para manter sua frota operando em todos os turnos. Conte sobre a sua operação e a TranspoTech recomenda a solução ideal, com cotação."
+          messagePlaceholder="Modelo do equipamento, turnos de trabalho e tipo de bateria/carregador."
+          submitLabel="Solicitar cotação"
+        />
         <NeedsSection />
       </div>
 
@@ -63,7 +72,7 @@ export default function BateriasPage() {
         description="Fale com a TranspoTech e receba orientação para cotar baterias, carregadores ou avaliar a rotina de energia da operação."
         descriptionWidth="560px"
         ctaLabel="Solicitar cotação"
-        ctaHref={ROUTES.ORCAMENTO}
+        ctaHref="#solicitar-baterias"
       />
     </main>
   );

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { AutomacaoHeroSection } from "@/components/automacao/hero-section/hero-section";
+import { LeadFormSection } from "@/components/layout/lead-form-section/lead-form-section";
 import { PartnershipSection } from "@/components/automacao/partnership-section/partnership-section";
 import { BenefitsSection } from "@/components/automacao/benefits-section/benefits-section";
 import { SolutionsSection } from "@/components/automacao/solutions-section/solutions-section";
@@ -30,10 +31,19 @@ export default function AutomacaoPage() {
     <main>
       <AutomacaoHeroSection />
 
-      {/* Grupo claro 1 — Parceria TranspoTech + Dematic (fundo #FBFBFB) */}
+      {/* Grupo claro 1 — Parceria TranspoTech + Dematic + Captação.
+          Uma única malha cobre tudo, sem cortes (fundo #FBFBFB). */}
       <div className="relative isolate bg-[#fbfbfb]">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
         <PartnershipSection />
+        <LeadFormSection
+          id="avaliar-automacao"
+          titleTop="Avalie automatizar"
+          titleBottom="a sua operação"
+          description="Conte sobre sua operação intralogística e avaliamos o melhor caminho de automação para o seu negócio."
+          messagePlaceholder="Tipo de operação (indústria, CD, e-commerce), volume e principais gargalos."
+          submitLabel="Avaliar minha operação"
+        />
       </div>
 
       {/* Bloco dark — Números */}
@@ -70,7 +80,7 @@ export default function AutomacaoPage() {
         titleAccent="para sua operação?"
         description="Resposta em até 1 dia útil. Sem compromisso. Confidencialidade garantida."
         ctaLabel="Avaliar minha operação"
-        ctaHref={ROUTES.ORCAMENTO}
+        ctaHref="#avaliar-automacao"
         secondaryLabel="Falar com especialista"
         secondaryHref={ROUTES.CONTATO}
       />

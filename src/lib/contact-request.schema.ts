@@ -13,6 +13,8 @@ export const contactRequestSchema = z.object({
   consent: z.literal(true, {
     message: "É necessário concordar com a Política de Privacidade",
   }),
+  /** Opcional — usado só no formulário de locação (período em meses). */
+  periodMonths: z.string().optional(),
 });
 
 export type ContactRequestValues = z.infer<typeof contactRequestSchema>;

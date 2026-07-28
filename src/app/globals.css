@@ -7,6 +7,11 @@ body {
   color: var(--foreground);
   font-family: var(--font-body, Arial, Helvetica, sans-serif);
   -webkit-font-smoothing: antialiased;
+  /* Empurra o conteúdo para baixo quando o banner de "solicitação iniciada"
+     está visível (a barra ocupa o topo como uma seção). 0 quando ausente.
+     Transição suave para o empurrão/recolhimento não "saltar". */
+  padding-top: var(--app-banner-h, 0px);
+  transition: padding-top 0.25s ease;
 }
 
 h1,
@@ -77,4 +82,19 @@ select:focus-visible,
   .hero-dot-pulse {
     animation: none;
   }
+}
+
+/* Entrada do banner "retomar solicitação" (barra no topo da página). */
+@keyframes leadBannerIn {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.lead-banner-in {
+  animation: leadBannerIn 0.3s ease-out;
 }
