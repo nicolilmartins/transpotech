@@ -10,7 +10,7 @@ export function HeroSection() {
   return (
     <section
       data-header-hero
-      className="relative h-[100dvh] w-full overflow-hidden hero-short:flex hero-short:flex-col"
+      className="relative h-[100svh] w-full overflow-hidden hero-short:flex hero-short:flex-col"
     >
       {/* Desktop: empilhadeira full-bleed atrás do conteúdo. Wrapper escalado
           proporcionalmente mantém a empilhadeira a ~66% em qualquer largura;
