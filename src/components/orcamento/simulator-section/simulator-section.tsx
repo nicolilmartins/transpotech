@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { SlidersHorizontal, X } from "lucide-react";
 import { Section } from "@/components/ui/section";
+import { Button } from "@/components/ui/button";
 import {
   compararCustos,
   DEFAULT_INPUTS,
@@ -136,14 +137,15 @@ export function SimulatorSection() {
         ))}
       </div>
 
-      <button
-        type="button"
+      <Button
+        variant="gray"
+        size="md"
         onClick={() => setInputs(DEFAULT_INPUTS)}
         disabled={isDefault}
-        className="mt-auto h-11 w-full rounded-full bg-neutral-800/10 text-body-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-800/20 disabled:pointer-events-none disabled:opacity-50"
+        className="w-full"
       >
         Restaurar médias
-      </button>
+      </Button>
     </div>
   );
 
@@ -274,9 +276,9 @@ function ComparisonTable({ colunas }: { colunas: ResultadoEquipamento[] }) {
     // encolher e rolar internamente no mobile.
     <div
       ref={boxRef}
-      className="min-w-0 overflow-x-auto rounded-2xl bg-neutral-50 pb-3 pr-3 pt-8 sm:pb-4 sm:pr-4 sm:pt-9"
+      className="flex min-w-0 overflow-x-auto rounded-2xl bg-neutral-50 pb-3 pt-8 sm:pb-4 sm:pt-9"
     >
-      <table className="w-full min-w-[560px] table-fixed border-separate border-spacing-0 text-left">
+      <table className="min-w-[560px] flex-1 table-fixed border-separate border-spacing-0 text-left">
         <colgroup>
           <col className="w-[160px]" />
           <col className="w-4" />
@@ -366,6 +368,10 @@ function ComparisonTable({ colunas }: { colunas: ResultadoEquipamento[] }) {
           })}
         </tbody>
       </table>
+      {/* Espaço à direita como conteúdo rolável — ao chegar no fim do scroll
+          horizontal o fundo cinza do box aparece à direita do último card
+          (o padding-right no próprio container de scroll é ignorado no fim). */}
+      <div aria-hidden className="w-3 shrink-0 sm:w-4" />
     </div>
   );
 }
