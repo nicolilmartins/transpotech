@@ -1,58 +1,43 @@
 "use client";
 
+import { Fragment } from "react";
 import {
   FileText,
   Inbox,
   Search,
   MessageSquareMore,
   ShieldCheck,
+  type LucideIcon,
 } from "lucide-react";
-import { StepsProcess, type ProcessStep } from "@/components/layout/steps-process/steps-process";
+import { StepsProcess } from "@/components/layout/steps-process/steps-process";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { canalTransparenciaPage } from "@/sanity/content/pages/canal-transparencia";
 
-const steps: ProcessStep[] = [
-  {
-    title: "Você registra o relato",
-    description: "Informe o ocorrido com o máximo de detalhes possível.",
-    Icon: FileText,
-  },
-  {
-    title: "O relato é recebido",
-    description:
-      "As informações são direcionadas para avaliação conforme o fluxo definido pela empresa.",
-    Icon: Inbox,
-  },
-  {
-    title: "A análise é iniciada",
-    description:
-      "A comissão responsável avalia o conteúdo, evidências e necessidade de apuração.",
-    Icon: Search,
-  },
-  {
-    // Duas linhas fixas; nowrap só no desktop para não quebrar em 3+ linhas
-    // dentro da coluna estreita.
-    title: (
-      <>
-        <span className="lg:block lg:whitespace-nowrap">
-          Podem ser solicitadas
-        </span>{" "}
-        <span className="lg:block lg:whitespace-nowrap">
-          informações adicionais
-        </span>
-      </>
-    ),
-    description:
-      "Quando houver identificação ou canal de retorno, a empresa pode solicitar complementos.",
-    Icon: MessageSquareMore,
-  },
-  {
-    title: "O caso recebe encaminhamento",
-    description:
-      "As medidas cabíveis são tratadas conforme políticas internas e legislação aplicável.",
-    Icon: ShieldCheck,
-  },
+type ProcessContent = SectionContent<typeof canalTransparenciaPage.sections.process>;
+
+// Ícone de cada etapa, na ordem das etapas editadas no Studio.
+const stepIcons: LucideIcon[] = [
+  FileText,
+  Inbox,
+  Search,
+  MessageSquareMore,
+  ShieldCheck,
 ];
 
-export function ProcessSection() {
+// Título com Enter vira duas linhas fixas; nowrap só no desktop para não
+// quebrar em 3+ linhas dentro da coluna estreita.
+function StepTitle({ text }: { text: string }) {
+  const lines = text.split("\n");
+  if (lines.length === 1) return text;
+  return lines.map((line, i) => (
+    <Fragment key={i}>
+      {i > 0 && " "}
+      <span className="lg:block lg:whitespace-nowrap">{line.trim()}</span>
+    </Fragment>
+  ));
+}
+
+export function ProcessSection({ content }: { content: ProcessContent }) {
   return (
     <StepsProcess
       id="processo"
@@ -61,14 +46,18 @@ export function ProcessSection() {
       columnsTemplate="1fr 1fr 1fr 1.17fr 1fr"
       title={
         <>
-          <span className="font-normal lg:block">Como funciona</span>{" "}
+          <span className="font-normal lg:block">{content.titleTop}</span>{" "}
           <span className="font-bold text-primary-500 lg:block">
-            o processo
+            {content.titleAccent}
           </span>
         </>
       }
-      description="Um processo estruturado e sigiloso, do registro do relato ao encaminhamento conforme as políticas internas."
-      steps={steps}
+      description={content.description}
+      steps={content.steps.map((step, i) => ({
+        title: <StepTitle text={step.title} />,
+        description: step.description,
+        Icon: stepIcons[i],
+      }))}
     />
   );
 }

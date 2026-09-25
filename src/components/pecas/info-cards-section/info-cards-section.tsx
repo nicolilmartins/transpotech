@@ -1,29 +1,11 @@
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { pecasPage } from "@/sanity/content/pages/pecas";
 
-type InfoTopic = { title: string; items: string[] };
+type InfoCardsContent = SectionContent<typeof pecasPage.sections.infoCards>;
 
-const topics: InfoTopic[] = [
-  {
-    title: "Sobre o equipamento",
-    items: ["Marca", "Modelo", "Capacidade", "Número de série"],
-  },
-  {
-    title: "Sobre a peça e o problema",
-    items: [
-      "Foto da peça ou local de instalação",
-      "Descrição do problema",
-      "Diagnóstico técnico (se houver)",
-      "Tipo de manutenção",
-    ],
-  },
-  {
-    title: "Sobre o pedido",
-    items: ["Quantidade", "Cidade/UF", "Urgência"],
-  },
-];
-
-export function InfoCardsSection() {
+export function InfoCardsSection({ content }: { content: InfoCardsContent }) {
   return (
     <Section
       data-header-dark
@@ -32,20 +14,20 @@ export function InfoCardsSection() {
       {/* Cabeçalho — alinhado à esquerda */}
       <div className="flex max-w-[640px] flex-col gap-4">
         <h2 className="text-h2 font-normal text-neutral-50">
-          Informações que ajudam a{" "}
+          {content.title}{" "}
           <br className="hidden lg:inline" />
-          encontrar a <span className="text-primary-500">peça certa</span>
+          {content.titleMiddle}{" "}
+          <span className="text-primary-500">{content.titleAccent}</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-400">
-          Quanto mais detalhes você enviar, mais rápido o time consegue
-          direcionar sua cotação.
+          {content.description}
         </p>
       </div>
 
       {/* Tópicos — linhas divisórias + tick laranja por linha */}
       <div className="w-full">
         <ul className="flex flex-col border-t border-white/10">
-          {topics.map((topic) => (
+          {content.topics.map((topic) => (
             <li
               key={topic.title}
               className="group relative flex flex-col gap-3 border-b border-white/10 py-10 transition-colors lg:flex-row lg:gap-16 lg:py-12"
@@ -61,7 +43,7 @@ export function InfoCardsSection() {
               </h3>
 
               <p className="pl-6 text-body leading-[1.5] text-neutral-400 transition-colors duration-300 group-hover:text-neutral-50 lg:w-1/2 lg:pl-0">
-                {topic.items.join(" · ")}
+                {topic.items.map((item) => item.text).join(" · ")}
               </p>
             </li>
           ))}
@@ -69,7 +51,7 @@ export function InfoCardsSection() {
       </div>
 
       <Button variant="primary" size="lg" href="#solicitar-pecas">
-        Enviar informações para cotação
+        {content.buttonLabel}
       </Button>
     </Section>
   );

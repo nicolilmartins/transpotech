@@ -3,6 +3,8 @@ import {
   DarkArtCard,
   type DarkArtCardArt,
 } from "@/components/layout/dark-art-card";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { locacaoPage } from "@/sanity/content/pages/locacao";
 import iconGalpao from "@/assets/images/stats/card-galpao.webp";
 import iconCarrinho from "@/assets/images/stats/card-carrinho.webp";
 import iconFabrica from "@/assets/images/stats/card-fabrica.webp";
@@ -10,14 +12,9 @@ import iconCaminhao from "@/assets/images/stats/card-caminhao.webp";
 import iconFloco from "@/assets/images/stats/loc-icon-floco.webp";
 
 // Geometria por card conforme o Figma (node 3603:3365). left/top alinham o
-// objeto ao texto.
-type Segment = { title: string; description: string; art: DarkArtCardArt };
-
-const segments: Segment[] = [
+// objeto ao texto. Na ordem dos cards editados no Studio.
+const arts: { art: DarkArtCardArt }[] = [
   {
-    title: "Centro de distribuição",
-    description:
-      "Para operações com alto volume, SLA exigente, turnos intensos e necessidade de disponibilidade.",
     art: {
       src: iconGalpao,
       width: 175.718,
@@ -29,9 +26,6 @@ const segments: Segment[] = [
     },
   },
   {
-    title: "Supermercados e atacadistas",
-    description:
-      "Para recebimento, armazenagem, reposição, expansão de loja, sazonalidade e picos de abastecimento.",
     art: {
       src: iconCarrinho,
       width: 204.438,
@@ -43,9 +37,6 @@ const segments: Segment[] = [
     },
   },
   {
-    title: "Indústrias e manufaturas",
-    description:
-      "Para almoxarifado, linha de produto, movimentação interna, expedição e apoio à manutenção.",
     art: {
       src: iconFabrica,
       width: 178.49,
@@ -57,9 +48,6 @@ const segments: Segment[] = [
     },
   },
   {
-    title: "Operadores logísticos e 3PLs",
-    description:
-      "Para contratos novos, aumento temporário de demanda e abertura de novas operações.",
     art: {
       src: iconCaminhao,
       width: 176.465,
@@ -71,9 +59,6 @@ const segments: Segment[] = [
     },
   },
   {
-    title: "Galpões e operações sazonais",
-    description:
-      "Para períodos de alta demanda, inventários, eventos, projetos temporários ou substituição emergencial.",
     art: {
       src: iconFloco,
       width: 178.49,
@@ -86,7 +71,10 @@ const segments: Segment[] = [
   },
 ];
 
-export function SegmentsSection() {
+type SegmentsContent = SectionContent<typeof locacaoPage.sections.segments>;
+
+export function SegmentsSection({ content }: { content: SegmentsContent }) {
+  const segments = content.items.map((item, i) => ({ ...item, ...arts[i] }));
   const [topRow, bottomRow] = [segments.slice(0, 3), segments.slice(3)];
 
   return (
@@ -94,15 +82,14 @@ export function SegmentsSection() {
       {/* Cabeçalho */}
       <div className="flex w-full max-w-[560px] flex-col gap-4">
         <p className="text-body font-semibold uppercase tracking-wide text-primary-500">
-          Segmentos
+          {content.eyebrow}
         </p>
         <h2 className="text-h2 font-normal text-neutral-50">
-          Locação para diferentes{" "}
-          <span className="font-bold text-primary-500">tipos de operação</span>
+          {content.titleRegular}{" "}
+          <span className="font-bold text-primary-500">{content.titleAccent}</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-400">
-          A TranspoTech apoia empresas com necessidades distintas de
-          movimentação, abastecimento interno, armazenagem e suporte técnico.
+          {content.description}
         </p>
       </div>
 

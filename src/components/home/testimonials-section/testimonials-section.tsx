@@ -2,11 +2,11 @@ import { type CSSProperties } from "react";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { SnapCarousel } from "@/components/layout/snap-carousel";
-import warehouse from "@/assets/images/depoimentos/warehouse.png";
 import caseLogo1 from "@/assets/images/depoimentos/case-logo1.png";
 import caseLogo2 from "@/assets/images/depoimentos/case-logo2.png";
-import avatar from "@/assets/images/depoimentos/avatar.png";
 import quote from "@/assets/images/quote.png";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { homePage } from "@/sanity/content/pages/home";
 
 // Fundo do card (Figma): linear verde (#146B55, 0.2) → laranja (#E78028) já
 // transparente (stop em 118%). O brilho quente vem do glow laranja no canto.
@@ -42,7 +42,15 @@ function CardGlow() {
   );
 }
 
-export function TestimonialsSection() {
+// Logo de cada case, na ordem dos cases editados no Studio.
+const caseLogos = [
+  { src: caseLogo1, className: "h-9 w-[186px] object-contain" },
+  { src: caseLogo2, className: "h-9 w-[200px] object-contain mix-blend-lighten" },
+];
+
+type TestimonialsContent = SectionContent<typeof homePage.sections.testimonials>;
+
+export function TestimonialsSection({ content }: { content: TestimonialsContent }) {
   return (
     <section
       data-header-dark
@@ -53,14 +61,13 @@ export function TestimonialsSection() {
         <div className="relative flex w-full flex-col items-start gap-4">
           <div className="w-[626px] max-w-full">
             <h2 className="text-h2 text-neutral-100">
-              <span className="font-normal">O que nossos </span>
-              <span className="font-bold">clientes dizem</span>
+              <span className="font-normal">{content.titleRegular}</span>
+              <span className="font-bold">{content.titleAccent}</span>
             </h2>
           </div>
           <div className="flex w-full items-center justify-between gap-4">
             <p className="w-[507px] max-w-full text-body leading-[1.35] text-neutral-200">
-              A melhor prova de valor não está só no portfólio, mas na
-              capacidade de responder à cenários reais com a solução certa.
+              {content.description}
             </p>
 
             {/* Setas de navegação — canto superior direito, após o texto */}
@@ -96,55 +103,35 @@ export function TestimonialsSection() {
               flex sizing idêntico ao cardBase → 4 colunas iguais) */}
           <div className="relative hidden min-h-[280px] overflow-hidden rounded-xl bg-image-placeholder lg:block lg:h-[380px] lg:min-w-0 lg:flex-1 lg:shrink">
             <Image
-              src={warehouse}
-              alt="Operação em armazém"
+              src={content.image}
+              alt={content.image.alt}
               fill
               sizes="25vw"
               className="object-cover [object-position:35%_center]"
             />
           </div>
 
-          {/* Case 1 */}
-          <article data-snap-item className={cardBase} style={cardGradient}>
-            <CardGlow />
-            <div className="relative z-10 flex h-full flex-col justify-between">
-              <div className="flex flex-col gap-2">
-                <h3 className="text-body-lg font-semibold leading-[1.35] text-neutral-100">
-                  Logística em escala
-                </h3>
-                <p className="text-body leading-[1.35] text-neutral-300">
-                  Como uma operação nacional reduziu gargalos e acelerou a
-                  tomada de decisão com uma estrutura digital mais clara.
-                </p>
+          {/* Cases */}
+          {content.cases.map((item, i) => (
+            <article key={i} data-snap-item className={cardBase} style={cardGradient}>
+              <CardGlow />
+              <div className="relative z-10 flex h-full flex-col justify-between">
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-body-lg font-semibold leading-[1.35] text-neutral-100">
+                    {item.title}
+                  </h3>
+                  <p className="text-body leading-[1.35] text-neutral-300">
+                    {item.description}
+                  </p>
+                </div>
+                <Image
+                  src={caseLogos[i].src}
+                  alt=""
+                  className={caseLogos[i].className}
+                />
               </div>
-              <Image
-                src={caseLogo1}
-                alt=""
-                className="h-9 w-[186px] object-contain"
-              />
-            </div>
-          </article>
-
-          {/* Case 2 */}
-          <article data-snap-item className={cardBase} style={cardGradient}>
-            <CardGlow />
-            <div className="relative z-10 flex h-full flex-col justify-between">
-              <div className="flex flex-col gap-2">
-                <h3 className="text-body-lg font-semibold leading-[1.35] text-neutral-100">
-                  Custos reduzidos
-                </h3>
-                <p className="text-body leading-[1.35] text-neutral-300">
-                  Como uma operação global reduziu custos de frete e otimizou
-                  prazos integrando sistemas de rastreamento inteligente.
-                </p>
-              </div>
-              <Image
-                src={caseLogo2}
-                alt=""
-                className="h-9 w-[200px] object-contain mix-blend-lighten"
-              />
-            </div>
-          </article>
+            </article>
+          ))}
 
           {/* Depoimento */}
           <article data-snap-item className={cardBase} style={cardGradient}>
@@ -158,27 +145,26 @@ export function TestimonialsSection() {
                 />
                 <div className="flex flex-col gap-2">
                   <h3 className="text-body-lg font-semibold leading-[1.35] text-neutral-100">
-                    Logística em escala
+                    {content.quoteTitle}
                   </h3>
                   <p className="text-body leading-[1.35] text-neutral-300">
-                    A TranspoTech nos ajudou a reorganizar toda a estrutura de
-                    dados da operação. Em três meses, passamos a enxergar em
-                    tempo real onde estava cada carga, onde estavam os atrasos e
-                    onde o custo estava vazando.
+                    {content.quote}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <Image
-                  src={avatar}
-                  alt="Joel Castro"
+                  src={content.authorPhoto}
+                  alt={content.authorPhoto.alt}
                   className="size-[54px] rounded-full object-cover"
                 />
                 <div className="flex flex-col gap-1 text-body">
                   <span className="font-semibold leading-[1.35] text-neutral-100">
-                    Joel Castro
+                    {content.authorName}
                   </span>
-                  <span className="leading-[1.35] text-neutral-200">Meli</span>
+                  <span className="leading-[1.35] text-neutral-200">
+                    {content.authorCompany}
+                  </span>
                 </div>
               </div>
             </div>

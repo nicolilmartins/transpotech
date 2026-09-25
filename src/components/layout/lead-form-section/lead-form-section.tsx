@@ -14,6 +14,7 @@ import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import { HoverMesh } from "@/components/layout/hover-mesh";
+import { useSharedTexts } from "@/components/layout/shared-texts";
 import {
   contactRequestSchema,
   type ContactRequestValues,
@@ -22,10 +23,12 @@ import {
 const labelBase = "text-body font-semibold text-neutral-700";
 
 // Opções de período de locação (1 a 60 meses) — campo com busca na locação.
-const rentalPeriodOptions = Array.from({ length: 60 }, (_, i) => {
-  const n = i + 1;
-  return { value: String(n), label: `${n} ${n === 1 ? "mês" : "meses"}` };
-});
+function rentalPeriodOptions(singular: string, plural: string) {
+  return Array.from({ length: 60 }, (_, i) => {
+    const n = i + 1;
+    return { value: String(n), label: `${n} ${n === 1 ? singular : plural}` };
+  });
+}
 
 type LeadFormSectionProps = {
   /** Primeira linha do título (peso normal). */
@@ -34,9 +37,9 @@ type LeadFormSectionProps = {
   titleBottom: string;
   /** Texto de apoio / CTA para o formulário. */
   description: string;
-  /** Placeholder da mensagem — específico por página. */
+  /** Placeholder da mensagem — específico por página; sem ele, o dos textos comuns. */
   messagePlaceholder?: string;
-  /** Rótulo do botão de envio. */
+  /** Rótulo do botão de envio; sem ele, o dos textos comuns. */
   submitLabel?: string;
   /** id de âncora da seção. */
   id?: string;
@@ -51,12 +54,13 @@ export function LeadFormSection({
   titleTop,
   titleBottom,
   description,
-  messagePlaceholder = "Descreva sua operação, equipamento, urgência, cidade ou o que você precisa resolver.",
-  submitLabel = "Enviar solicitação",
+  messagePlaceholder,
+  submitLabel,
   id = "solicitar",
   withRentalPeriod = false,
 }: LeadFormSectionProps) {
   const uid = useId();
+  const { leadForm: texts } = useSharedTexts();
   const [sent, setSent] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [outOfView, setOutOfView] = useState(false);
@@ -162,7 +166,7 @@ export function LeadFormSection({
         {/* Título / CTA — esquerda no desktop, primeiro no mobile */}
         <div className="flex flex-col gap-4 lg:pt-2">
           <p className="text-body font-semibold uppercase tracking-wide text-primary-500">
-            Falar com especialista
+            {texts.eyebrow}
           </p>
           <BlurRevealTitle
             as="h2"
@@ -189,13 +193,13 @@ export function LeadFormSection({
         >
           <div className="flex flex-col gap-1.5">
             <label htmlFor={`${uid}-name`} className={labelBase}>
-              Nome *
+              {texts.nameLabel}
             </label>
             <Input
               id={`${uid}-name`}
               type="text"
               autoComplete="name"
-              placeholder="Digite seu nome completo."
+              placeholder={texts.namePlaceholder}
               invalid={!!errors.name}
               aria-describedby={errors.name ? `${uid}-name-error` : undefined}
               {...register("name")}
@@ -207,13 +211,13 @@ export function LeadFormSection({
 
           <div className="flex flex-col gap-1.5">
             <label htmlFor={`${uid}-company`} className={labelBase}>
-              Empresa *
+              {texts.companyLabel}
             </label>
             <Input
               id={`${uid}-company`}
               type="text"
               autoComplete="organization"
-              placeholder="Informe o nome da empresa."
+              placeholder={texts.companyPlaceholder}
               invalid={!!errors.company}
               aria-describedby={errors.company ? `${uid}-company-error` : undefined}
               {...register("company")}
@@ -226,13 +230,13 @@ export function LeadFormSection({
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
               <label htmlFor={`${uid}-phone`} className={labelBase}>
-                Telefone *
+                {texts.phoneLabel}
               </label>
               <Input
                 id={`${uid}-phone`}
                 type="tel"
                 autoComplete="tel"
-                placeholder="Telefone ou WhatsApp."
+                placeholder={texts.phonePlaceholder}
                 invalid={!!errors.phone}
                 aria-describedby={errors.phone ? `${uid}-phone-error` : undefined}
                 {...register("phone")}
@@ -243,13 +247,13 @@ export function LeadFormSection({
             </div>
             <div className="flex flex-col gap-1.5">
               <label htmlFor={`${uid}-email`} className={labelBase}>
-                E-mail *
+                {texts.emailLabel}
               </label>
               <Input
                 id={`${uid}-email`}
                 type="email"
                 autoComplete="email"
-                placeholder="nome@empresa.com.br"
+                placeholder={texts.emailPlaceholder}
                 invalid={!!errors.email}
                 aria-describedby={errors.email ? `${uid}-email-error` : undefined}
                 {...register("email")}
@@ -262,7 +266,7 @@ export function LeadFormSection({
 
           <div className="flex flex-col gap-1.5">
             <label htmlFor={`${uid}-city`} className={labelBase}>
-              Cidade/UF *
+              {texts.cityLabel}
             </label>
             <Controller
               control={control}
@@ -290,7 +294,7 @@ export function LeadFormSection({
           {withRentalPeriod && (
             <div className="flex flex-col gap-1.5">
               <label htmlFor={`${uid}-period`} className={labelBase}>
-                Período de locação (meses)
+                {texts.rentalPeriodLabel}
               </label>
               <Controller
                 control={control}
@@ -298,16 +302,19 @@ export function LeadFormSection({
                 render={({ field }) => (
                   <Select
                     id={`${uid}-period`}
-                    options={rentalPeriodOptions}
+                    options={rentalPeriodOptions(
+                      texts.monthSingular,
+                      texts.monthPlural,
+                    )}
                     value={field.value ?? ""}
                     onChange={(v) => {
                       field.onChange(v);
                       setEngaged(true);
                     }}
                     onBlur={field.onBlur}
-                    placeholder="Selecione o período"
+                    placeholder={texts.rentalPeriodPlaceholder}
                     searchable
-                    searchPlaceholder="Buscar meses…"
+                    searchPlaceholder={texts.rentalPeriodSearchPlaceholder}
                   />
                 )}
               />
@@ -316,12 +323,12 @@ export function LeadFormSection({
 
           <div className="flex flex-col gap-1.5">
             <label htmlFor={`${uid}-message`} className={labelBase}>
-              Mensagem *
+              {texts.messageLabel}
             </label>
             <Textarea
               id={`${uid}-message`}
               rows={3}
-              placeholder={messagePlaceholder}
+              placeholder={messagePlaceholder ?? texts.messagePlaceholder}
               invalid={!!errors.message}
               aria-describedby={errors.message ? `${uid}-message-error` : undefined}
               {...register("message")}
@@ -341,8 +348,7 @@ export function LeadFormSection({
               className="mt-1"
             />
             <span className="text-body leading-[1.35] text-neutral-600">
-              Concordo com o tratamento dos meus dados conforme a Política de
-              Privacidade da TranspoTech (LGPD).
+              {texts.consent}
             </span>
           </label>
           {errors.consent && (
@@ -359,7 +365,7 @@ export function LeadFormSection({
               disabled={isSubmitting}
               className="w-full self-start lg:w-auto"
             >
-              {submitLabel}
+              {submitLabel ?? texts.submitLabel}
             </Button>
             {sent && (
               <p
@@ -367,7 +373,7 @@ export function LeadFormSection({
                 className="inline-flex items-start gap-2 text-body font-semibold text-success"
               >
                 <CircleCheck aria-hidden className="mt-0.5 size-5 shrink-0" />
-                Sua solicitação foi enviada! Em breve retornaremos.
+                {texts.successMessage}
               </p>
             )}
           </div>
@@ -390,13 +396,13 @@ export function LeadFormSection({
                   className="size-5 shrink-0 text-primary-500"
                 />
                 <p className="text-body text-neutral-900">
-                  Você começou uma solicitação.{" "}
+                  {texts.resumeText}{" "}
                   <button
                     type="button"
                     onClick={scrollToForm}
                     className="font-semibold text-primary-500 underline underline-offset-2 transition-colors hover:text-primary-600"
                   >
-                    Voltar e finalizar
+                    {texts.resumeAction}
                   </button>
                 </p>
                 <button

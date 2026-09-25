@@ -9,7 +9,9 @@ import { BatteryTypesSection } from "@/components/baterias-e-carregadores/batter
 import { RequestStepsSection } from "@/components/baterias-e-carregadores/request-steps-section/request-steps-section";
 import { WhyTranspotechSection } from "@/components/baterias-e-carregadores/why-transpotech-section/why-transpotech-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
-import { faqBaterias } from "@/data/faq-baterias";
+import { getFaqItems } from "@/sanity/queries/faq";
+import { getPage } from "@/sanity/queries/pages";
+import { bateriasPage } from "@/sanity/content/pages/baterias";
 import { CtaSection } from "@/components/layout/cta/cta-section";
 import { HoverMesh } from "@/components/layout/hover-mesh";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
@@ -26,31 +28,32 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BateriasPage() {
+export default async function BateriasPage() {
+  const [faqItems, content] = await Promise.all([
+    getFaqItems("baterias"),
+    getPage(bateriasPage),
+  ]);
+
   return (
     <main>
-      <BateriasHeroSection />
+      <BateriasHeroSection content={content.hero} />
 
       {/* Grupo claro 1 — Especialistas em baterias (Tecnologia) + Captação +
           O que sua operação precisa. Uma única malha cobre tudo, sem cortes. */}
       <div className="relative isolate bg-background">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <TechSection />
+        <TechSection content={content.tech} />
         <LeadFormSection
           id="solicitar-baterias"
-          titleTop="Energia para a frota"
-          titleBottom="trabalhar sem parar"
-          description="Baterias de lítio e carregadores para manter sua frota operando em todos os turnos. Conte sobre a sua operação e a TranspoTech recomenda a solução ideal, com cotação."
-          messagePlaceholder="Modelo do equipamento, turnos de trabalho e tipo de bateria/carregador."
-          submitLabel="Solicitar cotação"
+          {...content.leadForm}
         />
-        <NeedsSection />
+        <NeedsSection content={content.needs} />
       </div>
 
       {/* Bloco dark — Tipos de baterias */}
       <div className="relative isolate bg-[#181616]">
         <DarkAmbient />
-        <BatteryTypesSection />
+        <BatteryTypesSection content={content.batteryTypes} />
       </div>
 
       {/* Grupo claro 3 — Como funciona + Por que TranspoTech + FAQ (malha só até
@@ -58,22 +61,18 @@ export default function BateriasPage() {
       <div className="relative isolate bg-background">
         <div className="relative">
           <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-          <RequestStepsSection />
-          <WhyTranspotechSection />
+          <RequestStepsSection content={content.requestSteps} />
+          <WhyTranspotechSection content={content.whyTranspotech} />
         </div>
         <FaqSection
-          titleRegular="Dúvidas frequentes sobre "
-          titleAccent="baterias e carregadores"
-          items={faqBaterias}
+          {...content.faq}
+          items={faqItems}
         />
       </div>
 
       <CtaSection
-        titleRegular="Precisa melhorar a disponibilidade dos seus "
-        titleAccent="equipamentos elétricos?"
-        description="Fale com a TranspoTech e receba orientação para cotar baterias, carregadores ou avaliar a rotina de energia da operação."
+        {...content.cta}
         descriptionWidth="560px"
-        ctaLabel="Solicitar cotação"
         ctaHref="#solicitar-baterias"
       />
     </main>

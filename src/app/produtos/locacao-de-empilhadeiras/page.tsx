@@ -14,7 +14,9 @@ import { RentVsBuySection } from "@/components/locacao-de-empilhadeiras/rent-vs-
 import { FleetManagerSection } from "@/components/locacao-de-empilhadeiras/fleet-manager-section/fleet-manager-section";
 import { CompareSection } from "@/components/layout/compare-section/compare-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
-import { faqEmpilhadeiras } from "@/data/faq-empilhadeiras";
+import { getFaqItems } from "@/sanity/queries/faq";
+import { getPage } from "@/sanity/queries/pages";
+import { locacaoPage } from "@/sanity/content/pages/locacao";
 import { BrandsSection } from "@/components/layout/brands-section/brands-section";
 import { CtaSection } from "@/components/layout/cta/cta-section";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
@@ -41,48 +43,53 @@ const dealerBrands = [
   { src: baoli, alt: "Baoli" },
 ];
 
-export default function LocacaoPage() {
+export default async function LocacaoPage() {
+  const [faqItems, content] = await Promise.all([
+    getFaqItems("empilhadeiras"),
+    getPage(locacaoPage),
+  ]);
+
   return (
     <main>
-      <LocacaoHeroSection />
+      <LocacaoHeroSection content={content.hero} />
 
       {/* Grupo claro 1 — Marcas (Dealer oficial) + Captação + Frota & Tecnologia.
           Uma única malha cobre tudo, sem cortes. */}
       <div className="relative isolate bg-background">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <BrandsSection tone="light" eyebrow="Dealer oficial" brands={dealerBrands} />
+        <BrandsSection
+          tone="light"
+          eyebrow={content.brands.eyebrow}
+          brands={dealerBrands}
+        />
         <LeadFormSection
           id="solicitar-locacao"
-          titleTop="Proposta de locação"
-          titleBottom="sob medida"
-          description="Conte sobre sua operação e a TranspoTech monta um plano de locação com manutenção preventiva inclusa e disponibilidade garantida."
-          messagePlaceholder="Quantidade de equipamentos, aplicação, prazo e cidade da operação."
-          submitLabel="Solicitar proposta de locação"
+          {...content.leadForm}
           withRentalPeriod
         />
-        <FleetTechSection />
+        <FleetTechSection content={content.fleetTech} />
         <CompareSection />
-        <ElectricFleetSection />
-        <ForkliftTypesSection />
+        <ElectricFleetSection content={content.electricFleet} />
+        <ForkliftTypesSection content={content.forkliftTypes} />
       </div>
 
       {/* Bloco dark 1 — Planos */}
       <div className="relative isolate bg-[#181616]">
         <DarkAmbient greenOffset={520} />
-        <PlansSection />
+        <PlansSection content={content.plans} />
       </div>
 
       {/* Grupo claro 2 — Processo */}
       <div className="relative isolate bg-background">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <ProcessSection />
+        <ProcessSection content={content.process} />
       </div>
 
       {/* Bloco dark 2 — Estrutura + Segmentos */}
       <div className="relative isolate bg-[#181616]">
         <DarkAmbient />
-        <StructureSection />
-        <SegmentsSection />
+        <StructureSection content={content.structure} />
+        <SegmentsSection content={content.segments} />
       </div>
 
       {/* Grupo claro 3 — Locar vs. comprar + FleetManager + FAQ. Uma única
@@ -90,25 +97,13 @@ export default function LocacaoPage() {
       <div className="relative isolate bg-background">
         <div className="relative">
           <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-          <RentVsBuySection />
-          <FleetManagerSection />
+          <RentVsBuySection content={content.rentVsBuy} />
+          <FleetManagerSection content={content.fleetManager} />
         </div>
-        <FaqSection
-          titleRegular="Perguntas frequentes sobre "
-          titleAccent="locação de empilhadeiras"
-          items={faqEmpilhadeiras}
-        />
+        <FaqSection {...content.faq} items={faqItems} />
       </div>
 
-      <CtaSection
-        // Espaço não-quebrável entre "suporte" e "e" para o "e" não ficar órfão
-        // no início de linha no mobile (fica "suporte e" / "previsibilidade?").
-        titleRegular={"Sua operação precisa de disponibilidade, suporte e "}
-        titleAccent="previsibilidade?"
-        description="Fale com a TranspoTech e receba uma recomendação de locação conforme as necessidades da sua operação."
-        ctaLabel="Falar com especialista"
-        ctaHref="#solicitar-locacao"
-      />
+      <CtaSection {...content.cta} ctaHref="#solicitar-locacao" />
     </main>
   );
 }

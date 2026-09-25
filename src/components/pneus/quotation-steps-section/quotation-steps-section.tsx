@@ -1,45 +1,27 @@
 "use client";
 
 import { ClipboardList, Upload, Search, FileCheck } from "lucide-react";
-import { StepsProcess, type ProcessStep } from "@/components/layout/steps-process/steps-process";
+import { StepsProcess } from "@/components/layout/steps-process/steps-process";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { pneusPage } from "@/sanity/content/pages/pneus";
 
-const steps: ProcessStep[] = [
-  {
-    title: "Você informa a necessidade",
-    description: "Escolha a categoria ou descreva o pneu que precisa.",
-    Icon: ClipboardList,
-  },
-  {
-    title: "Envia dados do equipamento",
-    description:
-      "Modelo, medida, aplicação e foto ajudam a validar a solicitação.",
-    Icon: Upload,
-  },
-  {
-    title: "A equipe avalia compatibilidade",
-    description:
-      "A TranspoTech direciona a melhor alternativa conforme operação e disponibilidade.",
-    Icon: Search,
-  },
-  {
-    title: "Você recebe orientação ou cotação",
-    description: "O time retorna com os próximos passos para compra.",
-    Icon: FileCheck,
-  },
-];
+// Ícone de cada etapa, na ordem das etapas editadas no Studio.
+const icons = [ClipboardList, Upload, Search, FileCheck];
 
-export function QuotationStepsSection() {
+type QuotationStepsContent = SectionContent<typeof pneusPage.sections.quotationSteps>;
+
+export function QuotationStepsSection({ content }: { content: QuotationStepsContent }) {
   return (
     <StepsProcess
       title={
         <>
-          <span className="font-normal">Como funciona</span>{" "}
+          <span className="font-normal">{content.titleRegular}</span>{" "}
           <br className="hidden lg:inline" />
-          <span className="font-bold text-primary-500">a cotação de pneus</span>
+          <span className="font-bold text-primary-500">{content.titleAccent}</span>
         </>
       }
-      description="Um processo simples e rápido: você informa a necessidade e a equipe da TranspoTech indica o pneu certo para a sua operação."
-      steps={steps}
+      description={content.description}
+      steps={content.steps.map((step, i) => ({ ...step, Icon: icons[i] }))}
     />
   );
 }

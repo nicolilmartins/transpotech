@@ -10,3 +10,11 @@ export const baseOpenGraph = {
   locale: "pt_BR",
   siteName: "TranspoTech",
 } as const satisfies OpenGraph;
+
+// Descrições padrão do site (layout raiz). São o fallback de siteSettings.seo
+// e a fonte do seed; o valor editável fica no Sanity.
+export const defaultDescription =
+  "TranspoTech: locação, assistência técnica e venda de empilhadeiras industriais. Representante oficial STILL, Linde e Baoli. 25 anos de mercado, 11 unidades.";
+
+export const defaultShareDescription =
+  "Locação, assistência técnica e venda de empilhadeiras industriais. Representante oficial STILL, Linde e Baoli.";

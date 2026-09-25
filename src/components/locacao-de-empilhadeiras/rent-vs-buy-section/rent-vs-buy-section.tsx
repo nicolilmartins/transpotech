@@ -1,20 +1,6 @@
 import { Section } from "@/components/ui/section";
-
-const rentReasons = [
-  "A demanda varia ao longo do ano",
-  "A operação está crescendo ou abrindo uma nova unidade",
-  "A manutenção da frota própria está ficando cara",
-  "A empresa quer evitar obsolescência dos equipamentos",
-  "Existe pressão para reduzir CAPEX",
-  "A operação precisa de suporte técnico e troca mais ágil",
-];
-
-const buyReasons = [
-  "A operação é muito estável",
-  "O uso é previsível por muitos anos",
-  "A empresa tem equipe interna robusta de manutenção",
-  "A frota própria já está bem dimensionada",
-];
+import type { SectionContent } from "@/sanity/content/fields";
+import type { locacaoPage } from "@/sanity/content/pages/locacao";
 
 type CompareCardProps = {
   title: string;
@@ -44,8 +30,8 @@ function CompareCard({ title, reasons, accent }: CompareCardProps) {
       {/* Zona dos tópicos — mesmo neutral-50 a 50% (divisão) + leve linha */}
       <div className="relative flex-1 border-t border-black/[0.04] bg-neutral-50/50 px-6 pb-8 pt-6 lg:px-8">
         <ul className="relative z-10 flex flex-col gap-2.5">
-          {reasons.map((reason) => (
-            <li key={reason} className="flex items-start gap-3">
+          {reasons.map((reason, i) => (
+            <li key={i} className="flex items-start gap-3">
               <span
                 aria-hidden
                 className={`mt-[9px] size-1.5 shrink-0 rounded-full ${bulletBg}`}
@@ -61,7 +47,9 @@ function CompareCard({ title, reasons, accent }: CompareCardProps) {
   );
 }
 
-export function RentVsBuySection() {
+type RentVsBuyContent = SectionContent<typeof locacaoPage.sections.rentVsBuy>;
+
+export function RentVsBuySection({ content }: { content: RentVsBuyContent }) {
   return (
     <Section className="flex flex-col items-center gap-12 lg:gap-16">
       {/* Cabeçalho centralizado */}
@@ -69,27 +57,26 @@ export function RentVsBuySection() {
         {/* Duas linhas fixas em todos os tamanhos: "Vale a pena" /
             "locar ou comprar?" (block também no mobile). */}
         <h2 className="text-h2 text-neutral-800">
-          <span className="block font-normal">Vale a pena</span>{" "}
+          <span className="block font-normal">{content.titleTop}</span>{" "}
           <span className="block font-bold text-primary-500">
-            locar ou comprar?
+            {content.titleAccent}
           </span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          Cada uma com seus benefícios próprios. A escolha certa deve sempre se
-          basear nas necessidades da sua operação.
+          {content.description}
         </p>
       </div>
 
       {/* Comparativo */}
       <div className="grid w-full grid-cols-1 items-stretch gap-4 lg:grid-cols-2">
         <CompareCard
-          title="Locar pode ser melhor quando:"
-          reasons={rentReasons}
+          title={content.rentTitle}
+          reasons={content.rentReasons.map(({ label }) => label)}
           accent="rent"
         />
         <CompareCard
-          title="Comprar pode ser melhor quando:"
-          reasons={buyReasons}
+          title={content.buyTitle}
+          reasons={content.buyReasons.map(({ label }) => label)}
           accent="buy"
         />
       </div>

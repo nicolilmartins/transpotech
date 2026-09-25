@@ -1,29 +1,34 @@
 import { PhotoHero } from "@/components/layout/photo-hero";
-import heroImage from "@/assets/images/hero-sustentabilidade.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { sustentabilidadePage } from "@/sanity/content/pages/sustentabilidade";
 
-export function SustentabilidadeHeroSection() {
+type SustentabilidadeHeroContent = SectionContent<
+  typeof sustentabilidadePage.sections.hero
+>;
+
+export function SustentabilidadeHeroSection({
+  content,
+}: {
+  content: SustentabilidadeHeroContent;
+}) {
   return (
     <PhotoHero
-      image={heroImage}
+      image={content.image}
       // Gradiente sobe além do título para garantir a legibilidade sobre a imagem
       shadeStops={[40, 94]}
       contentClassName="max-w-[900px]"
       titleClassName="text-h2 text-neutral-50"
-      // Duas linhas: quebra forçada antes de "responsabilidade..."
+      // Duas linhas: quebra forçada antes da segunda parte
       titleSegments={[
+        { text: content.titleTop, className: "font-normal", br: true },
         {
-          text: "Sustentabilidade, inclusão e",
-          className: "font-normal",
-          br: true,
-        },
-        {
-          text: "responsabilidade na intralogística",
+          text: content.titleAccent,
           className: "font-bold text-primary-500 lg:whitespace-nowrap",
         },
       ]}
       descriptionClassName="max-w-[480px]"
-      description="Iniciativas de sustentabilidade, inclusão, comunidade e governança para um futuro mais responsável."
-      cta={{ href: "#destaques", label: "Conhecer iniciativas ESG" }}
+      description={content.description}
+      cta={{ href: "#destaques", label: content.buttonLabel }}
     />
   );
 }

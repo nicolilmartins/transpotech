@@ -2,12 +2,20 @@ import Image from "next/image";
 import { ArrowRight, Clock } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
-import { featuredArticle } from "@/data/articles";
+import type { Article } from "@/data/articles";
 import { ROUTES } from "@/lib/routes";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { portalConteudoPage } from "@/sanity/content/pages/portal-conteudo";
 
-export function FeaturedSection() {
-  const article = featuredArticle;
+type FeaturedContent = SectionContent<typeof portalConteudoPage.sections.featured>;
 
+export function FeaturedSection({
+  article,
+  content,
+}: {
+  article: Article;
+  content: FeaturedContent;
+}) {
   return (
     <Section className="flex flex-col pt-0">
       {/* Linha divisória fina — mesmo tom dos filtros do catálogo. 20px acima
@@ -15,7 +23,7 @@ export function FeaturedSection() {
       <div className="border-t border-neutral-200" />
 
       <p className="mt-12 text-body font-semibold uppercase tracking-wide text-secondary-600">
-        Notícia em destaque
+        {content.eyebrow}
       </p>
 
       <article className="mt-5 grid grid-cols-1 items-stretch gap-4 overflow-hidden rounded-2xl bg-white p-3 transition duration-300 hover:scale-[1.01] hover:z-10 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)] lg:grid-cols-2 lg:gap-8">
@@ -63,7 +71,7 @@ export function FeaturedSection() {
             iconRight={<ArrowRight aria-hidden className="size-5" />}
             className="self-start"
           >
-            Ler notícia completa
+            {content.buttonLabel}
           </Button>
         </div>
       </article>

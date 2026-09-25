@@ -1,10 +1,16 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
-import heroImage from "@/assets/images/hero-servicos.webp";
-import heroImageMobile from "@/assets/images/hero-servicos-mobile.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { servicosPage } from "@/sanity/content/pages/servicos";
 
-export function ServicosHeroSection() {
+type ServicosHeroContent = SectionContent<typeof servicosPage.sections.hero>;
+
+export function ServicosHeroSection({
+  content,
+}: {
+  content: ServicosHeroContent;
+}) {
   return (
     <section data-header-hero className="relative w-full bg-background md:p-4">
       {/* Card de imagem — full-bleed no mobile; de md em diante, 16px de padding em volta e bordas de 20px */}
@@ -12,7 +18,7 @@ export function ServicosHeroSection() {
         {/* Imagem de fundo (mobile) — recorte exato do Figma (node 3640:3253):
             técnico na empilhadeira retrátil em destaque. */}
         <Image
-          src={heroImageMobile}
+          src={content.imageMobile}
           alt=""
           priority
           fill
@@ -21,7 +27,7 @@ export function ServicosHeroSection() {
         />
         {/* Imagem de fundo (desktop) — manutenção / técnico em operação */}
         <Image
-          src={heroImage}
+          src={content.image}
           alt=""
           priority
           fill
@@ -49,19 +55,19 @@ export function ServicosHeroSection() {
                 {
                   // Espaço no fim: no mobile o <br> some e o título flui
                   // preenchendo as linhas (sem "manter" sozinho na segunda).
-                  text: "Manutenção para manter ",
+                  // O merge do CMS mantém esse espaço mesmo se o editor apagá-lo.
+                  text: content.titleTop,
                   className: "font-normal",
                   br: "hidden lg:inline",
                 },
                 {
-                  text: "sua frota em operação",
+                  text: content.titleAccent,
                   className: "font-bold text-primary-500",
                 },
               ]}
             />
             <p className="mx-auto max-w-[440px] text-h6 font-normal leading-[1.3] text-neutral-50">
-              Preventiva, corretiva e multimarcas com suporte técnico
-              especializado.
+              {content.description}
             </p>
           </div>
 
@@ -71,7 +77,7 @@ export function ServicosHeroSection() {
             href="#solicitar-servico"
             className="w-full lg:w-auto"
           >
-            Solicitar assistência técnica
+            {content.buttonLabel}
           </Button>
         </div>
       </div>

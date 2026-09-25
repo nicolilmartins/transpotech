@@ -1,47 +1,27 @@
 "use client";
 
-import { Send, Inbox, Search, Reply } from "lucide-react";
-import { StepsProcess, type ProcessStep } from "@/components/layout/steps-process/steps-process";
+import { Send, Inbox, Search, Reply, type LucideIcon } from "lucide-react";
+import { StepsProcess } from "@/components/layout/steps-process/steps-process";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { ouvidoriaPage } from "@/sanity/content/pages/ouvidoria";
 
-const steps: ProcessStep[] = [
-  {
-    title: "Você envia sua manifestação",
-    description:
-      "Preencha o formulário com seus dados, tipo de manifestação e mensagem.",
-    Icon: Send,
-  },
-  {
-    title: "A demanda é recebida",
-    description:
-      "As informações são direcionadas para análise e encaminhamento interno.",
-    Icon: Inbox,
-  },
-  {
-    title: "A área responsável avalia",
-    description:
-      "A equipe relacionada ao tema analisa o caso e, quando necessário, busca mais informações.",
-    Icon: Search,
-  },
-  {
-    title: "O retorno é realizado",
-    description:
-      "Quando houver dados de contato, a TranspoTech poderá retornar conforme o fluxo definido.",
-    Icon: Reply,
-  },
-];
+type ProcessContent = SectionContent<typeof ouvidoriaPage.sections.process>;
 
-export function ProcessSection() {
+// Ícone de cada etapa, na ordem das etapas editadas no Studio.
+const stepIcons: LucideIcon[] = [Send, Inbox, Search, Reply];
+
+export function ProcessSection({ content }: { content: ProcessContent }) {
   return (
     <StepsProcess
       title={
         <>
-          <span className="font-normal">Como funciona a</span>{" "}
+          <span className="font-normal">{content.titleTop}</span>{" "}
           <br className="hidden lg:inline" />
-          <span className="font-bold text-primary-500">Ouvidoria</span>
+          <span className="font-bold text-primary-500">{content.titleAccent}</span>
         </>
       }
-      description="Um processo simples e transparente, do envio da manifestação ao retorno da TranspoTech."
-      steps={steps}
+      description={content.description}
+      steps={content.steps.map((step, i) => ({ ...step, Icon: stepIcons[i] }))}
     />
   );
 }

@@ -4,15 +4,12 @@ import { Section } from "@/components/ui/section";
 import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/lib/routes";
-import banner from "@/assets/images/operacao-image.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { empilhadeirasNovasPage } from "@/sanity/content/pages/empilhadeiras-novas";
 
-const badges = [
-  "Inspeção técnica",
-  "Pronta entrega",
-  "Garantia de até 12 meses",
-];
+type ConsiderUsedContent = SectionContent<typeof empilhadeirasNovasPage.sections.considerUsed>;
 
-export function ConsiderUsedSection() {
+export function ConsiderUsedSection({ content }: { content: ConsiderUsedContent }) {
   return (
     <Section
       data-header-dark
@@ -21,20 +18,18 @@ export function ConsiderUsedSection() {
       <div className="flex flex-1 flex-col gap-10 lg:gap-8">
         <div className="flex flex-col gap-4">
           <h2 className="text-h2 text-neutral-50">
-            <span className="font-normal">Considere também</span>{" "}
+            <span className="font-normal">{content.titleRegular}</span>{" "}
             <br className="hidden lg:inline" />
-            <span className="font-bold text-primary-500">seminovas</span>
+            <span className="font-bold text-primary-500">{content.titleAccent}</span>
           </h2>
           <p className="max-w-[520px] text-body leading-[1.35] text-neutral-300">
-            Equipamentos com revisão técnica TranspoTech, garantia e pronta
-            entrega. Indicados para ramp-up rápido, projetos temporários ou
-            expansão controlada de frota.
+            {content.description}
           </p>
         </div>
 
         <ul className="flex flex-col gap-4">
-          {badges.map((label) => (
-            <li key={label} className="flex items-center gap-3">
+          {content.items.map(({ label }, i) => (
+            <li key={i} className="flex items-center gap-3">
               <CircleCheck
                 aria-hidden
                 className="size-5 shrink-0 text-neutral-400"
@@ -50,14 +45,14 @@ export function ConsiderUsedSection() {
           href={`${ROUTES.EMPILHADEIRAS_SEMINOVAS}#disponiveis-agora`}
           className="self-start"
         >
-          Ver catálogo de seminovas
+          {content.buttonLabel}
         </Button>
       </div>
 
       <ParallaxFrame className="h-[260px] w-full rounded-3xl lg:h-[500px] lg:w-1/2">
         <Image
-          src={banner}
-          alt="Empilhadeira seminova revisada pela TranspoTech em operação"
+          src={content.image}
+          alt={content.image.alt}
           fill
           sizes="(min-width: 1024px) 50vw, 100vw"
           className="object-cover"

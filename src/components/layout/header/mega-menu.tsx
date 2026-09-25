@@ -39,7 +39,9 @@ export type MegaMenuConfig = {
 };
 
 // Megamenus por item de navegação — espelham o sitemap do site.
-export const megaMenus: Record<string, MegaMenuConfig> = {
+export const getMegaMenus = (
+  careersUrl: string
+): Record<string, MegaMenuConfig> => ({
   Produtos: {
     featured: {
       image: automacao,
@@ -125,7 +127,7 @@ export const megaMenus: Record<string, MegaMenuConfig> = {
           {
             title: "Trabalhe conosco",
             subtitle: "Faça parte do time",
-            href: ROUTES.GUPY,
+            href: careersUrl,
             Icon: Users,
           },
         ],
@@ -155,7 +157,7 @@ export const megaMenus: Record<string, MegaMenuConfig> = {
       },
     ],
   },
-};
+});
 
 type MegaMenuProps = {
   open: boolean;

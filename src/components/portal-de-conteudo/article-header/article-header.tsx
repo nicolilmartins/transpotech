@@ -2,7 +2,13 @@ import { Clock } from "lucide-react";
 import type { Article } from "@/data/articles";
 import { formatLongDate } from "@/data/articles";
 
-export function ArticleHeader({ article }: { article: Article }) {
+export function ArticleHeader({
+  article,
+  authorPrefix,
+}: {
+  article: Article;
+  authorPrefix: string;
+}) {
   return (
     <header className="flex flex-col gap-4">
       <p className="text-body font-semibold uppercase tracking-wide text-secondary-600">
@@ -22,7 +28,9 @@ export function ArticleHeader({ article }: { article: Article }) {
           {article.readTime}
         </span>
         <span aria-hidden>·</span>
-        <span>por {article.author}</span>
+        <span>
+          {authorPrefix} {article.author}
+        </span>
       </div>
     </header>
   );

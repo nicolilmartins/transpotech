@@ -2,6 +2,9 @@ import type { CSSProperties } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { TextLink } from "@/components/ui/text-link";
 import { Section } from "@/components/ui/section";
+import { LineBreaks } from "@/components/ui/line-breaks";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { pneusPage } from "@/sanity/content/pages/pneus";
 // Recortes com fundo transparente vindos do Figma (node 3705:3158), um por card.
 import imgEmpilhadeira from "@/assets/images/pneus/pneu-empilhadeira.webp";
 import imgOtr from "@/assets/images/pneus/pneu-otr.webp";
@@ -74,12 +77,8 @@ function shadowStyle(s: GroundShadow): CSSProperties {
   };
 }
 
-type Category = {
-  title: string;
-  description: string;
-  cta: string;
-  art: Art;
-};
+// Arte de cada card, na ordem dos cards editados no Studio.
+type Category = { art: Art };
 
 // Quanto a arte mais alta sai acima do card (46.338px no Figma). Todo slot
 // reserva esse espaço no topo, então os cards de uma mesma linha ficam
@@ -91,10 +90,6 @@ const TEXT_TOP = "49.296cqw";
 
 const categories: Category[] = [
   {
-    title: "Pneus para Empilhadeiras",
-    description:
-      "Disponíveis nos tipos press-on, pneumático e sólido, conforme a aplicação e o piso da operação.",
-    cta: "Solicitar pneu para empilhadeira",
     art: {
       src: imgEmpilhadeira,
       alt: "Empilhadeira STILL a combustão",
@@ -104,10 +99,6 @@ const categories: Category[] = [
     },
   },
   {
-    title: "Pneus OTR (Off-The-Road)",
-    description:
-      "Para escavadeiras, motoniveladoras, retroescavadeiras, carregadeiras, tratores de esteira e compactação.",
-    cta: "Solicitar pneu OTR",
     art: {
       src: imgOtr,
       alt: "Retroescavadeira",
@@ -127,10 +118,6 @@ const categories: Category[] = [
     },
   },
   {
-    title: "Pneus Agrícolas",
-    description:
-      "Para tratores, colheitadeiras, plantadeiras, pulverizadores e máquinas de henificação no campo.",
-    cta: "Solicitar pneu agrícola",
     art: {
       src: imgAgricola,
       alt: "Trator agrícola",
@@ -151,10 +138,6 @@ const categories: Category[] = [
     },
   },
   {
-    title: "Pneus Florestais",
-    description:
-      "Para skidders, fellers (derrubadoras), processadores, transportadores florestais e máquinas de exploração.",
-    cta: "Solicitar pneu florestal",
     art: {
       src: imgFlorestal,
       alt: "Máquina florestal com garra",
@@ -175,10 +158,6 @@ const categories: Category[] = [
     },
   },
   {
-    title: "Pneus Portuários",
-    description:
-      "Para reach stackers, carretas portuárias, empilhadeiras de porto, empurradores e equipamentos de contêiner.",
-    cta: "Solicitar pneu portuário",
     art: {
       src: imgPortuario,
       alt: "Reach stacker portuária",
@@ -197,26 +176,26 @@ const categories: Category[] = [
   },
 ];
 
-export function CategoriesSection() {
+type CategoriesContent = SectionContent<typeof pneusPage.sections.categories>;
+
+export function CategoriesSection({ content }: { content: CategoriesContent }) {
   return (
     <Section className="flex flex-col gap-12 lg:gap-16">
       <div className="flex max-w-[640px] flex-col gap-4">
         <h2 className="text-h2 font-normal text-neutral-800">
-          Escolha a categoria mais <br className="hidden lg:block" />
-          próxima da{" "}
-          <span className="font-bold text-primary-500">sua necessidade</span>
+          <LineBreaks text={content.title} brClassName="hidden lg:block" />{" "}
+          <span className="font-bold text-primary-500">{content.titleAccent}</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          Os pneus devem ser escolhidos conforme equipamento, ambiente,{" "}
-          <br className="hidden lg:block" />
-          piso, carga e intensidade de uso.
+          <LineBreaks text={content.description} brClassName="hidden lg:block" />
         </p>
       </div>
 
       {/* gap-y-7: somado ao topo reservado do slot, dá os 75px entre linhas
           do Figma. */}
       <div className="flex w-full flex-wrap justify-center gap-x-4 gap-y-7">
-        {categories.map(({ title, description, cta, art }) => {
+        {content.items.map(({ title, description, cta }, i) => {
+          const { art } = categories[i];
           const box = artBox(art);
           return (
             // Slot = container de consulta: as medidas em cqw da arte e do

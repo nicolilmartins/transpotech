@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Facebook, Instagram, Linkedin, Youtube } from "@/components/ui/icons";
 import { ROUTES } from "@/lib/routes";
+import type { Unit } from "@/data/units";
+import type { SiteSettings, SocialNetwork } from "@/sanity/queries/site-settings";
 import { FooterGlow } from "./footer-glow";
 import { DriftMesh } from "@/components/layout/drift-mesh";
 import logoLight from "@/assets/images/logo-transpotech-light.svg";
@@ -10,7 +12,7 @@ import atomsix from "@/assets/images/atomsix-symbol.svg";
 
 const logoWatermark = logoLight;
 
-const linkGroups = [
+const getLinkGroups = (careersUrl: string) => [
   {
     title: "Produtos",
     links: [
@@ -34,7 +36,7 @@ const linkGroups = [
     links: [
       { label: "Quem somos", href: ROUTES.QUEM_SOMOS },
       { label: "Portal de conteúdo", href: ROUTES.PORTAL_CONTEUDO },
-      { label: "Trabalhe conosco", href: ROUTES.GUPY },
+      { label: "Trabalhe conosco", href: careersUrl },
       { label: "Contato", href: ROUTES.CONTATO },
     ],
   },
@@ -48,32 +50,23 @@ const linkGroups = [
   },
 ];
 
-// Ordem por estado (SC > PR > RS > SP > GO). A grade preenche por coluna
-// (grid-flow-col, 2 linhas), então cada coluna agrupa unidades vizinhas —
-// as duas de Blumenau ficam juntas na primeira coluna.
-const units = [
-  { city: "Blumenau - SC", note: " (Hub Técnico)", phone: "(47) 3331-4900" },
-  { city: "Blumenau - SC", note: " (Seminovas)", phone: "(47) 3331-4900" },
-  { city: "Chapecó - SC", phone: "(49) 3981-9975" },
-  { city: "Itajaí - SC", phone: "(47) 3331-4901" },
-  { city: "Joinville - SC", phone: "(47) 3419-0033" },
-  { city: "Curitiba - PR", phone: "(41) 3377-3303" },
-  { city: "Maringá - PR", phone: "(44) 3200-0414" },
-  { city: "Caxias do Sul - RS", phone: "(54) 3771-4129" },
-  { city: "Nova Santa Rita - RS", phone: "(51) 3479-6740" },
-  { city: "Indaiatuba - SP", phone: "(19) 3825-3370" },
-  { city: "Aparecida de Goiânia - GO", phone: "(62) 3413-8334" },
+// Rede sem URL em siteSettings mantém o ícone com href "#" (as URLs reais
+// ainda não foram fornecidas).
+const socials: { key: SocialNetwork; name: string; Icon: typeof Facebook }[] = [
+  { key: "facebook", name: "Facebook", Icon: Facebook },
+  { key: "instagram", name: "Instagram", Icon: Instagram },
+  { key: "linkedin", name: "LinkedIn", Icon: Linkedin },
+  { key: "youtube", name: "YouTube", Icon: Youtube },
 ];
 
-// href ainda "#": as URLs reais das redes não foram fornecidas.
-const socials = [
-  { name: "Facebook", Icon: Facebook },
-  { name: "Instagram", Icon: Instagram },
-  { name: "LinkedIn", Icon: Linkedin },
-  { name: "YouTube", Icon: Youtube },
-];
+type FooterProps = {
+  units: Unit[];
+  careersUrl: SiteSettings["careersUrl"];
+  social: SiteSettings["social"];
+};
 
-export function Footer() {
+export function Footer({ units, careersUrl, social }: FooterProps) {
+  const linkGroups = getLinkGroups(careersUrl);
   return (
     <footer
       id="rodape"
@@ -98,10 +91,12 @@ export function Footer() {
           <div className="flex flex-col gap-9">
             <Image src={logoLight} alt="TranspoTech" className="h-8 w-[174px]" />
             <div className="flex items-center gap-5">
-              {socials.map(({ name, Icon }) => (
+              {socials.map(({ key, name, Icon }) => (
                 <Link
                   key={name}
-                  href="#"
+                  href={social[key] ?? "#"}
+                  target={social[key] ? "_blank" : undefined}
+                  rel={social[key] ? "noopener noreferrer" : undefined}
                   aria-label={`TranspoTech no ${name}`}
                   className="text-neutral-300 transition-colors hover:text-neutral-50"
                 >
@@ -163,21 +158,28 @@ export function Footer() {
             <h3 className="font-heading text-h6 font-semibold text-neutral-100">
               Nossas unidades
             </h3>
+            {/* units vem na ordem por estado (SC > PR > RS > SP > GO). A grade
+                preenche por coluna (grid-flow-col, 2 linhas), então cada coluna
+                agrupa unidades vizinhas — as duas de Blumenau ficam juntas na
+                primeira coluna. */}
             <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:gap-x-8 lg:grid-flow-col lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-x-12 lg:gap-y-6">
-              {units.map((unit) => (
-                <div
-                  key={`${unit.city}${unit.note ?? ""}`}
-                  className="flex flex-col gap-[5px] text-body"
-                >
-                  <p className="leading-[1.35] text-neutral-300">
-                    <span className="font-semibold">{unit.city}</span>
-                    {unit.note && <span className="font-normal">{unit.note}</span>}
-                  </p>
-                  <p className="font-normal leading-[1.35] text-neutral-100">
-                    {unit.phone}
-                  </p>
-                </div>
-              ))}
+              {units.map((unit) => {
+                const note = unit.footerNote ?? unit.note;
+                return (
+                  <div
+                    key={`${unit.city}${unit.note ?? ""}`}
+                    className="flex flex-col gap-[5px] text-body"
+                  >
+                    <p className="leading-[1.35] text-neutral-300">
+                      <span className="font-semibold">{unit.city}</span>
+                      {note && <span className="font-normal">{` (${note})`}</span>}
+                    </p>
+                    <p className="font-normal leading-[1.35] text-neutral-100">
+                      {unit.phone}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </div>
 

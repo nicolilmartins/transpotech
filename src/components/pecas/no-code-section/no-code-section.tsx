@@ -4,38 +4,22 @@ import { useEffect, useRef } from "react";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { pecasPage } from "@/sanity/content/pages/pecas";
 
-type Step = { number: string; title: string; description: string };
+type NoCodeContent = SectionContent<typeof pecasPage.sections.noCode>;
 
-const steps: Step[] = [
-  {
-    number: "01",
-    title: "Descreva o problema",
-    description: "Explique o que está acontecendo com o equipamento.",
-  },
-  {
-    number: "02",
-    title: "Informe o equipamento",
-    description: "Informe marca, modelo, capacidade ou número de série.",
-  },
-  {
-    number: "03",
-    title: "Receba orientação",
-    description: "A equipe avalia as informações e direciona a solicitação.",
-  },
-];
-
-export function NoCodeSection() {
+export function NoCodeSection({ content }: { content: NoCodeContent }) {
   const wrapRef = useRef<HTMLOListElement>(null);
   const fillRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const titleRefs = useRef<(HTMLHeadingElement | null)[]>([]);
+  const n = content.steps.length;
 
   // Ao entrar na viewport, a linha laranja e os títulos "acendem" da esquerda
   // para a direita uma única vez; depois permanecem no estado final.
   useEffect(() => {
     const wrap = wrapRef.current;
     if (!wrap) return;
-    const n = steps.length;
 
     const apply = (p: number) => {
       for (let i = 0; i < n; i++) {
@@ -76,7 +60,7 @@ export function NoCodeSection() {
       st.kill();
       tween.kill();
     };
-  }, []);
+  }, [n]);
 
   return (
     <Section
@@ -86,12 +70,10 @@ export function NoCodeSection() {
       {/* Cabeçalho — canto esquerdo */}
       <div className="flex max-w-[640px] flex-col gap-4">
         <h2 className="text-h2 font-normal text-neutral-50">
-          Não sabe o código da peça?
+          {content.title}
         </h2>
         <p className="text-body leading-[1.35] text-neutral-400">
-          Muitas solicitações começam com uma descrição do problema, uma foto ou
-          os dados do equipamento. A TranspoTech ajuda a direcionar sua
-          necessidade.
+          {content.description}
         </p>
       </div>
 
@@ -100,11 +82,11 @@ export function NoCodeSection() {
         ref={wrapRef}
         className="grid w-full grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-3"
       >
-        {steps.map((step, i) => (
-          <li key={step.number} className="flex w-full flex-col">
+        {content.steps.map((step, i) => (
+          <li key={i} className="flex w-full flex-col">
             <div className="flex flex-col gap-2">
               <span className="font-heading text-h6 font-bold text-primary-500">
-                {step.number}
+                {String(i + 1).padStart(2, "0")}
               </span>
               <h3
                 ref={(el) => {
@@ -134,7 +116,7 @@ export function NoCodeSection() {
       </ol>
 
       <Button variant="primary" size="lg" href="#solicitar-pecas">
-        Receber orientação
+        {content.buttonLabel}
       </Button>
     </Section>
   );

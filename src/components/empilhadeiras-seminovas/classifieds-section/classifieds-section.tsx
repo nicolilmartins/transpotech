@@ -4,15 +4,20 @@ import { useState } from "react";
 import { Section } from "@/components/ui/section";
 import { ProductCard } from "@/components/layout/product-card/product-card";
 import { QuoteModal } from "@/components/layout/quote-modal/quote-modal";
-import { forkliftsSeminovas } from "@/data/forklifts-seminovas";
 import { ROUTES } from "@/lib/routes";
 import type { Forklift } from "@/types/forklift.types";
 
 type ClassifiedsSectionProps = {
-  /** Equipamentos exibidos. Default: todos os classificados. */
-  items?: Forklift[];
-  eyebrow?: string;
-  title?: string;
+  /** Equipamentos exibidos. */
+  items: Forklift[];
+  /** Opções do modal de orçamento. Default: `items`. */
+  quoteOptions?: Forklift[];
+  eyebrow: string;
+  title: string;
+  labelYear: string;
+  labelHours: string;
+  labelCapacity: string;
+  labelLocation: string;
   /** id de âncora — usado por links que apontam direto para a lista. */
   id?: string;
 };
@@ -21,9 +26,14 @@ type ClassifiedsSectionProps = {
 // detalhe de novas): os cards fluem na vertical, quebrando em novas linhas
 // conforme o estoque cresce, sem rolagem horizontal.
 export function ClassifiedsSection({
-  items = forkliftsSeminovas,
-  eyebrow = "Classificados",
-  title = "Seminovas disponíveis agora",
+  items,
+  quoteOptions = items,
+  eyebrow,
+  title,
+  labelYear,
+  labelHours,
+  labelCapacity,
+  labelLocation,
   id,
 }: ClassifiedsSectionProps) {
   const [quoteForId, setQuoteForId] = useState<string | null>(null);
@@ -49,10 +59,10 @@ export function ClassifiedsSection({
             onRequestQuote={(f) => setQuoteForId(f.id)}
             detailsHref={`${ROUTES.EMPILHADEIRAS_SEMINOVAS}/${forklift.id}`}
             specs={[
-              { label: "Ano", value: forklift.year ?? "—" },
-              { label: "Horas trabalhadas", value: forklift.workedHours ?? "—" },
-              { label: "Capacidade", value: forklift.capacity },
-              { label: "Localização", value: forklift.location },
+              { label: labelYear, value: forklift.year ?? "—" },
+              { label: labelHours, value: forklift.workedHours ?? "—" },
+              { label: labelCapacity, value: forklift.capacity },
+              { label: labelLocation, value: forklift.location },
             ]}
           />
         ))}
@@ -61,7 +71,7 @@ export function ClassifiedsSection({
       {quoteForId && (
         <QuoteModal
           onClose={() => setQuoteForId(null)}
-          forklifts={forkliftsSeminovas}
+          forklifts={quoteOptions}
           initialSelectedId={quoteForId}
         />
       )}

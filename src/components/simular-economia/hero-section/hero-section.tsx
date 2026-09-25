@@ -1,8 +1,13 @@
 import { Section } from "@/components/ui/section";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import { DriftMesh } from "@/components/layout/drift-mesh";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { simularEconomiaPage } from "@/sanity/content/pages/simular-economia";
 
-export function OrcamentoHeroSection() {
+type OrcamentoHeroContent = SectionContent<typeof simularEconomiaPage.sections.hero>;
+
+export function OrcamentoHeroSection({ content }: { content: OrcamentoHeroContent }) {
+
   return (
     <div
       data-header-hero
@@ -16,19 +21,17 @@ export function OrcamentoHeroSection() {
 
       <Section className="flex flex-col items-center gap-4 pb-[36px] pt-[168px] text-center lg:pb-[48px] lg:pt-[196px]">
         <p className="text-body font-semibold uppercase tracking-wide text-primary-500">
-          Simulador de economia
+          {content.eyebrow}
         </p>
         <BlurRevealTitle
           className="text-balance text-h2 text-neutral-800"
           segments={[
-            { text: "Empilhadeira GLP ou elétrica:", className: "font-normal", br: true },
-            { text: "quanto sua operação economiza?", className: "font-bold text-primary-500" },
+            { text: content.titleTop, className: "font-normal", br: true },
+            { text: content.titleAccent, className: "font-bold text-primary-500" },
           ]}
         />
         <p className="mx-auto max-w-[620px] text-pretty text-body leading-[1.5] text-neutral-600">
-          Ajuste os turnos, o preço do cilindro de gás e o kWh e compare o custo
-          de energia de uma empilhadeira a GLP com uma elétrica a lítio e em
-          quantos meses ela se paga.
+          {content.description}
         </p>
       </Section>
     </div>

@@ -4,12 +4,17 @@ import { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import { Plus } from "lucide-react";
 import { automationHotspots } from "./automation-hotspots.data";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { automacaoPage } from "@/sanity/content/pages/automacao";
 
 // Camada de pontos interativos sobre a ilustração, no modelo do mapa
 // interativo da Dematic: botão "+" sobre cada etapa que abre um pop-up
 // ancorado nele mesmo (não um modal). Só um pop-up aberto por vez; fecha no
 // Escape, no clique fora e ao abrir outro ponto.
-export function AutomationHotspots() {
+type HotspotItems = SectionContent<typeof automacaoPage.sections.hotspots>["items"];
+
+// Texto e foto vêm do Studio; posição e lado de abertura, do .data (por índice).
+export function AutomationHotspots({ content }: { content: HotspotItems }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const layerRef = useRef<HTMLDivElement>(null);
   const uid = useId();
@@ -39,7 +44,8 @@ export function AutomationHotspots() {
       ref={layerRef}
       className="pointer-events-none absolute inset-0 z-20"
     >
-      {automationHotspots.map((spot) => {
+      {content.map((item, i) => {
+        const spot = { ...automationHotspots[i], ...item };
         const isOpen = openId === spot.id;
         const panelId = `${uid}-${spot.id}`;
         const openRight = spot.side === "right";

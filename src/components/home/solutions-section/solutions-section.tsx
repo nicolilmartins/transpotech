@@ -19,98 +19,44 @@ import {
 } from "lucide-react";
 import gearRing from "@/assets/images/solutions-gear.svg";
 import { ROUTES } from "@/lib/routes";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { homePage } from "@/sanity/content/pages/home";
 
-type Solution = {
-  title: string;
+// Ícone e destino de cada solução, na ordem das soluções editadas no Studio.
+type SolutionLink = {
   icon: LucideIcon;
-  description: string;
-  cta: string;
   /** Destino do CTA no centro da engrenagem. */
   href: string;
 };
 
-const solutions: Solution[] = [
+const solutionLinks: SolutionLink[] = [
+  { icon: Forklift, href: ROUTES.LOCACAO },
   {
-    title: "Locação de empilhadeiras",
-    icon: Forklift,
-    description:
-      "STILL, Linde e Baoli com frota pronta para operação imediata e custo previsível.",
-    cta: "Ver locação",
-    href: ROUTES.LOCACAO,
-  },
-  {
-    title: "Venda de empilhadeiras novas",
     icon: Sparkles,
-    description:
-      "Linde, Still e Baoli zero-km com orientação técnica para a escolha certa.",
-    cta: "Ver novas",
     // /produtos/empilhadeiras (índice) ainda está em construção — o destino
     // útil é direto o catálogo de novas.
     href: ROUTES.EMPILHADEIRAS_NOVAS,
   },
+  { icon: CircleDollarSign, href: ROUTES.EMPILHADEIRAS_SEMINOVAS },
   {
-    title: "Empilhadeiras seminovas",
-    icon: CircleDollarSign,
-    description:
-      "Seminovas revisadas, com garantia e o melhor custo-benefício para sua operação.",
-    cta: "Ver seminovas",
-    href: ROUTES.EMPILHADEIRAS_SEMINOVAS,
-  },
-  {
-    title: "Assistência multimarcas",
     icon: Wrench,
-    description:
-      "Manutenção preventiva, corretiva e multimarcas com 380+ técnicos especializados e peças em estoque.",
-    cta: "Ver serviços",
     // /servicos/assistencia-multimarcas seria o destino literal, mas está em
     // construção — /servicos cobre preventiva, corretiva e multimarcas.
     href: ROUTES.SERVICOS,
   },
+  { icon: Network, href: ROUTES.AUTOMACAO },
   {
-    title: "Automação intralogística",
-    icon: Network,
-    description:
-      "Menos gargalos, mais produtividade. Automação por etapas adaptada à maturidade da operação.",
-    cta: "Conhecer automação",
-    href: ROUTES.AUTOMACAO,
-  },
-  {
-    title: "Transporte",
     icon: Truck,
-    description:
-      "Movimentação e logística de cargas com equipe especializada e cobertura nacional.",
-    cta: "Falar sobre transporte",
     // Não há página de transporte no site; o CTA já é de conversa, então vai
     // para o contato.
     href: ROUTES.CONTATO,
   },
-  {
-    title: "Baterias e carregadores",
-    icon: BatteryCharging,
-    description:
-      "Baterias, carregadores e infraestrutura de energia para operações elétricas eficientes.",
-    cta: "Ver baterias",
-    href: ROUTES.BATERIAS,
-  },
-  {
-    title: "Peças e componentes",
-    icon: Settings2,
-    description:
-      "Peças originais e compatíveis com estoque amplo para reduzir tempo de parada.",
-    cta: "Ver peças",
-    href: ROUTES.PECAS,
-  },
-  {
-    title: "Pneus",
-    icon: Disc3,
-    description:
-      "Pneus para empilhadeiras de todos os portes e aplicações, com troca no local.",
-    cta: "Ver pneus",
-    href: ROUTES.PNEUS,
-  },
+  { icon: BatteryCharging, href: ROUTES.BATERIAS },
+  { icon: Settings2, href: ROUTES.PECAS },
+  { icon: Disc3, href: ROUTES.PNEUS },
 ];
 
-const N = solutions.length; // 9
+const N = solutionLinks.length; // 9
 
 // ─── Geometria (viewBox quadrado, engrenagem centralizada) ───────────────────
 const VB       = 600;      // viewBox quadrado
@@ -152,7 +98,10 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-export function SolutionsSection() {
+type SolutionsContent = SectionContent<typeof homePage.sections.solutions>;
+
+export function SolutionsSection({ content }: { content: SolutionsContent }) {
+  const solutions = content.items.map((item, i) => ({ ...item, ...solutionLinks[i] }));
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   // O ciclo automático só roda com a seção na tela: fora dela, o re-render e
@@ -270,17 +219,16 @@ export function SolutionsSection() {
       <div className="mx-auto w-full max-w-[1440px] px-5 pt-12 sm:px-6 lg:px-16 lg:pt-20">
         <div className="mx-auto flex max-w-[640px] flex-col items-center gap-5 text-center">
           <p className="font-heading text-[16px] font-medium uppercase leading-[1.1] text-primary-300">
-            solução 360°
+            {content.eyebrow}
           </p>
           <h2 className="text-balance text-h2 text-neutral-100">
-            <span className="lg:block font-normal">Soluções em</span>{" "}
+            <span className="lg:block font-normal">{content.titleRegular}</span>{" "}
             <span className="lg:block font-bold text-primary-500">
-              Intralogística
+              {content.titleAccent}
             </span>
           </h2>
           <p className="max-w-[474px] text-body leading-6 text-neutral-300">
-            Escolha a necessidade mais próxima do seu momento e encontre a
-            solução adequada com rapidez
+            {content.description}
           </p>
         </div>
       </div>

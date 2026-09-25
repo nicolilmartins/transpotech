@@ -1,34 +1,10 @@
 import { Section } from "@/components/ui/section";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { locacaoPage } from "@/sanity/content/pages/locacao";
 
-type Plan = { plano: string; quando: string };
+type PlansContent = SectionContent<typeof locacaoPage.sections.plans>;
 
-const plans: Plan[] = [
-  {
-    plano: "Locação de longo prazo",
-    quando:
-      "Operações contínuas, CDs, indústrias, supermercados e operadores logísticos",
-  },
-  {
-    plano: "Short rental",
-    quando:
-      "Picos sazonais, inventários, eventos, testes e demandas temporárias",
-  },
-  {
-    plano: "Frota sob demanda",
-    quando: "Expansão, novos contratos ou substituição de frota própria",
-  },
-  {
-    plano: "Locação com manutenção",
-    quando: "Empresas que querem reduzir a carga interna de manutenção",
-  },
-  {
-    plano: "Locação de novas e seminovas",
-    quando:
-      "Diferentes níveis de investimento, prazo e necessidade operacional",
-  },
-];
-
-export function PlansSection() {
+export function PlansSection({ content }: { content: PlansContent }) {
   return (
     <Section
       data-header-dark
@@ -37,25 +13,23 @@ export function PlansSection() {
       {/* Cabeçalho — alinhado à esquerda */}
       <div className="flex max-w-[640px] flex-col gap-4">
         <h2 className="text-h2 text-neutral-50">
-          <span className="font-normal">Planos de locação para</span>{" "}
+          <span className="font-normal">{content.titleRegular}</span>{" "}
           <br className="hidden lg:inline" />
           <span className="font-bold text-primary-500">
-            diferentes demandas
+            {content.titleAccent}
           </span>
         </h2>
         <p className="text-body leading-[1.5] text-neutral-400">
-          Do contrato de longo prazo ao short rental para picos sazonais,
-          escolha o modelo que melhor se encaixa na sua operação, sempre com
-          manutenção e suporte técnico da TranspoTech.
+          {content.description}
         </p>
       </div>
 
       {/* Planos — linhas divisórias + tick laranja por linha */}
       <div className="w-full">
         <ul className="flex flex-col border-t border-white/10">
-          {plans.map((p) => (
+          {content.items.map((p, i) => (
             <li
-              key={p.plano}
+              key={i}
               className="group relative flex flex-col gap-3 border-b border-white/10 py-10 transition-colors lg:flex-row lg:gap-16 lg:py-12"
             >
               {/* Linha precisa à esquerda — fica laranja no hover */}
@@ -65,11 +39,11 @@ export function PlansSection() {
               />
 
               <h3 className="pl-6 font-heading text-h4 font-normal text-neutral-100 transition-colors duration-300 group-hover:text-primary-500 lg:w-1/2 lg:pl-8">
-                {p.plano}
+                {p.title}
               </h3>
 
               <p className="pl-6 text-body leading-[1.5] text-neutral-400 transition-colors duration-300 group-hover:text-neutral-50 lg:w-1/2 lg:pl-0">
-                {p.quando}
+                {p.description}
               </p>
             </li>
           ))}

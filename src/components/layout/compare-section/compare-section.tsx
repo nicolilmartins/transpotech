@@ -11,6 +11,7 @@ import {
 import Image, { type StaticImageData } from "next/image";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
+import { getSharedTexts } from "@/sanity/queries/shared";
 // Mesmas fotos do comparativo da página de simulação (src/data/glp-vs-eletrica.ts).
 import imgEletrica from "@/assets/images/empilhadeiras/rce_1.webp";
 import imgGlp from "@/assets/images/empilhadeiras/rc_44_1.webp";
@@ -33,95 +34,28 @@ type CompareItem = {
 };
 
 // Comparativo elétrica (lítio) × GLP — critérios e copy baseados no
-// comparativo TranspoTech. Elétrica com acento verde (eletrificação/ESG) e
-// GLP em laranja. Cada critério usa o mesmo ícone nos dois cards.
-const items: CompareItem[] = [
+// comparativo TranspoTech (textos em sanity/content/pages/shared.ts).
+// Elétrica com acento verde (eletrificação/ESG) e GLP em laranja. Cada
+// critério usa o mesmo ícone nos dois cards, por posição.
+const pointIcons: LucideIcon[] = [
+  DollarSign,
+  Wrench,
+  Gauge,
+  Leaf,
+  Disc3,
+  LifeBuoy,
+  Fuel,
+];
+
+const cardVisuals: Pick<CompareItem, "image" | "imageAlt" | "accent">[] = [
   {
-    title: "Elétrica (lítio)",
-    description: "A mesma força. Muito mais economia.",
     image: imgEletrica,
     imageAlt: "Empilhadeira elétrica a lítio STILL RCE",
-    points: [
-      {
-        Icon: DollarSign,
-        label: "Custo de energia",
-        text: "R$ 400,00 em energia elétrica — até 90% de economia no dia a dia.",
-      },
-      {
-        Icon: Wrench,
-        label: "Custo de manutenção",
-        text: "Até 70% de economia: menos peças, menos paradas e menos custos.",
-      },
-      {
-        Icon: Gauge,
-        label: "Desempenho",
-        text: "Mesmo desempenho e força da combustão para as mesmas aplicações.",
-      },
-      {
-        Icon: Leaf,
-        label: "Impacto ambiental",
-        text: "Zero emissão de gases, mais sustentável e amiga do meio ambiente.",
-      },
-      {
-        Icon: Disc3,
-        label: "Frenagem e segurança",
-        text: "Frenagem regenerativa reduz o uso do freio, evita fadiga e economiza em manutenções.",
-      },
-      {
-        Icon: LifeBuoy,
-        label: "Pneus",
-        text: "Menor desgaste dos pneus pelo menor uso do freio.",
-      },
-      {
-        Icon: Fuel,
-        label: "Armazenagem de gás",
-        text: "Dispensa cilindros: mais segurança, melhor qualidade do ar e otimização de espaço (m²).",
-      },
-    ],
     accent: "secondary",
   },
   {
-    title: "GLP",
-    description: "Força que você conhece. Combustível que você paga.",
     image: imgGlp,
     imageAlt: "Empilhadeira a GLP STILL RC 44-25 C",
-    points: [
-      {
-        Icon: DollarSign,
-        label: "Custo de energia",
-        text: "R$ 4.000,00 em combustível (GLP) — valor de simulação.",
-      },
-      {
-        Icon: Wrench,
-        label: "Custo de manutenção",
-        text: "Mais componentes de desgaste: sistema de combustível, motor, transmissão, carburador, correias e radiadores.",
-      },
-      {
-        Icon: Gauge,
-        label: "Desempenho",
-        text: "Força e desempenho dependem do combustível e exigem aquecimento do motor.",
-      },
-      {
-        Icon: Leaf,
-        label: "Impacto ambiental",
-        text: "Emite gases poluentes, contribuindo para a poluição do ar.",
-      },
-      {
-        Icon: Disc3,
-        label: "Frenagem e segurança",
-        text: "Maior uso do pedal de freio, gerando fadiga do operador e mais desgaste do sistema.",
-      },
-      {
-        Icon: LifeBuoy,
-        label: "Pneus",
-        text: "Maior desgaste dos pneus devido ao uso mais frequente do freio.",
-      },
-      {
-        Icon: Fuel,
-        label: "Armazenagem de gás",
-        text: "Exige armazenamento físico de cilindros, ocupando espaço e com cuidados de segurança.",
-      },
-    ],
     accent: "primary",
   },
 ];
@@ -173,8 +107,8 @@ function CompareCard({
       </div>
 
       <ul className="relative mt-6 flex flex-col gap-4 border-t border-black/[0.06] pt-6">
-        {points.map(({ Icon, label, text }) => (
-          <li key={label} className="flex items-start gap-3">
+        {points.map(({ Icon, label, text }, i) => (
+          <li key={i} className="flex items-start gap-3">
             <Icon
               aria-hidden
               className={`mt-0.5 size-5 shrink-0 ${accentText}`}
@@ -200,25 +134,29 @@ type CompareSectionProps = {
   ctaHref?: string;
 };
 
-export function CompareSection({
+export async function CompareSection({
   ctaLabel,
   ctaHref,
 }: CompareSectionProps = {}) {
+  const { compare: content } = await getSharedTexts();
+  const items: CompareItem[] = content.cards.map((card, i) => ({
+    ...cardVisuals[i],
+    title: card.title,
+    description: card.description,
+    points: card.points.map((point, j) => ({ ...point, Icon: pointIcons[j] })),
+  }));
+
   return (
     <Section className="flex flex-col items-center gap-12 lg:gap-16">
       <div className="flex max-w-[640px] flex-col gap-4 text-center">
         <h2 className="text-h2 text-neutral-800">
-          <span className="lg:block font-normal">
-            Empilhadeira elétrica ou GLP:
-          </span>{" "}
+          <span className="lg:block font-normal">{content.titleTop}</span>{" "}
           <span className="lg:block font-bold text-primary-500">
-            qual escolher?
+            {content.titleAccent}
           </span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          As duas movimentam as mesmas cargas, mas brilham em operações
-          diferentes. Veja qual encaixa melhor na sua rotina antes de escolher o
-          modelo.
+          {content.description}
         </p>
       </div>
 
@@ -226,8 +164,8 @@ export function CompareSection({
           dá espaço para as empilhadeiras transbordarem o topo; no mobile o gap
           maior acomoda o transbordo do segundo card. */}
       <div className="grid w-full grid-cols-1 items-stretch gap-16 rounded-3xl bg-neutral-50 p-4 pt-16 sm:p-6 sm:pt-20 lg:grid-cols-2 lg:gap-6 lg:pt-24">
-        {items.map((item) => (
-          <CompareCard key={item.title} {...item} />
+        {items.map((item, i) => (
+          <CompareCard key={i} {...item} />
         ))}
       </div>
 

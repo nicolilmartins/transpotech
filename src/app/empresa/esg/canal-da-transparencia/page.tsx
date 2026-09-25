@@ -11,7 +11,10 @@ import { FaqSection } from "@/components/layout/faq/faq-section";
 import { HoverMesh } from "@/components/layout/hover-mesh";
 import { DriftMesh } from "@/components/layout/drift-mesh";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
-import { faqCanalTransparencia } from "@/data/faq-canal-transparencia";
+import { getFaqItems } from "@/sanity/queries/faq";
+import { getSiteSettings } from "@/sanity/queries/site-settings";
+import { getPage } from "@/sanity/queries/pages";
+import { canalTransparenciaPage } from "@/sanity/content/pages/canal-transparencia";
 import { ROUTES } from "@/lib/routes";
 
 export const metadata: Metadata = {
@@ -26,7 +29,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CanalTransparenciaPage() {
+export default async function CanalTransparenciaPage() {
+  const [settings, faqItems, content] = await Promise.all([
+    getSiteSettings(),
+    getFaqItems("canal-transparencia"),
+    getPage(canalTransparenciaPage),
+  ]);
+
   return (
     <main>
       {/* Grupo claro 1 */}
@@ -34,39 +43,34 @@ export default function CanalTransparenciaPage() {
         {/* Hero — malha grande que anda pelo fundo (sem cursor) */}
         <div className="relative">
           <DriftMesh className="pointer-events-none absolute inset-0 -z-10" />
-          <CanalHeroSection />
+          <CanalHeroSection
+            ouvidorDigitalUrl={settings.ouvidorDigitalUrl}
+            content={content.hero}
+          />
         </div>
         <div className="relative">
           <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-          <ScopeSection />
-          <RedirectSection />
+          <ScopeSection content={content.scope} />
+          <RedirectSection content={content.redirect} />
         </div>
       </div>
 
       {/* Bloco dark — Como funciona o processo + Nossos compromissos */}
       <div className="relative isolate bg-[#181616]">
         <DarkAmbient />
-        <ProcessSection />
-        <CommitmentsSection />
+        <ProcessSection content={content.process} />
+        <CommitmentsSection content={content.commitments} />
       </div>
 
       {/* Grupo claro 2 — FAQ (sem malha) */}
       <div className="bg-background">
         <FaqSection
-          titleRegular="Perguntas "
-          titleAccent="frequentes"
-          items={faqCanalTransparencia}
+          {...content.faq}
+          items={faqItems}
         />
       </div>
 
-      <CtaSection
-        titleRegular="Tem uma manifestação que não é sobre "
-        titleAccent="ética ou conduta?"
-        titleBreak
-        description="Use a Ouvidoria Digital para reclamações, sugestões, elogios, dúvidas ou solicitações gerais."
-        ctaLabel="Acessar Ouvidoria"
-        ctaHref={ROUTES.OUVIDORIA}
-      />
+      <CtaSection {...content.cta} titleBreak ctaHref={ROUTES.OUVIDORIA} />
     </main>
   );
 }

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { ROUTES } from "@/lib/routes";
 
-export function BackToCatalog() {
+export function BackToCatalog({ label }: { label: string }) {
   return (
     <section className="bg-neutral-100">
       {/* 32px visíveis em cima e embaixo. pt-8 = 32px; pb-14 = 56px, sendo
@@ -14,7 +14,7 @@ export function BackToCatalog() {
           className="flex h-12 w-full items-center justify-center gap-2 rounded-full text-body font-semibold text-neutral-500 transition-colors hover:text-primary-500"
         >
           <ArrowLeft aria-hidden className="size-5" />
-          Voltar ao catálogo de empilhadeiras novas
+          {label}
         </Link>
       </div>
     </section>

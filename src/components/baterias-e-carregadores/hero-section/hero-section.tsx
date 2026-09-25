@@ -1,9 +1,12 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
-import heroImage from "@/assets/images/hero-image-baterias.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { bateriasPage } from "@/sanity/content/pages/baterias";
 
-export function BateriasHeroSection() {
+type BateriasHeroContent = SectionContent<typeof bateriasPage.sections.hero>;
+
+export function BateriasHeroSection({ content }: { content: BateriasHeroContent }) {
   return (
     <section data-header-hero className="relative w-full bg-background md:p-4">
       {/* Card de imagem — full-bleed no mobile; de md em diante, 16px de padding em volta e bordas de 20px */}
@@ -12,7 +15,7 @@ export function BateriasHeroSection() {
             65% desloca a cena para a esquerda em telas estreitas, mantendo o
             técnico carregando a empilhadeira dentro do enquadramento. */}
         <Image
-          src={heroImage}
+          src={content.image}
           alt=""
           preload
           fill
@@ -37,16 +40,15 @@ export function BateriasHeroSection() {
               tone="dark"
               className="text-h2 text-neutral-50"
               segments={[
-                { text: "Energia para", className: "font-normal", br: true },
+                { text: content.titleTop, className: "font-normal", br: true },
                 {
-                  text: "equipamentos elétricos",
+                  text: content.titleAccent,
                   className: "font-bold text-primary-500",
                 },
               ]}
             />
             <p className="mx-auto max-w-[420px] text-h6 font-normal leading-[1.3] text-neutral-50">
-              Baterias e carregadores conforme compatibilidade, autonomia e
-              rotina de uso.
+              {content.description}
             </p>
           </div>
 
@@ -56,7 +58,7 @@ export function BateriasHeroSection() {
             href="#solicitar-baterias"
             className="w-full lg:w-auto"
           >
-            Solicitar cotação
+            {content.buttonLabel}
           </Button>
         </div>
       </div>

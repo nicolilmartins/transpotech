@@ -1,16 +1,19 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
-import heroImage from "@/assets/images/hero-image-pecas.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { pecasPage } from "@/sanity/content/pages/pecas";
 
-export function PecasHeroSection() {
+type PecasHeroContent = SectionContent<typeof pecasPage.sections.hero>;
+
+export function PecasHeroSection({ content }: { content: PecasHeroContent }) {
   return (
     <section data-header-hero className="relative w-full bg-background md:p-4">
       {/* Card de imagem — full-bleed no mobile; de md em diante, 16px de padding em volta e bordas de 20px */}
       <div className="relative flex h-svh md:h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden md:rounded-[20px]">
         {/* Imagem de fundo — peças / manutenção em operação */}
         <Image
-          src={heroImage}
+          src={content.image}
           alt=""
           preload
           fill
@@ -35,16 +38,15 @@ export function PecasHeroSection() {
               tone="dark"
               className="text-h2 text-neutral-50"
               segments={[
-                { text: "Peças para cada", className: "font-normal", br: true },
+                { text: content.titleTop, className: "font-normal", br: true },
                 {
-                  text: "necessidade da operação",
+                  text: content.titleAccent,
                   className: "font-bold text-primary-500",
                 },
               ]}
             />
             <p className="mx-auto max-w-[420px] text-h6 font-normal leading-[1.3] text-neutral-50">
-              Originais e multimarcas para manutenção, reposição ou equipamento
-              parado.
+              {content.description}
             </p>
           </div>
 
@@ -54,7 +56,7 @@ export function PecasHeroSection() {
             href="#solicitar-pecas"
             className="w-full lg:w-auto"
           >
-            Solicitar cotação de peças
+            {content.buttonLabel}
           </Button>
         </div>
       </div>

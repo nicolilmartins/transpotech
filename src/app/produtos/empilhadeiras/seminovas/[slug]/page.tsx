@@ -6,28 +6,32 @@ import { SeminovaDetailSection } from "@/components/empilhadeiras-seminovas/deta
 import { ClassifiedsSection } from "@/components/empilhadeiras-seminovas/classifieds-section/classifieds-section";
 import { DriftMesh } from "@/components/layout/drift-mesh";
 import {
-  forkliftsSeminovas,
+  getForkliftSeminovaBySlug,
+  getForkliftSeminovaSlugs,
+  getForkliftsSeminovas,
   getOtherSeminovas,
-  getSeminovaBySlug,
-} from "@/data/forklifts-seminovas";
+} from "@/sanity/queries/forklifts";
+import { getPage } from "@/sanity/queries/pages";
+import { seminovasPage } from "@/sanity/content/pages/seminovas";
 import { ROUTES } from "@/lib/routes";
 
 type DetailPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-// Estoque é um conjunto fixo: slugs fora de generateStaticParams retornam 404.
-export const dynamicParams = false;
+// Modelos publicados no CMS depois do build são gerados na primeira visita
+// (dynamicParams padrão); slug inexistente cai no notFound() da página.
 
-export function generateStaticParams() {
-  return forkliftsSeminovas.map((forklift) => ({ slug: forklift.id }));
+export async function generateStaticParams() {
+  const slugs = await getForkliftSeminovaSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
   params,
 }: DetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const forklift = getSeminovaBySlug(slug);
+  const forklift = await getForkliftSeminovaBySlug(slug);
 
   if (!forklift) {
     return { title: "Equipamento não encontrado" };
@@ -53,11 +57,15 @@ export default async function EmpilhadeiraSeminovaDetalhePage({
   params,
 }: DetailPageProps) {
   const { slug } = await params;
-  const forklift = getSeminovaBySlug(slug);
+  const [forklifts, { detail: content, classifieds }] = await Promise.all([
+    getForkliftsSeminovas(),
+    getPage(seminovasPage),
+  ]);
+  const forklift = forklifts.find((f) => f.id === slug);
 
   if (!forklift) notFound();
 
-  const others = getOtherSeminovas(forklift);
+  const others = getOtherSeminovas(forklifts, forklift);
 
   return (
     <main>
@@ -69,15 +77,24 @@ export default async function EmpilhadeiraSeminovaDetalhePage({
           fade
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-svh"
         />
-        <SeminovaDetailSection forklift={forklift} />
+        <SeminovaDetailSection
+          forklift={forklift}
+          forklifts={forklifts}
+          content={content}
+        />
       </div>
 
       {/* Outros classificados — mesmo carrossel da página de seminovas */}
       <div className="relative isolate bg-neutral-50">
         <ClassifiedsSection
           items={others}
-          eyebrow="Classificados"
-          title="Outras seminovas disponíveis"
+          quoteOptions={forklifts}
+          eyebrow={content.othersEyebrow}
+          title={content.othersTitle}
+          labelYear={classifieds.labelYear}
+          labelHours={classifieds.labelHours}
+          labelCapacity={classifieds.labelCapacity}
+          labelLocation={classifieds.labelLocation}
         />
       </div>
     </main>

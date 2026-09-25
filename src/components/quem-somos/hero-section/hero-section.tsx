@@ -1,26 +1,23 @@
 import { PhotoHero } from "@/components/layout/photo-hero";
 import { ROUTES } from "@/lib/routes";
-import heroImage from "@/assets/images/hero-quem-somos.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { quemSomosPage } from "@/sanity/content/pages/quem-somos";
 
-export function QuemSomosHeroSection() {
+type QuemSomosHeroContent = SectionContent<typeof quemSomosPage.sections.hero>;
+
+export function QuemSomosHeroSection({ content }: { content: QuemSomosHeroContent }) {
   return (
     <PhotoHero
-      image={heroImage}
+      image={content.image}
       contentClassName="max-w-[820px]"
       titleClassName="text-balance text-h2 text-neutral-50"
       titleSegments={[
-        {
-          text: "Especialistas em empilhadeiras para ",
-          className: "font-normal",
-        },
-        {
-          text: "operações em movimento",
-          className: "font-bold text-primary-500",
-        },
+        { text: content.titleRegular, className: "font-normal" },
+        { text: content.titleAccent, className: "font-bold text-primary-500" },
       ]}
       descriptionClassName="max-w-[520px]"
-      description="Desde 2001, a TranspoTech atua com soluções para movimentação de materiais, apoiando empresas que precisam de disponibilidade, segurança, eficiência e suporte técnico especializado."
-      cta={{ href: ROUTES.CONTATO, label: "Fale com um especialista" }}
+      description={content.description}
+      cta={{ href: ROUTES.CONTATO, label: content.buttonLabel }}
     />
   );
 }

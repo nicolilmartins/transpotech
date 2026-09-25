@@ -4,6 +4,8 @@ import Image, { type StaticImageData } from "next/image";
 import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { Section } from "@/components/ui/section";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { servicosPage } from "@/sanity/content/pages/servicos";
 import logoYale from "@/assets/Logos/logo-yale.webp";
 import logoClark from "@/assets/Logos/logo-clark.webp";
 import logoHyster from "@/assets/Logos/logo-hyster.webp";
@@ -39,7 +41,9 @@ const corners = [
 
 const LINE_COLOR = "rgba(245,130,32,0.1)"; // primary-500 / 10%
 
-export function MultibrandSection() {
+type MultibrandContent = SectionContent<typeof servicosPage.sections.multibrand>;
+
+export function MultibrandSection({ content }: { content: MultibrandContent }) {
   const headerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLParagraphElement>(null);
@@ -132,15 +136,14 @@ export function MultibrandSection() {
         className="mx-auto flex max-w-[640px] flex-col items-center gap-4 text-center"
       >
         <p className="text-body font-semibold uppercase tracking-wide text-secondary-600">
-          Assistência multimarcas
+          {content.eyebrow}
         </p>
         <h2 className="text-h3 font-normal text-neutral-800">
-          Manutenção para empilhadeiras de{" "}
-          <span className="font-bold text-primary-500">todas as marcas</span>
+          {content.title}{" "}
+          <span className="font-bold text-primary-500">{content.titleAccent}</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          Nossa equipe conectada ao departamento de peças garante agilidade no
-          atendimento e o menor custo para sua operação.
+          {content.description}
         </p>
       </div>
 
@@ -190,8 +193,7 @@ export function MultibrandSection() {
           ref={footerRef}
           className="text-center text-body leading-[1.35] text-neutral-500"
         >
-          Também atendemos equipamentos importados e chineses, todas as marcas e
-          modelos, elétricos e a combustão.
+          {content.footnote}
         </p>
       </div>
     </Section>

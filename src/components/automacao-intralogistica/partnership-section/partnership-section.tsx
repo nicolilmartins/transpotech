@@ -5,14 +5,19 @@ import { Button } from "@/components/ui/button";
 import { AutomationDots } from "./automation-dots";
 import { AutomationHotspots } from "./automation-hotspots";
 import illoAutomation from "@/assets/images/stats/illustration-automation.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { automacaoPage } from "@/sanity/content/pages/automacao";
 
-const highlights = [
-  "Recebimento e armazenagem automatizados, com máximo uso do espaço",
-  "Separação e expedição mais rápidas e com menos erros",
-  "Engenharia local, implantação própria e pós-venda em cobertura nacional",
-];
+type PartnershipContent = SectionContent<typeof automacaoPage.sections.partnership>;
+type HotspotsContent = SectionContent<typeof automacaoPage.sections.hotspots>;
 
-export function PartnershipSection() {
+export function PartnershipSection({
+  content,
+  hotspots,
+}: {
+  content: PartnershipContent;
+  hotspots: HotspotsContent;
+}) {
   return (
     <Section className="relative flex flex-col">
       <div className="relative flex flex-col gap-10 lg:min-h-[420px] lg:flex-row lg:items-start">
@@ -26,7 +31,7 @@ export function PartnershipSection() {
             className="pointer-events-none h-auto w-full object-contain"
           />
           <AutomationDots />
-          <AutomationHotspots />
+          <AutomationHotspots content={hotspots.items} />
         </div>
 
         {/* Texto */}
@@ -34,21 +39,18 @@ export function PartnershipSection() {
           <div className="flex flex-col gap-8 lg:gap-10">
             <div className="flex flex-col gap-4">
               <p className="text-body font-semibold uppercase tracking-wide text-secondary-600">
-                Parceria tecnológica
+                {content.eyebrow}
               </p>
               <h2 className="text-h3 font-normal text-neutral-800">
-                TranspoTech + Dematic
+                {content.title}
               </h2>
               <p className="text-body leading-[1.35] text-neutral-600">
-                A TranspoTech leva ao Brasil a automação intralogística da
-                Dematic, referência mundial e parte do grupo KION. Automatizamos
-                a operação de ponta a ponta, do recebimento à expedição, com
-                engenharia local e suporte próprio.
+                {content.description}
               </p>
             </div>
 
             <ul className="flex flex-col gap-3">
-              {highlights.map((highlight) => (
+              {content.highlights.map(({ label: highlight }) => (
                 <li key={highlight} className="flex items-center gap-2">
                   <CircleCheck aria-hidden className="size-5 shrink-0 text-primary-500" />
                   <span className="text-body leading-[1.35] text-neutral-600 lg:whitespace-nowrap">
@@ -60,7 +62,7 @@ export function PartnershipSection() {
           </div>
 
           <Button variant="primary" size="lg" href="#solucoes">
-            Conheça as soluções
+            {content.buttonLabel}
           </Button>
         </div>
       </div>

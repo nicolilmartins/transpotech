@@ -18,6 +18,9 @@ import { CtaSection } from "@/components/layout/cta/cta-section";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
 import { HoverMesh } from "@/components/layout/hover-mesh";
 import { ROUTES } from "@/lib/routes";
+import { getHomeArticles } from "@/sanity/queries/articles";
+import { getPage } from "@/sanity/queries/pages";
+import { homePage } from "@/sanity/content/pages/home";
 
 export const metadata: Metadata = {
   title: "TranspoTech | Empilhadeiras, Locação e Manutenção",
@@ -32,44 +35,52 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [articles, content] = await Promise.all([
+    getHomeArticles(),
+    getPage(homePage),
+  ]);
+
   return (
     <main>
-      <HeroSection />
+      <HeroSection content={content.hero} />
       {/* Grupo claro 1 — Experiência. Malha livre cobrindo todo o fundo (sem
           silhueta): o hover revela a malha em qualquer área. */}
       <div className="relative isolate bg-background">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <ExperienceSection />
+        <ExperienceSection content={content.experience} />
       </div>
       {/* Bloco dark 1 — fundo neutral-900 + ambiência (blurs que andam no scroll) */}
       <div className="relative isolate bg-neutral-900">
         <DarkAmbient />
-        <SolutionsSection />
-        <PortfolioSection />
-        <BrandsSection />
+        <SolutionsSection content={content.solutions} />
+        <PortfolioSection content={content.portfolio} />
+        <BrandsSection {...content.brands} />
       </div>
       {/* Grupo claro 2 — Comparativo + ESG + Serviços + Automação + Segmentos */}
       <div className="relative isolate bg-background">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <CompareSection ctaLabel="Simular economia" ctaHref={ROUTES.SIMULADOR} />
-        <EsgSection />
-        <ServicesSection />
-        <AutomationSection />
-        <SegmentsSection />
+        <CompareSection
+          ctaLabel={content.compare.ctaLabel}
+          ctaHref={ROUTES.SIMULADOR}
+        />
+        <EsgSection content={content.esg} />
+        <ServicesSection content={content.services} />
+        <AutomationSection content={content.automation} />
+        <SegmentsSection content={content.segments} />
       </div>
       {/* Bloco dark 2 — fundo neutral-900 + ambiência (blurs que andam no scroll) */}
       <div className="relative isolate bg-neutral-900">
         <DarkAmbient />
-        <TestimonialsSection />
-        <WhyUsSection />
+        <TestimonialsSection content={content.testimonials} />
+        <WhyUsSection content={content.whyUs} />
       </div>
       {/* Grupo claro 3 — Blog (fundo neutral-50, branco mais escuro) */}
       <div className="relative isolate bg-neutral-50">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <BlogSection />
+        <BlogSection content={content.blog} articles={articles} />
       </div>
-      <CtaSection />
+      <CtaSection {...content.cta} />
     </main>
   );
 }

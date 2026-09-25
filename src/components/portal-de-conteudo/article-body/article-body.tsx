@@ -1,11 +1,35 @@
-import type { Article } from "@/data/articles";
-import { articleSections } from "../article-sections";
+import type { ArticleDetail } from "@/sanity/queries/articles";
+import { articleSections, type ArticleSection } from "../article-sections";
+import { ArticlePortableText } from "./article-portable-text";
 
-// Conteúdo editorial de demonstração (o texto final é publicado via CMS).
+export function ArticleBody({
+  article,
+  sections,
+}: {
+  article: ArticleDetail;
+  sections: ArticleSection[];
+}) {
+  if (article.body) {
+    return (
+      <article className="flex w-full max-w-[860px] flex-col gap-5 text-body leading-[1.7] text-neutral-700">
+        {/* Lead — resumo do artigo */}
+        <p className="text-lg font-medium leading-[1.6] text-neutral-800">
+          {article.excerpt}
+        </p>
+        <ArticlePortableText value={article.body} sections={sections} />
+      </article>
+    );
+  }
+
+  return <DemoArticleBody article={article} />;
+}
+
+// Conteúdo editorial de demonstração, exibido sem o CMS configurado; o seed
+// (src/sanity/seed/articles.ts) leva este mesmo texto para o Sanity.
 // Escrito com base em conhecimento consolidado do setor de intralogística sobre
 // locação x compra de empilhadeiras (custo total de propriedade, CAPEX x OPEX,
 // taxa de utilização e ponto de equilíbrio).
-export function ArticleBody({ article }: { article: Article }) {
+function DemoArticleBody({ article }: { article: ArticleDetail }) {
   return (
     <article className="flex w-full max-w-[860px] flex-col gap-5 text-body leading-[1.7] text-neutral-700">
       {/* Lead — resumo do artigo */}

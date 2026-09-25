@@ -4,6 +4,8 @@ import iconTecnicos from "@/assets/images/stats/card-selo.webp";
 import iconMultimarcas from "@/assets/images/stats/card-loja.webp";
 import iconPresenca from "@/assets/images/stats/card-pin.webp";
 import iconEstoque from "@/assets/images/stats/card-engrenagem.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { homePage } from "@/sanity/content/pages/home";
 
 // Ícone 3D (imagem) posicionado exatamente como no Figma (node 3593:3243).
 // A caixa da arte é 204.438×153.328 e uma máscara radial (equivalente ao SVG
@@ -24,10 +26,9 @@ type IconArt = {
   img: { left: string; top: string } | "fill";
 };
 
+// Ícone de cada card, na ordem dos cards editados no Studio.
 type WhyUsCard = {
   icon: IconArt;
-  title: string;
-  description: string;
 };
 
 const ART_W = 204.438;
@@ -41,7 +42,7 @@ const MASK_Y = 12.819;
 const MASK_IMAGE =
   "radial-gradient(74.7585px 66.9338px at 74.7585px 66.9338px, #000 0%, transparent 100%)";
 
-const cards: WhyUsCard[] = [
+const cardArts: WhyUsCard[] = [
   {
     icon: {
       src: iconTecnicos,
@@ -52,9 +53,6 @@ const cards: WhyUsCard[] = [
       flip: false,
       img: "fill",
     },
-    title: "+400 técnicos especializados",
-    description:
-      "Suporte para abastecimento de linha, movimentação interna e continuidade de produção.",
   },
   {
     icon: {
@@ -65,9 +63,6 @@ const cards: WhyUsCard[] = [
       flip: false,
       img: "fill",
     },
-    title: "Atendimento multimarcas",
-    description:
-      "Soluções para armazenagem, fluxo, picking, expedição e produtividade operacional.",
   },
   {
     icon: {
@@ -78,9 +73,6 @@ const cards: WhyUsCard[] = [
       maskY: 7.819,
       img: "fill",
     },
-    title: "+88% de presença nacional",
-    description:
-      "11 unidades em PR, SC, RS, SP e GO para resposta próxima e suporte técnico local.",
   },
   {
     icon: {
@@ -91,9 +83,6 @@ const cards: WhyUsCard[] = [
       maskY: 9.819,
       img: "fill",
     },
-    title: "+30 milhões em estoque de peças",
-    description:
-      "Estrutura que garante rapidez, eficiência e flexibilidade total na manutenção de empilhadeiras.",
   },
 ];
 
@@ -152,7 +141,11 @@ function CardIcon({ icon }: { icon: IconArt }) {
   );
 }
 
-export function WhyUsSection() {
+type WhyUsContent = SectionContent<typeof homePage.sections.whyUs>;
+
+export function WhyUsSection({ content }: { content: WhyUsContent }) {
+  const cards = content.cards.map((card, i) => ({ ...card, ...cardArts[i] }));
+
   return (
     <Section
       data-header-dark
@@ -160,17 +153,17 @@ export function WhyUsSection() {
     >
       <div className="relative w-full">
         <h2 className="w-full text-center text-h2 text-neutral-200">
-          <span className="lg:block font-normal">Por que as empresas</span>{" "}
+          <span className="lg:block font-normal">{content.titleRegular}</span>{" "}
           <span className="lg:block font-bold text-primary-500">
-            escolhem a TranspoTech
+            {content.titleAccent}
           </span>
         </h2>
       </div>
 
       <div className="relative grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {cards.map((card) => (
+        {cards.map((card, i) => (
           <div
-            key={card.title}
+            key={i}
             className="relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-surface-dark p-6 transition-shadow duration-300 hover:z-10 hover:shadow-glow-secondary lg:min-h-[299px]"
           >
             <CardIcon icon={card.icon} />

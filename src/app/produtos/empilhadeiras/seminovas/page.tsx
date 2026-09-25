@@ -12,7 +12,10 @@ import { ConsiderNewSection } from "@/components/empilhadeiras-seminovas/conside
 import { ClassifiedsSection } from "@/components/empilhadeiras-seminovas/classifieds-section/classifieds-section";
 import { CompareSection } from "@/components/layout/compare-section/compare-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
-import { faqSeminovas } from "@/data/faq-seminovas";
+import { getFaqItems } from "@/sanity/queries/faq";
+import { getForkliftsSeminovas } from "@/sanity/queries/forklifts";
+import { getPage } from "@/sanity/queries/pages";
+import { seminovasPage } from "@/sanity/content/pages/seminovas";
 import { HoverMesh } from "@/components/layout/hover-mesh";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
 
@@ -28,10 +31,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function EmpilhadeirasSeminovasPage() {
+export default async function EmpilhadeirasSeminovasPage() {
+  const [forklifts, faqItems, content] = await Promise.all([
+    getForkliftsSeminovas(),
+    getFaqItems("seminovas"),
+    getPage(seminovasPage),
+  ]);
+
   return (
     <main>
-      <SeminovasHeroSection />
+      <SeminovasHeroSection content={content.hero} />
 
       {/* Grupo claro 1 — Captação (logo após a hero) + Por que comprar + Como
           avaliamos. Uma única malha cobre tudo, sem cortes. */}
@@ -39,26 +48,22 @@ export default function EmpilhadeirasSeminovasPage() {
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
         <LeadFormSection
           id="consultar-seminovas"
-          titleTop="Encontre a seminova ideal"
-          titleBottom="para sua operação"
-          description="Diga o que você precisa e retornamos com opções de empilhadeiras seminovas revisadas, com procedência e garantia."
-          messagePlaceholder="Capacidade, tipo de empilhadeira, aplicação e cidade da operação."
-          submitLabel="Consultar seminovas"
+          {...content.leadForm}
         />
-        <WhyBuySection />
-        <EvaluationSection />
+        <WhyBuySection content={content.whyBuy} />
+        <EvaluationSection content={content.evaluation} />
       </div>
 
       {/* Bloco dark — O que está incluso */}
       <div className="relative isolate bg-[#181616]">
         <DarkAmbient />
-        <IncludedSection />
+        <IncludedSection content={content.included} />
       </div>
 
       {/* Grupo claro 2 — Onde entrega valor + Comparativo elétrica × GLP */}
       <div className="relative isolate bg-background">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <ValueSection />
+        <ValueSection content={content.value} />
         <CompareSection />
       </div>
 
@@ -67,25 +72,25 @@ export default function EmpilhadeirasSeminovasPage() {
           seções de forma contínua (parecem uma seção só). */}
       <div className="relative isolate bg-[#181616]">
         <DarkAmbient />
-        <PurchaseStepsSection />
-        <ConsiderNewSection />
+        <PurchaseStepsSection content={content.purchaseSteps} />
+        <ConsiderNewSection content={content.considerNew} />
       </div>
 
       {/* Classificados — estoque de seminovas disponível, mesmo card e grid da
           seção "Outras opções que podem servir" das páginas de detalhe. Fundo
           neutral-50 (igual ao dos relacionados) para os cards brancos destacarem. */}
       <div className="relative isolate bg-neutral-50">
-        <ClassifiedsSection id="disponiveis-agora" />
+        <ClassifiedsSection
+          id="disponiveis-agora"
+          items={forklifts}
+          {...content.classifieds}
+        />
       </div>
 
       {/* Grupo claro 4 — FAQ (sem malha). pb-6 compensa o -mt-6 do footer (topo
           arredondado sobreposto), mantendo os 48/80px visuais da diretriz. */}
       <div className="bg-background pb-6">
-        <FaqSection
-          titleRegular="Dúvidas frequentes sobre "
-          titleAccent="seminovas"
-          items={faqSeminovas}
-        />
+        <FaqSection {...content.faq} items={faqItems} />
       </div>
     </main>
   );

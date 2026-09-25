@@ -2,53 +2,16 @@ import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { TextLink } from "@/components/ui/text-link";
 import { ROUTES } from "@/lib/routes";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { bateriasPage } from "@/sanity/content/pages/baterias";
 
-type BatteryType = {
-  title: string;
-  description: string;
-  fits: string[];
-  cta: string;
-};
+type BatteryTypesContent = SectionContent<typeof bateriasPage.sections.batteryTypes>;
+type BatteryType = BatteryTypesContent["types"][number];
 
-const types: BatteryType[] = [
-  {
-    title: "Chumbo-ácida",
-    description:
-      "Tecnologia tradicional, amplamente usada em empilhadeiras elétricas.",
-    fits: [
-      "Operações de 1 turno",
-      "Investimento inicial menor",
-      "Estrutura com sala de baterias e equipe de manutenção",
-    ],
-    cta: "Solicitar avaliação",
-  },
-  {
-    title: "Íons de lítio (Li-ion)",
-    description:
-      "Tecnologia moderna, com carga rápida e por oportunidade.",
-    fits: [
-      "Operações 24/7 ou multi-turno",
-      "Operações sem sala de baterias dedicada",
-      "Quem busca ganho de produtividade e disponibilidade",
-    ],
-    cta: "Avaliar migração para lítio",
-  },
-  {
-    title: "Tração e demais tecnologias",
-    description:
-      "Outras configurações ou tecnologias específicas conforme equipamento, autonomia e aplicação.",
-    fits: [
-      "Equipamentos com requisito técnico específico",
-      "Substituição direta com compatibilidade validada",
-      "Operações que precisam preservar a tecnologia atual",
-    ],
-    cta: "Falar com especialista",
-  },
-];
+// Destino do link de cada card, na ordem dos cards editados no Studio.
+const hrefs = [ROUTES.SIMULADOR, ROUTES.SIMULADOR, ROUTES.CONTATO];
 
-function BatteryCard({ title, description, fits, cta }: BatteryType) {
-  const href = cta === "Falar com especialista" ? ROUTES.CONTATO : ROUTES.SIMULADOR;
-
+function BatteryCard({ title, description, fits, cta, href }: BatteryType & { href: string }) {
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-3xl">
       {/* Zona do título — glow laranja bem suave que acende no hover */}
@@ -66,7 +29,7 @@ function BatteryCard({ title, description, fits, cta }: BatteryType) {
       {/* Zona dos tópicos — divisão por linha sutil + bullets de acento */}
       <div className="relative flex flex-1 flex-col gap-8 bg-white/[0.07] px-6 pb-8 pt-6 lg:px-8">
         <ul className="flex flex-1 flex-col gap-2.5">
-          {fits.map((fit) => (
+          {fits.map(({ text: fit }) => (
             <li key={fit} className="flex items-start gap-3">
               <span
                 aria-hidden
@@ -87,33 +50,30 @@ function BatteryCard({ title, description, fits, cta }: BatteryType) {
   );
 }
 
-export function BatteryTypesSection() {
+export function BatteryTypesSection({ content }: { content: BatteryTypesContent }) {
   return (
     <Section data-header-dark className="flex flex-col gap-10 lg:gap-12">
       <div className="flex max-w-[720px] flex-col gap-4">
         <h2 className="text-h2 font-normal text-neutral-50">
-          Tipos de baterias{" "}
+          {content.titleRegular}{" "}
           <br className="hidden lg:inline" />
-          <span className="font-bold text-primary-500">para empilhadeiras</span>
+          <span className="font-bold text-primary-500">{content.titleAccent}</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-300">
-          A escolha entre tecnologias depende da rotina de uso, turnos, espaço
-          operacional e investimento. A TranspoTech ajuda a indicar a alternativa
-          certa para sua operação.
+          {content.description}
         </p>
       </div>
 
       <div className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-3">
-        {types.map((type) => (
-          <BatteryCard key={type.title} {...type} />
+        {content.types.map((type, i) => (
+          <BatteryCard key={type.title} {...type} href={hrefs[i]} />
         ))}
       </div>
 
       {/* Faixa — dúvida entre tecnologias */}
       <div className="flex flex-col gap-10 rounded-2xl bg-white/5 sm:gap-6 p-6 ring-1 ring-white/10 sm:flex-row sm:items-center sm:justify-between lg:p-8">
         <p className="max-w-[640px] text-body leading-[1.35] text-neutral-300">
-          Em dúvida entre tecnologias? A equipe TranspoTech avalia rotina, turnos
-          e disponibilidade pra recomendar a melhor opção.
+          {content.bannerText}
         </p>
         <Button
           variant="primary"
@@ -121,7 +81,7 @@ export function BatteryTypesSection() {
           href={ROUTES.SIMULADOR}
           className="shrink-0"
         >
-          Avaliar tecnologia ideal
+          {content.bannerButtonLabel}
         </Button>
       </div>
     </Section>

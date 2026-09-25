@@ -1,46 +1,24 @@
 import { Section } from "@/components/ui/section";
 import { TextLink } from "@/components/ui/text-link";
-import { ROUTES } from "@/lib/routes";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { ouvidoriaPage } from "@/sanity/content/pages/ouvidoria";
 
-type Channel = {
-  title: string;
-  description: string;
-  quotes: string[];
-  ctaLabel: string;
+type ChannelChoiceContent = SectionContent<
+  typeof ouvidoriaPage.sections.channelChoice
+>;
+
+type Channel = ChannelChoiceContent["channels"][number] & {
   href: string;
   /** Cor de acento dos detalhes (glow, bullets e CTA). */
   accent: "primary" | "secondary";
 };
 
-const channels: Channel[] = [
-  {
-    title: "Ouvidoria Digital",
-    description:
-      "Use para reclamações, sugestões, elogios, dúvidas, solicitações e feedbacks gerais sobre atendimento ou relacionamento.",
-    quotes: [
-      "Quero registrar uma reclamação sobre atendimento",
-      "Quero sugerir uma melhoria",
-      "Quero elogiar uma equipe",
-      "Tenho uma dúvida institucional",
-    ],
-    ctaLabel: "Enviar manifestação",
-    href: "#manifestacao",
-    accent: "primary",
-  },
-  {
-    title: "Canal da Transparência",
-    description:
-      "Use para relatos relacionados a ética, integridade, assédio, discriminação, fraude, conflito de interesses ou descumprimento de políticas.",
-    quotes: [
-      "Quero relatar uma situação de assédio",
-      "Quero relatar possível fraude",
-      "Quero relatar conduta antiética",
-      "Quero relatar discriminação",
-    ],
-    ctaLabel: "Acessar Canal da Transparência",
-    href: ROUTES.OUVIDOR_DIGITAL,
-    accent: "secondary",
-  },
+// Destino e cor de cada canal, na ordem dos canais editados no Studio.
+const getChannelLinks = (
+  ouvidorDigitalUrl: string,
+): Pick<Channel, "href" | "accent">[] => [
+  { href: "#manifestacao", accent: "primary" },
+  { href: ouvidorDigitalUrl, accent: "secondary" },
 ];
 
 function ChannelCard({
@@ -76,13 +54,13 @@ function ChannelCard({
       <div className="relative flex flex-1 flex-col gap-8 bg-white/[0.07] px-6 pb-8 pt-6 lg:px-8">
         <ul className="flex flex-1 flex-col gap-2.5">
           {quotes.map((quote) => (
-            <li key={quote} className="flex items-start gap-3">
+            <li key={quote.text} className="flex items-start gap-3">
               <span
                 aria-hidden
                 className={`mt-2 size-1.5 shrink-0 rounded-full ${bulletClass}`}
               />
               <span className="text-body italic leading-[1.35] text-neutral-300">
-                “{quote}”
+                “{quote.text}”
               </span>
             </li>
           ))}
@@ -99,18 +77,28 @@ function ChannelCard({
   );
 }
 
-export function ChannelChoiceSection() {
+type ChannelChoiceSectionProps = {
+  /** URL do canal de relatos do Ouvidor Digital (siteSettings). */
+  ouvidorDigitalUrl: string;
+  content: ChannelChoiceContent;
+};
+
+export function ChannelChoiceSection({
+  ouvidorDigitalUrl,
+  content,
+}: ChannelChoiceSectionProps) {
+  const links = getChannelLinks(ouvidorDigitalUrl);
   return (
     <Section data-header-dark className="flex flex-col gap-10 lg:gap-12">
       <div className="flex max-w-[720px] flex-col gap-4">
         <h2 className="text-h3 font-normal text-neutral-50">
-          Qual canal devo usar?
+          {content.title}
         </h2>
       </div>
 
       <div className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-2">
-        {channels.map((channel) => (
-          <ChannelCard key={channel.title} {...channel} />
+        {content.channels.map((channel, i) => (
+          <ChannelCard key={channel.title} {...channel} {...links[i]} />
         ))}
       </div>
     </Section>

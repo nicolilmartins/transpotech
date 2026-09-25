@@ -12,10 +12,12 @@ import {
 } from "lucide-react";
 import illustration from "@/assets/images/stats/illustration-segment.webp";
 import { gsap } from "@/lib/gsap";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { homePage } from "@/sanity/content/pages/home";
 
+// Marcador de cada segmento na ilustração, na ordem dos segmentos editados no
+// Studio.
 type Marker = {
-  title: string;
-  description: string;
   /** Ícone exibido no card mobile (desktop usa os marcadores na ilustração) */
   icon: LucideIcon;
   color: "green" | "orange";
@@ -26,11 +28,8 @@ type Marker = {
   delay: number;
 };
 
-const markers: Marker[] = [
+const markerArts: Marker[] = [
   {
-    title: "Indústria",
-    description:
-      "Suporte para abastecimento de linha, movimentação interna e continuidade de produção.",
     icon: Factory,
     color: "green",
     side: "left",
@@ -40,9 +39,6 @@ const markers: Marker[] = [
     delay: 360,
   },
   {
-    title: "Distribuição",
-    description:
-      "Soluções para armazenagem, fluxo, picking, expedição e produtividade operacional.",
     icon: Warehouse,
     color: "green",
     side: "left",
@@ -52,9 +48,6 @@ const markers: Marker[] = [
     delay: 450,
   },
   {
-    title: "Varejo e atacado",
-    description:
-      "Apoio para movimentação eficiente em operações com alto giro e necessidade de ritmo constante.",
     icon: Store,
     color: "orange",
     side: "right",
@@ -64,9 +57,6 @@ const markers: Marker[] = [
     delay: 540,
   },
   {
-    title: "Logística",
-    description:
-      "Estrutura para operações que precisam de disponibilidade, resposta rápida e previsibilidade.",
     icon: Truck,
     color: "orange",
     side: "right",
@@ -77,7 +67,10 @@ const markers: Marker[] = [
   },
 ];
 
-export function SegmentsSection() {
+type SegmentsContent = SectionContent<typeof homePage.sections.segments>;
+
+export function SegmentsSection({ content }: { content: SegmentsContent }) {
+  const markers = content.items.map((item, i) => ({ ...item, ...markerArts[i] }));
   const sectionRef = useRef<HTMLElement>(null);
   const labelRef = useRef<HTMLParagraphElement>(null);
   const h2Ref = useRef<HTMLHeadingElement>(null);
@@ -162,21 +155,20 @@ export function SegmentsSection() {
             ref={labelRef}
             className="text-body font-semibold leading-[1.35] text-primary-500"
           >
-            SEGMENTOS
+            {content.eyebrow}
           </p>
           <h2
             ref={h2Ref}
             className="w-[426px] max-w-full text-h2 font-bold leading-[1.1] text-neutral-800"
           >
-            Aplicações por setor
+            {content.title}
           </h2>
         </div>
         <p
           ref={descRef}
           className="w-[507px] max-w-full text-body leading-6 text-neutral-600"
         >
-          A TranspoTech apoia empresas com necessidades distintas de
-          movimentação, abastecimento interno, armazenagem e suporte técnico.
+          {content.description}
         </p>
       </div>
 
@@ -191,9 +183,9 @@ export function SegmentsSection() {
 
       {/* Mobile — grid simples de segmentos (sem animação própria) */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
-        {markers.map((m) => (
+        {markers.map((m, i) => (
           <div
-            key={m.title}
+            key={i}
             className="flex flex-col gap-3 rounded-xl bg-neutral-50 p-5"
           >
             <m.icon className="size-6 text-secondary-500" aria-hidden />
@@ -240,7 +232,7 @@ export function SegmentsSection() {
               : "bg-gradient-to-r from-primary-500/60 to-transparent";
 
           return (
-            <Fragment key={m.title}>
+            <Fragment key={i}>
               {/* Linha conectora */}
               <div
                 ref={(node) => { lineRefs.current[i] = node; }}

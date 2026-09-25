@@ -8,49 +8,17 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Section } from "@/components/ui/section";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { seminovasPage } from "@/sanity/content/pages/seminovas";
 
 type Card = { title: string; description: string; Icon: LucideIcon };
 
-// "\n" força quebra de linha fixa na descrição (whitespace-pre-line no <p>).
+// Ícone de cada card, na ordem dos cards editados no Studio.
+const icons: LucideIcon[] = [TrendingUp, CalendarClock, ShieldCheck, Warehouse, RefreshCw, Rocket];
 
-const cards: Card[] = [
-  {
-    title: "Expansão controlada",
-    description:
-      "Adicionar capacidade sem comprometer CAPEX em equipamento novo.",
-    Icon: TrendingUp,
-  },
-  {
-    title: "Projetos temporários",
-    description: "Obras, contratos com prazo fixo\ne operações sazonais.",
-    Icon: CalendarClock,
-  },
-  {
-    title: "Backup de frota",
-    description:
-      "Garantir continuidade operacional quando o equipamento principal sai para manutenção.",
-    Icon: ShieldCheck,
-  },
-  {
-    title: "Operações de pátio",
-    description:
-      "Aplicações externas onde robustez é mais importante que tecnologia de ponta.",
-    Icon: Warehouse,
-  },
-  {
-    title: "Substituição de fim de vida",
-    description:
-      "Trocar equipamento muito antigo por uma seminova mais nova com TCO melhor.",
-    Icon: RefreshCw,
-  },
-  {
-    title: "Operação inicial",
-    description:
-      "Pequenas e médias empresas começando a estruturar a frota intralogística.",
-    Icon: Rocket,
-  },
-];
+type ValueContent = SectionContent<typeof seminovasPage.sections.value>;
 
+// Enter digitado na descrição quebra a linha (whitespace-pre-line no <p>).
 function ValueCard({ title, description, Icon }: Card) {
   // Mesma superfície dos cards brancos da seção "Por que comprar seminova
   // com a TranspoTech" (bg-neutral-50 + sombra esverdeada no hover).
@@ -72,7 +40,7 @@ function ValueCard({ title, description, Icon }: Card) {
   );
 }
 
-export function ValueSection() {
+export function ValueSection({ content }: { content: ValueContent }) {
   return (
     <Section className="flex flex-col gap-10 lg:gap-12">
       {/* Cabeçalho */}
@@ -80,11 +48,11 @@ export function ValueSection() {
         {/* Duas linhas fixas (nowrap só no desktop; no mobile flui natural) */}
         <h2 className="text-h2 font-normal text-neutral-800">
           <span className="lg:block lg:whitespace-nowrap">
-            Onde a empilhadeira seminova
+            {content.titleTop}
           </span>{" "}
           <span className="lg:block">
-            entrega{" "}
-            <span className="font-bold text-primary-500">mais valor</span>
+            {content.titleMiddle}{" "}
+            <span className="font-bold text-primary-500">{content.titleAccent}</span>
           </span>
         </h2>
       </div>
@@ -92,8 +60,8 @@ export function ValueSection() {
       {/* Cards — mesmo visual/comportamento da seção de serviços da home
           (sem a parte do botão) */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((card) => (
-          <ValueCard key={card.title} {...card} />
+        {content.cards.map((card, i) => (
+          <ValueCard key={card.title} {...card} Icon={icons[i]} />
         ))}
       </div>
     </Section>

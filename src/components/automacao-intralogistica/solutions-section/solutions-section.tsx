@@ -23,142 +23,81 @@ import {
 } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { automacaoPage } from "@/sanity/content/pages/automacao";
 
-type Item = { title: string; description: string; Icon: LucideIcon };
+type SolutionsContent = SectionContent<typeof automacaoPage.sections.solutions>;
+type TabContent = SectionContent<typeof automacaoPage.sections.solutionsTab1>;
+type Item = TabContent["items"][number] & { Icon: LucideIcon };
 
-type Category = {
-  name: string;
+// Ícone de cada tópico, por aba e na ordem dos tópicos editados no Studio.
+// `headline` e `description` de cada aba não são exibidos hoje.
+const categories: {
   Icon: LucideIcon;
   // Título do card em duas linhas (ao menos duas palavras em cada).
   headline: [string, string];
   // Descrição curta e atrativa da aba, abaixo do título.
   description: string;
-  items: Item[];
-};
-
-const categories: Category[] = [
+  itemIcons: LucideIcon[];
+}[] = [
   {
-    name: "Soluções",
     Icon: Boxes,
     headline: ["Soluções para atender pedidos", "com velocidade"],
     description:
       "Fluxos automatizados que aceleram o atendimento e entregam o pedido certo, na hora certa, sem retrabalho.",
-    items: [
-      {
-        Icon: Zap,
-        title: "Microatendimento",
-        description: "Fulfillment rápido perto do consumidor.",
-      },
-      {
-        Icon: Boxes,
-        title: "Atendimento em caixas mistas",
-        description: "Paletes e caixas montados por pedido.",
-      },
-    ],
+    itemIcons: [Zap, Boxes],
   },
   {
-    name: "Sistemas",
     Icon: Workflow,
     headline: ["Sistemas que cobrem", "toda a operação"],
     description:
       "Do recebimento à expedição, cada etapa conectada em um só fluxo: rastreável, integrado e pronto para escalar.",
-    items: [
-      {
-        Icon: Inbox,
-        title: "Recebimento",
-        description: "Conferência e alocação automatizadas.",
-      },
-      {
-        Icon: Route,
-        title: "Transporte",
-        description: "Movimentação interna entre etapas.",
-      },
-      {
-        Icon: Warehouse,
-        title: "Armazenagem",
-        description: "Estocagem densa automatizada (AS/RS).",
-      },
-      {
-        Icon: PackageSearch,
-        title: "Separação",
-        description: "Picking assistido, rápido e preciso.",
-      },
-      {
-        Icon: Send,
-        title: "Envio",
-        description: "Embalagem e expedição no prazo.",
-      },
-    ],
+    itemIcons: [Inbox, Route, Warehouse, PackageSearch, Send],
   },
   {
-    name: "AGV & Robótica",
     Icon: Bot,
     headline: ["AGV e robótica", "para operações autônomas"],
     description:
       "Robôs e veículos autônomos que trabalham lado a lado com a sua equipe, elevando a produtividade e reduzindo o esforço manual.",
-    items: [
-      {
-        Icon: Navigation,
-        title: "AGV",
-        description: "Transporte de cargas sem operador.",
-      },
-      {
-        Icon: Bot,
-        title: "Robôs móveis autônomos (AMR)",
-        description: "Navegação autônoma pelo layout.",
-      },
-      {
-        Icon: Grid3x3,
-        title: "AutoStore",
-        description: "Armazenagem ultracompacta em cubos.",
-      },
-      {
-        Icon: PackageSearch,
-        title: "Separação de caixas e peças",
-        description: "Picking automatizado de caixas e peças.",
-      },
-      {
-        Icon: MoveRight,
-        title: "Esteiras",
-        description: "Transportadores entre cada etapa.",
-      },
-      {
-        Icon: Layers,
-        title: "Paletização e despaletização",
-        description: "Montagem e desmontagem de paletes.",
-      },
-      {
-        Icon: Shuffle,
-        title: "Sorter de bolsas",
-        description: "Classificação em bolsas, alta cadência.",
-      },
-      {
-        Icon: Cpu,
-        title: "Robótica",
-        description: "Braços e células de manuseio.",
-      },
-      {
-        Icon: GitBranch,
-        title: "Sistemas de classificação",
-        description: "Sorters de alto volume ao destino.",
-      },
-      {
-        Icon: LayoutPanelTop,
-        title: "Estações de trabalho",
-        description: "Postos goods-to-person, ergonômicos.",
-      },
+    itemIcons: [
+      Navigation,
+      Bot,
+      Grid3x3,
+      PackageSearch,
+      MoveRight,
+      Layers,
+      Shuffle,
+      Cpu,
+      GitBranch,
+      LayoutPanelTop,
     ],
   },
 ];
 
-// A aba "Todos" (ativa por padrão) reúne os tópicos de todas as categorias;
-// as demais filtram por categoria.
-const tabs: { name: string; items: Item[] }[] = [
-  { name: "Todos", items: categories.flatMap((c) => c.items) },
-  ...categories.map((c) => ({ name: c.name, items: c.items })),
-];
+export function SolutionsSection({
+  content,
+  tabs: tabContents,
+}: {
+  content: SolutionsContent;
+  /** Uma entrada por aba de categoria, na ordem das abas. */
+  tabs: TabContent[];
+}) {
+  const categoryTabs = tabContents.map((tab, c) => ({
+    name: tab.name,
+    items: tab.items.map(
+      (item, i): Item => ({
+        ...item,
+        Icon: categories[c].itemIcons[i],
+      }),
+    ),
+  }));
+  // A aba "Todos" (ativa por padrão) reúne os tópicos de todas as categorias;
+  // as demais filtram por categoria.
+  const tabs: { name: string; items: Item[] }[] = [
+    { name: content.allTabLabel, items: categoryTabs.flatMap((c) => c.items) },
+    ...categoryTabs,
+  ];
 
-export function SolutionsSection() {
   const [active, setActive] = useState(0);
   const current = tabs[active];
   // Abas com poucos itens (ex.: Soluções, 2) são centralizadas; as demais usam
@@ -228,15 +167,17 @@ export function SolutionsSection() {
     >
       <div className="mx-auto flex max-w-[640px] flex-col items-center gap-4 text-center">
         <p className="text-body font-semibold uppercase tracking-wide text-secondary-600">
-          Soluções em automação
+          {content.eyebrow}
         </p>
         <h2 className="text-h3 font-normal text-neutral-800">
-          Automação de ponta a ponta para <br className="hidden lg:inline" />
-          <span className="font-bold text-primary-500">sua intralogística</span>
+          {content.title}
+          <br className="hidden lg:inline" />
+          <span className="font-bold text-primary-500">
+            {content.titleAccent}
+          </span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          O portfólio Dematic cobre a operação de ponta a ponta, do recebimento
-          à expedição, combinando equipamentos, software e robótica.
+          {content.description}
         </p>
       </div>
 

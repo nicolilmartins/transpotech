@@ -1,16 +1,19 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
-import heroImage from "@/assets/images/hero-image-pneus.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { pneusPage } from "@/sanity/content/pages/pneus";
 
-export function PneusHeroSection() {
+type PneusHeroContent = SectionContent<typeof pneusPage.sections.hero>;
+
+export function PneusHeroSection({ content }: { content: PneusHeroContent }) {
   return (
     <section data-header-hero className="relative w-full bg-background md:p-4">
       {/* Card de imagem — full-bleed no mobile; de md em diante, 16px de padding em volta e bordas de 20px */}
       <div className="relative flex h-svh md:h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden md:rounded-[20px]">
         {/* Imagem de fundo — pneus em operação */}
         <Image
-          src={heroImage}
+          src={content.image}
           alt=""
           preload
           fill
@@ -36,18 +39,18 @@ export function PneusHeroSection() {
               className="text-h2 text-neutral-50"
               segments={[
                 {
-                  text: "Pneus para operação",
+                  text: content.titleTop,
                   className: "font-normal",
                   br: true,
                 },
                 {
-                  text: "segura e produtiva",
+                  text: content.titleAccent,
                   className: "font-bold text-primary-500",
                 },
               ]}
             />
             <p className="mx-auto max-w-[420px] text-h6 font-normal leading-[1.3] text-neutral-50">
-              A categoria certa para cada piso, aplicação e tipo de operação.
+              {content.description}
             </p>
           </div>
 
@@ -58,7 +61,7 @@ export function PneusHeroSection() {
             href="#solicitar-pneus"
             className="w-full lg:w-auto"
           >
-            Solicitar cotação de pneus
+            {content.buttonLabel}
           </Button>
         </div>
       </div>

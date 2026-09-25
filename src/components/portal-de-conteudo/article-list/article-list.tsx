@@ -5,16 +5,17 @@ import { Search, SearchX } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { articles as allArticles } from "@/data/articles";
+import type { Article } from "@/data/articles";
 import { ArticleCard } from "@/components/layout/article-card/article-card";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { portalConteudoPage } from "@/sanity/content/pages/portal-conteudo";
+
+type ArticleListContent = SectionContent<typeof portalConteudoPage.sections.articleList>;
 
 // Publicações exibidas por vez; "Carregar mais" acrescenta outro bloco.
 const PAGE_SIZE = 6;
 
 const unique = (values: string[]) => Array.from(new Set(values));
-
-// Tags de filtro = categorias das publicações.
-const categories = unique(allArticles.map((a) => a.category));
 
 function TagFilter({
   active,
@@ -41,7 +42,18 @@ function TagFilter({
   );
 }
 
-export function ArticleList() {
+export function ArticleList({
+  articles: allArticles,
+  content,
+}: {
+  articles: Article[];
+  content: ArticleListContent;
+}) {
+  // Tags de filtro = categorias das publicações.
+  const categories = useMemo(
+    () => unique(allArticles.map((a) => a.category)),
+    [allArticles]
+  );
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -56,7 +68,7 @@ export function ArticleList() {
       if (category && a.category !== category) return false;
       return true;
     });
-  }, [search, category]);
+  }, [allArticles, search, category]);
 
   const visible = filtered.slice(0, visibleCount);
   const hasMore = filtered.length > visible.length;
@@ -76,12 +88,12 @@ export function ArticleList() {
   return (
     <Section className="flex flex-col gap-8">
       <div className="flex flex-col gap-2">
-        <h2 className="text-h3 font-normal text-neutral-800">Últimas notícias</h2>
+        <h2 className="text-h3 font-normal text-neutral-800">{content.title}</h2>
         <p className="text-body text-neutral-600">
           {filtered.length}{" "}
           {filtered.length === 1
-            ? "publicação encontrada."
-            : "publicações encontradas."}
+            ? content.resultSingular
+            : content.resultPlural}
         </p>
       </div>
 
@@ -91,14 +103,14 @@ export function ArticleList() {
           type="search"
           value={search}
           onChange={(e) => changeSearch(e.target.value)}
-          placeholder="Buscar por título, autor ou tema"
+          placeholder={content.searchPlaceholder}
           aria-label="Buscar publicações"
           iconEnd={<Search className="size-5" />}
         />
 
         <div className="flex flex-wrap gap-2">
           <TagFilter active={category === ""} onClick={() => changeCategory("")}>
-            Todos
+            {content.allLabel}
           </TagFilter>
           {categories.map((cat) => (
             <TagFilter
@@ -117,10 +129,10 @@ export function ArticleList() {
         <div className="flex flex-col items-center justify-center gap-4 rounded-2xl bg-white px-6 py-16 text-center">
           <SearchX aria-hidden className="size-10 text-neutral-400" />
           <p className="text-h6 font-semibold text-neutral-800">
-            Nenhuma publicação encontrada
+            {content.emptyTitle}
           </p>
           <p className="max-w-sm text-body text-neutral-600">
-            Tente ajustar a busca ou os filtros.
+            {content.emptyDescription}
           </p>
         </div>
       ) : (
@@ -140,11 +152,12 @@ export function ArticleList() {
               size="lg"
               onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
             >
-              Carregar mais
+              {content.loadMoreLabel}
             </Button>
           )}
           <p aria-live="polite" className="text-body text-neutral-500">
-            Mostrando {visible.length} de {filtered.length}
+            {content.showingPrefix} {visible.length} {content.showingSeparator}{" "}
+            {filtered.length}
           </p>
         </div>
       )}

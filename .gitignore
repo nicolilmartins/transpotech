@@ -32,3 +32,10 @@ coverage/
 inputs/*.pdf
 inputs/*.xlsx
 inputs/*.docx
+
+# seed gerado do conteúdo local (scripts/sanity/build-seed.mjs)
+scripts/sanity/seed.ndjson
+
+# runtime do sanity dev/build
+.sanity/
+/dist

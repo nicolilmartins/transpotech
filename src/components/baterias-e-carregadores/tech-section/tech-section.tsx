@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { Section } from "@/components/ui/section";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
@@ -9,6 +9,8 @@ import illo2 from "@/assets/images/baterias-tech/illo-2.webp";
 import illo3 from "@/assets/images/baterias-tech/illo-3.webp";
 import mask1 from "@/assets/images/baterias-tech/mask-1.png";
 import mask2 from "@/assets/images/baterias-tech/mask-2.png";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { bateriasPage } from "@/sanity/content/pages/baterias";
 
 // Conta o número principal (primeiro grupo de dígitos), preservando sufixos.
 const countValue = (value: string, progress: number) =>
@@ -37,18 +39,18 @@ type Media = {
   filter?: string;
 };
 
-type Stat = {
-  value: string;
-  label: string;
+type StatLayout = {
   countdownFrom?: number;
   labelWidth: number;
   media: Media;
 };
 
-const stats: Stat[] = [
+type TechContent = SectionContent<typeof bateriasPage.sections.tech>;
+type Stat = TechContent["stats"][number] & StatLayout;
+
+// Layout de cada card, na ordem dos números editados no Studio.
+const layouts: StatLayout[] = [
   {
-    value: "3x mais",
-    label: "Mais vida útil do que baterias chumbo-ácidas",
     labelWidth: 185,
     media: {
       illo: illo1,
@@ -63,8 +65,6 @@ const stats: Stat[] = [
     },
   },
   {
-    value: "30%",
-    label: "Redução no consumo de energia",
     labelWidth: 160,
     media: {
       illo: illo2,
@@ -77,10 +77,8 @@ const stats: Stat[] = [
       objectPosition: "center",
     },
   },
-  // Contador decrescente: parte de countdownFrom e chega a 0.
+  // Contador decrescente: parte de countdownFrom e desce até o número do texto.
   {
-    value: "0",
-    label: "Salas de baterias necessárias",
     countdownFrom: 10,
     labelWidth: 160,
     media: {
@@ -116,12 +114,20 @@ const maskStyle = (m: Media): CSSProperties => ({
     : {}),
 });
 
-const displayValue = (s: Stat, progress: number) =>
-  s.countdownFrom != null
-    ? String(Math.round(s.countdownFrom * (1 - progress)))
+const displayValue = (s: Stat, progress: number) => {
+  const from = s.countdownFrom;
+  return from != null
+    ? s.value.replace(/\d+/, (digits) =>
+        String(Math.round(from + (parseInt(digits, 10) - from) * progress))
+      )
     : countValue(s.value, progress);
+};
 
-export function TechSection() {
+export function TechSection({ content }: { content: TechContent }) {
+  const stats = useMemo<Stat[]>(
+    () => content.stats.map((stat, i) => ({ ...stat, ...layouts[i] })),
+    [content.stats]
+  );
   const statsRef = useRef<HTMLDivElement>(null);
   const numberRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const cardElRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -182,24 +188,22 @@ export function TechSection() {
       trigger.kill();
       tweens.forEach((t) => t.kill());
     };
-  }, []);
+  }, [stats]);
 
   return (
     <Section className="flex flex-col gap-12 lg:gap-16">
       {/* Cabeçalho */}
       <div className="flex max-w-[720px] flex-col gap-4">
         <p className="text-body font-semibold uppercase tracking-wide text-secondary-600">
-          Tecnologia
+          {content.eyebrow}
         </p>
         <h2 className="text-h2 font-normal text-neutral-800">
-          Especialistas em baterias{" "}
+          {content.titleRegular}{" "}
           <br className="hidden lg:inline" />
-          <span className="font-bold text-primary-500">de Íons de Lítio</span>
+          <span className="font-bold text-primary-500">{content.titleAccent}</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          Distribuidores autorizados das marcas líderes em carregadores e
-          baterias tracionárias e de arranque. Tecnologia que reduz custo, libera
-          espaço e elimina paradas para troca de bateria.
+          {content.description}
         </p>
       </div>
 

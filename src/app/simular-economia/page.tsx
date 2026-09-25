@@ -5,6 +5,8 @@ import { OrcamentoHeroSection } from "@/components/simular-economia/hero-section
 import { SimulatorSection } from "@/components/simular-economia/simulator-section/simulator-section";
 import { CtaSection } from "@/components/layout/cta/cta-section";
 import { ROUTES } from "@/lib/routes";
+import { getPage } from "@/sanity/queries/pages";
+import { simularEconomiaPage } from "@/sanity/content/pages/simular-economia";
 
 export const metadata: Metadata = {
   title: "Simulador de Economia",
@@ -18,19 +20,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function OrcamentoPage() {
+export default async function OrcamentoPage() {
+  const content = await getPage(simularEconomiaPage);
+
   return (
     <main>
-      <OrcamentoHeroSection />
-      <SimulatorSection />
+      <OrcamentoHeroSection content={content.hero} />
+      <SimulatorSection content={content.simulator} />
 
-      <CtaSection
-        titleRegular="Quer o número exato para "
-        titleAccent="a sua operação?"
-        description="Um especialista da TranspoTech dimensiona o equipamento certo e apresenta a proposta mais vantajosa, sem compromisso."
-        ctaLabel="Falar com especialista"
-        ctaHref={ROUTES.CONTATO}
-      />
+      <CtaSection {...content.cta} ctaHref={ROUTES.CONTATO} />
     </main>
   );
 }

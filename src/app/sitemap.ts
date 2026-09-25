@@ -1,13 +1,21 @@
 import type { MetadataRoute } from "next";
-import { articles } from "@/data/articles";
-import { forkliftsNovas } from "@/data/forklifts-novas";
-import { forkliftsSeminovas } from "@/data/forklifts-seminovas";
 import { env } from "@/lib/env";
 import { ROUTES } from "@/lib/routes";
+import { getArticleSitemapEntries } from "@/sanity/queries/articles";
+import {
+  getForkliftNovaSlugs,
+  getForkliftSeminovaSlugs,
+} from "@/sanity/queries/forklifts";
 
 const url = (path: string) => `${env.siteUrl}${path}`;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [articles, novas, seminovas] = await Promise.all([
+    getArticleSitemapEntries(),
+    getForkliftNovaSlugs(),
+    getForkliftSeminovaSlugs(),
+  ]);
+
   return [
     { url: url(ROUTES.HOME), lastModified: new Date(), changeFrequency: "weekly", priority: 1.0 },
 
@@ -15,15 +23,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // UnderConstruction.
     { url: url(ROUTES.LOCACAO), lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
     { url: url(ROUTES.EMPILHADEIRAS_NOVAS), lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-    ...forkliftsNovas.map((forklift) => ({
-      url: url(`${ROUTES.EMPILHADEIRAS_NOVAS}/${forklift.id}`),
+    ...novas.map((slug) => ({
+      url: url(`${ROUTES.EMPILHADEIRAS_NOVAS}/${slug}`),
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
     { url: url(ROUTES.EMPILHADEIRAS_SEMINOVAS), lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-    ...forkliftsSeminovas.map((forklift) => ({
-      url: url(`${ROUTES.EMPILHADEIRAS_SEMINOVAS}/${forklift.id}`),
+    ...seminovas.map((slug) => ({
+      url: url(`${ROUTES.EMPILHADEIRAS_SEMINOVAS}/${slug}`),
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.7,
@@ -46,7 +54,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url(ROUTES.OUVIDORIA), lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
     { url: url(ROUTES.PORTAL_CONTEUDO), lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
     ...articles.map((article) => ({
-      url: url(`${ROUTES.PORTAL_CONTEUDO}/${article.id}`),
+      url: url(`${ROUTES.PORTAL_CONTEUDO}/${article.slug}`),
       lastModified: new Date(article.dateISO),
       changeFrequency: "yearly" as const,
       priority: 0.6,

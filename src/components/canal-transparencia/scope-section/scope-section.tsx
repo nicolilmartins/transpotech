@@ -10,21 +10,24 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Section } from "@/components/ui/section";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { canalTransparenciaPage } from "@/sanity/content/pages/canal-transparencia";
 
-type Topic = { title: string; Icon: LucideIcon };
+type ScopeContent = SectionContent<typeof canalTransparenciaPage.sections.scope>;
 
-const topics: Topic[] = [
-  { title: "Assédio moral ou sexual", Icon: UserX },
-  { title: "Discriminação", Icon: UserMinus },
-  { title: "Fraude ou corrupção", Icon: Banknote },
-  { title: "Conflito de interesses", Icon: Scale },
-  { title: "Descumprimento de políticas internas", Icon: FileWarning },
-  { title: "Uso indevido de recursos", Icon: PackageX },
-  { title: "Conduta antiética", Icon: Gavel },
-  { title: "Outras situações sensíveis", Icon: TriangleAlert },
+// Ícone de cada tópico, na ordem dos tópicos editados no Studio.
+const topicIcons: LucideIcon[] = [
+  UserX,
+  UserMinus,
+  Banknote,
+  Scale,
+  FileWarning,
+  PackageX,
+  Gavel,
+  TriangleAlert,
 ];
 
-export function ScopeSection() {
+export function ScopeSection({ content }: { content: ScopeContent }) {
   return (
     <Section
       id="escopo"
@@ -33,29 +36,31 @@ export function ScopeSection() {
       {/* Cabeçalho — à esquerda, no topo */}
       <div className="flex flex-col gap-4 lg:w-[420px] lg:shrink-0">
         <h2 className="text-h3 text-neutral-800">
-          <span className="font-normal">Quando usar o</span>{" "}
+          <span className="font-normal">{content.titleTop}</span>{" "}
           <br className="hidden lg:inline" />
           <span className="font-bold text-primary-500">
-            Canal da Transparência?
+            {content.titleAccent}
           </span>
         </h2>
         <p className="text-body leading-[1.5] text-neutral-500">
-          Este canal deve ser utilizado para relatos relacionados a condutas
-          incompatíveis com os princípios da TranspoTech.
+          {content.description}
         </p>
       </div>
 
       {/* Cards — ícone laranja + tópico; todos do mesmo tamanho */}
       <ul className="grid w-full flex-1 grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-3">
-        {topics.map((item) => (
-          <li
-            key={item.title}
-            className="flex items-center gap-3 rounded-xl bg-neutral-50 px-4 py-3"
-          >
-            <item.Icon aria-hidden className="size-5 shrink-0 text-primary-500" />
-            <span className="text-body text-neutral-800">{item.title}</span>
-          </li>
-        ))}
+        {content.topics.map((item, i) => {
+          const Icon = topicIcons[i];
+          return (
+            <li
+              key={item.title}
+              className="flex items-center gap-3 rounded-xl bg-neutral-50 px-4 py-3"
+            >
+              <Icon aria-hidden className="size-5 shrink-0 text-primary-500" />
+              <span className="text-body text-neutral-800">{item.title}</span>
+            </li>
+          );
+        })}
       </ul>
     </Section>
   );

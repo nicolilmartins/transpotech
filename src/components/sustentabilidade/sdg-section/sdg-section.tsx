@@ -1,5 +1,7 @@
 import Image, { type StaticImageData } from "next/image";
 import { Section } from "@/components/ui/section";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { sustentabilidadePage } from "@/sanity/content/pages/sustentabilidade";
 import ods3 from "@/assets/images/ods/ods-3.webp";
 import ods4 from "@/assets/images/ods/ods-4.webp";
 import ods5 from "@/assets/images/ods/ods-5.webp";
@@ -36,20 +38,21 @@ const sdgs: Sdg[] = [
   { number: 13, label: "Ação contra a mudança global do clima", icon: ods13 },
 ];
 
-export function SdgSection() {
+type SdgContent = SectionContent<typeof sustentabilidadePage.sections.sdg>;
+
+export function SdgSection({ content }: { content: SdgContent }) {
   return (
     <Section className="flex flex-col gap-10 lg:gap-14">
       <div className="flex max-w-[720px] flex-col gap-4">
         <p className="text-body font-semibold uppercase tracking-wide text-secondary-600">
-          ODS, ONU
+          {content.eyebrow}
         </p>
         <h2 className="text-h3 font-normal text-neutral-800">
-          Compromisso com <span className="font-bold">impacto positivo</span>
+          {content.titleRegular}
+          <span className="font-bold">{content.titleAccent}</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          A TranspoTech contribui com 11 dos 17 Objetivos de Desenvolvimento
-          Sustentável (ODS) da ONU, conectando suas iniciativas e práticas
-          internas à agenda 2030.
+          {content.description}
         </p>
       </div>
 

@@ -5,13 +5,12 @@ import Image, { type StaticImageData } from "next/image";
 import { TextLink } from "@/components/ui/text-link";
 import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import { ROUTES } from "@/lib/routes";
-import novas from "@/assets/images/portfolio-novas.png";
-import egv165 from "@/assets/images/empilhadeiras/egv-16-5.webp";
-import linde from "@/assets/images/empilhadeiras/linde.webp";
 import iconNovas from "@/assets/images/stats/portfolio-icon-novas.webp";
 import iconSeminovas from "@/assets/images/stats/portfolio-icon-seminovas.webp";
 import iconLocacao from "@/assets/images/stats/portfolio-icon-locacao.webp";
 import { gsap } from "@/lib/gsap";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { homePage } from "@/sanity/content/pages/home";
 
 // Ícone 3D (imagem) posicionado exatamente como no Figma (node 3593:3337):
 // caixa transbordando o canto superior esquerdo do card, com máscara radial
@@ -30,20 +29,17 @@ type IconArt = {
   scale?: number;
 };
 
-type PortfolioCard = {
+// Ícone e destino de cada card, na ordem dos cards editados no Studio.
+type PortfolioCardArt = {
   iconArt: IconArt;
-  title: string;
-  description: string;
-  cta: string;
   href: string;
-  image: StaticImageData;
 };
 
 const MASK_IMAGE =
   "radial-gradient(74.7585px 66.9338px at 74.7585px 66.9338px, #000 0%, transparent 100%)";
 const MASK_SIZE = "149.517px 133.868px";
 
-const cards: PortfolioCard[] = [
+const cardArts: PortfolioCardArt[] = [
   {
     iconArt: {
       src: iconNovas,
@@ -56,12 +52,7 @@ const cards: PortfolioCard[] = [
       flip: true,
       scale: 0.85,
     },
-    title: "Empilhadeiras\nnovas",
-    description:
-      "Equipamentos de marcas reconhecidas para operações que exigem desempenho, segurança e confiabilidade no longo prazo.",
-    cta: "Ver empilhadeiras novas",
     href: ROUTES.EMPILHADEIRAS_NOVAS,
-    image: egv165,
   },
   {
     iconArt: {
@@ -74,12 +65,7 @@ const cards: PortfolioCard[] = [
       maskY: 7.819,
       flip: false,
     },
-    title: "Empilhadeiras\nseminovas",
-    description:
-      "Alternativo para quem busca disponibilidade rápida, revisão técnica e melhor adequação ao orçamento.",
-    cta: "Ver empilhadeiras seminovas",
     href: ROUTES.EMPILHADEIRAS_SEMINOVAS,
-    image: novas,
   },
   {
     iconArt: {
@@ -92,12 +78,7 @@ const cards: PortfolioCard[] = [
       maskY: 12.819,
       flip: true,
     },
-    title: "Locação de\nequipamentos",
-    description:
-      "Solução para operações que precisam de flexibilidade, previsibilidade de custo e resposta rápida à demanda.",
-    cta: "Solicitar proposta",
     href: ROUTES.CONTATO,
-    image: linde,
   },
 ];
 
@@ -137,7 +118,10 @@ function CardIcon({ art }: { art: IconArt }) {
   );
 }
 
-export function PortfolioSection() {
+type PortfolioContent = SectionContent<typeof homePage.sections.portfolio>;
+
+export function PortfolioSection({ content }: { content: PortfolioContent }) {
+  const cards = content.cards.map((card, i) => ({ ...card, ...cardArts[i] }));
   const [active, setActive] = useState(0);
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -176,21 +160,19 @@ export function PortfolioSection() {
       <div className="flex w-[641px] max-w-full flex-col gap-6">
         <div className="flex flex-col gap-4">
           <p className="text-body font-semibold leading-[1.35] text-primary-400">
-            PORTFÓLIO
+            {content.eyebrow}
           </p>
           {/* Duas linhas fixas: "Equipamentos novos," / "seminovos e locação
               de frota" (nowrap só no desktop; no mobile flui natural) */}
           <h2 className="text-h2 font-normal text-neutral-100">
-            <span className="lg:block">Equipamentos novos,</span>{" "}
+            <span className="lg:block">{content.titleRegular}</span>{" "}
             <span className="lg:block font-bold text-primary-500 lg:whitespace-nowrap">
-              seminovos e locação de frota
+              {content.titleAccent}
             </span>
           </h2>
         </div>
         <p className="text-body leading-6 text-neutral-300">
-          Da aquisição e locação ao suporte técnico e automação, a TranspoTech
-          conecta as principais necessidades da movimentação e intralogística em
-          uma estrutura integrada.
+          {content.description}
         </p>
       </div>
 
@@ -202,7 +184,7 @@ export function PortfolioSection() {
           const open = index === active;
           return (
             <div
-              key={card.title}
+              key={index}
               onMouseEnter={() => setActive(index)}
               onFocusCapture={() => setActive(index)}
               className={`relative flex items-start overflow-hidden rounded-xl bg-surface-dark p-6 transition-[flex-grow] duration-300 ease-out xl:h-[400px] xl:items-center ${

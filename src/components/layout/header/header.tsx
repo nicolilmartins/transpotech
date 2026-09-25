@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LogoTranspotech } from "@/components/ui/logo";
-import { MegaMenu, megaMenus } from "./mega-menu";
+import { MegaMenu, getMegaMenus } from "./mega-menu";
 import { ROUTES } from "@/lib/routes";
 import { ScrollTrigger } from "@/lib/gsap";
 
@@ -80,7 +80,13 @@ function useHeaderState(menuOpen: boolean) {
   return { onDark, onHero, hidden };
 }
 
-export function Header() {
+type HeaderProps = {
+  /** URL do portal de carreiras (siteSettings), destino de "Trabalhe conosco". */
+  careersUrl: string;
+};
+
+export function Header({ careersUrl }: HeaderProps) {
+  const megaMenus = useMemo(() => getMegaMenus(careersUrl), [careersUrl]);
   const [menuOpen, setMenuOpen] = useState(false);
   const { onDark, onHero, hidden } = useHeaderState(menuOpen);
   const [openLabel, setOpenLabel] = useState<string | null>(null);

@@ -2,13 +2,26 @@ import { getImageProps } from "next/image";
 import { preload } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
-import forklift from "@/assets/images/hero-image-empilhadeiras-seminovas.webp";
-import forkliftMobile from "@/assets/images/hero-image-empilhadeiras-seminovas-mobile.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { seminovasPage } from "@/sanity/content/pages/seminovas";
 
 // Mesmo ponto de corte do `md:` do Tailwind (48rem).
 const DESKTOP_MEDIA = "(min-width: 48rem)";
 
-export function SeminovasHeroSection() {
+// Primeira palavra e o resto. O título tem duas partes editáveis (normal e
+// destaque) e o celular quebra linha depois da primeira palavra de cada uma.
+function splitFirstWord(text: string): [string, string] {
+  const [first = "", ...rest] = text.trim().split(/\s+/);
+  return [first, rest.join(" ")];
+}
+
+type SeminovasHeroContent = SectionContent<typeof seminovasPage.sections.hero>;
+
+export function SeminovasHeroSection({ content }: { content: SeminovasHeroContent }) {
+  const { image: forklift, imageMobile: forkliftMobile } = content;
+  const [regularFirst, regularRest] = splitFirstWord(content.titleRegular);
+  const [accentFirst, accentRest] = splitFirstWord(content.titleAccent);
+
   // Art direction com <picture>: o navegador baixa só a versão da viewport.
   // Duas <Image preload> gerariam dois preloads sem media e a versão
   // escondida por CSS disputaria banda com o LCP.
@@ -84,29 +97,28 @@ export function SeminovasHeroSection() {
                 // garantia". Desktop mantém as duas linhas de antes (os <br>
                 // responsivos trocam o ponto de quebra por breakpoint).
                 {
-                  text: "Empilhadeiras ",
+                  text: `${regularFirst} `,
                   className: "font-normal",
                   br: "lg:hidden",
                 },
                 {
-                  text: "seminovas ",
+                  text: `${regularRest} `,
                   className: "font-normal",
                   br: "hidden lg:inline",
                 },
                 {
-                  text: "revisadas ",
+                  text: `${accentFirst} `,
                   className: "font-bold text-primary-500",
                   br: "lg:hidden",
                 },
                 {
-                  text: "e com garantia",
+                  text: accentRest,
                   className: "font-bold text-primary-500",
                 },
               ]}
             />
             <p className="mx-auto max-w-[420px] text-h6 font-normal leading-[1.3] text-neutral-50">
-              Inspeção completa, procedência e suporte pós-venda, pronta entrega
-              com confiança.
+              {content.description}
             </p>
           </div>
 
@@ -117,7 +129,7 @@ export function SeminovasHeroSection() {
             href="#disponiveis-agora"
             className="w-full lg:w-auto"
           >
-            Solicitar cotação
+            {content.buttonLabel}
           </Button>
         </div>
       </div>

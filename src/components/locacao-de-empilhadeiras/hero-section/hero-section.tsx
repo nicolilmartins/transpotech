@@ -1,10 +1,12 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
-import forklift from "@/assets/images/hero-image-locacao-de-empilhadeiras.webp";
-import forkliftMobile from "@/assets/images/hero-image-locacao-de-empilhadeiras-mobile.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { locacaoPage } from "@/sanity/content/pages/locacao";
 
-export function LocacaoHeroSection() {
+type LocacaoHeroContent = SectionContent<typeof locacaoPage.sections.hero>;
+
+export function LocacaoHeroSection({ content }: { content: LocacaoHeroContent }) {
   return (
     <section data-header-hero className="relative w-full bg-background md:p-4">
       {/* Card de imagem — full-bleed no mobile; de md em diante, 16px de padding em volta e bordas de 20px */}
@@ -13,7 +15,7 @@ export function LocacaoHeroSection() {
         {/* Mobile: recorte exato do Figma (node 3321:3289) — empilhadeira
             central em destaque; o arquivo já é a janela do design (669x1336). */}
         <Image
-          src={forkliftMobile}
+          src={content.imageMobile}
           alt=""
           priority
           fill
@@ -22,7 +24,7 @@ export function LocacaoHeroSection() {
         />
         {/* Desktop (md+): recorte landscape padrão, cobrindo a hero inteira. */}
         <Image
-          src={forklift}
+          src={content.image}
           alt=""
           priority
           fill
@@ -48,19 +50,18 @@ export function LocacaoHeroSection() {
               className="text-h2 text-neutral-50"
               segments={[
                 {
-                  text: "Locação flexível para",
+                  text: content.titleTop,
                   className: "font-normal",
                   br: true,
                 },
                 {
-                  text: "cada operação",
+                  text: content.titleAccent,
                   className: "font-bold text-primary-500",
                 },
               ]}
             />
             <p className="mx-auto max-w-[420px] text-h6 font-normal leading-[1.3] text-neutral-50">
-              Empilhadeiras novas e seminovas com contratos flexíveis e suporte
-              técnico 24h.
+              {content.description}
             </p>
           </div>
 
@@ -71,7 +72,7 @@ export function LocacaoHeroSection() {
             href="#solicitar-locacao"
             className="w-full lg:w-auto"
           >
-            Locar empilhadeira
+            {content.buttonLabel}
           </Button>
         </div>
       </div>

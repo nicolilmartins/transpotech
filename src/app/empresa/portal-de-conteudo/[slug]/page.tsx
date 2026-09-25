@@ -14,28 +14,34 @@ import { NewsletterSection } from "@/components/layout/newsletter-section/newsle
 import { CtaSection } from "@/components/layout/cta/cta-section";
 import { DriftMesh } from "@/components/layout/drift-mesh";
 import {
-  articles,
-  getArticleById,
+  articleSections,
+  getArticleSections,
+} from "@/components/portal-de-conteudo/article-sections";
+import {
+  getArticleBySlug,
+  getArticleSitemapEntries,
   getRelatedArticles,
-} from "@/data/articles";
+} from "@/sanity/queries/articles";
+import { getPage } from "@/sanity/queries/pages";
+import { artigoPage } from "@/sanity/content/pages/artigo";
 import { ROUTES } from "@/lib/routes";
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
 };
 
-// Conjunto fixo de artigos: slugs fora de generateStaticParams retornam 404.
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return articles.map((article) => ({ slug: article.id }));
+// Artigos publicados no CMS depois do build são gerados na primeira visita
+// (dynamicParams padrão); slug inexistente cai no notFound() da página.
+export async function generateStaticParams() {
+  const entries = await getArticleSitemapEntries();
+  return entries.map((entry) => ({ slug: entry.slug }));
 }
 
 export async function generateMetadata({
   params,
 }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const article = getArticleById(slug);
+  const article = await getArticleBySlug(slug);
 
   if (!article) {
     return { title: "Conteúdo não encontrado" };
@@ -55,11 +61,17 @@ export async function generateMetadata({
 
 export default async function ArtigoPage({ params }: ArticlePageProps) {
   const { slug } = await params;
-  const article = getArticleById(slug);
+  const article = await getArticleBySlug(slug);
 
   if (!article) notFound();
 
-  const related = getRelatedArticles(article, 3);
+  const [related, content] = await Promise.all([
+    getRelatedArticles(article, 3),
+    getPage(artigoPage),
+  ]);
+  const sections = article.body
+    ? getArticleSections(article.body)
+    : articleSections;
 
   return (
     <main>
@@ -79,11 +91,17 @@ export default async function ArtigoPage({ params }: ArticlePageProps) {
         <Section className="flex flex-col gap-8">
           <Breadcrumb
             items={[
-              { label: "Portal de Conteúdo", href: ROUTES.PORTAL_CONTEUDO },
+              {
+                label: content.header.breadcrumbLabel,
+                href: ROUTES.PORTAL_CONTEUDO,
+              },
               { label: article.title },
             ]}
           />
-          <ArticleHeader article={article} />
+          <ArticleHeader
+            article={article}
+            authorPrefix={content.header.authorPrefix}
+          />
           {/* Mais espaço entre o título/descrição e a imagem de capa */}
           <div className="mt-4 lg:mt-8">
             <ArticleCover article={article} />
@@ -94,37 +112,35 @@ export default async function ArtigoPage({ params }: ArticlePageProps) {
       {/* Corpo do artigo — texto à esquerda, aside (compartilhar + sumário) à direita */}
       <div className="bg-background">
         <Section className="flex flex-col gap-10 pt-2 lg:flex-row lg:items-start lg:justify-between lg:gap-12 lg:pt-4">
-          <ArticleBody article={article} />
+          <ArticleBody article={article} sections={sections} />
 
           <aside className="flex flex-col gap-6 lg:sticky lg:top-28 lg:w-[300px] lg:shrink-0">
             {/* Caixinha de compartilhar */}
             <div className="flex items-center justify-between gap-3 rounded-xl border border-neutral-200 p-4">
               <span className="text-body font-semibold text-neutral-800">
-                Compartilhar
+                {content.aside.shareLabel}
               </span>
               <ArticleShare title={article.title} />
             </div>
 
             {/* Sumário com os tópicos em link */}
-            <ArticleToc />
+            {sections.length > 0 && (
+              <ArticleToc sections={sections} title={content.aside.tocTitle} />
+            )}
           </aside>
         </Section>
       </div>
 
       {/* Relacionados + Newsletter — mesmo tom do portal de conteúdo (neutral-50) */}
       <div className="bg-neutral-50">
-        <RelatedSection articles={related} />
+        <RelatedSection articles={related} content={content.related} />
         <NewsletterSection />
       </div>
 
       <CtaSection
-        titleRegular="Pronto pra evoluir "
-        titleAccent="sua operação?"
+        {...content.cta}
         titleBreak
-        description="Locação, compra, manutenção, acessórios e automação em um só parceiro: a TranspoTech mantém sua operação disponível, previsível e pronta para crescer."
-        ctaLabel="Falar com especialista"
         ctaHref={ROUTES.CONTATO}
-        secondaryLabel="Ver soluções"
         secondaryHref={ROUTES.SERVICOS}
       />
     </main>

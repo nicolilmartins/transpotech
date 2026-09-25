@@ -2,13 +2,15 @@ import { getImageProps } from "next/image";
 import { preload } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
-import heroImage from "@/assets/images/hero-automacao.webp";
-import heroImageMobile from "@/assets/images/hero-automacao-mobile.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { automacaoPage } from "@/sanity/content/pages/automacao";
 
 // Mesmo ponto de corte do `md:` do Tailwind (48rem).
 const DESKTOP_MEDIA = "(min-width: 48rem)";
 
-export function AutomacaoHeroSection() {
+type AutomacaoHeroContent = SectionContent<typeof automacaoPage.sections.hero>;
+
+export function AutomacaoHeroSection({ content }: { content: AutomacaoHeroContent }) {
   // Art direction com <picture>, como na hero de seminovas: o navegador baixa
   // só a versão da viewport, e o preload de cada uma fica restrito à sua media.
   const common = {
@@ -20,10 +22,10 @@ export function AutomacaoHeroSection() {
   } as const;
   const {
     props: { srcSet: desktopSrcSet, src: desktopSrc },
-  } = getImageProps({ ...common, src: heroImage });
+  } = getImageProps({ ...common, src: content.image });
   const { props: mobileProps } = getImageProps({
     ...common,
-    src: heroImageMobile,
+    src: content.imageMobile,
   });
 
   preload(mobileProps.src, {
@@ -79,19 +81,18 @@ export function AutomacaoHeroSection() {
               className="text-h2 text-neutral-50"
               segments={[
                 {
-                  text: "Operação logística",
+                  text: content.titleTop,
                   className: "font-normal",
                   br: true,
                 },
                 {
-                  text: "automatizada com Dematic",
+                  text: content.titleAccent,
                   className: "font-bold text-primary-500",
                 },
               ]}
             />
             <p className="mx-auto max-w-[440px] text-h6 font-normal leading-[1.3] text-neutral-50">
-              Soluções escaláveis para indústrias, e-commerces e centros de
-              distribuição.
+              {content.description}
             </p>
           </div>
 
@@ -101,7 +102,7 @@ export function AutomacaoHeroSection() {
             href="#avaliar-automacao"
             className="w-full lg:w-auto"
           >
-            Avaliar minha operação
+            {content.buttonLabel}
           </Button>
         </div>
       </div>

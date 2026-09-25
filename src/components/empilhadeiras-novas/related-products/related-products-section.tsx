@@ -4,12 +4,26 @@ import { useState } from "react";
 import { Section } from "@/components/ui/section";
 import { TextLink } from "@/components/ui/text-link";
 import { ProductCard } from "@/components/layout/product-card/product-card";
-import { forkliftsNovas } from "@/data/forklifts-novas";
 import { QuoteModal } from "@/components/layout/quote-modal/quote-modal";
 import { ROUTES } from "@/lib/routes";
 import type { Forklift } from "@/types/forklift.types";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { empilhadeirasNovasPage } from "@/sanity/content/pages/empilhadeiras-novas";
 
-export function RelatedProductsSection({ items }: { items: Forklift[] }) {
+type DetailContent = SectionContent<typeof empilhadeirasNovasPage.sections.detail>;
+
+type RelatedProductsSectionProps = {
+  items: Forklift[];
+  /** Catálogo completo, oferecido no modal de orçamento. */
+  forklifts: Forklift[];
+  content: Pick<DetailContent, "relatedEyebrow" | "relatedTitle" | "relatedLinkLabel">;
+};
+
+export function RelatedProductsSection({
+  items,
+  forklifts,
+  content,
+}: RelatedProductsSectionProps) {
   const [quoteForId, setQuoteForId] = useState<string | null>(null);
 
   if (items.length === 0) return null;
@@ -19,15 +33,15 @@ export function RelatedProductsSection({ items }: { items: Forklift[] }) {
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex flex-col gap-4">
           <p className="text-body font-semibold uppercase leading-[1.1] text-secondary-600">
-            Produtos relacionados
+            {content.relatedEyebrow}
           </p>
           <h2 className="max-w-[408px] text-h2 font-normal leading-[1.1] text-neutral-800">
-            Outras opções que podem servir
+            {content.relatedTitle}
           </h2>
         </div>
 
         <TextLink href={ROUTES.EMPILHADEIRAS_NOVAS} className="shrink-0">
-          Ver catálogo completo
+          {content.relatedLinkLabel}
         </TextLink>
       </div>
 
@@ -44,7 +58,7 @@ export function RelatedProductsSection({ items }: { items: Forklift[] }) {
       {quoteForId && (
         <QuoteModal
           onClose={() => setQuoteForId(null)}
-          forklifts={forkliftsNovas}
+          forklifts={forklifts}
           initialSelectedId={quoteForId}
         />
       )}

@@ -1,56 +1,30 @@
 import { Section } from "@/components/ui/section";
+import { LineBreaks } from "@/components/ui/line-breaks";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { quemSomosPage } from "@/sanity/content/pages/quem-somos";
 
-// Valores da cultura — os 8 originais condensados em 4 tópicos:
-// "Fazemos acontecer" + "Um time de donos" + "Vestimos a camisa";
-// "Não pegamos atalhos" + "Humildade, respeito e ética";
-// "Pensamos no futuro, agindo agora" + "Atualização constante".
-const values = [
-  {
-    title: "Fazemos acontecer",
-    description:
-      "Somos um time de donos que veste a camisa: assumimos a responsabilidade do começo ao fim e transformamos desafios em entrega.",
-  },
-  {
-    title: "Amamos o negócio dos nossos clientes",
-    description:
-      "Atendimento próximo e compromisso real com a operação de cada cliente: o sucesso deles é o nosso.",
-  },
-  {
-    title: "Não pegamos atalhos",
-    description:
-      "Agimos com ética, humildade e respeito em todas as relações, fazemos do jeito certo, mesmo quando é o caminho mais longo.",
-  },
-  {
-    title: "Pensamos no futuro, agindo agora",
-    description:
-      "Atualização constante para evoluir sempre: antecipamos tendências e agimos hoje para construir o amanhã.",
-  },
-];
+type CultureContent = SectionContent<typeof quemSomosPage.sections.culture>;
 
 // Visual da "Informações que ajudam a encontrar a peça certa" (pecas/
 // info-cards-section), adaptado para light mode.
-export function CultureSection() {
+export function CultureSection({ content }: { content: CultureContent }) {
   return (
     <Section className="flex flex-col items-start gap-10 lg:gap-14">
       {/* Cabeçalho — alinhado à esquerda */}
       <div className="flex max-w-[640px] flex-col gap-4">
         <h2 className="text-h2 font-normal text-neutral-800">
-          Uma cultura feita por pessoas{" "}
-          <br className="hidden lg:inline" />
-          que <span className="font-bold text-primary-500">fazem acontecer</span>
+          <LineBreaks text={content.title} brClassName="hidden lg:inline" />
+          <span className="font-bold text-primary-500">{content.titleAccent}</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          A TranspoTech acredita em relações de longo prazo, atendimento próximo
-          e responsabilidade na entrega. Nosso time atua com ética, humildade,
-          respeito, atualização constante e compromisso com o negócio dos
-          clientes.
+          {content.description}
         </p>
       </div>
 
       {/* Tópicos — linhas divisórias + barra de acento por linha */}
       <div className="w-full">
         <ul className="flex flex-col border-t border-neutral-200">
-          {values.map((value) => (
+          {content.values.map((value) => (
             <li
               key={value.title}
               className="group relative flex flex-col gap-3 border-b border-neutral-200 py-10 transition-colors lg:flex-row lg:gap-16 lg:py-12"

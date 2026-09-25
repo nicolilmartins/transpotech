@@ -15,6 +15,10 @@ import { CtaSection } from "@/components/layout/cta/cta-section";
 import { HoverMesh } from "@/components/layout/hover-mesh";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
 import { ROUTES } from "@/lib/routes";
+import { getSiteSettings } from "@/sanity/queries/site-settings";
+import { getUnits } from "@/sanity/queries/units";
+import { getPage } from "@/sanity/queries/pages";
+import { quemSomosPage } from "@/sanity/content/pages/quem-somos";
 
 export const metadata: Metadata = {
   title: "Quem Somos",
@@ -28,29 +32,35 @@ export const metadata: Metadata = {
   },
 };
 
-export default function QuemSomosPage() {
+export default async function QuemSomosPage() {
+  const [settings, units, content] = await Promise.all([
+    getSiteSettings(),
+    getUnits(),
+    getPage(quemSomosPage),
+  ]);
+
   return (
     <main>
       {/* Hero com foto (padrão dos produtos/serviços) */}
-      <QuemSomosHeroSection />
+      <QuemSomosHeroSection content={content.hero} />
 
       {/* Grupo claro — números da estrutura */}
       <div className="relative isolate bg-background">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <StatsSection />
+        <StatsSection content={content.stats} />
       </div>
 
       {/* Abrangência nacional (mapa) logo após os números — bloco dark
           próprio, com o mesmo fundo/ambient das demais dark sections. */}
       <div className="relative isolate bg-[#181616]">
         <DarkAmbient />
-        <StructureSection />
+        <StructureSection content={content.structure} />
       </div>
 
       {/* Grupo claro — galeria das unidades */}
       <div className="relative isolate bg-background">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <UnitsGallerySection />
+        <UnitsGallerySection units={units} content={content.units} />
       </div>
 
       {/* Bloco dark contínuo — institucional e história. Um só DarkAmbient
@@ -58,26 +68,25 @@ export default function QuemSomosPage() {
           (mesmo padrão das dark sections das outras páginas). */}
       <div className="relative isolate bg-[#181616]">
         <DarkAmbient />
-        <AboutSection />
-        <HistorySection />
+        <AboutSection content={content.about} />
+        <HistorySection content={content.history} />
       </div>
 
       {/* Grupo claro — cultura, carreiras, ESG e por que escolher */}
       <div className="relative isolate bg-background">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <CultureSection />
-        <CareersSection />
-        <EsgGovernanceSection />
-        <WhyChooseSection />
+        <CultureSection content={content.culture} />
+        <CareersSection
+          careersUrl={settings.careersUrl}
+          content={content.careers}
+        />
+        <EsgGovernanceSection content={content.esg} />
+        <WhyChooseSection content={content.whyChoose} />
       </div>
 
       <CtaSection
-        titleRegular="Precisa de uma parceira para "
-        titleAccent="sua operação intralogística?"
-        description="Fale com a TranspoTech e encontre a solução ideal para compra, locação, manutenção ou melhoria da sua operação."
-        ctaLabel="Falar com especialista"
+        {...content.cta}
         ctaHref={ROUTES.CONTATO}
-        secondaryLabel="Solicitar orçamento"
         secondaryHref={`${ROUTES.CONTATO}#solicitacao`}
       />
     </main>

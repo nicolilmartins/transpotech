@@ -15,10 +15,14 @@ import {
   contactRequestSchema,
   type ContactRequestValues,
 } from "@/lib/contact-request.schema";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { contatoPage } from "@/sanity/content/pages/contato";
+
+type ContatoHeroContent = SectionContent<typeof contatoPage.sections.hero>;
 
 const labelBase = "text-body font-semibold text-neutral-700";
 
-export function ContatoHeroSection() {
+export function ContatoHeroSection({ content }: { content: ContatoHeroContent }) {
   const [sent, setSent] = useState(false);
 
   const {
@@ -48,19 +52,17 @@ export function ContatoHeroSection() {
       {/* Esquerda — texto */}
       <div className="flex flex-col gap-4 lg:pt-2">
         <p className="text-body font-semibold uppercase tracking-wide text-primary-500">
-          Contato
+          {content.eyebrow}
         </p>
         <BlurRevealTitle
           className="text-h2 text-neutral-800"
           segments={[
-            { text: "Entre em contato", className: "font-normal", br: true },
-            { text: "com a TranspoTech", className: "font-bold" },
+            { text: content.titleTop, className: "font-normal", br: true },
+            { text: content.titleBottom, className: "font-bold" },
           ]}
         />
         <p className="max-w-[520px] text-body leading-[1.5] text-neutral-600">
-          Agende uma visita, proponha uma parceria, tire dúvidas ou fale com a
-          nossa equipe de imprensa. Preencha o formulário ao lado e retornamos em
-          até 2 dias úteis.
+          {content.description}
         </p>
       </div>
 
@@ -73,13 +75,13 @@ export function ContatoHeroSection() {
       >
         <div className="flex flex-col gap-1.5">
           <label htmlFor="ct-name" className={labelBase}>
-            Nome *
+            {content.nameLabel} *
           </label>
           <Input
             id="ct-name"
             type="text"
             autoComplete="name"
-            placeholder="Digite seu nome completo."
+            placeholder={content.namePlaceholder}
             invalid={!!errors.name}
             aria-describedby={errors.name ? "ct-name-error" : undefined}
             {...register("name")}
@@ -93,13 +95,13 @@ export function ContatoHeroSection() {
 
         <div className="flex flex-col gap-1.5">
           <label htmlFor="ct-company" className={labelBase}>
-            Empresa *
+            {content.companyLabel} *
           </label>
           <Input
             id="ct-company"
             type="text"
             autoComplete="organization"
-            placeholder="Informe o nome da empresa."
+            placeholder={content.companyPlaceholder}
             invalid={!!errors.company}
             aria-describedby={errors.company ? "ct-company-error" : undefined}
             {...register("company")}
@@ -114,13 +116,13 @@ export function ContatoHeroSection() {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5">
             <label htmlFor="ct-phone" className={labelBase}>
-              Telefone *
+              {content.phoneLabel} *
             </label>
             <Input
               id="ct-phone"
               type="tel"
               autoComplete="tel"
-              placeholder="Telefone ou WhatsApp."
+              placeholder={content.phonePlaceholder}
               invalid={!!errors.phone}
               aria-describedby={errors.phone ? "ct-phone-error" : undefined}
               {...register("phone")}
@@ -133,13 +135,13 @@ export function ContatoHeroSection() {
           </div>
           <div className="flex flex-col gap-1.5">
             <label htmlFor="ct-email" className={labelBase}>
-              E-mail *
+              {content.emailLabel} *
             </label>
             <Input
               id="ct-email"
               type="email"
               autoComplete="email"
-              placeholder="nome@empresa.com.br"
+              placeholder={content.emailPlaceholder}
               invalid={!!errors.email}
               aria-describedby={errors.email ? "ct-email-error" : undefined}
               {...register("email")}
@@ -154,7 +156,7 @@ export function ContatoHeroSection() {
 
         <div className="flex flex-col gap-1.5">
           <label htmlFor="ct-city" className={labelBase}>
-            Cidade/UF *
+            {content.cityLabel} *
           </label>
           <Controller
             control={control}
@@ -163,6 +165,7 @@ export function ContatoHeroSection() {
               <CityAutocomplete
                 id="ct-city"
                 name={field.name}
+                placeholder={content.cityPlaceholder}
                 value={field.value ?? ""}
                 onChange={field.onChange}
                 onBlur={field.onBlur}
@@ -179,12 +182,12 @@ export function ContatoHeroSection() {
 
         <div className="flex flex-col gap-1.5">
           <label htmlFor="ct-message" className={labelBase}>
-            Mensagem *
+            {content.messageLabel} *
           </label>
           <Textarea
             id="ct-message"
             rows={3}
-            placeholder="Descreva sua operação, equipamento, urgência, cidade ou o que você precisa resolver."
+            placeholder={content.messagePlaceholder}
             invalid={!!errors.message}
             aria-describedby={errors.message ? "ct-message-error" : undefined}
             {...register("message")}
@@ -204,8 +207,7 @@ export function ContatoHeroSection() {
             className="mt-1"
           />
           <span className="text-body leading-[1.35] text-neutral-600">
-            Concordo com o tratamento dos meus dados conforme a Política de
-            Privacidade da TranspoTech (LGPD).
+            {content.consentLabel}
           </span>
         </label>
         {errors.consent && (
@@ -222,7 +224,7 @@ export function ContatoHeroSection() {
             disabled={isSubmitting}
             className="w-full self-start lg:w-auto"
           >
-            Enviar solicitação
+            {content.submitLabel}
           </Button>
           {sent && (
             <p
@@ -230,8 +232,7 @@ export function ContatoHeroSection() {
               className="inline-flex items-start gap-2 text-body font-semibold text-success"
             >
               <CircleCheck aria-hidden className="mt-0.5 size-5 shrink-0" />
-              Sua solicitação foi enviada! Em breve retornaremos com sua
-              proposta.
+              {content.successMessage}
             </p>
           )}
         </div>

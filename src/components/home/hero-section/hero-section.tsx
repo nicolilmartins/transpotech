@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import { HeroHotspots } from "./hero-hotspots";
 import { ROUTES } from "@/lib/routes";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { homePage } from "@/sanity/content/pages/home";
 import forklift from "@/assets/images/home-hero-image.webp";
 
 // Arte da hero no enquadramento do antigo recorte mobile (1334x1550). Esse
@@ -50,7 +52,9 @@ function MobileHeroArt({ highPriority = false }: { highPriority?: boolean }) {
   );
 }
 
-export function HeroSection() {
+type HomeHeroContent = SectionContent<typeof homePage.sections.hero>;
+
+export function HeroSection({ content }: { content: HomeHeroContent }) {
   return (
     <section
       data-header-hero
@@ -97,7 +101,7 @@ export function HeroSection() {
       </div>
 
       {/* Bolinhas interativas sobre a empilhadeira (só desktop) */}
-      <HeroHotspots />
+      <HeroHotspots labels={content.hotspots.map(({ label }) => label)} />
 
       {/* Conteúdo — altura normal: sobreposto à imagem full-bleed (h-full).
           Em telas curtas: coluna de altura natural no topo, com a faixa da foto
@@ -110,18 +114,18 @@ export function HeroSection() {
             <BlurRevealTitle
               className="text-[32px] leading-[1.1] text-neutral-800 lg:w-max lg:text-[48px] 2xl:text-[54px]"
               segments={[
+                // O espaço fica no código: no mobile o <br> some e as partes
+                // seguem na mesma linha.
                 {
-                  text: "Empilhadeiras, ",
+                  text: `${content.titleBold.trimEnd()} `,
                   className: "font-bold",
                   br: "hidden sm:block",
                 },
-                { text: "locação e manutenção", className: "font-normal" },
+                { text: content.titleRegular, className: "font-normal" },
               ]}
             />
             <p className="text-[16px] font-normal text-neutral-800 hero-short:leading-[1.35] lg:max-w-[440px] lg:text-[16px] 2xl:text-[18px]">
-              Dealer autorizado Linde, STILL e Baoli no Sul do Brasil. Frota
-              funcionando, custo previsível e atendimento técnico 24h, tudo em um
-              único parceiro.
+              {content.description}
             </p>
           </div>
 
@@ -132,7 +136,7 @@ export function HeroSection() {
               href={ROUTES.LOCACAO}
               className="w-full lg:w-auto"
             >
-              Locar empilhadeira
+              {content.primaryLabel}
             </Button>
             <Button
               variant="gray"
@@ -140,7 +144,7 @@ export function HeroSection() {
               href={ROUTES.EMPILHADEIRAS_NOVAS}
               className="w-full lg:w-auto"
             >
-              Comprar empilhadeira
+              {content.secondaryLabel}
             </Button>
           </div>
         </div>

@@ -9,45 +9,22 @@ import { Section } from "@/components/ui/section";
 import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import { ROUTES } from "@/lib/routes";
 import { gsap } from "@/lib/gsap";
-// PLACEHOLDER: trocar por foto real da equipe/ações ESG TranspoTech.
-import team from "@/assets/images/transpotech-team.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { quemSomosPage } from "@/sanity/content/pages/quem-somos";
 
-type EsgItem = {
-  title: string;
-  description: string;
-  link: { label: string; href: string } | null;
-};
-
-const items: EsgItem[] = [
-  {
-    title: "Sustentabilidade",
-    description:
-      "Soluções e práticas que apoiam operações mais eficientes e conscientes.",
-    link: { label: "Saiba mais", href: ROUTES.SUSTENTABILIDADE },
-  },
-  {
-    title: "Inclusão",
-    description:
-      "Iniciativas voltadas à equidade, diversidade e desenvolvimento de pessoas.",
-    link: { label: "Conheça as iniciativas", href: ROUTES.SUSTENTABILIDADE },
-  },
-  {
-    title: "Comunidade",
-    description:
-      "Apoio a projetos sociais, esporte, educação e desenvolvimento comunitário.",
-    link: { label: "Conheça os projetos", href: ROUTES.SUSTENTABILIDADE },
-  },
-  {
-    title: "Governança",
-    description:
-      "Canais de transparência, ouvidoria digital e práticas de responsabilidade corporativa.",
-    link: { label: "Canal de transparência", href: ROUTES.CANAL_TRANSPARENCIA },
-  },
+// Destino do link de cada tópico, na ordem dos tópicos editados no Studio.
+const itemHrefs = [
+  ROUTES.SUSTENTABILIDADE,
+  ROUTES.SUSTENTABILIDADE,
+  ROUTES.SUSTENTABILIDADE,
+  ROUTES.CANAL_TRANSPARENCIA,
 ];
+
+type EsgContent = SectionContent<typeof quemSomosPage.sections.esg>;
 
 const STAGGER = 0.16;
 
-export function EsgGovernanceSection() {
+export function EsgGovernanceSection({ content }: { content: EsgContent }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const itemContainerRefs = useRef<HTMLDivElement[]>([]);
@@ -92,17 +69,15 @@ export function EsgGovernanceSection() {
       <div className="flex max-w-[641px] flex-col gap-6">
         <div className="flex max-w-[613px] flex-col gap-4">
           <p className="text-body font-semibold leading-[1.35] text-secondary-600">
-            ESG E GOVERNANÇA
+            {content.eyebrow}
           </p>
           <h2 className="text-h2 text-neutral-800">
-            <span className="font-normal">Crescimento com</span>{" "}
-            <span className="font-bold">responsabilidade</span>
+            <span className="font-normal">{content.titleRegular}</span>{" "}
+            <span className="font-bold">{content.titleAccent}</span>
           </h2>
         </div>
         <p className="text-body leading-[1.35] text-neutral-600">
-          A TranspoTech investe em iniciativas de responsabilidade social,
-          inclusão, sustentabilidade e governança. Acreditamos que uma operação
-          eficiente também deve contribuir para um futuro mais responsável.
+          {content.description}
         </p>
       </div>
 
@@ -118,19 +93,20 @@ export function EsgGovernanceSection() {
           className="order-last h-[300px] w-full shrink-0 rounded-xl lg:order-none lg:h-auto lg:w-[720px] lg:self-stretch"
         >
           <Image
-            src={team}
-            alt="Equipe TranspoTech em ações ESG"
+            src={content.image}
+            alt={content.image.alt}
             fill
             sizes="(min-width: 1024px) 720px, 100vw"
             className="object-cover"
-            placeholder="blur"
+            // Foto do CMS sem LQIP não tem blurDataURL; "blur" sem ele quebra.
+            placeholder={content.image.blurDataURL ? "blur" : "empty"}
           />
         </ParallaxFrame>
 
         {/* Mobile: sem py nos itens (barra = altura exata do texto), então o
             gap da lista compensa para manter o mesmo ritmo visual */}
         <div className="flex flex-1 flex-col gap-10 lg:gap-4">
-          {items.map((item, index) => (
+          {content.items.map((item, index) => (
             <div
               key={item.title}
               ref={(node) => {
@@ -157,15 +133,13 @@ export function EsgGovernanceSection() {
                     {item.description}
                   </p>
                 </div>
-                {item.link && (
-                  <Link
-                    href={item.link.href}
-                    className="flex items-center gap-2 text-body font-semibold leading-[1.35] text-neutral-600 transition-colors hover:text-primary-500"
-                  >
-                    {item.link.label}
-                    <ArrowRight className="size-5" />
-                  </Link>
-                )}
+                <Link
+                  href={itemHrefs[index]}
+                  className="flex items-center gap-2 text-body font-semibold leading-[1.35] text-neutral-600 transition-colors hover:text-primary-500"
+                >
+                  {item.linkLabel}
+                  <ArrowRight className="size-5" />
+                </Link>
               </div>
             </div>
           ))}

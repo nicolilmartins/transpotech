@@ -1,64 +1,29 @@
-import Image, { type StaticImageData } from "next/image";
+import Image from "next/image";
 import { Section } from "@/components/ui/section";
-// PLACEHOLDER: imagens reaproveitadas — trocar por fotos reais das iniciativas.
-import imgWomen from "@/assets/images/blog/post1.png";
-import imgSocial from "@/assets/images/blog/post2.png";
-import imgCitizen from "@/assets/images/blog/post3.jpg";
-import imgEfficiency from "@/assets/images/blog/post4.png";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { sustentabilidadePage } from "@/sanity/content/pages/sustentabilidade";
+type InitiativesContent = SectionContent<
+  typeof sustentabilidadePage.sections.initiatives
+>;
 
-type Initiative = {
-  title: string;
-  description: string;
-  image: StaticImageData;
-};
-
-const initiatives: Initiative[] = [
-  {
-    title: "Mulheres Mecânicas",
-    description:
-      "Iniciativa voltada à inclusão e valorização de mulheres em áreas técnicas do setor.",
-    image: imgWomen,
-  },
-  {
-    title: "Projetos sociais e comunitários",
-    description:
-      "Apoio a iniciativas ligadas a esporte, educação, inclusão e desenvolvimento da comunidade.",
-    image: imgSocial,
-  },
-  {
-    title: "Empresa cidadã",
-    description:
-      "Ações que fortalecem a conexão da empresa com a comunidade e ampliam o impacto positivo.",
-    image: imgCitizen,
-  },
-  {
-    title: "Soluções mais eficientes",
-    description:
-      "Atuação em tecnologias, equipamentos e serviços que apoiam operações intralogísticas mais eficientes.",
-    image: imgEfficiency,
-  },
-];
-
-export function InitiativesSection() {
+export function InitiativesSection({ content }: { content: InitiativesContent }) {
   return (
     <Section id="destaques" className="flex flex-col gap-10 lg:gap-14">
       <div className="flex max-w-[720px] flex-col gap-4">
         <p className="text-body font-semibold uppercase tracking-wide text-secondary-600">
-          Inclusão
+          {content.eyebrow}
         </p>
         <h2 className="text-h3 font-normal text-neutral-800">
-          Inclusão que{" "}
-          <span className="font-bold text-primary-500">movimenta o futuro</span>
+          {content.titleRegular}{" "}
+          <span className="font-bold text-primary-500">{content.titleAccent}</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          A TranspoTech acredita no desenvolvimento de pessoas e na construção
-          de oportunidades. Inclusão, formação e valorização profissional fazem
-          parte da nossa cultura.
+          {content.description}
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-        {initiatives.map((initiative) => (
+        {content.items.map((initiative) => (
           // Cards informativos, sem link: as iniciativas não têm página própria.
           <article
             key={initiative.title}

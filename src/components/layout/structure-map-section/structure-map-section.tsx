@@ -1,7 +1,7 @@
 import { Section } from "@/components/ui/section";
 import { StatsGrid } from "@/components/layout/stats-grid";
 import { BrazilMap } from "./brazil-map";
-import { COVERAGE_STATS } from "./coverage";
+import { getSharedTexts } from "@/sanity/queries/shared";
 
 // Seção "estrutura / abrangência nacional" compartilhada (serviços e
 // quem-somos): indicadores + legenda à esquerda e mapa do Brasil interativo à
@@ -21,7 +21,7 @@ type StructureMapSectionProps = {
   descriptionWidth?: string;
 };
 
-export function StructureMapSection({
+export async function StructureMapSection({
   eyebrow = "Abrangência nacional",
   titleTop,
   titleBottom,
@@ -29,6 +29,8 @@ export function StructureMapSection({
   description,
   descriptionWidth = "760px",
 }: StructureMapSectionProps) {
+  const { coverage } = await getSharedTexts();
+
   return (
     <Section data-header-dark>
       {/* Desktop: coluna esquerda (título + indicadores) | mapa ao lado de
@@ -69,7 +71,7 @@ export function StructureMapSection({
           {/* Indicadores + legenda */}
           <div className="order-3 flex flex-col gap-6 lg:order-none">
             <StatsGrid
-              stats={COVERAGE_STATS}
+              stats={coverage.stats}
               className="grid grid-cols-1 gap-4 sm:grid-cols-2"
             />
 
@@ -80,14 +82,14 @@ export function StructureMapSection({
                   aria-hidden
                   className="size-4 shrink-0 rounded-sm border border-neutral-50/40 bg-primary-500/30"
                 />
-                Estado com atuação TranspoTech
+                {coverage.legendActive}
               </li>
               <li className="flex items-center gap-3">
                 <span
                   aria-hidden
                   className="mx-0.5 size-3 shrink-0 rounded-full bg-primary-400 shadow-[0_0_8px_rgba(245,130,32,0.55)]"
                 />
-                Unidade física
+                {coverage.legendUnit}
               </li>
             </ul>
           </div>

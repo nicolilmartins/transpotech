@@ -7,18 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Section } from "@/components/ui/section";
 import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import { CircleCheck } from "lucide-react";
-import automacao from "@/assets/images/automacao.png";
 import { gsap } from "@/lib/gsap";
 import { ROUTES } from "@/lib/routes";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { homePage } from "@/sanity/content/pages/home";
 
-const bullets = [
-  "Menos gargalos entre o recebimento, armazenagem e expedição",
-  "Mais pedidos processados com a mesma equipe",
-  "Ociosidade reduzida e melhor aproveitamento do espaço",
-  "Evolução por etapas - do básico à automacão completa",
-];
+type AutomationContent = SectionContent<typeof homePage.sections.automation>;
 
-export function AutomationSection() {
+export function AutomationSection({ content }: { content: AutomationContent }) {
   const sectionRef = useRef<HTMLElement>(null);
   const h2Ref = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLParagraphElement>(null);
@@ -62,26 +58,24 @@ export function AutomationSection() {
                 className="w-[542px] max-w-full text-h2 text-neutral-800"
               >
                 <span className="font-normal">
-                  Automação intralogística para{" "}
+                  {content.titleRegular}{" "}
                 </span>
                 <span className="font-bold text-primary-500">
-                  alta produtividade
+                  {content.titleAccent}
                 </span>
               </h2>
               <p
                 ref={descRef}
                 className="w-[512px] max-w-full text-body leading-[1.35] text-neutral-600"
               >
-                Para empresas que precisam evoluir o fluxo intralogístico, a
-                TranspoTech também atua com soluções de automação voltadas à
-                eficiência operacional.
+                {content.description}
               </p>
             </div>
 
             <ul className="flex flex-col gap-3">
-              {bullets.map((b, i) => (
+              {content.bullets.map(({ label }, i) => (
                 <li
-                  key={b}
+                  key={i}
                   ref={(node) => {
                     if (node) bulletRefs.current[i] = node;
                   }}
@@ -92,7 +86,7 @@ export function AutomationSection() {
                     aria-hidden
                   />
                   <span className="text-body leading-[1.35] text-neutral-600">
-                    {b}
+                    {label}
                   </span>
                 </li>
               ))}
@@ -101,7 +95,7 @@ export function AutomationSection() {
 
           <div ref={buttonRef} className="hidden self-start lg:block">
             <Button variant="primary" size="lg" href={ROUTES.LOCACAO}>
-              Locar empilhadeira
+              {content.buttonLabel}
             </Button>
           </div>
         </div>
@@ -112,8 +106,8 @@ export function AutomationSection() {
           className="order-2 min-h-[280px] min-w-0 flex-1 self-stretch rounded-xl lg:order-none lg:min-h-0"
         >
           <Image
-            src={automacao}
-            alt="Empilhadeira em operação"
+            src={content.image}
+            alt={content.image.alt}
             fill
             sizes="(min-width: 1024px) 50vw, 100vw"
             className="object-cover"
@@ -123,7 +117,7 @@ export function AutomationSection() {
         {/* Botão — após a imagem no mobile */}
         <div className="order-3 self-start lg:hidden">
           <Button variant="primary" size="lg" href={ROUTES.LOCACAO}>
-            Locar empilhadeira
+            {content.buttonLabel}
           </Button>
         </div>
       </div>

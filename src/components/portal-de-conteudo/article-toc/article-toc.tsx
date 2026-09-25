@@ -1,17 +1,23 @@
-import { articleSections } from "../article-sections";
+import type { ArticleSection } from "../article-sections";
 
 // Sumário/índice do artigo — tópicos como links âncora para as seções do corpo.
-export function ArticleToc() {
+export function ArticleToc({
+  sections,
+  title,
+}: {
+  sections: ArticleSection[];
+  title: string;
+}) {
   return (
     <nav
       aria-label="Sumário do artigo"
       className="flex flex-col gap-3 rounded-xl border border-neutral-200 p-4"
     >
       <span className="text-body font-semibold text-neutral-800">
-        Neste artigo
+        {title}
       </span>
       <ul className="flex flex-col gap-2">
-        {articleSections.map((section) => (
+        {sections.map((section) => (
           <li key={section.id}>
             <a
               href={`#${section.id}`}

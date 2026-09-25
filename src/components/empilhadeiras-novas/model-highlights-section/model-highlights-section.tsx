@@ -8,8 +8,10 @@ import type { ResolvedForkliftDetail } from "@/data/forklift-details";
 // "Ver ficha técnica" fica no cabeçalho, à direita.
 export function ModelHighlightsSection({
   detail,
+  datasheetLabel,
 }: {
   detail: ResolvedForkliftDetail;
+  datasheetLabel: string;
 }) {
   return (
     <div className="relative isolate bg-[#181616]">
@@ -40,7 +42,7 @@ export function ModelHighlightsSection({
               href={detail.datasheetHref}
               className="justify-center"
             >
-              Ver ficha técnica
+              {datasheetLabel}
             </Button>
           </div>
         </div>
@@ -79,7 +81,7 @@ export function ModelHighlightsSection({
             href={detail.datasheetHref}
             className="w-full justify-center"
           >
-            Ver ficha técnica
+            {datasheetLabel}
           </Button>
         </div>
       </Section>

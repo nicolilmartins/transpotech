@@ -6,6 +6,9 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Section } from "@/components/ui/section";
+import { LineBreaks } from "@/components/ui/line-breaks";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { locacaoPage } from "@/sanity/content/pages/locacao";
 
 type Module = {
   title: string;
@@ -13,33 +16,11 @@ type Module = {
   Icon: LucideIcon;
 };
 
-// Os quatro módulos combináveis do STILL FleetManager 4.x.
-const modules: Module[] = [
-  {
-    title: "Autorização de operador",
-    description:
-      "Acesso liberado por cartão, chip ou PIN, com perfil de uso próprio para cada operador.",
-    Icon: UserCheck,
-  },
-  {
-    title: "Registro de impactos",
-    description:
-      "Sensor de aceleração detecta choques e registra data, hora, equipamento e operador.",
-    Icon: ShieldAlert,
-  },
-  {
-    title: "Reconhecimento de carga",
-    description:
-      "Sensores de pressão registram as cargas movimentadas por cada equipamento.",
-    Icon: Weight,
-  },
-  {
-    title: "Horas e relatórios",
-    description:
-      "Horas de operação e turnos alimentam diários de bordo e relatórios de eficiência.",
-    Icon: Timer,
-  },
-];
+// Ícone de cada módulo do STILL FleetManager 4.x, na ordem dos módulos
+// editados no Studio.
+const icons: LucideIcon[] = [UserCheck, ShieldAlert, Weight, Timer];
+
+type FleetManagerContent = SectionContent<typeof locacaoPage.sections.fleetManager>;
 
 function ModuleCard({ title, description, Icon }: Module) {
   // Mesma superfície dos cards de "Onde a empilhadeira seminova entrega mais
@@ -62,34 +43,32 @@ function ModuleCard({ title, description, Icon }: Module) {
   );
 }
 
-export function FleetManagerSection() {
+export function FleetManagerSection({ content }: { content: FleetManagerContent }) {
   return (
     <Section className="flex flex-col gap-10 lg:gap-12">
       {/* Cabeçalho */}
       <div className="flex w-full max-w-[720px] flex-col gap-4">
         <p className="text-body font-semibold uppercase tracking-wide text-secondary-600">
-          Gestão de frota
+          {content.eyebrow}
         </p>
         {/* Duas linhas fixas no desktop: "Sua frota locada conectada" /
             "com o FleetManager". No mobile o título flui natural. */}
         <h2 className="text-h2 font-normal text-neutral-800">
-          <span className="lg:block">Sua frota locada conectada</span>{" "}
+          <span className="lg:block">{content.titleTop}</span>{" "}
           <span className="lg:block">
-            com o <span className="font-bold text-primary-500">FleetManager</span>
+            {content.titleBottom}
+            <span className="font-bold text-primary-500">{content.titleAccent}</span>
           </span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          O sistema de gestão de frota da STILL mostra quem operou cada
-          equipamento, para quê,{" "}
-          <br className="hidden lg:inline" />
-          quando e se houve impacto. Tudo em um aplicativo web, sem instalação.
+          <LineBreaks text={content.description} brClassName="hidden lg:inline" />
         </p>
       </div>
 
       {/* Módulos combináveis */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {modules.map((item) => (
-          <ModuleCard key={item.title} {...item} />
+        {content.modules.map((item, i) => (
+          <ModuleCard key={item.title} {...item} Icon={icons[i]} />
         ))}
       </div>
     </Section>

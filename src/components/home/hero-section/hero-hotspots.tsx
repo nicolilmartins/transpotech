@@ -12,8 +12,9 @@ import { ROUTES } from "@/lib/routes";
 // à foto (0..1). Como a hero desktop usa object-cover num wrapper escalado, a
 // empilhadeira "anda" conforme a largura — então calculamos a posição de tela
 // levando o recorte em conta, e as bolinhas grudam na peça em qualquer largura.
+
+// Ponto de cada pill, na ordem das pills editadas no Studio (seção Banner).
 type Hotspot = {
-  label: string;
   href: string;
   /** Coordenadas relativas à foto original (0..1). */
   u: number;
@@ -24,22 +25,20 @@ type Hotspot = {
 
 const hotspots: Hotspot[] = [
   {
-    label: "Venda de faróis",
     href: ROUTES.PECAS,
     u: 0.522,
     v: 0.474,
     side: "right",
   },
   {
-    label: "Venda de retrovisores",
     href: ROUTES.PECAS,
     u: 0.602,
     v: 0.517,
     side: "right",
   },
-  { label: "Venda de mastros", href: ROUTES.PECAS, u: 0.655, v: 0.605 },
-  { label: "Venda de baterias", href: ROUTES.BATERIAS, u: 0.609, v: 0.701 },
-  { label: "Venda de pneus", href: ROUTES.PNEUS, u: 0.552, v: 0.864 },
+  { href: ROUTES.PECAS, u: 0.655, v: 0.605 },
+  { href: ROUTES.BATERIAS, u: 0.609, v: 0.701 },
+  { href: ROUTES.PNEUS, u: 0.552, v: 0.864 },
 ];
 
 // Quadro de referência dos u/v: foto 4096×2155 num wrapper left-[-14%]
@@ -73,7 +72,8 @@ function computePositions(w: number, h: number): Pos[] {
   }));
 }
 
-export function HeroHotspots() {
+export function HeroHotspots({ labels }: { labels: string[] }) {
+  const spots = hotspots.map((spot, i) => ({ ...spot, label: labels[i] }));
   const [active, setActive] = useState(0);
   const [engaged, setEngaged] = useState(false);
   const [positions, setPositions] = useState<Pos[] | null>(null);
@@ -138,7 +138,7 @@ export function HeroHotspots() {
       className="pointer-events-none absolute inset-0 z-[5] hidden lg:block"
     >
       {positions &&
-        hotspots.map((spot, i) => {
+        spots.map((spot, i) => {
           const isActive = active === i;
           // Quando alguma bolinha está ativa (pill aberta), as outras ficam
           // mais clarinhas (esmaecidas) para destacar a ativa.

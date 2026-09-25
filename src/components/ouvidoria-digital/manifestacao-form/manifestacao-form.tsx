@@ -16,6 +16,8 @@ import {
   manifestacaoTypes,
   type ManifestacaoFormValues,
 } from "@/lib/manifestacao.schema";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { ouvidoriaPage } from "@/sanity/content/pages/ouvidoria";
 
 const labelBase = "text-body font-semibold text-neutral-700";
 
@@ -28,7 +30,9 @@ function generateProtocol(): string {
   return `OUV-${stamp}-${rand}`;
 }
 
-export function ManifestacaoForm() {
+type ManifestacaoContent = SectionContent<typeof ouvidoriaPage.sections.form>;
+
+export function ManifestacaoForm({ content }: { content: ManifestacaoContent }) {
   const [protocol, setProtocol] = useState<string | null>(null);
 
   const {
@@ -60,14 +64,13 @@ export function ManifestacaoForm() {
       >
         <div className="flex flex-col gap-4 lg:pt-2">
           <p className="text-body font-semibold uppercase tracking-wide text-primary-500">
-            Canal de escuta
+            {content.eyebrow}
           </p>
           <h2 className="text-h3 font-normal text-neutral-800">
-            Envie sua manifestação
+            {content.title}
           </h2>
           <p className="text-body leading-[1.35] text-neutral-600">
-            Preencha o formulário para registrar sua manifestação. As
-            informações ajudam a direcionar sua demanda corretamente.
+            {content.description}
           </p>
         </div>
 
@@ -75,10 +78,10 @@ export function ManifestacaoForm() {
           <div className="flex w-full flex-col items-start gap-4 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 lg:p-8">
             <CheckCircle2 aria-hidden className="size-10 text-success" />
             <h3 className="font-heading text-h5 font-semibold text-neutral-800">
-              Manifestação enviada
+              {content.successTitle}
             </h3>
             <p className="text-body leading-[1.35] text-neutral-600">
-              Guarde o número de protocolo abaixo para acompanhar o andamento.
+              {content.successDescription}
             </p>
             <p className="rounded-lg bg-white px-4 py-3 font-heading text-h6 font-semibold text-neutral-800">
               {protocol}
@@ -88,7 +91,7 @@ export function ManifestacaoForm() {
               size="lg"
               onClick={() => setProtocol(null)}
             >
-              Enviar outra manifestação
+              {content.resetLabel}
             </Button>
           </div>
         ) : (
@@ -101,7 +104,7 @@ export function ManifestacaoForm() {
             <div className="grid grid-cols-1 gap-6">
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="mf-name" className={labelBase}>
-                  Nome *
+                  {content.nameLabel} *
                 </label>
                 <Input
                   id="mf-name"
@@ -116,12 +119,12 @@ export function ManifestacaoForm() {
               </div>
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="mf-contact" className={labelBase}>
-                  E-mail ou telefone *
+                  {content.contactLabel} *
                 </label>
                 <Input
                   id="mf-contact"
                   type="text"
-                  placeholder="email@empresa.com ou (00) 00000-0000"
+                  placeholder={content.contactPlaceholder}
                   invalid={!!errors.contact}
                   {...register("contact")}
                 />
@@ -137,7 +140,7 @@ export function ManifestacaoForm() {
             <div className="grid grid-cols-1 gap-6">
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="mf-relation" className={labelBase}>
-                  Relação com a TranspoTech *
+                  {content.relationLabel} *
                 </label>
                 <Controller
                   control={control}
@@ -145,7 +148,7 @@ export function ManifestacaoForm() {
                   render={({ field }) => (
                     <Select
                       id="mf-relation"
-                      placeholder="Selecione"
+                      placeholder={content.selectPlaceholder}
                       options={manifestacaoRelations}
                       invalid={!!errors.relation}
                       value={field.value ?? ""}
@@ -163,7 +166,7 @@ export function ManifestacaoForm() {
 
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="mf-type" className={labelBase}>
-                  Tipo de manifestação *
+                  {content.typeLabel} *
                 </label>
                 <Controller
                   control={control}
@@ -171,7 +174,7 @@ export function ManifestacaoForm() {
                   render={({ field }) => (
                     <Select
                       id="mf-type"
-                      placeholder="Selecione"
+                      placeholder={content.selectPlaceholder}
                       options={manifestacaoTypes}
                       invalid={!!errors.type}
                       value={field.value ?? ""}
@@ -189,12 +192,12 @@ export function ManifestacaoForm() {
             {/* Unidade / cidade */}
             <div className="flex flex-col gap-1.5">
               <label htmlFor="mf-location" className={labelBase}>
-                Unidade ou cidade relacionada *
+                {content.locationLabel} *
               </label>
               <Input
                 id="mf-location"
                 type="text"
-                placeholder="Ex.: Curitiba/PR"
+                placeholder={content.locationPlaceholder}
                 invalid={!!errors.location}
                 {...register("location")}
               />
@@ -208,12 +211,12 @@ export function ManifestacaoForm() {
             {/* Mensagem */}
             <div className="flex flex-col gap-1.5">
               <label htmlFor="mf-message" className={labelBase}>
-                Mensagem *
+                {content.messageLabel} *
               </label>
               <Textarea
                 id="mf-message"
                 rows={5}
-                placeholder="Descreva sua manifestação com o máximo de detalhes possível."
+                placeholder={content.messagePlaceholder}
                 invalid={!!errors.message}
                 {...register("message")}
                 className="min-h-[140px]"
@@ -226,7 +229,7 @@ export function ManifestacaoForm() {
             {/* Detalhes opcionais (recolhível) */}
             <details className="group rounded-xl border border-neutral-200 bg-neutral-50">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-body font-semibold text-neutral-700">
-                Detalhes opcionais (empresa, número de pedido, anexos)
+                {content.detailsSummary}
                 <ChevronDown
                   aria-hidden
                   className="size-5 text-neutral-500 transition-transform duration-200 group-open:rotate-180"
@@ -236,7 +239,7 @@ export function ManifestacaoForm() {
                 <div className="grid grid-cols-1 gap-5">
                   <div className="flex flex-col gap-1.5">
                     <label htmlFor="mf-company" className={labelBase}>
-                      Empresa
+                      {content.companyLabel}
                     </label>
                     <Input
                       id="mf-company"
@@ -247,7 +250,7 @@ export function ManifestacaoForm() {
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label htmlFor="mf-order" className={labelBase}>
-                      Número de pedido
+                      {content.orderLabel}
                     </label>
                     <Input
                       id="mf-order"
@@ -258,7 +261,7 @@ export function ManifestacaoForm() {
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="mf-files" className={labelBase}>
-                    Anexos
+                    {content.filesLabel}
                   </label>
                   <label
                     htmlFor="mf-files"
@@ -268,7 +271,7 @@ export function ManifestacaoForm() {
                       aria-hidden
                       className="size-5 text-neutral-500"
                     />
-                    Escolher arquivos
+                    {content.filesButton}
                   </label>
                   <input
                     id="mf-files"
@@ -291,7 +294,7 @@ export function ManifestacaoForm() {
                 disabled={isSubmitting}
                 className="self-start"
               >
-                Enviar manifestação
+                {content.submitLabel}
               </Button>
               <p className="text-body text-neutral-500">
                 Após o envio, exibimos um número de protocolo (placeholder até

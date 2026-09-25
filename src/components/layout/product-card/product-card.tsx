@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { MadeInBrazilBadge } from "@/components/ui/made-in-brazil-badge";
 import { ROUTES } from "@/lib/routes";
+import { useSharedTexts, type SharedTexts } from "@/components/layout/shared-texts";
 import type { Forklift, ForkliftBrand } from "@/types/forklift.types";
 
 const brandLabel: Record<ForkliftBrand, string> = {
@@ -26,12 +27,15 @@ function SpecRow({ label, value }: { label: string; value: string }) {
 type SpecItem = { label: string; value: string };
 
 /** Linhas de característica do catálogo de novas — padrão do card. */
-function catalogSpecs(forklift: Forklift): SpecItem[] {
+function catalogSpecs(
+  forklift: Forklift,
+  texts: SharedTexts["productCard"],
+): SpecItem[] {
   return [
-    { label: "Capacidade", value: forklift.capacity },
-    { label: "Energia", value: forklift.energy },
-    { label: "Elevação", value: forklift.liftHeight },
-    { label: "Corredor operacional", value: forklift.aisleWidth },
+    { label: texts.capacityLabel, value: forklift.capacity },
+    { label: texts.energyLabel, value: forklift.energy },
+    { label: texts.liftHeightLabel, value: forklift.liftHeight },
+    { label: texts.aisleWidthLabel, value: forklift.aisleWidth },
   ];
 }
 
@@ -55,7 +59,8 @@ export function ProductCard({
    */
   detailsHref?: string;
 }) {
-  const specRows = specs ?? catalogSpecs(forklift);
+  const { productCard: texts } = useSharedTexts();
+  const specRows = specs ?? catalogSpecs(forklift, texts);
   const detailsUrl =
     detailsHref ?? `${ROUTES.EMPILHADEIRAS_NOVAS}/${forklift.id}`;
 
@@ -109,8 +114,8 @@ export function ProductCard({
 
         {/* Características — linhas com 8px */}
         <dl className="flex flex-col gap-2">
-          {specRows.map((spec) => (
-            <SpecRow key={spec.label} label={spec.label} value={spec.value} />
+          {specRows.map((spec, i) => (
+            <SpecRow key={i} label={spec.label} value={spec.value} />
           ))}
         </dl>
       </div>
@@ -124,7 +129,7 @@ export function ProductCard({
           onClick={() => onRequestQuote(forklift)}
           className="w-full justify-center"
         >
-          Solicitar orçamento
+          {texts.quoteLabel}
         </Button>
         <Button
           variant="gray"
@@ -132,7 +137,7 @@ export function ProductCard({
           href={detailsUrl}
           className="w-full justify-center"
         >
-          Ver detalhes
+          {texts.detailsLabel}
         </Button>
       </div>
     </article>

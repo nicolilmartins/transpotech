@@ -2,27 +2,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Clock } from "lucide-react";
 import { TextLink } from "@/components/ui/text-link";
-import { articles } from "@/data/articles";
+import type { Article } from "@/data/articles";
 import { ROUTES } from "@/lib/routes";
-
-// Conteúdos exibidos na home (destaque + 3 menores). Cada card leva ao artigo
-// correspondente no Portal de Conteúdo.
-const SELECTED_IDS = [
-  "nova-unidade-joinville",
-  "linde-e20-e50-x-elite",
-  "cimine-2026-automacao",
-  "quando-vale-locar-empilhadeiras",
-];
-
-const selected = SELECTED_IDS.map((id) =>
-  articles.find((article) => article.id === id)
-).filter((article): article is (typeof articles)[number] => Boolean(article));
-
-const [featured, ...rest] = selected;
+import type { SectionContent } from "@/sanity/content/fields";
+import type { homePage } from "@/sanity/content/pages/home";
 
 const articleHref = (id: string) => `${ROUTES.PORTAL_CONTEUDO}/${id}`;
 
-export function BlogSection() {
+// Conteúdos exibidos na home (o primeiro é o destaque, os demais os cards
+// menores). Cada card leva ao artigo correspondente no Portal de Conteúdo.
+type BlogContent = SectionContent<typeof homePage.sections.blog>;
+
+export function BlogSection({
+  content,
+  articles,
+}: {
+  content: BlogContent;
+  articles: Article[];
+}) {
+  const [featured, ...rest] = articles;
+
+  // Nenhum artigo marcado para a home no CMS: a seção sai da página.
+  if (!featured) return null;
+
   return (
     <section className="relative isolate mx-auto flex w-full max-w-[1440px] flex-col items-start gap-10 overflow-hidden px-5 py-12 sm:px-6 lg:gap-16 lg:px-16 lg:py-20">
       {/* Cabeçalho — texto à esquerda, link "ver todos" à direita */}
@@ -31,16 +33,15 @@ export function BlogSection() {
       <div className="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="flex min-w-0 flex-col gap-4 lg:flex-1">
           <h2 className="w-full max-w-[613px] text-h2 text-neutral-800">
-            <span className="font-normal">Conteúdo prático para apoiar </span>
-            <span className="font-bold text-primary-500">suas decisões</span>
+            <span className="font-normal">{content.titleRegular}</span>
+            <span className="font-bold text-primary-500">{content.titleAccent}</span>
           </h2>
           <p className="text-body leading-[1.35] text-neutral-600">
-            Guias, comparativos e tendências sobre locação, acessórios e
-            automação.
+            {content.description}
           </p>
         </div>
         <TextLink href={ROUTES.PORTAL_CONTEUDO} className="shrink-0">
-          Ver todos os conteúdos
+          {content.allLabel}
         </TextLink>
       </div>
 
@@ -77,7 +78,7 @@ export function BlogSection() {
             {/* Rodapé: ler conteúdo (esquerda) · tempo de leitura (direita) */}
             <div className="flex items-center justify-between pt-2">
               <span className="flex items-center gap-2 text-body font-semibold leading-[1.35] text-neutral-400 transition-colors group-hover/card:text-neutral-200">
-                Ler conteúdo
+                {content.readLabel}
                 <ArrowRight className="size-5" aria-hidden />
               </span>
               <div className="flex items-center gap-2 text-neutral-400">
@@ -124,7 +125,7 @@ export function BlogSection() {
                 {/* Rodapé: ler conteúdo (esquerda) · tempo (direita) */}
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-1.5 text-body font-semibold leading-[1.35] text-neutral-500 transition-colors group-hover/card:text-neutral-700">
-                    Ler conteúdo
+                    {content.readLabel}
                     <ArrowRight className="size-4" aria-hidden />
                   </span>
                   <div className="flex items-center gap-1.5 text-neutral-400">

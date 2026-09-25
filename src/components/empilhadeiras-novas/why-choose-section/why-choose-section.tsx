@@ -3,6 +3,8 @@ import {
   DarkArtCard,
   type DarkArtCardArt,
 } from "@/components/layout/dark-art-card";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { empilhadeirasNovasPage } from "@/sanity/content/pages/empilhadeiras-novas";
 import iconBussola from "@/assets/images/stats/novas-icon-bussola.webp";
 import iconSelo from "@/assets/images/stats/card-selo.webp";
 import iconLoja from "@/assets/images/stats/card-loja.webp";
@@ -11,21 +13,14 @@ import iconPin from "@/assets/images/stats/card-pin.webp";
 import iconEngrenagem from "@/assets/images/stats/card-engrenagem.webp";
 
 // Geometria por card conforme o Figma (node 3603:3397). left/top alinham o
-// objeto verticalmente ao texto.
-type Reason = {
-  title: string;
-  description: string;
-  art: DarkArtCardArt;
-};
+// objeto verticalmente ao texto. Na ordem dos cards editados no Studio.
+type Reason = { art: DarkArtCardArt };
 
 // Caixa padrão desta seção (204.438×153.328).
 const BIG = { width: 204.438, height: 153.328 };
 
-const reasons: Reason[] = [
+const arts: Reason[] = [
   {
-    title: "Orientação técnica na escolha",
-    description:
-      "Apoio para escolher o equipamento conforme carga, altura, ambiente, piso, turno e intensidade de uso.",
     art: {
       src: iconBussola,
       width: 188.871,
@@ -38,21 +33,12 @@ const reasons: Reason[] = [
     },
   },
   {
-    title: "Distribuidor autorizado",
-    description:
-      "Venda de equipamentos Linde, STILL e Baoli com suporte de quem conhece a operação.",
     art: { ...BIG, src: iconSelo, maskX: 26.78, maskY: 10.819, left: -37, top: -23, flip: false },
   },
   {
-    title: "Novas e seminovas no mesmo lugar",
-    description:
-      "Compare alternativas para compra planejada, renovação de frota ou necessidade imediata.",
     art: { ...BIG, src: iconLoja, maskX: 26.78, maskY: 12.819, left: -37, top: -25, flip: false },
   },
   {
-    title: "Pós-venda especializado",
-    description:
-      "A TranspoTech também oferece serviços, peças, pneus, baterias e carregadores para manter a frota em operação.",
     art: {
       src: iconChave,
       width: 175.718,
@@ -65,32 +51,28 @@ const reasons: Reason[] = [
     },
   },
   {
-    title: "Estrutura regional",
-    description:
-      "Atendimento por unidades e equipe técnica para apoiar empresas em diferentes regiões.",
     art: { ...BIG, src: iconPin, maskX: 27.265, maskY: 7.819, left: -38, top: -20, flip: true },
   },
   {
-    title: "Soluções além da venda",
-    description:
-      "Além da compra, a TranspoTech pode apoiar com locação, manutenção e soluções intralogísticas.",
     art: { ...BIG, src: iconEngrenagem, maskX: 22.141, maskY: 9.819, left: -43, top: -22, flip: true },
   },
 ];
 
-export function WhyChooseSection() {
+type WhyChooseContent = SectionContent<typeof empilhadeirasNovasPage.sections.whyChoose>;
+
+export function WhyChooseSection({ content }: { content: WhyChooseContent }) {
   return (
     <Section className="flex flex-col items-center gap-10 lg:gap-16">
       <h2 className="max-w-[560px] text-center text-h2 text-neutral-50">
-        <span className="lg:block font-normal">Por que as empresas</span>{" "}
+        <span className="lg:block font-normal">{content.titleRegular}</span>{" "}
         <span className="lg:block font-bold text-primary-500">
-          escolhem a TranspoTech
+          {content.titleAccent}
         </span>
       </h2>
 
       <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {reasons.map((reason) => (
-          <DarkArtCard key={reason.title} {...reason} />
+        {content.cards.map((card, i) => (
+          <DarkArtCard key={card.title} {...card} {...arts[i]} />
         ))}
       </div>
     </Section>

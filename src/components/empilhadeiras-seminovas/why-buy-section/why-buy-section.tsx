@@ -6,6 +6,8 @@ import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { CardImageIcon } from "@/components/ui/card-image-icon";
 import { ROUTES } from "@/lib/routes";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { seminovasPage } from "@/sanity/content/pages/seminovas";
 import iconRevisao from "@/assets/images/stats/why-buy-icon-revisao.webp";
 import iconGarantia from "@/assets/images/stats/card-shield.webp";
 import iconEntrega from "@/assets/images/stats/why-buy-icon-entrega.webp";
@@ -33,18 +35,9 @@ type Art = {
   mask?: boolean;
 };
 
-type Card = {
-  /** Título com o ponto de quebra definido: [linha de cima, linha de baixo]. */
-  title: [string, string];
-  description: string;
-  art: Art;
-};
-
-const cards: Card[] = [
+// Arte de cada card, na ordem dos cards editados no Studio.
+const arts: { art: Art }[] = [
   {
-    title: ["Revisão técnica", "completa"],
-    description:
-      "Cada equipamento passa por avaliação multipontos antes de entrar no estoque.",
     // Prancheta é retrato (768×1024) com fundo cinza: caixa retrato (mesma
     // proporção) mostra a arte inteira, centralizada, e a máscara vira a
     // vinheta suave (igual ao anexo). object-cover não corta (aspect casa).
@@ -64,8 +57,6 @@ const cards: Card[] = [
     },
   },
   {
-    title: ["Garantia", "TranspoTech"],
-    description: "6 a 12 meses de garantia conforme condição do equipamento.",
     art: {
       src: iconGarantia,
       maskX: 14.486,
@@ -76,9 +67,6 @@ const cards: Card[] = [
     },
   },
   {
-    title: ["Pronta entrega", "disponível"],
-    description:
-      "Equipamentos prontos pra operação após inspeção e ajustes técnicos.",
     art: {
       src: iconEntrega,
       maskX: 14.486,
@@ -90,17 +78,16 @@ const cards: Card[] = [
     },
   },
   {
-    title: ["Cobertura", "nacional"],
-    description:
-      "10 unidades em PR, SC, RS, SP e GO para suporte próximo da sua operação.",
     art: { src: iconCobertura, maskX: 14.486, maskW: 149.517, flip: true },
   },
 ];
 
-export function WhyBuySection() {
+type WhyBuyContent = SectionContent<typeof seminovasPage.sections.whyBuy>;
+
+export function WhyBuySection({ content }: { content: WhyBuyContent }) {
   const gridRef = useRef<HTMLDivElement>(null);
   // Quando QUALQUER título não cabe em uma linha, todos quebram em duas
-  // (no ponto definido nos dados); quando todos cabem, ficam em uma linha.
+  // (entre as duas partes do título); quando todos cabem, ficam em uma linha.
   const [twoLines, setTwoLines] = useState(false);
 
   useEffect(() => {
@@ -151,52 +138,55 @@ export function WhyBuySection() {
   return (
     <Section className="flex flex-col items-start gap-10 lg:gap-14">
       <h2 className="text-h2 font-normal text-neutral-800">
-        Por que comprar seminova{" "}
+        {content.titleRegular}{" "}
         <br className="hidden lg:inline" />
-        <span className="font-bold text-primary-500">com a TranspoTech</span>
+        <span className="font-bold text-primary-500">{content.titleAccent}</span>
       </h2>
 
       <div
         ref={gridRef}
         className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
       >
-        {cards.map((card) => (
-          <div
-            key={card.title.join(" ")}
-            className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-neutral-50 p-6 transition-shadow duration-300 hover:z-10 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.18)] lg:min-h-[280px]"
-          >
-            <CardImageIcon
-              src={card.art.src}
-              width={card.art.width ?? 178.49}
-              height={card.art.height ?? 133.867}
-              left={card.art.left ?? -35}
-              top={card.art.top ?? -18}
-              maskX={card.art.maskX}
-              maskY={card.art.maskY ?? 0}
-              maskW={card.art.maskW}
-              maskH={card.art.maskH}
-              flip={card.art.flip}
-              objectFit={card.art.objectFit}
-              objectPosition={card.art.objectPosition}
-              scale={card.art.scale}
-              mask={card.art.mask}
-            />
-            <div className="relative mt-[124px] lg:mt-[140px] flex flex-col gap-4">
-              <h3 className="font-heading text-h6 font-semibold leading-[1.3] text-neutral-800">
-                {card.title[0]}
-                {twoLines ? <br /> : <Fragment> </Fragment>}
-                {card.title[1]}
-              </h3>
-              <p className="text-body leading-[1.35] text-neutral-600">
-                {card.description}
-              </p>
+        {content.cards.map((card, i) => {
+          const { art } = arts[i];
+          return (
+            <div
+              key={`${card.titleTop} ${card.titleBottom}`}
+              className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-xl bg-neutral-50 p-6 transition-shadow duration-300 hover:z-10 hover:shadow-[0_16px_48px_0_rgba(33,143,115,0.18)] lg:min-h-[280px]"
+            >
+              <CardImageIcon
+                src={art.src}
+                width={art.width ?? 178.49}
+                height={art.height ?? 133.867}
+                left={art.left ?? -35}
+                top={art.top ?? -18}
+                maskX={art.maskX}
+                maskY={art.maskY ?? 0}
+                maskW={art.maskW}
+                maskH={art.maskH}
+                flip={art.flip}
+                objectFit={art.objectFit}
+                objectPosition={art.objectPosition}
+                scale={art.scale}
+                mask={art.mask}
+              />
+              <div className="relative mt-[124px] lg:mt-[140px] flex flex-col gap-4">
+                <h3 className="font-heading text-h6 font-semibold leading-[1.3] text-neutral-800">
+                  {card.titleTop}
+                  {twoLines ? <br /> : <Fragment> </Fragment>}
+                  {card.titleBottom}
+                </h3>
+                <p className="text-body leading-[1.35] text-neutral-600">
+                  {card.description}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <Button variant="primary" size="lg" href={ROUTES.SIMULADOR}>
-        Consultar equipamentos
+        {content.buttonLabel}
       </Button>
     </Section>
   );

@@ -11,7 +11,9 @@ import { SegmentsSection } from "@/components/automacao-intralogistica/segments-
 // Seção "O que nossos clientes dizem" temporariamente oculta a pedido do cliente.
 // import { CasesSection } from "@/components/automacao-intralogistica/cases-section/cases-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
-import { faqAutomacao } from "@/data/faq-automacao";
+import { getFaqItems } from "@/sanity/queries/faq";
+import { getPage } from "@/sanity/queries/pages";
+import { automacaoPage } from "@/sanity/content/pages/automacao";
 import { CtaSection } from "@/components/layout/cta/cta-section";
 import { HoverMesh } from "@/components/layout/hover-mesh";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
@@ -29,39 +31,47 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AutomacaoPage() {
+export default async function AutomacaoPage() {
+  const [faqItems, content] = await Promise.all([
+    getFaqItems("automacao"),
+    getPage(automacaoPage),
+  ]);
+
   return (
     <main>
-      <AutomacaoHeroSection />
+      <AutomacaoHeroSection content={content.hero} />
 
       {/* Grupo claro 1 — Parceria TranspoTech + Dematic + Captação.
           Uma única malha cobre tudo, sem cortes (fundo surface-subtle). */}
       <div className="relative isolate bg-surface-subtle">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <PartnershipSection />
-        <LeadFormSection
-          id="avaliar-automacao"
-          titleTop="Avalie automatizar"
-          titleBottom="a sua operação"
-          description="Conte sobre sua operação intralogística e avaliamos o melhor caminho de automação para o seu negócio."
-          messagePlaceholder="Tipo de operação (indústria, CD, e-commerce), volume e principais gargalos."
-          submitLabel="Avaliar minha operação"
+        <PartnershipSection
+          content={content.partnership}
+          hotspots={content.hotspots}
         />
+        <LeadFormSection id="avaliar-automacao" {...content.leadForm} />
       </div>
 
       {/* Bloco dark — Números */}
       <div className="relative isolate bg-[#181616]">
         <DarkAmbient />
-        <BenefitsSection />
+        <BenefitsSection content={content.benefits} />
       </div>
 
       {/* Grupo claro 2 — Soluções/Sistemas/AGV + Processo + Segmentos.
           Uma única malha cobre as três, sem cortes. */}
       <div className="relative isolate bg-background">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <SolutionsSection />
-        <ProcessSection />
-        <SegmentsSection />
+        <SolutionsSection
+          content={content.solutions}
+          tabs={[
+            content.solutionsTab1,
+            content.solutionsTab2,
+            content.solutionsTab3,
+          ]}
+        />
+        <ProcessSection content={content.process} />
+        <SegmentsSection content={content.segments} />
       </div>
 
       {/* CasesSection segue oculta. Ela é dark (data-header-dark + cards com
@@ -71,20 +81,12 @@ export default function AutomacaoPage() {
 
       {/* Grupo claro 4 — FAQ (sem malha) */}
       <div className="bg-background">
-        <FaqSection
-          titleRegular="Perguntas que sempre recebemos "
-          titleAccent="sobre automação"
-          items={faqAutomacao}
-        />
+        <FaqSection {...content.faq} items={faqItems} />
       </div>
 
       <CtaSection
-        titleRegular="Vamos avaliar a automação certa "
-        titleAccent="para sua operação?"
-        description="Resposta em até 1 dia útil. Sem compromisso. Confidencialidade garantida."
-        ctaLabel="Avaliar minha operação"
+        {...content.cta}
         ctaHref="#avaliar-automacao"
-        secondaryLabel="Falar com especialista"
         secondaryHref={ROUTES.CONTATO}
       />
     </main>

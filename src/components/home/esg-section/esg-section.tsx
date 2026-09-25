@@ -6,47 +6,33 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ParallaxFrame } from "@/components/layout/parallax-frame";
-import team from "@/assets/images/esg-team.png";
 import gptw from "@/assets/images/gptw-badge.webp";
 import { ROUTES } from "@/lib/routes";
 import { gsap } from "@/lib/gsap";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { homePage } from "@/sanity/content/pages/home";
 
-type EsgItem = {
-  title: string;
-  description: string;
-  link: { label: string; href: string } | null;
-};
-
-const items: EsgItem[] = [
-  {
-    title: "Great Place To Work",
-    description:
-      "Pelo 4° ano consecutivo, a TranspoTech foi reconhecida como Great Place To Work.",
-    link: null,
-  },
-  {
-    title: "Pessoas no centro da operação",
-    description:
-      "Programas de inclusão e desenvolvimento de talentos na área técnica.",
-    link: null,
-  },
-  {
-    title: "Eficiência e operação mais limpa",
-    description:
-      "Foco em soluções e tecnologias que aumentam eficiência e reduzem impacto na operação.",
-    link: { label: "Saiba mais", href: ROUTES.SUSTENTABILIDADE },
-  },
-  {
-    title: "Ética, transparência e canais oficiais",
-    description:
-      "Canal de transparência para relatos e condutas (com seriedade e confidencialidade).",
-    link: { label: "Canal de transparência", href: ROUTES.CANAL_TRANSPARENCIA },
-  },
+// Destino do link de cada item, na ordem dos itens editados no Studio; o link
+// só aparece onde há destino e texto.
+const itemHrefs: (string | null)[] = [
+  null,
+  null,
+  ROUTES.SUSTENTABILIDADE,
+  ROUTES.CANAL_TRANSPARENCIA,
 ];
 
 const STAGGER = 0.16;
 
-export function EsgSection() {
+type EsgContent = SectionContent<typeof homePage.sections.esg>;
+
+export function EsgSection({ content }: { content: EsgContent }) {
+  const items = content.items.map((item, i) => {
+    const href = itemHrefs[i];
+    return {
+      ...item,
+      link: href && item.linkLabel ? { label: item.linkLabel, href } : null,
+    };
+  });
   const contentRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const itemContainerRefs = useRef<HTMLDivElement[]>([]);
@@ -95,25 +81,24 @@ export function EsgSection() {
         <div className="flex w-[641px] max-w-full flex-col gap-6">
           <div className="flex w-[613px] max-w-full flex-col gap-4">
             <p className="text-body font-semibold leading-[1.35] text-secondary-600">
-              ESG E GOVERNANÇA
+              {content.eyebrow}
             </p>
             <h2 className="text-h2 text-neutral-800">
-              <span className="font-bold">ESG na prática,</span>{" "}
+              <span className="font-bold">{content.titleBold}</span>{" "}
               <span className="font-normal">
-                para uma intralogística mais responsável
+                {content.titleRegular}
               </span>
             </h2>
           </div>
           <p className="text-body leading-[1.35] text-neutral-600">
-            Compromissos claros em Ambiental, Social e Governança com iniciativas
-            alinhadas aos ODS da ONU e canais formais de transparência.
+            {content.description}
           </p>
         </div>
 
         <div className="relative h-[90px] w-[71px] shrink-0 self-start sm:h-auto sm:w-[110px] sm:self-stretch md:w-[135px] lg:w-[163px]">
           <Image
             src={gptw}
-            alt="Great Place To Work Certificada — 4 anos consecutivos"
+            alt={content.badgeAlt}
             fill
             sizes="163px"
             className="object-contain object-right"
@@ -129,8 +114,8 @@ export function EsgSection() {
           className="order-last h-[300px] w-full shrink-0 rounded-xl lg:order-none lg:h-auto lg:w-[720px]"
         >
           <Image
-            src={team}
-            alt="Equipe TranspoTech"
+            src={content.image}
+            alt={content.image.alt}
             fill
             sizes="(min-width: 1024px) 720px, 100vw"
             className="object-cover"
@@ -143,7 +128,7 @@ export function EsgSection() {
         <div className="flex flex-1 flex-col gap-10 lg:gap-4">
           {items.map((item, index) => (
             <div
-              key={item.title}
+              key={index}
               ref={(node) => {
                 if (node) itemContainerRefs.current[index] = node;
               }}

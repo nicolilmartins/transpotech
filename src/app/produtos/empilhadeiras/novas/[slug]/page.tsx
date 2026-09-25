@@ -9,35 +9,39 @@ import { RelatedProductsSection } from "@/components/empilhadeiras-novas/related
 import { BackToCatalog } from "@/components/empilhadeiras-novas/back-to-catalog/back-to-catalog";
 import { DriftMesh } from "@/components/layout/drift-mesh";
 import {
-  forkliftsNovas,
-  getForkliftBySlug,
+  getForkliftDetail,
+  getForkliftNovaBySlug,
+  getForkliftNovaSlugs,
+  getForkliftsNovas,
   getRelatedForklifts,
-} from "@/data/forklifts-novas";
-import { getForkliftDetail } from "@/data/forklift-details";
+} from "@/sanity/queries/forklifts";
+import { getPage } from "@/sanity/queries/pages";
+import { empilhadeirasNovasPage } from "@/sanity/content/pages/empilhadeiras-novas";
 import { ROUTES } from "@/lib/routes";
 
 type DetailPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-// Catálogo é um conjunto fixo: slugs fora de generateStaticParams retornam 404.
-export const dynamicParams = false;
+// Modelos publicados no CMS depois do build são gerados na primeira visita
+// (dynamicParams padrão); slug inexistente cai no notFound() da página.
 
-export function generateStaticParams() {
-  return forkliftsNovas.map((forklift) => ({ slug: forklift.id }));
+export async function generateStaticParams() {
+  const slugs = await getForkliftNovaSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
   params,
 }: DetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const forklift = getForkliftBySlug(slug);
+  const forklift = await getForkliftNovaBySlug(slug);
 
   if (!forklift) {
     return { title: "Produto não encontrado" };
   }
 
-  const detail = getForkliftDetail(forklift);
+  const detail = await getForkliftDetail(forklift);
 
   return {
     title: forklift.name,
@@ -55,12 +59,16 @@ export default async function EmpilhadeiraNovaDetalhePage({
   params,
 }: DetailPageProps) {
   const { slug } = await params;
-  const forklift = getForkliftBySlug(slug);
+  const [forklifts, { detail: content }] = await Promise.all([
+    getForkliftsNovas(),
+    getPage(empilhadeirasNovasPage),
+  ]);
+  const forklift = forklifts.find((f) => f.id === slug);
 
   if (!forklift) notFound();
 
-  const detail = getForkliftDetail(forklift);
-  const related = getRelatedForklifts(forklift, 4);
+  const detail = await getForkliftDetail(forklift);
+  const related = getRelatedForklifts(forklifts, forklift, 4);
 
   return (
     <main>
@@ -77,7 +85,11 @@ export default async function EmpilhadeiraNovaDetalhePage({
           fade
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-svh"
         />
-        <ProductDetailSection forklift={forklift} />
+        <ProductDetailSection
+          forklift={forklift}
+          forklifts={forklifts}
+          content={content}
+        />
       </div>
 
       {/* Palco do modelo — imagem full-bleed com zoom (fundo claro) */}
@@ -87,14 +99,21 @@ export default async function EmpilhadeiraNovaDetalhePage({
 
       {/* Destaques do modelo — layout de lista (Planos de locação), dark mode,
           com o botão "Ver ficha técnica" no cabeçalho */}
-      <ModelHighlightsSection detail={detail} />
+      <ModelHighlightsSection
+        detail={detail}
+        datasheetLabel={content.datasheetLabel}
+      />
 
       {/* Relacionados */}
       <div className="relative isolate bg-neutral-50">
-        <RelatedProductsSection items={related} />
+        <RelatedProductsSection
+          items={related}
+          forklifts={forklifts}
+          content={content}
+        />
       </div>
 
-      <BackToCatalog />
+      <BackToCatalog label={content.backLabel} />
     </main>
   );
 }

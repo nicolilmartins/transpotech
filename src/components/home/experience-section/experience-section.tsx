@@ -1,15 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/ui/section";
+import { LineBreaks } from "@/components/ui/line-breaks";
 import card1 from "@/assets/images/stats/card1.png";
 import card2 from "@/assets/images/stats/card2.png";
 import illoCar from "@/assets/images/stats/illustration-car.webp";
 import illoMap from "@/assets/images/stats/map-illustration.webp";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { ROUTES } from "@/lib/routes";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { homePage } from "@/sanity/content/pages/home";
 
 // Conta o número principal (primeiro grupo de dígitos), preservando
 // prefixos/sufixos: "+3700", "+400", "+11".
@@ -20,9 +23,8 @@ const countValue = (value: string, progress: number) =>
 
 type BoxArt = { width: number; height: number; right: number; top: number };
 
-type Stat = {
-  value: string;
-  label: ReactNode;
+// Arte de cada card, na ordem dos números editados no Studio.
+type StatArt = {
   labelWidth: number;
   image: StaticImageData;
   // "contain" = ilustração ancorada à direita (padrão desta seção);
@@ -32,52 +34,21 @@ type Stat = {
   art: "contain" | "map" | BoxArt;
 };
 
-const stats: Stat[] = [
+const statArts: StatArt[] = [
+  { labelWidth: 178, image: card1, art: "contain" },
+  { labelWidth: 165, image: illoMap, art: "map" },
+  { labelWidth: 157, image: card2, art: "contain" },
   {
-    value: "+3700",
-    label: "Empilhadeiras locadas operando ativamente em diversos segmentos",
-    labelWidth: 178,
-    image: card1,
-    art: "contain",
-  },
-  {
-    value: "+670",
-    label: "Cidades atendidas",
-    labelWidth: 165,
-    image: illoMap,
-    art: "map",
-  },
-  {
-    value: "+400",
-    label: (
-      <>
-        Mecânicos (as)
-        <br />
-        para manutenção
-        <br />
-        preventiva e corretiva
-      </>
-    ),
-    labelWidth: 157,
-    image: card2,
-    art: "contain",
-  },
-  {
-    value: "+360",
-    label: (
-      <>
-        Carros oficinas
-        <br />
-        em + 15 estados
-      </>
-    ),
     labelWidth: 163,
     image: illoCar,
     art: { width: 236.4, height: 236.08, right: -42, top: -26 },
   },
 ];
 
-export function ExperienceSection() {
+type ExperienceContent = SectionContent<typeof homePage.sections.experience>;
+
+export function ExperienceSection({ content }: { content: ExperienceContent }) {
+  const stats = content.stats.map((stat, i) => ({ ...stat, ...statArts[i] }));
   const cardsRef = useRef<HTMLDivElement>(null);
   const numberRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const cardElRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -141,6 +112,8 @@ export function ExperienceSection() {
       trigger.kill();
       tweens.forEach((t) => t.kill());
     };
+    // content.stats vem do servidor e não muda depois da montagem.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -149,20 +122,17 @@ export function ExperienceSection() {
       <div className="flex w-[680px] max-w-full flex-col gap-6">
         <div className="flex w-[660px] max-w-full flex-col gap-4">
           <p className="text-body font-semibold leading-[1.35] text-secondary-600">
-            EXPERIÊNCIA
+            {content.eyebrow}
           </p>
           <h2 className="text-h2 font-normal text-neutral-800">
-            Mais de 88% do Brasil{" "}
-            <br className="hidden lg:inline" />
-            já conta{" "}
+            <LineBreaks text={content.title} brClassName="hidden lg:inline" />{" "}
             <span className="font-bold text-primary-500">
-              com a TranspoTech
+              {content.titleAccent}
             </span>
           </h2>
         </div>
         <p className="w-[510px] max-w-full text-body leading-[1.35] text-neutral-600">
-          Escala, equipe e infraestrutura para garantir disponibilidade,
-          agilidade e suporte técnico em todo o Sul e Sudeste.
+          {content.description}
         </p>
       </div>
 
@@ -170,7 +140,7 @@ export function ExperienceSection() {
       <div ref={cardsRef} className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:flex">
         {stats.map((s, i) => (
           <div
-            key={s.value}
+            key={i}
             ref={(node) => {
               cardElRefs.current[i] = node;
             }}
@@ -235,7 +205,7 @@ export function ExperienceSection() {
                 className="text-body leading-[1.35] text-neutral-600"
                 style={{ maxWidth: s.labelWidth }}
               >
-                {s.label}
+                <LineBreaks text={s.label} />
               </span>
             </div>
           </div>
@@ -243,7 +213,7 @@ export function ExperienceSection() {
       </div>
 
       <Button variant="primary" size="lg" href={ROUTES.CONTATO}>
-        Quero reduzir meus custos
+        {content.buttonLabel}
       </Button>
     </Section>
   );

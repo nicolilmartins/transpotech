@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { QuoteModal } from "@/components/layout/quote-modal/quote-modal";
+import { useSharedTexts } from "@/components/layout/shared-texts";
 import type { Forklift } from "@/types/forklift.types";
 
 // Botão "Solicitar orçamento deste modelo" das páginas de detalhe (novas e
@@ -16,6 +17,7 @@ export function ProductQuoteButton({
   forklifts: Forklift[];
 }) {
   const [open, setOpen] = useState(false);
+  const { productQuote } = useSharedTexts();
 
   return (
     <>
@@ -25,7 +27,7 @@ export function ProductQuoteButton({
         onClick={() => setOpen(true)}
         className="justify-center"
       >
-        Solicitar orçamento deste modelo
+        {productQuote.buttonLabel}
       </Button>
 
       {open && (

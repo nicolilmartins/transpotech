@@ -1,36 +1,10 @@
 import { Section } from "@/components/ui/section";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { seminovasPage } from "@/sanity/content/pages/seminovas";
 
-type Item = { title: string; description: string };
+type IncludedContent = SectionContent<typeof seminovasPage.sections.included>;
 
-const items: Item[] = [
-  {
-    title: "Garantia",
-    description:
-      "Cobertura de 6 a 12 meses conforme o equipamento, incluindo peças e mão de obra.",
-  },
-  {
-    title: "Revisão técnica documentada",
-    description:
-      "Laudo TranspoTech e histórico de manutenção entregues junto ao equipamento.",
-  },
-  {
-    title: "Suporte pós-venda",
-    description:
-      "Peças, manutenção preventiva e corretiva pela equipe técnica da TranspoTech.",
-  },
-  {
-    title: "Treinamento operacional",
-    description:
-      "Orientação básica de operação e segurança ao operador no recebimento.",
-  },
-  {
-    title: "Logística de entrega",
-    description:
-      "Transporte coordenado pela TranspoTech até a sua unidade, com hora marcada.",
-  },
-];
-
-export function IncludedSection() {
+export function IncludedSection({ content }: { content: IncludedContent }) {
   return (
     <Section
       data-header-dark
@@ -41,24 +15,23 @@ export function IncludedSection() {
         {/* Mobile: "O que está incluso" / "na compra"; desktop mantém
             "O que está" / "incluso na compra" (breaks por breakpoint). */}
         <h2 className="text-h2 text-neutral-50">
-          <span className="font-normal">O que está</span>{" "}
+          <span className="font-normal">{content.titleRegular}</span>{" "}
           <br className="hidden lg:inline" />
-          <span className="font-bold text-primary-500">incluso</span>
+          <span className="font-bold text-primary-500">{content.titleAccentTop}</span>
           <br className="lg:hidden" />{" "}
-          <span className="font-bold text-primary-500">na compra</span>
+          <span className="font-bold text-primary-500">{content.titleAccentBottom}</span>
         </h2>
         <p className="text-body leading-[1.5] text-neutral-400">
-          Cada empilhadeira seminova já vem com a estrutura da TranspoTech por trás,
-          da garantia ao suporte pós-venda.
+          {content.description}
         </p>
       </div>
 
       {/* Itens — linhas divisórias + tick laranja por linha */}
       <div className="w-full">
         <ul className="flex flex-col border-t border-white/10">
-          {items.map((item) => (
+          {content.items.map((item, i) => (
             <li
-              key={item.title}
+              key={i}
               className="group relative flex flex-col gap-3 border-b border-white/10 py-10 transition-colors lg:flex-row lg:gap-16 lg:py-12"
             >
               {/* Linha precisa à esquerda — fica laranja no hover */}

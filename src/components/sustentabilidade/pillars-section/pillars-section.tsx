@@ -1,53 +1,13 @@
 import { Leaf, Users, ShieldCheck, type LucideIcon } from "lucide-react";
 import { Section } from "@/components/ui/section";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { sustentabilidadePage } from "@/sanity/content/pages/sustentabilidade";
 
-type Pillar = {
-  title: string;
-  description: string;
-  items: string[];
-  Icon: LucideIcon;
-};
+type PillarsContent = SectionContent<typeof sustentabilidadePage.sections.pillars>;
+type Pillar = PillarsContent["pillars"][number] & { Icon: LucideIcon };
 
-const pillars: Pillar[] = [
-  {
-    title: "Ambiental",
-    description:
-      "Práticas e soluções que apoiam operações mais eficientes, conscientes e alinhadas à redução de impactos.",
-    items: [
-      "Eficiência operacional",
-      "Soluções elétricas e baterias",
-      "Uso responsável de recursos",
-      "Apoio a operações mais sustentáveis",
-      "Logística reversa, descarte correto de materiais e fluidos",
-      "Produção de 172 mil kWh/ano",
-    ],
-    Icon: Leaf,
-  },
-  {
-    title: "Social",
-    description:
-      "Iniciativas voltadas à inclusão, equidade, desenvolvimento de pessoas e impacto positivo na comunidade.",
-    items: [
-      "Equidade social",
-      "Mulheres Mecânicas",
-      "Projetos comunitários",
-      "Desenvolvimento de talentos",
-    ],
-    Icon: Users,
-  },
-  {
-    title: "Governança",
-    description:
-      "Práticas e canais que reforçam ética, transparência, escuta e responsabilidade corporativa.",
-    items: [
-      "Canal da Transparência",
-      "Ouvidoria Digital",
-      "Conduta ética",
-      "Relações responsáveis",
-    ],
-    Icon: ShieldCheck,
-  },
-];
+// Ícone de cada pilar, na ordem dos pilares editados no Studio.
+const pillarIcons: LucideIcon[] = [Leaf, Users, ShieldCheck];
 
 // Card no estilo do CompareCard (layout/compare-section), sem
 // ilustração e com acento verde (secondary) em todos.
@@ -73,13 +33,13 @@ function PillarCard({ title, description, items, Icon }: Pillar) {
       <div className="relative flex-1 border-t border-black/[0.04] bg-neutral-50/40 px-6 pb-8 pt-6 lg:px-8">
         <ul className="relative z-10 flex flex-col gap-2.5">
           {items.map((item) => (
-            <li key={item} className="flex items-start gap-3">
+            <li key={item.label} className="flex items-start gap-3">
               <span
                 aria-hidden
                 className="mt-2 size-1.5 shrink-0 rounded-full bg-secondary-600"
               />
               <span className="max-w-[88%] text-body leading-[1.35] text-neutral-700">
-                {item}
+                {item.label}
               </span>
             </li>
           ))}
@@ -89,25 +49,24 @@ function PillarCard({ title, description, items, Icon }: Pillar) {
   );
 }
 
-export function PillarsSection() {
+export function PillarsSection({ content }: { content: PillarsContent }) {
   return (
     <Section className="flex flex-col items-start gap-10 lg:gap-14">
       <div className="flex max-w-[720px] flex-col gap-4">
         <h2 className="text-h3 text-neutral-800">
-          <span className="lg:block font-normal">Comprometidos com</span>{" "}
+          <span className="lg:block font-normal">{content.titleTop}</span>{" "}
           <span className="lg:block font-bold text-primary-500">
-            um futuro mais sustentável
+            {content.titleAccent}
           </span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-600">
-          Operações mais eficientes e de menor impacto, pessoas valorizadas e
-          relações cada vez mais éticas e transparentes.
+          {content.description}
         </p>
       </div>
 
       <div className="grid w-full grid-cols-1 items-stretch gap-4 lg:grid-cols-3">
-        {pillars.map((pillar) => (
-          <PillarCard key={pillar.title} {...pillar} />
+        {content.pillars.map((pillar, i) => (
+          <PillarCard key={pillar.title} {...pillar} Icon={pillarIcons[i]} />
         ))}
       </div>
 

@@ -3,44 +3,21 @@
 import { useEffect, useRef, useState } from "react";
 import { Section } from "@/components/ui/section";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { quemSomosPage } from "@/sanity/content/pages/quem-somos";
 
-type Milestone = { badge: string; title: string; description: string };
-
-const milestones: Milestone[] = [
-  {
-    badge: "2001",
-    title: "Início da atuação da TranspoTech",
-    description:
-      "Começo da trajetória no mercado de intralogística e equipamentos de movimentação.",
-  },
-  {
-    badge: "Primeiros anos",
-    title: "Primeira empilhadeira locada",
-    description: "Expansão da atuação em locação e suporte técnico.",
-  },
-  {
-    badge: "Expansão",
-    title: "Abertura de novas unidades",
-    description:
-      "Crescimento regional para atender clientes em diferentes estados.",
-  },
-  {
-    badge: "Parcerias",
-    title: "Distribuidor autorizado",
-    description: "Fortalecimento da atuação com marcas reconhecidas no mercado.",
-  },
-  {
-    badge: "Hoje",
-    title: "Portfólio completo em intralogística",
-    description:
-      "Venda, locação, manutenção, peças, pneus, baterias, carregadores e soluções para movimentação de materiais.",
-  },
-];
+type HistoryContent = SectionContent<typeof quemSomosPage.sections.history>;
 
 // Linha horizontal + nós (mesmo padrão da seção "Como funciona a compra de
 // usada"): camada base (cinza) sob a laranja, revelada por clip-path da
 // esquerda para a direita conforme a seção entra na viewport.
-function LineMarkers({ tone }: { tone: "base" | "fill" }) {
+function LineMarkers({
+  count,
+  tone,
+}: {
+  count: number;
+  tone: "base" | "fill";
+}) {
   const isFill = tone === "fill";
   return (
     <div className="relative h-3">
@@ -52,8 +29,8 @@ function LineMarkers({ tone }: { tone: "base" | "fill" }) {
       {/* Cada nó fica no início da coluna (mesmo x da divisória vertical), com
           -translate-x-1/2 para centralizar sobre a linha. */}
       <div className="relative grid h-full grid-cols-5">
-        {milestones.map((milestone) => (
-          <div key={milestone.badge} className="flex items-center">
+        {Array.from({ length: count }).map((_, i) => (
+          <div key={i} className="flex items-center">
             <span
               className={`size-3 -translate-x-1/2 rounded-full ${
                 isFill
@@ -68,7 +45,8 @@ function LineMarkers({ tone }: { tone: "base" | "fill" }) {
   );
 }
 
-export function HistorySection() {
+export function HistorySection({ content }: { content: HistoryContent }) {
+  const { milestones } = content;
   const trackRef = useRef<HTMLDivElement>(null);
   const fillRef = useRef<HTMLDivElement>(null);
   // Mobile: trilho vertical à esquerda (mesma interação da régua do desktop)
@@ -160,14 +138,11 @@ export function HistorySection() {
       {/* Título em uma linha + descrição (topo esquerdo) */}
       <div className="flex max-w-[760px] flex-col gap-4">
         <h2 className="text-h2 text-neutral-50">
-          <span className="font-normal">Nossa </span>
-          <span className="font-bold">história</span>
+          <span className="font-normal">{content.titleRegular}</span>
+          <span className="font-bold">{content.titleAccent}</span>
         </h2>
         <p className="text-body leading-[1.5] text-neutral-400">
-          Nossa trajetória foi construída ao lado de clientes que precisam
-          movimentar mais, parar menos e operar com segurança. Ao longo dos anos,
-          ampliamos nossa estrutura, equipe técnica, unidades e portfólio para
-          atender operações cada vez mais exigentes.
+          {content.description}
         </p>
       </div>
 
@@ -232,13 +207,13 @@ export function HistorySection() {
 
         {/* Linha de baixo (desktop) — cinza base + laranja que carrega no scroll */}
         <div ref={trackRef} className="relative hidden lg:block">
-          <LineMarkers tone="base" />
+          <LineMarkers count={milestones.length} tone="base" />
           <div
             ref={fillRef}
             className="absolute inset-0"
             style={{ clipPath: "inset(-12px calc(100% + 12px) -12px -12px)" }}
           >
-            <LineMarkers tone="fill" />
+            <LineMarkers count={milestones.length} tone="fill" />
           </div>
         </div>
       </div>

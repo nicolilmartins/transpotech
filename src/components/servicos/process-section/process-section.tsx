@@ -5,43 +5,26 @@ import illoSearch from "@/assets/images/stats/illustration-search.webp";
 import illoFolder from "@/assets/images/stats/illustration-folder.webp";
 import illoToolBox from "@/assets/images/stats/illustration-tool-box.webp";
 import illoShield from "@/assets/images/stats/illustration-shield.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { servicosPage } from "@/sanity/content/pages/servicos";
 
-// Ilustrações provisórias — serão substituídas.
-const steps: ZigzagStep[] = [
-  {
-    title: "Você informa a necessidade",
-    description:
-      "Envie cidade, tipo de equipamento, modelo, série, marca, problema ou objetivo da manutenção.",
-    image: illoDocument,
-  },
-  {
-    title: "A equipe entende o contexto",
-    description:
-      "A TranspoTech avalia a demanda e direciona o atendimento conforme urgência, região e tipo de serviço.",
-    image: illoSearch,
-  },
-  {
-    title: "O técnico realiza o diagnóstico",
-    description:
-      "O equipamento é avaliado para identificar falhas, riscos, peças necessárias e prioridade de intervenção.",
-    image: illoFolder,
-  },
-  {
-    title: "A manutenção é executada",
-    description:
-      "A equipe realiza o serviço corretivo, preventivo ou programado conforme escopo definido.",
-    image: illoToolBox,
-  },
-  {
-    title: "Sua frota segue acompanhada",
-    description:
-      "Quando necessário, a TranspoTech pode apoiar com peças, novas manutenções, contrato ou plano recorrente.",
-    image: illoShield,
-    imageLgHeight: "lg:h-[270px]",
-  },
+// Ilustrações provisórias — serão substituídas. Uma por etapa, na ordem das
+// etapas editadas no Studio.
+const stepArt: Pick<ZigzagStep, "image" | "imageLgHeight">[] = [
+  { image: illoDocument },
+  { image: illoSearch },
+  { image: illoFolder },
+  { image: illoToolBox },
+  { image: illoShield, imageLgHeight: "lg:h-[270px]" },
 ];
 
-export function ProcessSection() {
+type ProcessContent = SectionContent<typeof servicosPage.sections.process>;
+
+export function ProcessSection({ content }: { content: ProcessContent }) {
+  const steps: ZigzagStep[] = content.steps.map((step, i) => ({
+    ...step,
+    ...stepArt[i],
+  }));
   return (
     <ZigzagProcess
       gradientId="serviceProcessFill"
@@ -49,17 +32,17 @@ export function ProcessSection() {
       header={
         <div className="flex max-w-[560px] flex-col items-center gap-4 text-center">
           <p className="text-body font-semibold uppercase tracking-wide text-secondary-600">
-            Processo
+            {content.eyebrow}
           </p>
           <h2 className="text-h2 text-neutral-800">
-            <span className="font-normal">Como funciona o </span>
-            <span className="font-bold text-primary-500">atendimento</span>
+            <span className="font-normal">{content.titleRegular}</span>
+            <span className="font-bold text-primary-500">{content.titleAccent}</span>
           </h2>
         </div>
       }
       cta={
         <Button variant="primary" size="lg" href="#solicitar-servico">
-          Solicitar atendimento
+          {content.buttonLabel}
         </Button>
       }
     />

@@ -13,12 +13,19 @@ import {
   type SimuladorInputs,
 } from "@/data/glp-vs-eletrica";
 import { formatBRL, formatBRLInteiro, formatMeses } from "@/lib/format";
+import { LineBreaks } from "@/components/ui/line-breaks";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { simularEconomiaPage } from "@/sanity/content/pages/simular-economia";
+
+type SimulatorContent = SectionContent<
+  typeof simularEconomiaPage.sections.simulator
+>;
 
 type FieldKey = keyof SimuladorInputs;
 
+// Um controle por nome editado no Studio, na mesma ordem.
 const fields: {
   key: FieldKey;
-  label: string;
   min: number;
   max: number;
   step: number;
@@ -26,7 +33,6 @@ const fields: {
 }[] = [
   {
     key: "turnos",
-    label: "Nr. de turnos de trabalho",
     min: 1,
     max: 3,
     step: 0.5,
@@ -35,7 +41,6 @@ const fields: {
   },
   {
     key: "cilindro",
-    label: "Valor do cilindro de gás P20",
     min: 100,
     max: 350,
     step: 10,
@@ -43,7 +48,6 @@ const fields: {
   },
   {
     key: "kwh",
-    label: "Valor do kWh",
     min: 0,
     max: 1.2,
     step: 0.01,
@@ -55,29 +59,22 @@ const fields: {
 const sliderClass =
   "h-1 w-full appearance-none rounded-full bg-neutral-200 outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 [&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary-500 [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary-500 [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110";
 
-type MetricRow = {
-  label: string;
-  fmt: (r: ResultadoEquipamento) => string;
-};
-
-const metricRows: MetricRow[] = [
-  { label: "Custo por hora", fmt: (r) => formatBRL(r.custoHora) },
-  { label: "Custo por mês", fmt: (r) => formatBRL(r.custoMes) },
-  { label: "Custo por ano", fmt: (r) => formatBRL(r.custoAno) },
-  { label: "Custo em 5 anos", fmt: (r) => formatBRL(r.custoCincoAnos) },
-  {
-    label: "Preço / retorno do investimento",
-    fmt: (r) =>
-      r.eletrica
-        ? formatMeses(r.paybackMeses ?? Infinity)
-        : formatBRLInteiro(r.preco ?? 0),
-  },
+// Valor de cada linha da tabela, na ordem dos nomes editados no Studio.
+const metricRows: ((r: ResultadoEquipamento) => string)[] = [
+  (r) => formatBRL(r.custoHora),
+  (r) => formatBRL(r.custoMes),
+  (r) => formatBRL(r.custoAno),
+  (r) => formatBRL(r.custoCincoAnos),
+  (r) =>
+    r.eletrica
+      ? formatMeses(r.paybackMeses ?? Infinity)
+      : formatBRLInteiro(r.preco ?? 0),
 ];
 
 const valueColor = (r: ResultadoEquipamento) =>
   r.eletrica ? "text-secondary-600" : "text-neutral-800";
 
-export function SimulatorSection() {
+export function SimulatorSection({ content }: { content: SimulatorContent }) {
   const [inputs, setInputs] = useState<SimuladorInputs>(DEFAULT_INPUTS);
   const [showFilters, setShowFilters] = useState(false);
   const { glp, baterias } = compararCustos(inputs);
@@ -108,7 +105,7 @@ export function SimulatorSection() {
       }
       if (e.key !== "Tab" || !dialogRef.current) return;
       const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
-        'button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])'
+        'button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])',
       );
       if (focusables.length === 0) return;
       const first = focusables[0];
@@ -138,45 +135,46 @@ export function SimulatorSection() {
     <div className="flex h-full flex-col gap-5">
       <div className="flex flex-col gap-1">
         <h2 className="font-heading text-body-lg font-semibold text-neutral-800">
-          Ajuste os valores
+          {content.filtersTitle}
         </h2>
         <p className="text-body leading-[1.4] text-neutral-600">
-          Partem de médias de referência no Brasil.
-          <br />
-          Arraste para a sua operação.
+          <LineBreaks text={content.filtersDescription} />
         </p>
       </div>
 
       <div className="flex flex-col">
-        {fields.map((f) => (
-          // Linha divisória acima de cada filtro (como no catálogo, sem seta).
-          <div
-            key={f.key}
-            className="flex flex-col gap-2 border-t border-neutral-200 pt-5 [&:not(:first-child)]:mt-5"
-          >
-            <span className="text-body font-semibold text-neutral-700">
-              {f.label}
-            </span>
-            <input
-              type="range"
-              min={f.min}
-              max={f.max}
-              step={f.step}
-              value={inputs[f.key]}
-              onChange={(e) => setField(f.key, e.target.value)}
-              aria-label={`${f.label}: ${f.format(inputs[f.key])}`}
-              aria-valuetext={f.format(inputs[f.key])}
-              className={sliderClass}
-            />
-            <div className="flex items-center justify-between text-body text-neutral-400">
-              <span>{f.format(f.min)}</span>
-              <span className="font-semibold text-primary-500">
-                {f.format(inputs[f.key])}
+        {fields.map((f, i) => {
+          const { label } = content.inputLabels[i];
+          return (
+            // Linha divisória acima de cada filtro (como no catálogo, sem seta).
+            <div
+              key={f.key}
+              className="flex flex-col gap-2 border-t border-neutral-200 pt-5 [&:not(:first-child)]:mt-5"
+            >
+              <span className="text-body font-semibold text-neutral-700">
+                {label}
               </span>
-              <span>{f.format(f.max)}</span>
+              <input
+                type="range"
+                min={f.min}
+                max={f.max}
+                step={f.step}
+                value={inputs[f.key]}
+                onChange={(e) => setField(f.key, e.target.value)}
+                aria-label={`${label}: ${f.format(inputs[f.key])}`}
+                aria-valuetext={f.format(inputs[f.key])}
+                className={sliderClass}
+              />
+              <div className="flex items-center justify-between text-body text-neutral-400">
+                <span>{f.format(f.min)}</span>
+                <span className="font-semibold text-primary-500">
+                  {f.format(inputs[f.key])}
+                </span>
+                <span>{f.format(f.max)}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <Button
@@ -186,7 +184,7 @@ export function SimulatorSection() {
         disabled={isDefault}
         className="w-full"
       >
-        Restaurar médias
+        {content.resetLabel}
       </Button>
     </div>
   );
@@ -201,7 +199,7 @@ export function SimulatorSection() {
         className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-neutral-800/10 px-5 text-body font-semibold text-neutral-700 lg:hidden"
       >
         <SlidersHorizontal aria-hidden className="size-5" />
-        Ajustar valores
+        {content.mobileFiltersLabel}
       </button>
 
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[300px_1fr]">
@@ -209,18 +207,19 @@ export function SimulatorSection() {
         <aside className="hidden lg:flex">{filtersPanel}</aside>
 
         {/* Comparação — box cinza com card branco interno para os equipamentos */}
-        <ComparisonTable colunas={colunas} />
+        <ComparisonTable
+          colunas={colunas}
+          title={content.tableTitle}
+          rowLabels={content.metricLabels}
+        />
       </div>
 
       {/* Nota de rodapé — mesma ressalva da planilha comercial */}
       <p className="max-w-[820px] text-body leading-[1.5] text-neutral-500">
-        <strong className="font-semibold text-neutral-600">Importante:</strong>{" "}
-        o retorno do investimento (pay-back) considera apenas a economia
-        energética. Não entram no cálculo fatores que ampliam ainda mais a
-        vantagem do lítio, como MTBF (tempo entre falhas), custo de manutenção,
-        intervalo de manutenção (250h no GLP × 1.000h na elétrica) e custo de
-        peças. Valores de referência para os modelos RC4425C (GLP) e RCE25-35
-        (elétrica lítio).
+        <strong className="font-semibold text-neutral-600">
+          {content.noteLabel}
+        </strong>{" "}
+        {content.note}
       </p>
 
       {/* Filtros como bottom sheet no mobile (mesmo padrão do catálogo) */}
@@ -231,7 +230,7 @@ export function SimulatorSection() {
             className="fixed inset-0 z-[200] flex flex-col justify-end lg:hidden"
             role="dialog"
             aria-modal="true"
-            aria-label="Ajustar valores"
+            aria-label={content.mobileFiltersLabel}
           >
             <div
               className="absolute inset-0 bg-black/50"
@@ -241,7 +240,7 @@ export function SimulatorSection() {
             <div className="relative z-10 flex max-h-[88svh] flex-col overflow-hidden rounded-t-2xl bg-white">
               <div className="flex items-center justify-between border-b border-neutral-200 p-5">
                 <h2 className="font-heading text-h6 font-semibold text-neutral-800">
-                  Ajustar valores
+                  {content.mobileFiltersLabel}
                 </h2>
                 <button
                   ref={closeRef}
@@ -262,12 +261,12 @@ export function SimulatorSection() {
                   onClick={() => setShowFilters(false)}
                   className="h-12 w-full rounded-full bg-primary-500 text-body font-semibold text-neutral-50 transition-colors hover:bg-primary-600"
                 >
-                  Ver comparação
+                  {content.mobileApplyLabel}
                 </button>
               </div>
             </div>
           </div>,
-          document.body
+          document.body,
         )}
     </Section>
   );
@@ -294,7 +293,15 @@ function nudgeScrollHint(el: HTMLElement): () => void {
 }
 
 // ─── Tabela comparativa: rótulos no card cinza, equipamentos no card branco ───
-function ComparisonTable({ colunas }: { colunas: ResultadoEquipamento[] }) {
+function ComparisonTable({
+  colunas,
+  title,
+  rowLabels,
+}: {
+  colunas: ResultadoEquipamento[];
+  title: string;
+  rowLabels: SimulatorContent["metricLabels"];
+}) {
   const lastRow = metricRows.length - 1;
   const boxRef = useRef<HTMLDivElement>(null);
 
@@ -313,7 +320,7 @@ function ComparisonTable({ colunas }: { colunas: ResultadoEquipamento[] }) {
       interactions.forEach((type) => box.removeEventListener(type, onInteract));
     };
     interactions.forEach((type) =>
-      box.addEventListener(type, onInteract, { passive: true })
+      box.addEventListener(type, onInteract, { passive: true }),
     );
 
     const observer = new IntersectionObserver(
@@ -324,7 +331,7 @@ function ComparisonTable({ colunas }: { colunas: ResultadoEquipamento[] }) {
           stopNudge = nudgeScrollHint(box);
         }
       },
-      { threshold: 0.4 }
+      { threshold: 0.4 },
     );
     observer.observe(box);
     return () => {
@@ -363,9 +370,7 @@ function ComparisonTable({ colunas }: { colunas: ResultadoEquipamento[] }) {
                 className="pointer-events-none absolute inset-x-0 bottom-full h-12 bg-neutral-50"
               />
               <span className="block font-heading text-xl font-bold leading-[1.15] text-neutral-800">
-                Comparar
-                <br />
-                máquinas
+                <LineBreaks text={title} />
               </span>
             </th>
             <td aria-hidden />
@@ -402,17 +407,20 @@ function ComparisonTable({ colunas }: { colunas: ResultadoEquipamento[] }) {
           </tr>
         </thead>
         <tbody>
-          {metricRows.map((row, ri) => {
+          {metricRows.map((fmt, ri) => {
             const last = ri === lastRow;
+            const { label } = rowLabels[ri];
             return (
-              <tr key={row.label}>
+              <tr key={label}>
                 <th
                   scope="row"
                   className={`sticky left-0 z-20 border-t border-neutral-200 bg-neutral-50 py-4 pl-4 pr-4 align-middle text-body ${
-                    last ? "font-bold text-neutral-800" : "font-medium text-neutral-600"
+                    last
+                      ? "font-bold text-neutral-800"
+                      : "font-medium text-neutral-600"
                   }`}
                 >
-                  {row.label}
+                  {label}
                 </th>
                 <td aria-hidden />
                 {colunas.map((c, i) => (
@@ -424,7 +432,7 @@ function ComparisonTable({ colunas }: { colunas: ResultadoEquipamento[] }) {
                       last && i === colunas.length - 1 ? "rounded-br-xl" : ""
                     }`}
                   >
-                    {row.fmt(c)}
+                    {fmt(c)}
                   </td>
                 ))}
               </tr>

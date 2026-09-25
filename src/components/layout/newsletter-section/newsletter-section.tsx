@@ -7,6 +7,7 @@ import { CircleCheck } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useSharedTexts } from "@/components/layout/shared-texts";
 import {
   newsletterSchema,
   type NewsletterFormValues,
@@ -14,6 +15,7 @@ import {
 
 export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
   const [sent, setSent] = useState(false);
+  const { newsletter: texts } = useSharedTexts();
 
   const {
     register,
@@ -48,13 +50,12 @@ export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
         {/* Texto */}
         <div className="flex flex-1 flex-col gap-4">
         <h2 className="text-h3 text-neutral-50">
-          <span className="font-normal">Inteligência logística</span>{" "}
+          <span className="font-normal">{texts.titleTop}</span>{" "}
           <br className="hidden lg:inline" />
-          <span className="font-bold text-primary-500">direto no seu e-mail</span>
+          <span className="font-bold text-primary-500">{texts.titleAccent}</span>
         </h2>
         <p className="max-w-[440px] text-body leading-[1.35] text-neutral-400">
-          Guias práticos, cases reais e tendências de intralogística para apoiar
-          as decisões da sua operação.
+          {texts.description}
         </p>
       </div>
 
@@ -75,7 +76,7 @@ export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
               id="nl-email"
               type="email"
               autoComplete="email"
-              placeholder="email@empresa.com"
+              placeholder={texts.emailPlaceholder}
               invalid={!!errors.email}
               aria-describedby={errors.email ? "nl-email-error" : undefined}
               {...register("email")}
@@ -89,7 +90,7 @@ export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
             disabled={isSubmitting}
             className="shrink-0 justify-center"
           >
-            Quero receber
+            {texts.buttonLabel}
           </Button>
         </div>
           {errors.email && (
@@ -103,8 +104,7 @@ export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
               className="inline-flex items-start gap-2 text-body font-semibold text-accent"
             >
               <CircleCheck aria-hidden className="mt-0.5 size-5 shrink-0" />
-              Inscrição confirmada! Em breve nossos conteúdos chegam ao seu
-              e-mail.
+              {texts.successMessage}
             </p>
           )}
         </form>
