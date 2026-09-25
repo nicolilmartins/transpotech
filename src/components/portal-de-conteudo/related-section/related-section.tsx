@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/intent-link";
 import { ArrowRight } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { ArticleCard } from "@/components/layout/article-card/article-card";
@@ -24,13 +24,13 @@ export function RelatedSection({
         <h2 className="text-h3 font-normal text-neutral-800">
           {content.title}
         </h2>
-        <Link
+        <IntentLink
           href={ROUTES.PORTAL_CONTEUDO}
           className="inline-flex shrink-0 items-center gap-1.5 text-body font-semibold text-primary-500 transition-colors hover:text-primary-600"
         >
           {content.linkLabel}
           <ArrowRight aria-hidden className="size-4" />
-        </Link>
+        </IntentLink>
       </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {articles.map((article) => (

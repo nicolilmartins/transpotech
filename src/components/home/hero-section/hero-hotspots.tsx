@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/intent-link";
 import { ROUTES } from "@/lib/routes";
 
 // Hotspots sutis sobre a empilhadeira da hero (só desktop). Bolinhas sempre
@@ -81,7 +81,9 @@ export function HeroHotspots({ labels }: { labels: string[] }) {
 
   // Mede o container (= tamanho da section) e recalcula as posições ancoradas
   // na imagem a cada resize — assim as bolinhas grudam na peça em qualquer
-  // largura, mesmo com o recorte do object-cover mudando.
+  // largura, mesmo com o recorte do object-cover mudando. Sem medição síncrona
+  // na montagem: o ResizeObserver já entrega a primeira medida após o layout do
+  // frame, e ler o retângulo aqui forçava um layout no meio da hidratação.
   useEffect(() => {
     const el = rootRef.current;
     if (!el) return;
@@ -91,7 +93,6 @@ export function HeroHotspots({ labels }: { labels: string[] }) {
         setPositions(computePositions(rect.width, rect.height));
       }
     };
-    recalc();
     const observer = new ResizeObserver(recalc);
     observer.observe(el);
     return () => observer.disconnect();
@@ -154,7 +155,7 @@ export function HeroHotspots({ labels }: { labels: string[] }) {
                 if (engaged) setActive(-1);
               }}
             >
-              <Link
+              <IntentLink
                 href={spot.href}
                 aria-label={spot.label}
                 onMouseEnter={() => engage(i)}
@@ -181,11 +182,11 @@ export function HeroHotspots({ labels }: { labels: string[] }) {
                     className="relative size-[18px] rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,0.35)]"
                   />
                 </span>
-              </Link>
+              </IntentLink>
 
               {/* Pill do rótulo — abre para o lado definido em `side`. Escura/
                   translúcida para legibilidade sobre o fundo claro da hero. */}
-              <Link
+              <IntentLink
                 href={spot.href}
                 tabIndex={-1}
                 onMouseEnter={() => engage(i)}
@@ -203,7 +204,7 @@ export function HeroHotspots({ labels }: { labels: string[] }) {
                 }`}
               >
                 {spot.label}
-              </Link>
+              </IntentLink>
             </div>
           );
         })}

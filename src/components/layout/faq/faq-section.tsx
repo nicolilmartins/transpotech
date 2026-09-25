@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { Section } from "@/components/ui/section";
-import { gsap } from "@/lib/gsap";
+import { cssEase, tweenStyle } from "@/lib/motion";
 
 export type FaqItem = { question: string; answer: string };
 
@@ -18,24 +18,36 @@ type FaqSectionProps = {
 export function FaqSection({ titleRegular, titleAccent, items }: FaqSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const isFirstRun = useRef(true);
 
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Na montagem o HTML do servidor já está no estado de openIndex (primeiro
+    // painel "auto", os outros h-0): pular evita ler scrollHeight e criar um
+    // tween por painel durante a hidratação.
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      panelRefs.current.forEach((panel, i) => {
+        if (panel) panel.style.height = i === openIndex ? "auto" : "0px";
+      });
+      return;
+    }
     panelRefs.current.forEach((panel, i) => {
       if (!panel) return;
       const isOpen = i === openIndex;
-      if (reduce) {
-        panel.style.height = isOpen ? "auto" : "0px";
-        return;
-      }
-      gsap.to(panel, {
-        height: isOpen ? panel.scrollHeight : 0,
-        duration: 0.35,
-        ease: "power2.out",
-        onComplete: () => {
-          if (isOpen) panel.style.height = "auto";
-        },
-      });
+      tweenStyle(
+        panel,
+        { height: isOpen ? `${panel.scrollHeight}px` : "0px" },
+        {
+          duration: 0.35,
+          easing: cssEase.power2Out,
+          onComplete: () => {
+            if (isOpen) panel.style.height = "auto";
+          },
+        }
+      );
     });
   }, [openIndex]);
 

@@ -12,7 +12,6 @@
     "sanity:seed": "node --import ./scripts/sanity/register.mjs scripts/sanity/build-seed.mjs"
   },
   "dependencies": {
-    "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.4.0",
     "@sanity/client": "^8.7.0",
     "@sanity/locale-pt-br": "^1.1.37",

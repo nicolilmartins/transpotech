@@ -33,9 +33,12 @@ function FleetCard({ title, description, image }: Card) {
 
       {/* Imagem centralizada na parte de baixo */}
       <div className="relative flex flex-1 items-center justify-center bg-neutral-50/40">
+        {/* Sem `sizes`, o srcset 1x/2x partia da largura original do arquivo
+            (w=1920); a arte aparece com 240px de altura. */}
         <Image
           src={image}
           alt=""
+          sizes={`${Math.ceil((240 * image.width) / image.height)}px`}
           className="pointer-events-none h-[240px] w-auto max-w-none select-none object-contain"
         />
       </div>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Section } from "@/components/ui/section";
 import { ProductCard } from "@/components/layout/product-card/product-card";
-import { QuoteModal } from "@/components/layout/quote-modal/quote-modal";
+import { LazyQuoteModal } from "@/components/layout/quote-modal/lazy-quote-modal";
 import { ROUTES } from "@/lib/routes";
 import type { Forklift } from "@/types/forklift.types";
 
@@ -69,7 +69,7 @@ export function ClassifiedsSection({
       </div>
 
       {quoteForId && (
-        <QuoteModal
+        <LazyQuoteModal
           onClose={() => setQuoteForId(null)}
           forklifts={quoteOptions}
           initialSelectedId={quoteForId}

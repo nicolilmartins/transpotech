@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
+import { cssEase, tweenStyle } from "@/lib/motion";
+
+const fade = { duration: 0.3, easing: cssEase.power1Out };
 
 /**
  * Blur verde suave que acompanha o cursor dentro da Hero e só existe no hover.
- * Segue o cursor com lerp (fator 0.18) via gsap.ticker + quickSetter.
+ * Segue o cursor com lerp (fator 0.18) por quadro.
  */
 export function HeroGlow() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -16,23 +18,29 @@ export function HeroGlow() {
     const glow = glowRef.current;
     if (!wrap || !glow) return;
 
-    const xSet = gsap.quickSetter(glow, "x", "px");
-    const ySet = gsap.quickSetter(glow, "y", "px");
-
     let tx = 0;
     let ty = 0;
     let cx = 0;
     let cy = 0;
     let inside = false;
     let init = false;
+    let raf = 0;
 
-    const ticker = () => {
+    const place = () => {
+      glow.style.transform = `translate(${cx - glow.offsetWidth / 2}px, ${
+        cy - glow.offsetHeight / 2
+      }px)`;
+    };
+
+    // Lerp por quadro; o rAF só roda enquanto o glow ainda não chegou ao alvo.
+    const tick = () => {
+      raf = 0;
       if (!inside) return;
       if (Math.abs(tx - cx) < 0.3 && Math.abs(ty - cy) < 0.3) return;
       cx += (tx - cx) * 0.18;
       cy += (ty - cy) * 0.18;
-      xSet(cx - glow.offsetWidth / 2);
-      ySet(cy - glow.offsetHeight / 2);
+      place();
+      raf = requestAnimationFrame(tick);
     };
 
     const onMove = (event: MouseEvent) => {
@@ -47,25 +55,24 @@ export function HeroGlow() {
         if (!init) {
           cx = x;
           cy = y;
-          xSet(cx - glow.offsetWidth / 2);
-          ySet(cy - glow.offsetHeight / 2);
+          place();
           init = true;
         }
         if (!inside) {
           inside = true;
-          gsap.to(glow, { opacity: 0.18, duration: 0.3, ease: "power1.out" });
+          tweenStyle(glow, { opacity: "0.18" }, fade);
         }
+        if (!raf) raf = requestAnimationFrame(tick);
       } else if (inside) {
         inside = false;
-        gsap.to(glow, { opacity: 0, duration: 0.3, ease: "power1.out" });
+        tweenStyle(glow, { opacity: "0" }, fade);
       }
     };
 
-    gsap.ticker.add(ticker);
     window.addEventListener("mousemove", onMove, { passive: true });
 
     return () => {
-      gsap.ticker.remove(ticker);
+      cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", onMove);
     };
   }, []);

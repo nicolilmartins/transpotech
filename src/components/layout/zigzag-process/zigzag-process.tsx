@@ -3,7 +3,8 @@
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { Section } from "@/components/ui/section";
-import { ScrollTrigger } from "@/lib/gsap";
+import { scrubOnScroll } from "@/lib/motion";
+import { useNearViewport } from "@/hooks/use-near-viewport";
 
 export type ZigzagStep = {
   title: string;
@@ -69,6 +70,16 @@ function imageTransform(step: ZigzagStep): string | undefined {
   );
 }
 
+// Imagem com altura fixa (200px / lg:300px ou `imageLgHeight`) e largura
+// proporcional. Sem `sizes`, o srcset em 1x/2x da largura intrínseca baixava
+// as versões de 1200/1920px para ilustrações de ~300px.
+function imageSizes(step: ZigzagStep): string {
+  const { width, height } = step.image;
+  const lgHeight = Number(step.imageLgHeight?.match(/\d+/)?.[0] ?? 300);
+  const at = (h: number) => `${Math.ceil((h * width) / height)}px`;
+  return `(min-width: 1024px) ${at(lgHeight)}, ${at(200)}`;
+}
+
 // Passos em zigue-zague ligados por uma linha que preenche de laranja no scroll.
 export function ZigzagProcess({
   header,
@@ -83,6 +94,10 @@ export function ZigzagProcess({
   const [dims, setDims] = useState({ w: 0, h: 0 });
   const [d, setD] = useState("");
   const stepCount = steps.length;
+  // O scrub da linha só é criado quando a trilha se aproxima da
+  // viewport; até lá os stops do JSX (offset 0) já são o estado vazio.
+  const [near, setNear] = useState(false);
+  useNearViewport(wrapRef, () => setNear(true));
 
   // Mede a posição de cada passo e desenha a linha zigue-zague (lado a lado).
   useEffect(() => {
@@ -111,7 +126,8 @@ export function ZigzagProcess({
       setD(roundedPath(pts, 24));
     };
 
-    build();
+    // Sem build() síncrono: o ResizeObserver entrega a primeira medida após o
+    // layout do frame, sem forçar layout durante a hidratação.
     const ro = new ResizeObserver(build);
     ro.observe(wrap);
     return () => ro.disconnect();
@@ -124,7 +140,7 @@ export function ZigzagProcess({
     const wrap = wrapRef.current;
     const s1 = stop1Ref.current;
     const s2 = stop2Ref.current;
-    if (!wrap || !s1 || !s2 || !d) return;
+    if (!near || !wrap || !s1 || !s2 || !d) return;
     const FADE = 0.06; // tamanho do degradê na ponta (fração da altura)
     const setProgress = (p: number) => {
       s1.setAttribute("offset", `${Math.max(0, p - FADE)}`);
@@ -135,16 +151,8 @@ export function ZigzagProcess({
       return;
     }
     setProgress(0);
-    const st = ScrollTrigger.create({
-      trigger: wrap,
-      start: "top 60%",
-      end: "bottom 75%",
-      scrub: true,
-      onUpdate: (self) => setProgress(self.progress),
-    });
-    ScrollTrigger.refresh();
-    return () => st.kill();
-  }, [d]);
+    return scrubOnScroll(wrap, { startLine: 0.6, endLine: 0.75 }, setProgress);
+  }, [d, near]);
 
   return (
     <Section className="flex flex-col items-center gap-12 lg:gap-16">
@@ -234,6 +242,7 @@ export function ZigzagProcess({
                   <Image
                     src={step.image}
                     alt=""
+                    sizes={imageSizes(step)}
                     style={{ transform: imageTransform(step) }}
                     className={`h-[200px] w-auto select-none object-contain ${
                       step.imageLgHeight ?? "lg:h-[300px]"

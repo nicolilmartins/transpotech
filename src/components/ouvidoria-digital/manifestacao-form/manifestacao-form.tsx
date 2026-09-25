@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm, type Resolver } from "react-hook-form";
 import { ChevronDown, Paperclip, CheckCircle2 } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { HoverMesh } from "@/components/layout/hover-mesh";
@@ -11,13 +10,30 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  manifestacaoSchema,
   manifestacaoRelations,
   manifestacaoTypes,
-  type ManifestacaoFormValues,
-} from "@/lib/manifestacao.schema";
+} from "@/lib/manifestacao.options";
+import type { ManifestacaoFormValues } from "@/lib/manifestacao.schema";
 import type { SectionContent } from "@/sanity/content/fields";
 import type { ouvidoriaPage } from "@/sanity/content/pages/ouvidoria";
+
+// zod + schema só baixam quando o visitante interage com o formulário (foco em
+// um campo) ou envia — mesmo padrão do LeadFormSection. O import é memoizado
+// pelo bundler: o foco já deixa tudo pronto para o envio.
+const loadValidation = () =>
+  Promise.all([
+    import("@hookform/resolvers/zod"),
+    import("@/lib/manifestacao.schema"),
+  ]);
+
+const manifestacaoResolver: Resolver<ManifestacaoFormValues> = async (
+  values,
+  context,
+  options,
+) => {
+  const [{ zodResolver }, { manifestacaoSchema }] = await loadValidation();
+  return zodResolver(manifestacaoSchema)(values, context, options);
+};
 
 const labelBase = "text-body font-semibold text-neutral-700";
 
@@ -42,7 +58,7 @@ export function ManifestacaoForm({ content }: { content: ManifestacaoContent }) 
     reset,
     formState: { errors, isSubmitting },
   } = useForm<ManifestacaoFormValues>({
-    resolver: zodResolver(manifestacaoSchema),
+    resolver: manifestacaoResolver,
   });
 
   const onSubmit = async (data: ManifestacaoFormValues) => {
@@ -98,6 +114,7 @@ export function ManifestacaoForm({ content }: { content: ManifestacaoContent }) 
           <form
             noValidate
             onSubmit={handleSubmit(onSubmit)}
+            onFocus={() => void loadValidation()}
             className="flex w-full flex-col gap-6 rounded-2xl border-2 border-neutral-100 bg-white p-6 lg:p-8"
           >
             {/* Nome + Contato */}

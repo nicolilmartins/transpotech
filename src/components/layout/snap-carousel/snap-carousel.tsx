@@ -73,7 +73,7 @@ export function SnapCarousel({
             onClick={() => scrollTo(i)}
             aria-label={`${dotLabel} ${i + 1}`}
             aria-current={i === active}
-            className={`rounded-full transition-all duration-300 ${
+            className={`rounded-full transition-[width,height,background-color] duration-300 ${
               i === active
                 ? "h-2 w-4 bg-neutral-100"
                 : "size-2 bg-neutral-600 hover:bg-neutral-500"

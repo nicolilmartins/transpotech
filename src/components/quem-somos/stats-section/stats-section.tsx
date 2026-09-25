@@ -10,7 +10,7 @@ import illoUser from "@/assets/images/stats/illustration-user.webp";
 import illoCar from "@/assets/images/stats/illustration-car.webp";
 import card1 from "@/assets/images/stats/card1.png";
 import illoHangar from "@/assets/images/stats/illustration-hangar.webp";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { ease, onScrollPast, tween } from "@/lib/motion";
 
 // Conta o número principal preservando prefixo e separador de milhar pt-BR:
 // "+3.700" → "+" + (3700 × progress) formatado como "3.700".
@@ -66,33 +66,25 @@ export function StatsSection({ content }: { content: StatsContent }) {
       if (node) node.textContent = countValue(s.value, 0);
     });
 
-    const counters = stats.map(() => ({ progress: 0 }));
-    const tweens: gsap.core.Tween[] = [];
-
-    const trigger = ScrollTrigger.create({
-      trigger: el,
-      start: "top 70%",
-      once: true,
-      onEnter: () => {
-        stats.forEach((s, i) => {
-          const tween = gsap.to(counters[i], {
-            progress: 1,
+    const cancels: (() => void)[] = [];
+    const stopTrigger = onScrollPast(el, 0.7, () => {
+      stats.forEach((s, i) => {
+        cancels.push(
+          tween({
             duration: 1.8,
-            ease: "power3.out",
-            onUpdate: () => {
+            ease: ease.power3Out,
+            onUpdate: (p) => {
               const node = numberRefs.current[i];
-              if (node)
-                node.textContent = countValue(s.value, counters[i].progress);
+              if (node) node.textContent = countValue(s.value, p);
             },
-          });
-          tweens.push(tween);
-        });
-      },
+          })
+        );
+      });
     });
 
     return () => {
-      trigger.kill();
-      tweens.forEach((t) => t.kill());
+      stopTrigger();
+      cancels.forEach((cancel) => cancel());
     };
   }, [stats]);
 
@@ -148,7 +140,7 @@ export function StatsSection({ content }: { content: StatsContent }) {
                     src={image}
                     alt=""
                     fill
-                    sizes="320px"
+                    sizes={`${Math.ceil(art.width)}px`}
                     className="object-cover"
                   />
                 </div>

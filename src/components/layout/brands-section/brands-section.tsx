@@ -74,6 +74,10 @@ export function BrandsSection({
               key={b.alt}
               src={b.src}
               alt={b.alt}
+              // Sem `sizes`, o srcset 1x/2x parte da largura original do
+              // arquivo (logos raster de até 3315px viravam w=3840). A largura
+              // segue a altura de cada breakpoint (40/48/83px, abaixo).
+              sizes={`(min-width: 1024px) ${Math.ceil((83 * b.src.width) / b.src.height)}px, (min-width: 640px) ${Math.ceil((48 * b.src.width) / b.src.height)}px, ${Math.ceil((40 * b.src.width) / b.src.height)}px`}
               className={`h-10 w-auto sm:h-12 lg:h-[83px] ${
                 isLight && b.mono !== false
                   ? "[filter:brightness(0)_invert(0.35)]"

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef, type CSSProperties } from "react";
-import { gsap } from "@/lib/gsap";
+import { cssEase, ease, tween } from "@/lib/motion";
 import Image from "next/image";
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/intent-link";
 import {
   ArrowRight,
   Forklift,
@@ -117,23 +117,36 @@ export function SolutionsSection({ content }: { content: SolutionsContent }) {
   const solutionContentRef = useRef<HTMLDivElement>(null);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Anima a engrenagem para o ângulo acumulado usando GSAP + CustomEase
+  // Anima a engrenagem do ângulo em que está (mesmo no meio de um giro) até
+  // o ângulo acumulado. Por rAF e não por WAAPI: o ângulo passa de 360° e a
+  // partida tem que ser o valor exato, não o lido da matriz computada.
+  const gearAngle = useRef(0);
+  const stopGear = useRef<(() => void) | null>(null);
   const rotateGear = (targetDeg: number) => {
-    gsap.to(gearRef.current, {
-      rotation: targetDeg,
+    const gear = gearRef.current;
+    if (!gear) return;
+    stopGear.current?.();
+    const from = gearAngle.current;
+    stopGear.current = tween({
       duration: prefersReducedMotion() ? 0 : 0.85,
-      ease: "gearEase",
-      overwrite: "auto",
+      ease: ease.gear,
+      onUpdate: (p) => {
+        gearAngle.current = from + (targetDeg - from) * p;
+        gear.style.transform = `rotate(${gearAngle.current}deg)`;
+      },
     });
   };
 
-  // Fade da solução ativa — substitui @keyframes fade-in-solution
+  // Fade da solução ativa
   const fadeSolution = () => {
-    if (!solutionContentRef.current || prefersReducedMotion()) return;
-    gsap.fromTo(
-      solutionContentRef.current,
-      { opacity: 0, y: 10 },
-      { opacity: 1, y: 0, duration: 0.35, ease: "power1.out" }
+    const el = solutionContentRef.current;
+    if (!el || prefersReducedMotion()) return;
+    el.animate(
+      [
+        { opacity: 0, translate: "0px 10px" },
+        { opacity: 1, translate: "0px 0px" },
+      ],
+      { duration: 350, easing: cssEase.power1Out }
     );
   };
 
@@ -158,16 +171,17 @@ export function SolutionsSection({ content }: { content: SolutionsContent }) {
       setActive(next);
     }, 3000);
     return () => clearInterval(id);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paused, inView]);
 
   // Cleanup on unmount
-  useEffect(() => () => { if (idleTimer.current) clearTimeout(idleTimer.current); }, []);
+  useEffect(() => () => {
+    if (idleTimer.current) clearTimeout(idleTimer.current);
+    stopGear.current?.();
+  }, []);
 
   // Fade da solução sempre que o ativo muda
   useEffect(() => {
     fadeSolution();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active]);
 
   const scheduleResume = () => {
@@ -260,7 +274,7 @@ export function SolutionsSection({ content }: { content: SolutionsContent }) {
 
         <div className="relative mx-auto aspect-square w-full max-w-[560px]">
 
-          {/* Anel segmentado do Figma — gira de ponto em ponto via GSAP */}
+          {/* Anel segmentado do Figma — gira de ponto em ponto */}
           {/* Mobile (sem labels ao redor): engrenagem e anéis ganham escala
               extra; como tudo é percentual, segue cabendo em qualquer largura */}
           <div
@@ -359,7 +373,7 @@ export function SolutionsSection({ content }: { content: SolutionsContent }) {
             {/* CTA da solução ativa — leva à página correspondente. O
                 aria-label repete o título porque "Ver novas" sozinho não diz
                 do que se trata fora do contexto visual do círculo. */}
-            <Link
+            <IntentLink
               href={sol.href}
               aria-label={`${sol.cta} — ${sol.title}`}
               className="group/cta inline-flex items-center gap-2 rounded-full bg-primary-500/15 px-5 py-2.5 text-body font-semibold text-primary-300 transition-colors hover:bg-primary-500/25"
@@ -369,7 +383,7 @@ export function SolutionsSection({ content }: { content: SolutionsContent }) {
                 className="size-4 transition-transform group-hover/cta:translate-x-0.5"
                 aria-hidden
               />
-            </Link>
+            </IntentLink>
           </div>
 
           {/* Áreas de clique transparentes sobre cada bolinha */}
@@ -398,7 +412,7 @@ export function SolutionsSection({ content }: { content: SolutionsContent }) {
               onClick={() => handleSelect(i)}
               aria-label={solutions[i].title}
               aria-pressed={active === i}
-              className={`h-[3px] rounded-full transition-all duration-300 ${
+              className={`h-[3px] rounded-full transition-[width,background-color] duration-300 ${
                 i === active
                   ? "w-6 bg-primary-400"
                   : "w-[6px] bg-white/20 hover:bg-white/40"

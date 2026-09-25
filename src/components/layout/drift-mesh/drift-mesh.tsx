@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type CSSProperties } from "react";
-import { gsap } from "@/lib/gsap";
+import { ease, prefersReducedMotion } from "@/lib/motion";
 
 // Malha grande que "anda" sozinha pelo fundo (referência:
 // terminal-industries.com/about). Mesmo desenho do HoverMesh (pontos +
@@ -48,45 +48,90 @@ export function DriftMesh({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersReducedMotion()) return;
 
-    // Sem valor inicial explícito o GSAP parte de 0 (canto superior esquerdo),
-    // ignorando o fallback do var() — então os blobs começam nas posições
-    // definidas em BLOBS.
-    BLOBS.forEach((b, i) => {
-      el.style.setProperty(`--bx${i}`, `${b.x}%`);
-      el.style.setProperty(`--by${i}`, `${b.y}%`);
-    });
-
-    // Fora da viewport os tweens ficam pausados: animar as variáveis da mask
+    // Fora da viewport o movimento fica pausado: animar as variáveis da mask
     // repinta a área inteira a cada frame, e o footer monta uma instância em
-    // toda página. Pausado, o tween não completa e não sorteia o próximo.
-    let visible = true;
+    // toda página. Pausado, o trecho em curso não completa nem sorteia o
+    // próximo.
+    // Trocar a mask por camadas movidas por transform não dá o mesmo pixel: as
+    // camadas de mask compõem por união (1 − Π(1 − aᵢ)) antes de multiplicar a
+    // malha, e camadas de conteúdo empilhadas somariam a malha várias vezes.
+    let visible = false;
+    let started = false;
+    let raf = 0;
+    let last = 0;
 
-    // Cada blob vagueia para um alvo aleatório e re-sorteia ao chegar.
-    BLOBS.forEach((_, i) => {
-      const move = () => {
-        gsap.to(el, {
-          paused: !visible,
-          [`--bx${i}`]: `${gsap.utils.random(5, 95, 1)}%`,
-          [`--by${i}`]: `${gsap.utils.random(8, 92, 1)}%`,
-          duration: gsap.utils.random(3, 6) / speed,
-          ease: "sine.inOut",
-          onComplete: move,
-        });
-      };
-      move();
-    });
+    // Cada blob vagueia para um alvo aleatório (5–95% / 8–92%, inteiros) em
+    // 3–6s, com sine.inOut, e re-sorteia ao chegar.
+    const blobs = BLOBS.map((b) => ({
+      x: b.x,
+      y: b.y,
+      fromX: b.x,
+      fromY: b.y,
+      toX: b.x,
+      toY: b.y,
+      elapsed: 0,
+      duration: 0,
+    }));
+    const randomInt = (min: number, max: number) =>
+      Math.round(min + Math.random() * (max - min));
+    const retarget = (b: (typeof blobs)[number]) => {
+      b.fromX = b.x;
+      b.fromY = b.y;
+      b.toX = randomInt(5, 95);
+      b.toY = randomInt(8, 92);
+      b.elapsed = 0;
+      b.duration = (3 + Math.random() * 3) / speed;
+    };
+
+    const frame = (now: number) => {
+      // Mesmo lagSmoothing padrão do GSAP: um salto > 500ms (aba em segundo
+      // plano, thread travada) conta como 33ms.
+      const gap = now - last;
+      const dt = (gap > 500 ? 33 : gap) / 1000;
+      last = now;
+      blobs.forEach((b, i) => {
+        b.elapsed += dt;
+        const p = ease.sineInOut(Math.min(1, b.elapsed / b.duration));
+        b.x = b.fromX + (b.toX - b.fromX) * p;
+        b.y = b.fromY + (b.toY - b.fromY) * p;
+        el.style.setProperty(`--bx${i}`, `${b.x}%`);
+        el.style.setProperty(`--by${i}`, `${b.y}%`);
+        if (b.elapsed >= b.duration) retarget(b);
+      });
+      raf = requestAnimationFrame(frame);
+    };
+    const run = () => {
+      if (raf) return;
+      raf = requestAnimationFrame((now) => {
+        last = now;
+        raf = requestAnimationFrame(frame);
+      });
+    };
+    const pause = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+    };
+
+    // O movimento só nasce na primeira entrada na viewport (o do footer, na
+    // maioria das visitas, nunca). Até lá valem os fallbacks do var().
+    const start = () => {
+      started = true;
+      blobs.forEach(retarget);
+    };
 
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
-      gsap.getTweensOf(el).forEach((t) => (visible ? t.resume() : t.pause()));
+      if (visible && !started) start();
+      if (visible) run();
+      else pause();
     });
     observer.observe(el);
 
     return () => {
       observer.disconnect();
-      gsap.killTweensOf(el);
+      pause();
     };
   }, [speed]);
 

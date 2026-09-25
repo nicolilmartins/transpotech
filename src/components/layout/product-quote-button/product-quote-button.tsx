@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { QuoteModal } from "@/components/layout/quote-modal/quote-modal";
+import {
+  LazyQuoteModal,
+  preloadQuoteModal,
+} from "@/components/layout/quote-modal/lazy-quote-modal";
 import { useSharedTexts } from "@/components/layout/shared-texts";
 import type { Forklift } from "@/types/forklift.types";
 
@@ -25,13 +28,15 @@ export function ProductQuoteButton({
         variant="primary"
         size="lg"
         onClick={() => setOpen(true)}
+        onPointerEnter={preloadQuoteModal}
+        onFocus={preloadQuoteModal}
         className="justify-center"
       >
         {productQuote.buttonLabel}
       </Button>
 
       {open && (
-        <QuoteModal
+        <LazyQuoteModal
           onClose={() => setOpen(false)}
           forklifts={forklifts}
           initialSelectedId={forklift.id}

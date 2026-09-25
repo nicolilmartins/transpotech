@@ -15,17 +15,36 @@ import { SharedTextsProvider } from "@/components/layout/shared-texts";
 
 // "Stack Sans Text" — fonte do design original (TPT01 / Figma), carregada
 // localmente. O arquivo variável cobre os pesos 400–700 usados nos headings.
+// O .woff2 é um subconjunto do .ttf original (125KB → 37KB): Latin-1 (todos os
+// acentos do português), pontuação, setas e ≈ ≤ ≥ − € ™. Caractere fora disso
+// cai na fonte de fallback. Para regerar com outros caracteres:
+//   python -m fontTools.subset StackSansText-VariableFont_wght.ttf --flavor=woff2 --layout-features='*' --unicodes=...
 const stackSans = localFont({
-  src: "../components/ui/Typography/Stack_Sans_Text/StackSansText-VariableFont_wght.ttf",
+  src: "../components/ui/Typography/Stack_Sans_Text/StackSansText-VariableFont_wght.woff2",
   variable: "--font-stack-sans",
   weight: "400 700",
   display: "swap",
 });
 
+// 400 e 600 aparecem acima da dobra em todas as páginas (header, hero) e são
+// pré-carregados; o 700 só aparece abaixo da dobra (exceto /simular-economia)
+// e fica numa segunda instância sem preload. Com Turbopack as duas instâncias
+// declaram o mesmo `font-family: Mukta Vaani`, então as @font-face se somam
+// numa família só e o CSS resultante é o mesmo de uma instância com os três
+// pesos; a variável dela entra no <html> só para garantir que esse CSS seja
+// incluído. (Com webpack o nome ganharia hash por instância e o 700 deixaria de
+// ser encontrado — aí é voltar para uma instância só.)
 const muktaVaani = Mukta_Vaani({
   variable: "--font-mukta-vaani",
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["400", "600"],
+});
+
+const muktaVaaniBold = Mukta_Vaani({
+  variable: "--font-mukta-vaani-bold",
+  subsets: ["latin"],
+  weight: "700",
+  preload: false,
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -79,7 +98,7 @@ export default async function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${stackSans.variable} ${muktaVaani.variable} h-full antialiased`}
+      className={`${stackSans.variable} ${muktaVaani.variable} ${muktaVaaniBold.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-body text-neutral-900">
         <Providers>

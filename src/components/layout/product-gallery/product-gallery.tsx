@@ -68,8 +68,9 @@ export function ProductGallery({
           src={images[selected]}
           alt={alt}
           fill
-          priority
-          sizes="(min-width: 1024px) 590px, 100vw"
+          preload
+          fetchPriority="high"
+          sizes="(min-width: 1024px) 590px, calc(100vw - 88px)"
           className="object-contain p-6"
         />
         {madeInBrazil && (

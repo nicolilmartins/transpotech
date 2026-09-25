@@ -16,6 +16,7 @@ export function PecasHeroSection({ content }: { content: PecasHeroContent }) {
           src={content.image}
           alt=""
           preload
+          fetchPriority="high"
           fill
           sizes="100vw"
           className="object-cover object-center"

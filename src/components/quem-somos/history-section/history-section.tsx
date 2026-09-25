@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Section } from "@/components/ui/section";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { ease, onScrollPast, scrubOnScroll, tween } from "@/lib/motion";
 import type { SectionContent } from "@/sanity/content/fields";
 import type { quemSomosPage } from "@/sanity/content/pages/quem-somos";
 
@@ -86,15 +86,7 @@ export function HistorySection({ content }: { content: HistoryContent }) {
       return;
     }
     set(0);
-    const st = ScrollTrigger.create({
-      trigger: wrap,
-      start: "top 70%",
-      end: "bottom 80%",
-      scrub: true,
-      onUpdate: (self) => set(self.progress),
-    });
-    ScrollTrigger.refresh();
-    return () => st.kill();
+    return scrubOnScroll(wrap, { startLine: 0.7, endLine: 0.8 }, set);
   }, []);
 
   // A régua laranja "carrega" (esquerda → direita) uma única vez quando a seção
@@ -112,24 +104,13 @@ export function HistorySection({ content }: { content: HistoryContent }) {
       return;
     }
     set(0);
-    const state = { p: 0 };
-    const tween = gsap.to(state, {
-      p: 1,
-      duration: 1.8,
-      ease: "sine.inOut",
-      paused: true,
-      onUpdate: () => set(state.p),
+    let stopTween: (() => void) | undefined;
+    const stopTrigger = onScrollPast(track, 0.9, () => {
+      stopTween = tween({ duration: 1.8, ease: ease.sineInOut, onUpdate: set });
     });
-    const st = ScrollTrigger.create({
-      trigger: track,
-      start: "top 90%",
-      once: true,
-      onEnter: () => tween.play(),
-    });
-    ScrollTrigger.refresh();
     return () => {
-      st.kill();
-      tween.kill();
+      stopTrigger();
+      stopTween?.();
     };
   }, []);
 

@@ -9,7 +9,7 @@ import card1 from "@/assets/images/stats/card1.png";
 import card2 from "@/assets/images/stats/card2.png";
 import illoCar from "@/assets/images/stats/illustration-car.webp";
 import illoMap from "@/assets/images/stats/map-illustration.webp";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { ease, onScrollPast, tween } from "@/lib/motion";
 import { ROUTES } from "@/lib/routes";
 import type { SectionContent } from "@/sanity/content/fields";
 import type { homePage } from "@/sanity/content/pages/home";
@@ -85,32 +85,25 @@ export function ExperienceSection({ content }: { content: ExperienceContent }) {
       if (node) node.textContent = countValue(s.value, 0);
     });
 
-    const counters = stats.map(() => ({ progress: 0 }));
-    const tweens: gsap.core.Tween[] = [];
-
-    const trigger = ScrollTrigger.create({
-      trigger: el,
-      start: "top 70%",
-      once: true,
-      onEnter: () => {
-        stats.forEach((s, i) => {
-          const tween = gsap.to(counters[i], {
-            progress: 1,
+    const cancels: (() => void)[] = [];
+    const stopTrigger = onScrollPast(el, 0.7, () => {
+      stats.forEach((s, i) => {
+        cancels.push(
+          tween({
             duration: 1.8,
-            ease: "power3.out", // equivale ao easeOut cúbico original: 1 - (1-t)^3
-            onUpdate: () => {
+            ease: ease.power3Out,
+            onUpdate: (p) => {
               const node = numberRefs.current[i];
-              if (node) node.textContent = countValue(s.value, counters[i].progress);
+              if (node) node.textContent = countValue(s.value, p);
             },
-          });
-          tweens.push(tween);
-        });
-      },
+          })
+        );
+      });
     });
 
     return () => {
-      trigger.kill();
-      tweens.forEach((t) => t.kill());
+      stopTrigger();
+      cancels.forEach((cancel) => cancel());
     };
     // content.stats vem do servidor e não muda depois da montagem.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -172,7 +165,10 @@ export function ExperienceSection({ content }: { content: ExperienceContent }) {
                 src={s.image}
                 alt=""
                 fill
-                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                // object-contain: a largura desenhada é limitada pela altura
+                // do card (172px no desktop, até isso no mobile) vezes o zoom
+                // máximo (card ativo/hover), não pela largura do card.
+                sizes={`${Math.ceil(((172 * s.image.width) / s.image.height) * (s.art === "map" ? 1.35 : 1.05))}px`}
                 className={`pointer-events-none origin-right select-none object-contain object-right transition-transform duration-500 ease-out ${
                   s.art === "map"
                     ? `translate-x-[37%] lg:scale-[1.28] lg:group-hover:scale-[1.35] ${

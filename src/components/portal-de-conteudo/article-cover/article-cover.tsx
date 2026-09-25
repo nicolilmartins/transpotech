@@ -8,7 +8,8 @@ export function ArticleCover({ article }: { article: Article }) {
       <Image
         src={article.image}
         alt={article.title}
-        priority
+        preload
+        fetchPriority="high"
         fill
         sizes="(min-width: 1024px) 960px, 100vw"
         className="object-cover"

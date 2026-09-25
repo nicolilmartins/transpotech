@@ -1,18 +1,6 @@
 import { z } from "zod";
-import { reportRelations } from "@/lib/report.schema";
-
-// Reaproveita as relações do Canal da Transparência.
-export { reportRelations as manifestacaoRelations };
-
-/** Opções do select "Tipo de manifestação" (rascunho — validar depois). */
-export const manifestacaoTypes = [
-  "Reclamação",
-  "Sugestão",
-  "Elogio",
-  "Dúvida",
-  "Solicitação",
-  "Outro",
-] as const;
+import { reportRelations } from "@/lib/report.options";
+import { manifestacaoTypes } from "@/lib/manifestacao.options";
 
 export const manifestacaoSchema = z.object({
   name: z.string().min(2, "Informe seu nome"),

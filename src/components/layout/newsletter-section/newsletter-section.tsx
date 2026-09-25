@@ -1,17 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type Resolver } from "react-hook-form";
 import { CircleCheck } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSharedTexts } from "@/components/layout/shared-texts";
-import {
-  newsletterSchema,
-  type NewsletterFormValues,
-} from "@/lib/newsletter.schema";
+import type { NewsletterFormValues } from "@/lib/newsletter.schema";
+
+// zod + schema (~100KB) só baixam no foco do campo ou no envio: a seção fica
+// abaixo da dobra e o HTML dela não depende da validação.
+const loadValidation = () =>
+  Promise.all([
+    import("@hookform/resolvers/zod"),
+    import("@/lib/newsletter.schema"),
+  ]);
+
+const newsletterResolver: Resolver<NewsletterFormValues> = async (
+  values,
+  context,
+  options
+) => {
+  const [{ zodResolver }, { newsletterSchema }] = await loadValidation();
+  return zodResolver(newsletterSchema)(values, context, options);
+};
 
 export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
   const [sent, setSent] = useState(false);
@@ -22,9 +35,7 @@ export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<NewsletterFormValues>({
-    resolver: zodResolver(newsletterSchema),
-  });
+  } = useForm<NewsletterFormValues>({ resolver: newsletterResolver });
 
   const onSubmit = async (data: NewsletterFormValues) => {
     // Sem backend por ora — confirma o cadastro localmente (padrão use-submit-lead).
@@ -64,6 +75,7 @@ export function NewsletterSection({ showGlow = true }: { showGlow?: boolean }) {
         noValidate
         onSubmit={handleSubmit(onSubmit)}
         onChange={() => sent && setSent(false)}
+        onFocus={() => void loadValidation()}
         className="relative flex flex-1 flex-col gap-3 lg:justify-center"
       >
         <div className="flex flex-col gap-3 sm:flex-row">

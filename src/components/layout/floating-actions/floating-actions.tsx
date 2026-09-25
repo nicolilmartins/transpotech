@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/intent-link";
 import { MapPin, Phone, Plus } from "lucide-react";
-import { gsap } from "@/lib/gsap";
+import { cssEase, prefersReducedMotion, tweenStyle } from "@/lib/motion";
 import { ROUTES } from "@/lib/routes";
 
 // "Nossas unidades" leva à seção de unidades da página de contato; "Contatos"
@@ -27,33 +27,68 @@ export function FloatingActions() {
 
   // Estado inicial (fechado) — opções invisíveis
   useEffect(() => {
-    gsap.set(optionRefs.current, { opacity: 0, y: 8, pointerEvents: "none" });
+    optionRefs.current.forEach((el) => {
+      if (!el) return;
+      el.style.opacity = "0";
+      el.style.transform = "translate(0px, 8px)";
+      el.style.pointerEvents = "none";
+    });
   }, []);
 
-  // Anima ao abrir/fechar
+  // Anima ao abrir/fechar. Antes da primeira abertura não há o que fechar
+  // (o estado fechado já foi aplicado acima).
+  const hasOpened = useRef(false);
   useEffect(() => {
+    if (open) hasOpened.current = true;
+    if (!hasOpened.current) return;
+    const opts = optionRefs.current.filter((el) => el !== null);
+    const icon = iconRef.current;
+    const reduced = prefersReducedMotion();
     if (open) {
-      gsap.set(optionRefs.current, { pointerEvents: "auto" });
-      gsap.to(optionRefs.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.2,
-        ease: "power1.out",
-        stagger: { each: 0.06, from: "end" },
-      });
-      gsap.to(iconRef.current, { rotation: 45, duration: 0.2, ease: "power1.out" });
+      opts.forEach((el) => (el.style.pointerEvents = "auto"));
+      // Cascata a partir do último (o mais próximo do botão).
+      opts.forEach((el, i) =>
+        tweenStyle(
+          el,
+          { opacity: "1", transform: "translate(0px, 0px)" },
+          {
+            duration: reduced ? 0 : 0.2,
+            delay: reduced ? 0 : (opts.length - 1 - i) * 0.06,
+            easing: cssEase.power1Out,
+          }
+        )
+      );
+      if (icon) {
+        tweenStyle(
+          icon,
+          { transform: "rotate(45deg)" },
+          { duration: reduced ? 0 : 0.2, easing: cssEase.power1Out }
+        );
+      }
     } else {
-      gsap.to(optionRefs.current, {
-        opacity: 0,
-        y: 8,
-        duration: 0.15,
-        ease: "power1.in",
-        stagger: 0.06,
-        onComplete: () => {
-          gsap.set(optionRefs.current, { pointerEvents: "none" });
-        },
-      });
-      gsap.to(iconRef.current, { rotation: 0, duration: 0.2, ease: "power1.out" });
+      opts.forEach((el, i) =>
+        tweenStyle(
+          el,
+          { opacity: "0", transform: "translate(0px, 8px)" },
+          {
+            duration: reduced ? 0 : 0.15,
+            delay: reduced ? 0 : i * 0.06,
+            easing: cssEase.power1In,
+            // Cliques voltam a passar só ao fim da cascata inteira.
+            onComplete:
+              i === opts.length - 1
+                ? () => opts.forEach((o) => (o.style.pointerEvents = "none"))
+                : undefined,
+          }
+        )
+      );
+      if (icon) {
+        tweenStyle(
+          icon,
+          { transform: "rotate(0deg)" },
+          { duration: reduced ? 0 : 0.2, easing: cssEase.power1Out }
+        );
+      }
     }
   }, [open]);
 
@@ -81,7 +116,7 @@ export function FloatingActions() {
       {/* Opções — flutuam acima do botão */}
       <div className="absolute bottom-full right-0 mb-3 flex flex-col items-end gap-3">
         {options.map((option, index) => (
-          <Link
+          <IntentLink
             key={option.label}
             href={option.href}
             ref={(node) => { optionRefs.current[index] = node; }}
@@ -100,7 +135,7 @@ export function FloatingActions() {
             >
               <option.Icon className="size-6" />
             </span>
-          </Link>
+          </IntentLink>
         ))}
       </div>
 

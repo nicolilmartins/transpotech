@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { HeroPicture } from "@/components/layout/photo-hero/hero-picture";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import type { SectionContent } from "@/sanity/content/fields";
@@ -15,24 +15,13 @@ export function ServicosHeroSection({
     <section data-header-hero className="relative w-full bg-background md:p-4">
       {/* Card de imagem — full-bleed no mobile; de md em diante, 16px de padding em volta e bordas de 20px */}
       <div className="relative flex h-svh md:h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden md:rounded-[20px]">
-        {/* Imagem de fundo (mobile) — recorte exato do Figma (node 3640:3253):
-            técnico na empilhadeira retrátil em destaque. */}
-        <Image
-          src={content.imageMobile}
-          alt=""
-          priority
-          fill
-          sizes="100vw"
-          className="object-cover object-center md:hidden"
-        />
-        {/* Imagem de fundo (desktop) — manutenção / técnico em operação */}
-        <Image
-          src={content.image}
-          alt=""
-          priority
-          fill
-          sizes="100vw"
-          className="hidden object-cover object-center md:block"
+        {/* Imagem de fundo. Mobile: recorte exato do Figma (node 3640:3253),
+            técnico na empilhadeira retrátil em destaque. Desktop: manutenção /
+            técnico em operação. */}
+        <HeroPicture
+          image={content.image}
+          imageMobile={content.imageMobile}
+          className="object-cover object-center"
         />
 
         {/* Gradiente escuro da base para o topo, concentrado na base */}

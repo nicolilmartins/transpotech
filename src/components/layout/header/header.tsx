@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/intent-link";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LogoTranspotech } from "@/components/ui/logo";
 import { MegaMenu, getMegaMenus } from "./mega-menu";
 import { ROUTES } from "@/lib/routes";
-import { ScrollTrigger } from "@/lib/gsap";
 
 const MEGA_MENU_ID = "megamenu-panel";
 
@@ -61,19 +60,39 @@ function useHeaderState(menuOpen: boolean) {
     window.addEventListener("scroll", updateDark, { passive: true });
     window.addEventListener("resize", updateDark);
 
-    // Hide/show via GSAP ScrollTrigger
-    const st = ScrollTrigger.create({
-      start: "top+=" + 120 + " top", // HIDE_THRESHOLD = 120
-      onUpdate: (self) => {
-        const scrollingDown = self.direction === 1;
-        setHidden(scrollingDown && !menuOpenRef.current);
-      },
-    });
+    // Hide/show pela direção do scroll. Substitui um ScrollTrigger
+    // (start "top+=120 top", sem end) para não baixar o GSAP em toda página:
+    // mesma regra — só reage com o scroll dentro de [120, fim da página], e a
+    // saída da faixa conta como um último passo (ex.: subir abaixo de 120
+    // mostra o header).
+    const HIDE_THRESHOLD = 120;
+    const clampScroll = () => {
+      const max = Math.max(
+        HIDE_THRESHOLD,
+        document.documentElement.scrollHeight - window.innerHeight,
+      );
+      return Math.min(Math.max(window.scrollY, HIDE_THRESHOLD), max);
+    };
+    let lastScroll = clampScroll();
+    let frame = 0;
+    const updateHidden = () => {
+      frame = 0;
+      const current = clampScroll();
+      if (current === lastScroll) return;
+      const scrollingDown = current > lastScroll;
+      lastScroll = current;
+      setHidden(scrollingDown && !menuOpenRef.current);
+    };
+    const onScroll = () => {
+      frame ||= requestAnimationFrame(updateHidden);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       window.removeEventListener("scroll", updateDark);
       window.removeEventListener("resize", updateDark);
-      st.kill();
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(frame);
     };
   }, []);
 
@@ -184,14 +203,14 @@ export function Header({ careersUrl }: HeaderProps) {
         >
           {/* Esquerda: Logo + Desktop Nav */}
           <div className="flex items-center gap-4 lg:gap-20">
-            <Link href="/" className="shrink-0" aria-label="TranspoTech: página inicial">
+            <IntentLink href="/" className="shrink-0" aria-label="TranspoTech: página inicial">
               <LogoTranspotech
                 className={[
                   "h-8 w-[174px] transition-colors duration-300",
                   darkPill ? "text-neutral-50" : "text-logo-ink",
                 ].join(" ")}
               />
-            </Link>
+            </IntentLink>
 
             {/* Desktop nav */}
             <nav aria-label="Navegação principal" className="hidden lg:block">
@@ -255,10 +274,10 @@ export function Header({ careersUrl }: HeaderProps) {
                           {underline}
                         </button>
                       ) : (
-                        <Link href={item.href ?? "#"} className={triggerClass}>
+                        <IntentLink href={item.href ?? "#"} className={triggerClass}>
                           {item.label}
                           {underline}
-                        </Link>
+                        </IntentLink>
                       )}
                     </li>
                   );
@@ -358,7 +377,7 @@ export function Header({ careersUrl }: HeaderProps) {
                                     const external =
                                       sub.href.startsWith("http");
                                     return (
-                                    <Link
+                                    <IntentLink
                                       key={sub.title}
                                       href={sub.href}
                                       onClick={closeMobileMenu}
@@ -381,7 +400,7 @@ export function Header({ careersUrl }: HeaderProps) {
                                           {sub.subtitle}
                                         </span>
                                       </span>
-                                    </Link>
+                                    </IntentLink>
                                     );
                                   })}
                                 </div>
@@ -390,13 +409,13 @@ export function Header({ careersUrl }: HeaderProps) {
                           )}
                         </>
                       ) : (
-                        <Link
+                        <IntentLink
                           href={item.href ?? "#"}
                           onClick={closeMobileMenu}
                           className="flex items-center justify-between rounded-xl px-4 py-3 text-body font-medium text-neutral-800 hover:bg-neutral-50"
                         >
                           {item.label}
-                        </Link>
+                        </IntentLink>
                       )}
                     </li>
                   );

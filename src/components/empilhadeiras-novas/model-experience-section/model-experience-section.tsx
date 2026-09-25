@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { withGsap } from "@/lib/load-gsap";
 import type { ResolvedForkliftDetail } from "@/data/forklift-details";
 
 // Palco full-bleed do modelo: a imagem surge inteira no fundo claro e, ao chegar
@@ -20,55 +20,57 @@ export function ModelExperienceSection({
     const zoom = zoomRef.current;
     if (!intro || !zoom) return;
 
-    // Só no desktop: entrada + pin/zoom (a imagem cresce até preencher a tela).
-    // No mobile a imagem fica ESTÁTICA (box), sem pin/zoom.
-    const mm = gsap.matchMedia();
-    mm.add(
-      "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
-      () => {
-        // Entrada: a imagem surge (fade + sobe) ao entrar — aparece INTEIRA no
-        // fundo claro antes de qualquer zoom.
-        gsap.set(zoom, { opacity: 0, y: 40 });
-        ScrollTrigger.create({
-          trigger: intro,
-          start: "top 80%",
-          once: true,
-          onEnter: () =>
-            gsap.to(zoom, {
-              opacity: 1,
-              y: 0,
-              duration: 0.9,
-              ease: "power2.out",
-            }),
-        });
+    return withGsap(({ gsap, ScrollTrigger }) => {
+      // Só no desktop: entrada + pin/zoom (a imagem cresce até preencher a tela).
+      // No mobile a imagem fica ESTÁTICA (box), sem pin/zoom.
+      const mm = gsap.matchMedia();
+      mm.add(
+        "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
+        () => {
+          // Entrada: a imagem surge (fade + sobe) ao entrar — aparece INTEIRA no
+          // fundo claro antes de qualquer zoom.
+          gsap.set(zoom, { opacity: 0, y: 40 });
+          ScrollTrigger.create({
+            trigger: intro,
+            start: "top 80%",
+            once: true,
+            onEnter: () =>
+              gsap.to(zoom, {
+                opacity: 1,
+                y: 0,
+                duration: 0.9,
+                ease: "power2.out",
+              }),
+          });
 
-        // Pin + zoom: quando a imagem contida chega ao topo, ela é fixada por um
-        // curto trecho e ampliada — mantendo-se centralizada — até preencher a
-        // tela. offsetWidth/Height = tamanho base (não afetado pelo scale).
-        ScrollTrigger.create({
-          trigger: intro,
-          start: "top top",
-          end: "+=90%",
-          pin: true,
-          scrub: 0.6,
-          anticipatePin: 1,
-          onUpdate: (self) => {
-            const p = self.progress;
-            const w = zoom.offsetWidth || 1;
-            const h = zoom.offsetHeight || 1;
-            const target = Math.min(
-              2,
-              Math.max(window.innerWidth / w, window.innerHeight / h)
-            );
-            gsap.set(zoom, { scale: 1 + p * (target - 1) });
-          },
-        });
+          // Pin + zoom: quando a imagem contida chega ao topo, ela é fixada por um
+          // curto trecho e ampliada — mantendo-se centralizada — até preencher a
+          // tela. offsetWidth/Height = tamanho base (não afetado pelo scale).
+          ScrollTrigger.create({
+            trigger: intro,
+            start: "top top",
+            end: "+=90%",
+            pin: true,
+            scrub: 0.6,
+            anticipatePin: 1,
+            onUpdate: (self) => {
+              const p = self.progress;
+              const w = zoom.offsetWidth || 1;
+              const h = zoom.offsetHeight || 1;
+              const target = Math.min(
+                2,
+                Math.max(window.innerWidth / w, window.innerHeight / h)
+              );
+              gsap.set(zoom, { scale: 1 + p * (target - 1) });
+            },
+          });
 
-        ScrollTrigger.refresh();
-      }
-    );
+          ScrollTrigger.refresh();
+        }
+      );
 
-    return () => mm.revert();
+      return () => mm.revert();
+    });
   }, []);
 
   return (
@@ -92,7 +94,6 @@ export function ModelExperienceSection({
           src={detail.media.hero.src}
           alt={detail.media.hero.alt}
           fill
-          priority
           sizes="100vw"
           className={
             detail.media.hero.fit === "contain"

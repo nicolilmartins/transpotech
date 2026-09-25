@@ -3,7 +3,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleCheck, PencilLine, X } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
@@ -15,10 +14,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import { HoverMesh } from "@/components/layout/hover-mesh";
 import { useSharedTexts } from "@/components/layout/shared-texts";
+import type { ContactRequestValues } from "@/lib/contact-request.schema";
 import {
-  contactRequestSchema,
-  type ContactRequestValues,
-} from "@/lib/contact-request.schema";
+  contactResolver,
+  loadContactValidation,
+} from "@/lib/contact-request.resolver";
 
 const labelBase = "text-body font-semibold text-neutral-700";
 
@@ -77,9 +77,7 @@ export function LeadFormSection({
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<ContactRequestValues>({
-    resolver: zodResolver(contactRequestSchema),
-  });
+  } = useForm<ContactRequestValues>({ resolver: contactResolver });
 
   // Detecta se a seção saiu da viewport pelo topo. Usa histerese (limiares de
   // mostrar/esconder afastados > altura do banner) porque, ao aparecer, o banner
@@ -188,6 +186,7 @@ export function LeadFormSection({
           // Marca "começou a preencher" no primeiro input real (digitação/seleção
           // humana borbulha até aqui). É o gatilho do banner.
           onInput={() => setEngaged(true)}
+          onFocus={() => void loadContactValidation()}
           onChange={() => sent && setSent(false)}
           className="flex flex-col gap-5 rounded-2xl border-2 border-neutral-100 bg-white p-6 lg:p-8"
         >

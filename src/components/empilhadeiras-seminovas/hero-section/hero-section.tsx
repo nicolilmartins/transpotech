@@ -1,12 +1,8 @@
-import { getImageProps } from "next/image";
-import { preload } from "react-dom";
+import { HeroPicture } from "@/components/layout/photo-hero/hero-picture";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import type { SectionContent } from "@/sanity/content/fields";
 import type { seminovasPage } from "@/sanity/content/pages/seminovas";
-
-// Mesmo ponto de corte do `md:` do Tailwind (48rem).
-const DESKTOP_MEDIA = "(min-width: 48rem)";
 
 // Primeira palavra e o resto. O título tem duas partes editáveis (normal e
 // destaque) e o celular quebra linha depois da primeira palavra de cada uma.
@@ -18,43 +14,8 @@ function splitFirstWord(text: string): [string, string] {
 type SeminovasHeroContent = SectionContent<typeof seminovasPage.sections.hero>;
 
 export function SeminovasHeroSection({ content }: { content: SeminovasHeroContent }) {
-  const { image: forklift, imageMobile: forkliftMobile } = content;
   const [regularFirst, regularRest] = splitFirstWord(content.titleRegular);
   const [accentFirst, accentRest] = splitFirstWord(content.titleAccent);
-
-  // Art direction com <picture>: o navegador baixa só a versão da viewport.
-  // Duas <Image preload> gerariam dois preloads sem media e a versão
-  // escondida por CSS disputaria banda com o LCP.
-  const common = {
-    alt: "",
-    fill: true,
-    sizes: "100vw",
-    loading: "eager",
-    fetchPriority: "high",
-  } as const;
-  const {
-    props: { srcSet: desktopSrcSet, src: desktopSrc },
-  } = getImageProps({ ...common, src: forklift });
-  const { props: mobileProps } = getImageProps({
-    ...common,
-    src: forkliftMobile,
-  });
-
-  // Um preload por viewport, cada um restrito à sua media.
-  preload(mobileProps.src, {
-    as: "image",
-    imageSrcSet: mobileProps.srcSet,
-    imageSizes: common.sizes,
-    fetchPriority: "high",
-    media: `not all and ${DESKTOP_MEDIA}`,
-  });
-  preload(desktopSrc, {
-    as: "image",
-    imageSrcSet: desktopSrcSet,
-    imageSizes: common.sizes,
-    fetchPriority: "high",
-    media: DESKTOP_MEDIA,
-  });
 
   return (
     <section data-header-hero className="relative w-full bg-background md:p-4">
@@ -63,18 +24,11 @@ export function SeminovasHeroSection({ content }: { content: SeminovasHeroConten
         {/* Imagem de fundo. Mobile: mesma cena em versão clara, corte do
             Figma na empilhadeira da esquerda (object-position ≈ 44%).
             Desktop: frota de empilhadeiras em operação. */}
-        <picture className="contents">
-          <source
-            media={DESKTOP_MEDIA}
-            srcSet={desktopSrcSet}
-            sizes={common.sizes}
-          />
-          <img
-            {...mobileProps}
-            alt=""
-            className="object-cover object-[44%_center] md:scale-[1.15] md:object-[72%_center]"
-          />
-        </picture>
+        <HeroPicture
+          image={content.image}
+          imageMobile={content.imageMobile}
+          className="object-cover object-[44%_center] md:scale-[1.15] md:object-[72%_center]"
+        />
 
         {/* Gradiente escuro (#01120E) da base para o topo, concentrado na base */}
         <div

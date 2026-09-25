@@ -12,7 +12,7 @@ import { SlidersHorizontal, SearchX, X } from "lucide-react";
 import type { Forklift, ForkliftBrand } from "@/types/forklift.types";
 import { brandOrder } from "@/data/forklifts-novas";
 import { ProductCard } from "@/components/layout/product-card/product-card";
-import { QuoteModal } from "@/components/layout/quote-modal/quote-modal";
+import { LazyQuoteModal } from "@/components/layout/quote-modal/lazy-quote-modal";
 import { useModalFocus } from "@/hooks/use-modal-focus";
 import { CatalogToolbar } from "./catalog-toolbar/catalog-toolbar";
 import { CatalogFilters } from "./catalog-filters/catalog-filters";
@@ -402,17 +402,19 @@ export function Catalog({ forklifts }: { forklifts: Forklift[] }) {
             </div>
           ) : (
             <div className="flex flex-col gap-12">
-              {grouped.map((group) => (
+              {grouped.map((group, groupIndex) => (
                 <section key={group.brand} className="flex flex-col gap-6">
                   <h2 className="font-heading text-h2 font-normal text-neutral-800">
                     {brandLabel[group.brand]}
                   </h2>
                   <div className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-                    {group.items.map((forklift) => (
+                    {group.items.map((forklift, i) => (
                       <ProductCard
                         key={forklift.id}
                         forklift={forklift}
                         onRequestQuote={openQuote}
+                        // Primeiro card = LCP do catálogo no mobile.
+                        priority={groupIndex === 0 && i === 0}
                       />
                     ))}
                   </div>
@@ -481,7 +483,7 @@ export function Catalog({ forklifts }: { forklifts: Forklift[] }) {
         )}
 
       {quoteOpen && (
-        <QuoteModal
+        <LazyQuoteModal
           onClose={() => setQuoteOpen(false)}
           forklifts={forklifts}
           initialSelectedId={quoteForId}

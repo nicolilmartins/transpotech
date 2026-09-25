@@ -1,13 +1,11 @@
-"use client";
-
-import { usePathname } from "next/navigation";
 import { Facebook, Linkedin, Whatsapp, X } from "@/components/ui/icons";
 import { env } from "@/lib/env";
 
-// Ícones de compartilhamento. A URL vem de env.siteUrl + pathname, então os
-// hrefs já saem prontos no HTML do servidor (sem JS também funcionam).
-export function ArticleShare({ title }: { title: string }) {
-  const url = new URL(usePathname(), env.siteUrl).href;
+// Ícones de compartilhamento. A URL vem de env.siteUrl + caminho do artigo.
+// Server Component: os hrefs saem prontos no HTML e o env (que valida com
+// zod) não vai para o bundle do cliente.
+export function ArticleShare({ title, path }: { title: string; path: string }) {
+  const url = new URL(path, env.siteUrl).href;
 
   const u = encodeURIComponent(url);
   const t = encodeURIComponent(title);

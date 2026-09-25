@@ -1,7 +1,6 @@
 "use client";
 
 import { Fragment, useRef } from "react";
-import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import {
   Factory,
@@ -11,7 +10,13 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import illustration from "@/assets/images/stats/illustration-segment.webp";
-import { gsap } from "@/lib/gsap";
+import {
+  cssEase,
+  playOnScroll,
+  prefersReducedMotion,
+  prepareFrom,
+} from "@/lib/motion";
+import { useNearViewport } from "@/hooks/use-near-viewport";
 import type { SectionContent } from "@/sanity/content/fields";
 import type { homePage } from "@/sanity/content/pages/home";
 
@@ -80,26 +85,22 @@ export function SegmentsSection({ content }: { content: SegmentsContent }) {
   const dotRefs = useRef<(HTMLDivElement | null)[]>([]);
   const markerLabelRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  useNearViewport(sectionRef, () => {
+    const section = sectionRef.current;
+    if (!section || prefersReducedMotion()) return;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 80%",
-        once: true,
-      },
-    });
-
-    // Header
-    tl.from(labelRef.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, 0)
-      .from(h2Ref.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, 0.08)
-      .from(descRef.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, 0.16);
+    // Timeline do cabeçalho e dos marcadores; cada item no seu atraso.
+    const fade = { duration: 0.7, easing: cssEase.power1Out };
+    const anims = [
+      ...prepareFrom(labelRef.current, { opacity: 0, y: 16 }, fade),
+      ...prepareFrom(h2Ref.current, { opacity: 0, y: 16 }, { ...fade, delay: 0.08 }),
+      ...prepareFrom(descRef.current, { opacity: 0, y: 16 }, { ...fade, delay: 0.16 }),
+    ];
 
     // Ilustração (desktop)
-    if (illustrationRef.current) {
-      tl.from(illustrationRef.current, { opacity: 0, duration: 0.7, ease: "power1.out" }, 0.24);
-    }
+    anims.push(
+      ...prepareFrom(illustrationRef.current, { opacity: 0 }, { ...fade, delay: 0.24 })
+    );
 
     // Marcadores (desktop) — cada um no seu delay original. O ponto nasce
     // pequeno e cresce até o tamanho final; a linha é "desenhada" a partir do
@@ -111,40 +112,46 @@ export function SegmentsSection({ content }: { content: SegmentsContent }) {
       const label = markerLabelRefs.current[i];
 
       if (dot) {
-        tl.from(
-          dot,
-          { scale: 0, opacity: 0, duration: 0.45, ease: "back.out(1.6)" },
-          d
+        anims.push(
+          ...prepareFrom(
+            dot,
+            { scale: 0, opacity: 0 },
+            { duration: 0.45, delay: d, easing: cssEase.backOut(1.6) }
+          )
         );
       }
       if (line) {
         // Nos marcadores da esquerda o ponto fica na ponta DIREITA da linha
         // (revela da direita para a esquerda); nos da direita, o inverso.
-        tl.fromTo(
-          line,
+        const reveal = line.animate(
+          [
+            {
+              clipPath:
+                m.side === "left"
+                  ? "inset(0% 0% 0% 100%)"
+                  : "inset(0% 100% 0% 0%)",
+            },
+            { clipPath: "inset(0% 0% 0% 0%)" },
+          ],
           {
-            clipPath:
-              m.side === "left"
-                ? "inset(0% 0% 0% 100%)"
-                : "inset(0% 100% 0% 0%)",
-          },
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 0.6,
-            ease: "power2.out",
-          },
-          d + 0.15
+            duration: 600,
+            delay: (d + 0.15) * 1000,
+            easing: cssEase.power2Out,
+            fill: "both",
+          }
         );
+        reveal.pause();
+        anims.push(reveal);
       }
       if (label) {
-        tl.from(
-          label,
-          { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" },
-          d + 0.3
+        anims.push(
+          ...prepareFrom(label, { opacity: 0, y: 16 }, { ...fade, delay: d + 0.3 })
         );
       }
     });
-  }, { scope: sectionRef });
+
+    return playOnScroll(section, 0.8, anims);
+  });
 
   return (
     <section ref={sectionRef} data-reveal-skip className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-5 py-12 sm:px-6 lg:gap-16 lg:px-16 lg:py-20">
@@ -177,6 +184,8 @@ export function SegmentsSection({ content }: { content: SegmentsContent }) {
         <Image
           src={illustration}
           alt="Ilustração isométrica de um polo logístico com indústria, centros de distribuição, varejo e veículos em operação"
+          // Sem `sizes`, o srcset 1x/2x partia da largura do arquivo (w=1920).
+          sizes="(min-width: 640px) calc(100vw - 48px), calc(100vw - 40px)"
           className="h-auto w-full"
         />
       </div>
@@ -216,7 +225,7 @@ export function SegmentsSection({ content }: { content: SegmentsContent }) {
             src={illustration}
             alt="Ilustração isométrica de um polo logístico com indústria, centros de distribuição, varejo e veículos em operação"
             fill
-            sizes="58vw"
+            sizes="(min-width: 1440px) 740px, 52vw"
             className="object-contain"
           />
         </div>

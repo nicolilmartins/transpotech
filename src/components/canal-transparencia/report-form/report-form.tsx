@@ -1,20 +1,33 @@
 "use client";
 
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm, type Resolver } from "react-hook-form";
 import { Paperclip, CheckCircle2 } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  reportSchema,
-  reportRelations,
-  reportTypes,
-  type ReportFormValues,
-} from "@/lib/report.schema";
+import { reportRelations, reportTypes } from "@/lib/report.options";
+import type { ReportFormValues } from "@/lib/report.schema";
+
+// zod + schema só baixam quando o visitante interage com o formulário (foco em
+// um campo) ou envia — mesmo padrão do LeadFormSection. O import é memoizado
+// pelo bundler: o foco já deixa tudo pronto para o envio.
+const loadValidation = () =>
+  Promise.all([
+    import("@hookform/resolvers/zod"),
+    import("@/lib/report.schema"),
+  ]);
+
+const reportResolver: Resolver<ReportFormValues> = async (
+  values,
+  context,
+  options
+) => {
+  const [{ zodResolver }, { reportSchema }] = await loadValidation();
+  return zodResolver(reportSchema)(values, context, options);
+};
 
 const labelBase = "text-body font-semibold text-neutral-700";
 
@@ -38,7 +51,7 @@ export function ReportForm() {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<ReportFormValues>({
-    resolver: zodResolver(reportSchema),
+    resolver: reportResolver,
     defaultValues: { identify: "anonimo" },
   });
 
@@ -86,6 +99,7 @@ export function ReportForm() {
         <form
           noValidate
           onSubmit={handleSubmit(onSubmit)}
+          onFocus={() => void loadValidation()}
           className="flex w-full flex-col gap-6 rounded-2xl border-2 border-neutral-100 bg-white p-6 lg:p-8"
         >
           {/* Identificação */}

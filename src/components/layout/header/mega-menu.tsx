@@ -1,5 +1,5 @@
 import Image, { type StaticImageData } from "next/image";
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/intent-link";
 import {
   Forklift,
   Sparkles,
@@ -197,7 +197,7 @@ export function MegaMenu({
       <div className="overflow-hidden rounded-3xl bg-white p-4 shadow-[0_24px_60px_rgba(0,0,0,0.18)] ring-1 ring-black/5">
         <div className="flex gap-4">
           {/* Card em destaque */}
-          <Link
+          <IntentLink
             href={featured.href}
             onClick={onNavigate}
             className="group relative flex w-[300px] shrink-0 flex-col justify-end overflow-hidden rounded-2xl bg-neutral-900 p-6"
@@ -221,7 +221,7 @@ export function MegaMenu({
                 {featured.description}
               </p>
             </div>
-          </Link>
+          </IntentLink>
 
           {/* Colunas de itens */}
           <div className="flex flex-1 flex-col justify-center p-2">
@@ -241,7 +241,7 @@ export function MegaMenu({
                       const external = item.href.startsWith("http");
                       return (
                       <li key={item.title}>
-                        <Link
+                        <IntentLink
                           href={item.href}
                           onClick={onNavigate}
                           target={external ? "_blank" : undefined}
@@ -259,7 +259,7 @@ export function MegaMenu({
                               {item.subtitle}
                             </span>
                           </span>
-                        </Link>
+                        </IntentLink>
                       </li>
                       );
                     })}

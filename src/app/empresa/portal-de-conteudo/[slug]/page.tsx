@@ -120,7 +120,10 @@ export default async function ArtigoPage({ params }: ArticlePageProps) {
               <span className="text-body font-semibold text-neutral-800">
                 {content.aside.shareLabel}
               </span>
-              <ArticleShare title={article.title} />
+              <ArticleShare
+                title={article.title}
+                path={`${ROUTES.PORTAL_CONTEUDO}/${article.id}`}
+              />
             </div>
 
             {/* Sumário com os tópicos em link */}

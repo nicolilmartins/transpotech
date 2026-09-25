@@ -1,48 +1,12 @@
-import { getImageProps } from "next/image";
-import { preload } from "react-dom";
+import { HeroPicture } from "@/components/layout/photo-hero/hero-picture";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import type { SectionContent } from "@/sanity/content/fields";
 import type { automacaoPage } from "@/sanity/content/pages/automacao";
 
-// Mesmo ponto de corte do `md:` do Tailwind (48rem).
-const DESKTOP_MEDIA = "(min-width: 48rem)";
-
 type AutomacaoHeroContent = SectionContent<typeof automacaoPage.sections.hero>;
 
 export function AutomacaoHeroSection({ content }: { content: AutomacaoHeroContent }) {
-  // Art direction com <picture>, como na hero de seminovas: o navegador baixa
-  // só a versão da viewport, e o preload de cada uma fica restrito à sua media.
-  const common = {
-    alt: "",
-    fill: true,
-    sizes: "100vw",
-    loading: "eager",
-    fetchPriority: "high",
-  } as const;
-  const {
-    props: { srcSet: desktopSrcSet, src: desktopSrc },
-  } = getImageProps({ ...common, src: content.image });
-  const { props: mobileProps } = getImageProps({
-    ...common,
-    src: content.imageMobile,
-  });
-
-  preload(mobileProps.src, {
-    as: "image",
-    imageSrcSet: mobileProps.srcSet,
-    imageSizes: common.sizes,
-    fetchPriority: "high",
-    media: `not all and ${DESKTOP_MEDIA}`,
-  });
-  preload(desktopSrc, {
-    as: "image",
-    imageSrcSet: desktopSrcSet,
-    imageSizes: common.sizes,
-    fetchPriority: "high",
-    media: DESKTOP_MEDIA,
-  });
-
   return (
     <section data-header-hero className="relative w-full bg-background md:p-4">
       {/* Card de imagem — full-bleed no mobile; de md em diante, 16px de padding em volta e bordas de 20px */}
@@ -50,18 +14,11 @@ export function AutomacaoHeroSection({ content }: { content: AutomacaoHeroConten
         {/* Imagem de fundo. Mobile: recorte exato do Figma (node 3640:3262),
             técnica com laptop diante da linha automatizada. Desktop: armazém
             automatizado. */}
-        <picture className="contents">
-          <source
-            media={DESKTOP_MEDIA}
-            srcSet={desktopSrcSet}
-            sizes={common.sizes}
-          />
-          <img
-            {...mobileProps}
-            alt=""
-            className="object-cover object-center"
-          />
-        </picture>
+        <HeroPicture
+          image={content.image}
+          imageMobile={content.imageMobile}
+          className="object-cover object-center"
+        />
 
         {/* Gradiente escuro da base para o topo, concentrado na base */}
         <div

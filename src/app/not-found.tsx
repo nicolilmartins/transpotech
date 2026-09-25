@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/intent-link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -18,12 +18,12 @@ export default function NotFound() {
         <p className="max-w-md text-muted-foreground">
           A página que você procura não existe ou foi movida.
         </p>
-        <Link
+        <IntentLink
           href="/"
           className="rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
         >
           Voltar ao início
-        </Link>
+        </IntentLink>
       </section>
     </main>
   );

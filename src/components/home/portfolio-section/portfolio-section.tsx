@@ -8,7 +8,7 @@ import { ROUTES } from "@/lib/routes";
 import iconNovas from "@/assets/images/stats/portfolio-icon-novas.webp";
 import iconSeminovas from "@/assets/images/stats/portfolio-icon-seminovas.webp";
 import iconLocacao from "@/assets/images/stats/portfolio-icon-locacao.webp";
-import { gsap } from "@/lib/gsap";
+import { cssEase, tweenStyle } from "@/lib/motion";
 import type { SectionContent } from "@/sanity/content/fields";
 import type { homePage } from "@/sanity/content/pages/home";
 
@@ -131,23 +131,28 @@ export function PortfolioSection({ content }: { content: PortfolioContent }) {
   useEffect(() => {
     imageRefs.current.forEach((el, i) => {
       if (!el) return;
-      gsap.set(el, i === active
-        ? { marginLeft: 40, opacity: 1 }
-        : { marginLeft: 0, opacity: 0 }
-      );
+      el.style.marginLeft = i === active ? "40px" : "0px";
+      el.style.opacity = i === active ? "1" : "0";
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Anima ao mudar o card ativo
+  // Anima ao mudar o card ativo. Na montagem o efeito acima já aplicou esse
+  // estado.
+  const isFirstRun = useRef(true);
   useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
     imageRefs.current.forEach((el, i) => {
       if (!el) return;
-      if (i === active) {
-        gsap.to(el, { marginLeft: 40, opacity: 1, duration: 0.3, ease: "power1.out", overwrite: "auto" });
-      } else {
-        gsap.to(el, { marginLeft: 0, opacity: 0, duration: 0.3, ease: "power1.out", overwrite: "auto" });
-      }
+      const isActive = i === active;
+      tweenStyle(
+        el,
+        { marginLeft: isActive ? "40px" : "0px", opacity: isActive ? "1" : "0" },
+        { duration: 0.3, easing: cssEase.power1Out }
+      );
     });
   }, [active]);
 
@@ -228,7 +233,7 @@ export function PortfolioSection({ content }: { content: PortfolioContent }) {
 
               {/* Imagem — apenas no desktop largo. flex-1 preenche o espaço
                   restante do card (fica maior em telas grandes, menor nas
-                  menores); o gap de 40px é o marginLeft animado por GSAP. */}
+                  menores); o gap de 40px é o marginLeft animado. */}
               <ParallaxFrame
                 ref={(node) => { imageRefs.current[index] = node; }}
                 aria-hidden={!open}

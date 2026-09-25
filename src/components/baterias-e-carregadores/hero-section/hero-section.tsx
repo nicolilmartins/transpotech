@@ -18,6 +18,7 @@ export function BateriasHeroSection({ content }: { content: BateriasHeroContent 
           src={content.image}
           alt=""
           preload
+          fetchPriority="high"
           fill
           sizes="100vw"
           className="object-cover object-[65%_70%]"

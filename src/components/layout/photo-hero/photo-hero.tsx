@@ -44,7 +44,8 @@ export function PhotoHero({
         <Image
           src={image}
           alt=""
-          priority
+          preload
+          fetchPriority="high"
           fill
           sizes="100vw"
           className="object-cover object-center"

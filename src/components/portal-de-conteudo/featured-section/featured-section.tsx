@@ -26,14 +26,20 @@ export function FeaturedSection({
         {content.eyebrow}
       </p>
 
-      <article className="mt-5 grid grid-cols-1 items-stretch gap-4 overflow-hidden rounded-2xl bg-white p-3 transition duration-300 hover:scale-[1.01] hover:z-10 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)] lg:grid-cols-2 lg:gap-8">
-        {/* Imagem com pequena borda do card ao redor (padding do article + cantos). */}
+      {/* Transição só no que o hover muda: o ScrollReveal anima opacity e
+          transform por GSAP, e com `transition` genérico cada quadro dele
+          disparava e cancelava uma transição CSS. */}
+      <article className="mt-5 grid grid-cols-1 items-stretch gap-4 overflow-hidden rounded-2xl bg-white p-3 transition-[scale,box-shadow] duration-300 hover:scale-[1.01] hover:z-10 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)] lg:grid-cols-2 lg:gap-8">
+        {/* Imagem com pequena borda do card ao redor (padding do article + cantos).
+            É o LCP da página: baixa já, com prioridade alta. */}
         <div className="relative h-[248px] w-full overflow-hidden rounded-xl bg-neutral-100 lg:h-full lg:min-h-[404px]">
           <Image
             src={article.image}
             alt={article.title}
             fill
-            sizes="(min-width: 1024px) 50vw, 100vw"
+            loading="eager"
+            fetchPriority="high"
+            sizes="(min-width: 1440px) 628px, (min-width: 1024px) calc(50vw - 92px), calc(100vw - 64px)"
             className="object-cover"
           />
         </div>

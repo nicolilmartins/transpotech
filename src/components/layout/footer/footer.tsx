@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/intent-link";
 import { Facebook, Instagram, Linkedin, Youtube } from "@/components/ui/icons";
 import { ROUTES } from "@/lib/routes";
 import type { Unit } from "@/data/units";
@@ -11,6 +11,10 @@ import gptw from "@/assets/images/gptw-badge.webp";
 import atomsix from "@/assets/images/atomsix-symbol.svg";
 
 const logoWatermark = logoLight;
+
+// Selo GPTW: altura fixa (90px / lg:115px) e largura proporcional. Sem
+// `sizes`, o srcset em 1x/2x da largura intrínseca baixava a versão de 1080px.
+const gptwSizes = `(min-width: 1024px) ${Math.ceil((115 * gptw.width) / gptw.height)}px, ${Math.ceil((90 * gptw.width) / gptw.height)}px`;
 
 const getLinkGroups = (careersUrl: string) => [
   {
@@ -92,7 +96,7 @@ export function Footer({ units, careersUrl, social }: FooterProps) {
             <Image src={logoLight} alt="TranspoTech" className="h-8 w-[174px]" />
             <div className="flex items-center gap-5">
               {socials.map(({ key, name, Icon }) => (
-                <Link
+                <IntentLink
                   key={name}
                   href={social[key] ?? "#"}
                   target={social[key] ? "_blank" : undefined}
@@ -101,7 +105,7 @@ export function Footer({ units, careersUrl, social }: FooterProps) {
                   className="text-neutral-300 transition-colors hover:text-neutral-50"
                 >
                   <Icon className="size-5" aria-hidden />
-                </Link>
+                </IntentLink>
               ))}
             </div>
           </div>
@@ -118,7 +122,7 @@ export function Footer({ units, careersUrl, social }: FooterProps) {
                 {group.links.map((link) => {
                   const external = link.href.startsWith("http");
                   return (
-                    <Link
+                    <IntentLink
                       key={link.label}
                       href={link.href}
                       target={external ? "_blank" : undefined}
@@ -126,7 +130,7 @@ export function Footer({ units, careersUrl, social }: FooterProps) {
                       className="leading-[1.35] text-neutral-300 transition-colors hover:text-neutral-50"
                     >
                       {link.label}
-                    </Link>
+                    </IntentLink>
                   );
                 })}
               </div>
@@ -136,6 +140,7 @@ export function Footer({ units, careersUrl, social }: FooterProps) {
           <Image
             src={gptw}
             alt="Great Place To Work Certificada — 4 anos consecutivos"
+            sizes={gptwSizes}
             className="h-[90px] w-auto shrink-0 self-start lg:h-[115px] lg:self-auto"
           />
         </div>
@@ -191,7 +196,7 @@ export function Footer({ units, careersUrl, social }: FooterProps) {
             <p className="text-body leading-[1.35] text-neutral-100">
               © 2026 TranspoTech todos os direitos reservados.
             </p>
-            <Link
+            <IntentLink
               href="https://www.atom6studio.com/pt-br"
               target="_blank"
               rel="noopener noreferrer"
@@ -203,7 +208,7 @@ export function Footer({ units, careersUrl, social }: FooterProps) {
                 Criado por
               </span>
               <Image src={atomsix} alt="Atom6 Studio" className="size-6" />
-            </Link>
+            </IntentLink>
           </div>
         </div>
       </div>

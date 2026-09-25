@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Section } from "@/components/ui/section";
 import { TextLink } from "@/components/ui/text-link";
 import { ProductCard } from "@/components/layout/product-card/product-card";
-import { QuoteModal } from "@/components/layout/quote-modal/quote-modal";
+import { LazyQuoteModal } from "@/components/layout/quote-modal/lazy-quote-modal";
 import { ROUTES } from "@/lib/routes";
 import type { Forklift } from "@/types/forklift.types";
 import type { SectionContent } from "@/sanity/content/fields";
@@ -56,7 +56,7 @@ export function RelatedProductsSection({
       </div>
 
       {quoteForId && (
-        <QuoteModal
+        <LazyQuoteModal
           onClose={() => setQuoteForId(null)}
           forklifts={forklifts}
           initialSelectedId={quoteForId}

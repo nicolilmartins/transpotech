@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleCheck } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
@@ -11,10 +10,11 @@ import { Input } from "@/components/ui/input";
 import { CityAutocomplete } from "@/components/ui/city-autocomplete";
 import { Textarea } from "@/components/ui/textarea";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
+import type { ContactRequestValues } from "@/lib/contact-request.schema";
 import {
-  contactRequestSchema,
-  type ContactRequestValues,
-} from "@/lib/contact-request.schema";
+  contactResolver,
+  loadContactValidation,
+} from "@/lib/contact-request.resolver";
 import type { SectionContent } from "@/sanity/content/fields";
 import type { contatoPage } from "@/sanity/content/pages/contato";
 
@@ -31,9 +31,7 @@ export function ContatoHeroSection({ content }: { content: ContatoHeroContent })
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<ContactRequestValues>({
-    resolver: zodResolver(contactRequestSchema),
-  });
+  } = useForm<ContactRequestValues>({ resolver: contactResolver });
 
   const onSubmit = async (data: ContactRequestValues) => {
     // Sem backend — simula o envio (padrão dos demais formulários).
@@ -71,6 +69,7 @@ export function ContatoHeroSection({ content }: { content: ContatoHeroContent })
         noValidate
         onSubmit={handleSubmit(onSubmit)}
         onChange={() => sent && setSent(false)}
+        onFocus={() => void loadContactValidation()}
         className="flex flex-col gap-5 rounded-2xl border-2 border-neutral-100 bg-white p-6 lg:p-8"
       >
         <div className="flex flex-col gap-1.5">

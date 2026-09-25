@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/intent-link";
 import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 
@@ -42,14 +42,14 @@ export function TextLink({
     // Link para fora do site abre em nova aba (mesmo padrão do header e footer).
     const external = href.startsWith("http");
     return (
-      <Link
+      <IntentLink
         href={href}
         target={external ? "_blank" : undefined}
         rel={external ? "noopener noreferrer" : undefined}
         className={classes}
       >
         {content}
-      </Link>
+      </IntentLink>
     );
   }
 

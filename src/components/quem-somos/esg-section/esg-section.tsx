@@ -1,14 +1,19 @@
 "use client";
 
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
+import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/intent-link";
 import { ArrowRight } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import { ROUTES } from "@/lib/routes";
-import { gsap } from "@/lib/gsap";
+import {
+  cssEase,
+  playOnScroll,
+  prefersReducedMotion,
+  prepareFrom,
+  prepareFromEach,
+} from "@/lib/motion";
 import type { SectionContent } from "@/sanity/content/fields";
 import type { quemSomosPage } from "@/sanity/content/pages/quem-somos";
 
@@ -30,38 +35,25 @@ export function EsgGovernanceSection({ content }: { content: EsgContent }) {
   const itemContainerRefs = useRef<HTMLDivElement[]>([]);
   const gradientBarRefs = useRef<HTMLDivElement[]>([]);
 
-  useGSAP(
-    () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  useLayoutEffect(() => {
+    const content = contentRef.current;
+    if (!content || prefersReducedMotion()) return;
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: contentRef.current,
-          start: "top 75%",
-          once: true,
-        },
-      });
-
-      tl.from(
-        imageRef.current,
-        { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" },
-        0
-      );
-
-      tl.from(
+    const easing = cssEase.power1Out;
+    return playOnScroll(content, 0.75, [
+      ...prepareFrom(imageRef.current, { opacity: 0, y: 16 }, { duration: 0.7, easing }),
+      ...prepareFromEach(
         itemContainerRefs.current,
-        { opacity: 0, y: 12, duration: 0.5, ease: "power1.out", stagger: STAGGER },
-        0
-      );
-
-      tl.from(
+        { opacity: 0, y: 12 },
+        { duration: 0.5, easing, stagger: STAGGER }
+      ),
+      ...prepareFromEach(
         gradientBarRefs.current,
-        { opacity: 0, duration: 0.7, ease: "power1.out", stagger: STAGGER },
-        0.3
-      );
-    },
-    { scope: contentRef }
-  );
+        { opacity: 0 },
+        { duration: 0.7, easing, delay: 0.3, stagger: STAGGER }
+      ),
+    ]);
+  }, []);
 
   return (
     <Section className="flex flex-col items-start gap-10 lg:gap-[67px]">
@@ -133,13 +125,13 @@ export function EsgGovernanceSection({ content }: { content: EsgContent }) {
                     {item.description}
                   </p>
                 </div>
-                <Link
+                <IntentLink
                   href={itemHrefs[index]}
                   className="flex items-center gap-2 text-body font-semibold leading-[1.35] text-neutral-600 transition-colors hover:text-primary-500"
                 >
                   {item.linkLabel}
                   <ArrowRight className="size-5" />
-                </Link>
+                </IntentLink>
               </div>
             </div>
           ))}

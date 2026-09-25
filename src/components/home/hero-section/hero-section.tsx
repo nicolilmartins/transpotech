@@ -1,4 +1,5 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
+import { preload } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import { HeroHotspots } from "./hero-hotspots";
@@ -18,16 +19,37 @@ import forklift from "@/assets/images/home-hero-image.webp";
 // 24 colunas (4308/4332) antes da borda: o wrapper recorta na linha de reflexo e
 // a cópia invertida é deslocada pela mesma folga. O chão ali é degradê suave.
 //
-// Só a arte do desktop leva `preload`: o <link> de preload não tem `media`, e
-// preload nas duas variantes (sizes diferentes → URLs diferentes) fazia as duas
-// disputarem banda em qualquer viewport. A mobile fica com fetchPriority alto.
+// Preload das duas artes com `media`: sizes diferentes → URLs diferentes, e
+// sem `media` as duas disputavam banda em qualquer viewport. O `preload` do
+// <Image> não aceita `media`, então o <img> do desktop fica lazy (lazy dentro de
+// display:none não baixa no mobile) e é o <link> que o busca cedo no desktop.
+const HERO_DESKTOP_SIZES = "160vw";
+const HERO_MOBILE_SIZES = "121vw";
+
+function preloadHeroArt() {
+  const variants = [
+    { sizes: HERO_DESKTOP_SIZES, media: "(min-width: 1024px)" },
+    { sizes: HERO_MOBILE_SIZES, media: "(max-width: 1023px)" },
+  ];
+  for (const { sizes, media } of variants) {
+    const { props } = getImageProps({ src: forklift, alt: "", fill: true, sizes });
+    preload(props.src, {
+      as: "image",
+      imageSrcSet: props.srcSet,
+      imageSizes: props.sizes,
+      fetchPriority: "high",
+      media,
+    });
+  }
+}
+
 function MobileHeroArt({ highPriority = false }: { highPriority?: boolean }) {
   const art = (mirror = false) => (
     <Image
       src={forklift}
       alt=""
       fill
-      sizes="121vw"
+      sizes={HERO_MOBILE_SIZES}
       loading={mirror || highPriority ? "eager" : undefined}
       fetchPriority={highPriority && !mirror ? "high" : undefined}
       className="object-cover"
@@ -55,6 +77,7 @@ function MobileHeroArt({ highPriority = false }: { highPriority?: boolean }) {
 type HomeHeroContent = SectionContent<typeof homePage.sections.hero>;
 
 export function HeroSection({ content }: { content: HomeHeroContent }) {
+  preloadHeroArt();
   return (
     <section
       data-header-hero
@@ -75,9 +98,8 @@ export function HeroSection({ content }: { content: HomeHeroContent }) {
           <Image
             src={forklift}
             alt=""
-            preload
             fill
-            sizes="160vw"
+            sizes={HERO_DESKTOP_SIZES}
             className="object-cover"
           />
         </div>

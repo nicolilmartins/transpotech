@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { MadeInBrazilBadge } from "@/components/ui/made-in-brazil-badge";
 import { ROUTES } from "@/lib/routes";
+import { preloadQuoteModal } from "@/components/layout/quote-modal/lazy-quote-modal";
 import { useSharedTexts, type SharedTexts } from "@/components/layout/shared-texts";
 import type { Forklift, ForkliftBrand } from "@/types/forklift.types";
 
@@ -26,6 +27,19 @@ function SpecRow({ label, value }: { label: string; value: string }) {
 
 type SpecItem = { label: string; value: string };
 
+// Altura da caixa da foto (h-[200px]). Com object-contain, a foto aparece com
+// no máximo 200px × proporção de largura — a caixa é mais larga que isso em
+// quase toda viewport, e um `sizes` pela largura da caixa baixava ~2× mais
+// pixels do que a tela mostra.
+const IMAGE_BOX_HEIGHT = 200;
+
+function imageSizes({ width, height }: Forklift["image"]): string {
+  if (!width || !height) {
+    return "(min-width: 1024px) 262px, (min-width: 640px) calc(50vw - 80px), calc(100vw - 88px)";
+  }
+  return `${Math.ceil((IMAGE_BOX_HEIGHT * width) / height)}px`;
+}
+
 /** Linhas de característica do catálogo de novas — padrão do card. */
 function catalogSpecs(
   forklift: Forklift,
@@ -44,6 +58,7 @@ export function ProductCard({
   onRequestQuote,
   specs,
   detailsHref,
+  priority = false,
 }: {
   forklift: Forklift;
   /** "Solicitar orçamento" abre o modal de orçamento com este equipamento. */
@@ -58,6 +73,8 @@ export function ProductCard({
    * classificados apontam para o detalhe de seminovas.
    */
   detailsHref?: string;
+  /** Card da imagem LCP (o primeiro da lista): baixa já, com prioridade alta. */
+  priority?: boolean;
 }) {
   const { productCard: texts } = useSharedTexts();
   const specRows = specs ?? catalogSpecs(forklift, texts);
@@ -67,14 +84,20 @@ export function ProductCard({
   return (
     // Card com padding simétrico (p-6 = 24px). gap-8 (32px) separa imagem →
     // textos → botões. A imagem fica DENTRO do card, sem exceder o topo.
-    <article className="relative flex h-full flex-col gap-8 rounded-3xl bg-white p-6 transition duration-300 hover:z-10 hover:scale-[1.02] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)]">
+    // Transição só em scale/box-shadow (o hover): o ScrollReveal anima opacity
+    // e transform do card por GSAP, e com `transition` genérico cada quadro do
+    // GSAP abria e cancelava uma transição CSS — eventos transitionrun/cancel
+    // por quadro e a entrada atrasada em relação ao tween.
+    <article className="relative flex h-full flex-col gap-8 rounded-3xl bg-white p-6 transition-[scale,box-shadow] duration-300 hover:z-10 hover:scale-[1.02] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)]">
       {/* Imagem do produto — contida dentro do card */}
       <div className="relative h-[200px] w-full">
         <Image
           src={forklift.image}
           alt={forklift.name}
           fill
-          sizes="(min-width: 1024px) 262px, (min-width: 640px) 50vw, 100vw"
+          sizes={imageSizes(forklift.image)}
+          loading={priority ? "eager" : undefined}
+          fetchPriority={priority ? "high" : undefined}
           // Com o selo no canto esquerdo, a foto centralizada fica com o peso
           // visual todo à esquerda — o deslocamento devolve o equilíbrio.
           className={`object-contain ${
@@ -127,6 +150,8 @@ export function ProductCard({
           variant="primary"
           size="lg"
           onClick={() => onRequestQuote(forklift)}
+          onPointerEnter={preloadQuoteModal}
+          onFocus={preloadQuoteModal}
           className="w-full justify-center"
         >
           {texts.quoteLabel}

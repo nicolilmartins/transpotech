@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { HeroPicture } from "@/components/layout/photo-hero/hero-picture";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
 import type { SectionContent } from "@/sanity/content/fields";
@@ -11,25 +11,14 @@ export function LocacaoHeroSection({ content }: { content: LocacaoHeroContent })
     <section data-header-hero className="relative w-full bg-background md:p-4">
       {/* Card de imagem — full-bleed no mobile; de md em diante, 16px de padding em volta e bordas de 20px */}
       <div className="relative flex h-svh md:h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden md:rounded-[20px]">
-        {/* Imagem de fundo — empilhadeiras em operação */}
-        {/* Mobile: recorte exato do Figma (node 3321:3289) — empilhadeira
-            central em destaque; o arquivo já é a janela do design (669x1336). */}
-        <Image
-          src={content.imageMobile}
-          alt=""
-          priority
-          fill
-          sizes="100vw"
-          className="object-cover object-center md:hidden"
-        />
-        {/* Desktop (md+): recorte landscape padrão, cobrindo a hero inteira. */}
-        <Image
-          src={content.image}
-          alt=""
-          priority
-          fill
-          sizes="100vw"
-          className="hidden object-cover object-center md:block"
+        {/* Imagem de fundo — empilhadeiras em operação.
+            Mobile: recorte exato do Figma (node 3321:3289) — empilhadeira
+            central em destaque; o arquivo já é a janela do design (669x1336).
+            Desktop (md+): recorte landscape padrão, cobrindo a hero inteira. */}
+        <HeroPicture
+          image={content.image}
+          imageMobile={content.imageMobile}
+          className="object-cover object-center"
         />
 
         {/* Gradiente escuro (#01120E) da base para o topo, concentrado na base */}

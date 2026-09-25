@@ -60,6 +60,14 @@ const cardVisuals: Pick<CompareItem, "image" | "imageAlt" | "accent">[] = [
   },
 ];
 
+// Alturas da caixa da foto (h-44 / sm:h-52 / lg:h-60). Com object-contain a
+// foto aparece com no máximo altura × proporção de largura — menos que a
+// largura do card, que era a base do `sizes` antes.
+function containSizes({ width, height }: StaticImageData): string {
+  const at = (boxHeight: number) => `${Math.ceil((boxHeight * width) / height)}px`;
+  return `(min-width: 1024px) ${at(240)}, (min-width: 640px) ${at(208)}, ${at(176)}`;
+}
+
 function CompareCard({
   title,
   description,
@@ -94,7 +102,7 @@ function CompareCard({
           src={image}
           alt={imageAlt}
           fill
-          sizes="(min-width: 1024px) 420px, 90vw"
+          sizes={containSizes(image)}
           className="object-contain"
         />
       </div>

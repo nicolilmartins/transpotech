@@ -22,7 +22,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Section } from "@/components/ui/section";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { cssEase, prepareFrom, scrollLineMargin } from "@/lib/motion";
 import type { SectionContent } from "@/sanity/content/fields";
 import type { automacaoPage } from "@/sanity/content/pages/automacao";
 
@@ -138,24 +138,50 @@ export function SolutionsSection({
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const ul = listRef.current;
     if (!ul) return;
-    const items = Array.from(ul.children) as HTMLElement[];
-    gsap.set(items, { opacity: 0, y: 16 });
-    const triggers = ScrollTrigger.batch(items, {
-      start: "top 92%",
-      onEnter: (els) =>
-        gsap.to(els, {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: "power2.out",
-          stagger: 0.08,
-          overwrite: "auto",
+    const items = Array.from(ul.children);
+    const pending = new Map(
+      items.map((item) => [
+        item,
+        prepareFrom(
+          item,
+          { opacity: 0, y: 16 },
+          { duration: 0.6, easing: cssEase.power2Out },
+        ),
+      ]),
+    );
+
+    // Como o ScrollTrigger.batch (interval 0.1s): o primeiro item que passa da
+    // linha abre uma janela de 100ms; os que passarem nela entram juntos, em
+    // cascata de 0.08s.
+    let batch: Element[] = [];
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const flush = () => {
+      timer = undefined;
+      batch.forEach((item, i) =>
+        pending.get(item)?.forEach((anim) => {
+          anim.effect?.updateTiming({ delay: i * 80 });
+          anim.play();
         }),
-    });
-    ScrollTrigger.refresh();
+      );
+      batch = [];
+    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          observer.unobserve(entry.target);
+          batch.push(entry.target);
+        }
+        if (batch.length > 0) timer ??= setTimeout(flush, 100);
+      },
+      { rootMargin: scrollLineMargin(0.92) },
+    );
+    items.forEach((item) => observer.observe(item));
+
     return () => {
-      triggers.forEach((t) => t.kill());
-      gsap.set(items, { clearProps: "opacity,transform" });
+      observer.disconnect();
+      clearTimeout(timer);
+      pending.forEach((anims) => anims.forEach((anim) => anim.cancel()));
     };
   }, [active]);
 

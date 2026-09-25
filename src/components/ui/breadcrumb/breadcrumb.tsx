@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/intent-link";
 import { ChevronRight } from "lucide-react";
 
 export type BreadcrumbItem = {
@@ -15,12 +15,12 @@ export function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
           return (
             <li key={`${item.label}-${i}`} className="flex items-center gap-1.5">
               {item.href && !isLast ? (
-                <Link
+                <IntentLink
                   href={item.href}
                   className="transition-colors hover:text-primary-500"
                 >
                   {item.label}
-                </Link>
+                </IntentLink>
               ) : (
                 <span
                   className={isLast ? "font-semibold text-neutral-700" : undefined}

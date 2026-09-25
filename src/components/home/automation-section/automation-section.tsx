@@ -1,13 +1,19 @@
 "use client";
 
 import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/ui/section";
 import { ParallaxFrame } from "@/components/layout/parallax-frame";
 import { CircleCheck } from "lucide-react";
-import { gsap } from "@/lib/gsap";
+import {
+  cssEase,
+  playOnScroll,
+  prefersReducedMotion,
+  prepareFrom,
+  prepareFromEach,
+} from "@/lib/motion";
+import { useNearViewport } from "@/hooks/use-near-viewport";
 import { ROUTES } from "@/lib/routes";
 import type { SectionContent } from "@/sanity/content/fields";
 import type { homePage } from "@/sanity/content/pages/home";
@@ -22,23 +28,23 @@ export function AutomationSection({ content }: { content: AutomationContent }) {
   const buttonRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  useNearViewport(sectionRef, () => {
+    const section = sectionRef.current;
+    if (!section || prefersReducedMotion()) return;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 75%",
-        once: true,
-      },
-    });
-
-    tl.from(h2Ref.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, 0)
-      .from(descRef.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, 0.12)
-      .from(imageRef.current, { opacity: 0, x: 28, duration: 0.7, ease: "power1.out" }, 0.16)
-      .from(bulletRefs.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out", stagger: 0.09 }, 0.24)
-      .from(buttonRef.current, { opacity: 0, y: 16, duration: 0.7, ease: "power1.out" }, 0.6);
-  }, { scope: sectionRef });
+    const fade = { duration: 0.7, easing: cssEase.power1Out };
+    return playOnScroll(section, 0.75, [
+      ...prepareFrom(h2Ref.current, { opacity: 0, y: 16 }, fade),
+      ...prepareFrom(descRef.current, { opacity: 0, y: 16 }, { ...fade, delay: 0.12 }),
+      ...prepareFrom(imageRef.current, { opacity: 0, x: 28 }, { ...fade, delay: 0.16 }),
+      ...prepareFromEach(
+        bulletRefs.current,
+        { opacity: 0, y: 16 },
+        { ...fade, delay: 0.24, stagger: 0.09 }
+      ),
+      ...prepareFrom(buttonRef.current, { opacity: 0, y: 16 }, { ...fade, delay: 0.6 }),
+    ]);
+  });
 
   return (
     <Section
@@ -46,8 +52,8 @@ export function AutomationSection({ content }: { content: AutomationContent }) {
       data-reveal-skip
       className="flex flex-col items-start"
     >
-      {/* overflow-x-clip: a imagem entra com offset x:28 (GSAP) e, até o
-          ScrollTrigger disparar, esse deslocamento alargava a página no mobile */}
+      {/* overflow-x-clip: a imagem entra com offset x:28 e, até a entrada
+          disparar, esse deslocamento alargava a página no mobile */}
       <div className="flex w-full flex-col gap-8 overflow-x-clip lg:flex-row lg:items-center lg:gap-16">
         {/* Coluna de texto */}
         <div className="flex flex-col gap-14">

@@ -1,7 +1,6 @@
 "use client";
 
 import { Fragment, useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
 
 // Efeito de fonte da terminal-industries.com/why-terminal: o título chega
 // bem clarinho e vai "ligando" conforme uma faixa de brilho laranja com
@@ -30,6 +29,10 @@ const UNLIT = { light: "#e9e7e4", dark: "#5a5652" } as const;
 // (transparente) → frente de brilho laranja → texto ainda "desligado".
 const GLOW = "color-mix(in srgb, var(--color-primary-500) 95%, transparent)";
 const GLOW_CLEAR = "color-mix(in srgb, var(--color-primary-500) 0%, transparent)";
+
+// power2.out do GSAP como cubic-bezier exato: x(s) = s, y(s) = 1 - (1 - s)^3.
+const POWER2_OUT = "cubic-bezier(0.33333, 1, 0.66667, 1)";
+
 const coverFor = (unlit: string) =>
   `linear-gradient(90deg, ${GLOW_CLEAR} 0%, ${GLOW_CLEAR} 40%, ${GLOW} 50%, ${unlit} 60%, ${unlit} 100%)`;
 
@@ -61,16 +64,20 @@ export function BlurRevealTitle({
     // O estado inicial (72%, também no SSR) já deixa a faixa de brilho
     // entrando no texto — ao chegar na seção a varredura parece que já está
     // acontecendo; o ease .out mantém a sensação de movimento em andamento.
-    const tl = gsap.timeline();
-    tl.to(overlay, {
-      backgroundPosition: "0% 0%",
-      duration: 2.6,
-      ease: "power2.out",
-    });
-    tl.set(overlay, { opacity: 0 });
+    //
+    // Web Animations em vez de GSAP: sem JS por quadro durante a hidratação.
+    // Continua começando no efeito (pós-hidratação), como antes — começar no
+    // primeiro paint poria o repaint do degradê em disputa com o LCP.
+    const sweep = overlay.animate(
+      [{ backgroundPosition: "72% 0%" }, { backgroundPosition: "0% 0%" }],
+      { duration: 2600, easing: POWER2_OUT, fill: "forwards" }
+    );
+    sweep.onfinish = () => {
+      overlay.style.opacity = "0";
+    };
 
     return () => {
-      tl.kill();
+      sweep.cancel();
     };
   }, []);
 
