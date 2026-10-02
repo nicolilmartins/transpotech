@@ -15,6 +15,7 @@ import { pecasPage } from "@/sanity/content/pages/pecas";
 import { CtaSection } from "@/components/layout/cta/cta-section";
 import { HoverMesh } from "@/components/layout/hover-mesh";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
+import { ROUTES } from "@/lib/routes";
 
 export const metadata: Metadata = {
   title: "Peças para Empilhadeiras",
@@ -72,6 +73,8 @@ export default async function PecasPage() {
       <CtaSection
         {...content.cta}
         ctaHref="#solicitar-pecas"
+        secondaryLabel="Conheça os acessórios"
+        secondaryHref={ROUTES.ACESSORIOS}
       />
     </main>
   );

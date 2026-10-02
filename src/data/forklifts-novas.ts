@@ -262,7 +262,7 @@ export const forkliftsNovas: Forklift[] = [
   },
   {
     id: "baoli-kbd-35",
-    name: "Empilhadeira a Diesel Baoli KBD 35",
+    name: "Empilhadeira a Diesel Baoli KBD 30 - 35",
     brand: "Baoli",
     energyTag: "Combustão",
     equipmentType: "Contrabalançada",

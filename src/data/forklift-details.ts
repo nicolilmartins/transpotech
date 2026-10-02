@@ -411,7 +411,11 @@ const detailById: Record<string, ForkliftDetail> = {
   "baoli-kbd-35": {
     ...genericDetail,
     media: {
-      hero: { src: detKbd35, alt: "Empilhadeira a Diesel Baoli KBD 35 em pátio", fit: "cover" },
+      hero: {
+        src: detKbd35,
+        alt: "Empilhadeira a Diesel Baoli KBD 30 - 35 em pátio",
+        fit: "cover",
+      },
     },
   },
   "baoli-kbd-70": {

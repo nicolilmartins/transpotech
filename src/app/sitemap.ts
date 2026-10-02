@@ -39,6 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: url(ROUTES.PNEUS), lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: url(ROUTES.BATERIAS), lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: url(ROUTES.PECAS), lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
+    { url: url(ROUTES.ACESSORIOS), lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
 
     // Serviços
     { url: url(ROUTES.SERVICOS), lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },

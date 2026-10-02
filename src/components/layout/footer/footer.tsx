@@ -26,6 +26,7 @@ const getLinkGroups = (careersUrl: string) => [
       { label: "Pneus", href: ROUTES.PNEUS },
       { label: "Baterias e carregadores", href: ROUTES.BATERIAS },
       { label: "Peças", href: ROUTES.PECAS },
+      { label: "Acessórios", href: ROUTES.ACESSORIOS },
     ],
   },
   {

@@ -9,6 +9,7 @@ export const ROUTES = {
   PNEUS: "/produtos/pneus",
   BATERIAS: "/produtos/baterias-e-carregadores",
   PECAS: "/produtos/pecas",
+  ACESSORIOS: "/produtos/acessorios",
 
   // Serviços
   SERVICOS: "/servicos",
@@ -43,6 +44,7 @@ export const NAV_PRODUTOS = [
   { label: "Pneus", href: ROUTES.PNEUS },
   { label: "Baterias e Carregadores", href: ROUTES.BATERIAS },
   { label: "Peças", href: ROUTES.PECAS },
+  { label: "Acessórios", href: ROUTES.ACESSORIOS },
 ] as const;
 
 export const NAV_EMPRESA = [
