@@ -22,13 +22,15 @@ export function PartnershipSection({
     <Section className="relative flex flex-col">
       <div className="relative flex flex-col gap-10 lg:min-h-[420px] lg:flex-row lg:items-start">
         {/* Ilustração — no desktop é absoluta e maior, sangrando pela direita e
-            pelo topo (ultrapassa o padding da seção, conforme Figma 3508:4342). */}
-        <div className="relative order-last w-full select-none lg:absolute lg:left-[44%] lg:top-0 lg:order-none lg:w-[62%]">
+            pelo topo (ultrapassa o padding da seção, conforme Figma 3508:4342).
+            O select-none fica só na imagem: os pop-ups dos hotspots, dentro
+            deste bloco, precisam ter o texto selecionável. */}
+        <div className="relative order-last w-full lg:absolute lg:left-[44%] lg:top-0 lg:order-none lg:w-[62%]">
           <Image
             src={illoAutomation}
             alt="Fluxo de automação intralogística de ponta a ponta, TranspoTech + Dematic"
             sizes="(min-width: 1024px) 66vw, 100vw"
-            className="pointer-events-none h-auto w-full object-contain"
+            className="pointer-events-none h-auto w-full select-none object-contain"
           />
           <AutomationDots />
           <AutomationHotspots content={hotspots.items} />

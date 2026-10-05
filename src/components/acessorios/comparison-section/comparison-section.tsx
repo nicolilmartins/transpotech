@@ -1,6 +1,7 @@
 import { Minus } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
+import { ScrollHintBox } from "@/components/ui/scroll-hint-box";
 
 const columns = [
   "KION E-Check List",
@@ -79,8 +80,9 @@ export function ComparisonSection() {
         </p>
       </div>
 
-      {/* No mobile a tabela rola na horizontal dentro do próprio bloco */}
-      <div className="-mx-5 w-[calc(100%+2.5rem)] overflow-x-auto px-5 sm:mx-0 sm:w-full sm:px-0">
+      {/* No mobile a tabela rola na horizontal dentro do próprio bloco, com a
+          dica de arrastar ao entrar na tela */}
+      <ScrollHintBox className="-mx-5 w-[calc(100%+2.5rem)] overflow-x-auto px-5 sm:mx-0 sm:w-full sm:px-0">
         <table className="w-full min-w-[720px] border-collapse text-left">
           <caption className="sr-only">
             Comparativo entre E-Check List, Telemetria TranspoTech e STILL
@@ -137,7 +139,7 @@ export function ComparisonSection() {
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollHintBox>
 
       <Button variant="primary" size="lg" href="#solicitar-acessorios">
         Receber indicação da solução

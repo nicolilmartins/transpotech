@@ -96,6 +96,8 @@ type StateUnitsLayerProps = {
   drawn: boolean;
   /** Converte pixels de tela em unidades do viewBox (já considera o zoom). */
   px: (n: number) => number;
+  /** Como `px`, mas com piso de 16px de tela — só para tamanhos de fonte. */
+  pxFont: (n: number) => number;
   /** Usa `labelPosMobile` quando o mapa está estreito. */
   isMobile: boolean;
   /** id do filtro de glow dos dots (definido no <defs> do mapa). */
@@ -106,6 +108,7 @@ export function StateUnitsLayer({
   uf,
   drawn,
   px,
+  pxFont,
   isMobile,
   glowId,
 }: StateUnitsLayerProps) {
@@ -163,8 +166,11 @@ export function StateUnitsLayer({
               );
               return { x: l.x, y: l.y, textAnchor: l.anchor };
             })()}
-            fontSize={px(CAPITAL_FONT)}
-            className="fill-neutral-300"
+            fontSize={pxFont(CAPITAL_FONT)}
+            strokeWidth={px(4)}
+            strokeLinejoin="round"
+            paintOrder="stroke"
+            className="fill-neutral-300 stroke-neutral-900"
           >
             {data.capital.name}
           </text>
@@ -201,16 +207,19 @@ export function StateUnitsLayer({
               x={label.x}
               y={label.y}
               textAnchor={label.anchor}
-              fontSize={px(CITY_FONT)}
+              fontSize={pxFont(CITY_FONT)}
               fontWeight={600}
-              className="fill-neutral-50"
+              strokeWidth={px(4)}
+              strokeLinejoin="round"
+              paintOrder="stroke"
+              className="fill-neutral-50 stroke-neutral-900"
             >
               {p.city}
               {p.time && (
                 <tspan
                   x={label.x}
                   dy={px(LINE_GAP)}
-                  fontSize={px(TIME_FONT)}
+                  fontSize={pxFont(TIME_FONT)}
                   fontWeight={400}
                   className="fill-primary-400"
                 >

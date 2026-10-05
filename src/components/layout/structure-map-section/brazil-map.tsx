@@ -15,7 +15,7 @@ import {
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BRAZIL_STATES, type BrazilStateItem } from "./brazil-states";
-import { ACTIVE_UFS, UNIT_UFS } from "./coverage";
+import { ACTIVE_UFS, UNIT_UFS, coverageTier } from "./coverage";
 import { STATE_UNITS } from "./state-units";
 import { StateUnitsLayer, UNIT_DOT_CLASS } from "./state-units-layer";
 
@@ -42,7 +42,7 @@ const ZOOM_EASE = "cubic-bezier(.45,.05,.25,1)";
 // por estado antigo), senão as cidades próximas se sobrepõem.
 const FIT_AREA = 0.82;
 const FIT_UNITS = 0.64;
-const FIT_UNITS_MOBILE = 0.8;
+const FIT_UNITS_MOBILE = 0.62;
 // Ajuste por estado: no RS as duas cidades empilhadas (Caxias do Sul / Nova
 // Santa Rita) se sobrepõem com o enquadramento padrão; em SC o rótulo
 // "Florianópolis" (à direita, junto à costa) precisa de mais folga lateral.
@@ -55,8 +55,9 @@ const edgeFade = (pct: number) =>
 
 // Pins da visão Brasil (px de tela).
 const PIN_R = 5;
-const PIN_FONT = 14;
-const AREA_FONT = 14;
+const MIN_FONT_PX = 16; // piso de tamanho de texto, em px de tela
+const PIN_FONT = 16;
+const AREA_FONT = 16;
 
 // Posicionamento automático dos nomes de cidade na visão Brasil (algoritmo do
 // HTML de referência): cada rótulo testa lados até achar um livre. Offsets em
@@ -183,6 +184,12 @@ export function BrazilMap({ className = "" }: { className?: string }) {
   // px de tela → unidades do viewBox já considerando o zoom da câmera.
   const px = useCallback(
     (n: number) => (n * unitsPerPx * mobileFactor) / k,
+    [unitsPerPx, mobileFactor, k],
+  );
+  // Igual ao `px`, mas com piso de 16px de tela: a redução de 65% do mobile
+  // encolhe a geometria da camada de distâncias, nunca a legibilidade do texto.
+  const pxFont = useCallback(
+    (n: number) => (Math.max(n * mobileFactor, MIN_FONT_PX) * unitsPerPx) / k,
     [unitsPerPx, mobileFactor, k],
   );
   // px na visão Brasil (sem zoom e sem o fator mobile).
@@ -489,12 +496,19 @@ export function BrazilMap({ className = "" }: { className?: string }) {
             const unit = UNIT_UFS.includes(s.uf);
             const isSel = selected === s.uf;
             const dim = !!selected && !isSel;
+            // Dois tons: locação (mais forte) e atuação em venda/manutenção.
+            // O ponto da unidade física é desenhado por cima, à parte.
+            const tierFill = {
+              rental: "fill-primary-500/55 stroke-neutral-50/40",
+              active: "fill-primary-500/30 stroke-neutral-50/40",
+            } as const;
+            const tier = coverageTier(s.uf);
             const fill = !active
               ? "fill-neutral-50/4 stroke-neutral-50/40"
               : isSel
                 ? "fill-primary-500/15 stroke-primary-400"
-                : unit
-                  ? "fill-primary-500/50 stroke-neutral-50/40"
+                : tier
+                  ? tierFill[tier]
                   : "fill-primary-500/30 stroke-neutral-50/40";
             const interactive = active && !dim;
             return (
@@ -550,6 +564,7 @@ export function BrazilMap({ className = "" }: { className?: string }) {
               uf={selected}
               drawn={drawn}
               px={px}
+              pxFont={pxFont}
               isMobile={isMobile}
               glowId={glowId}
             />
@@ -559,9 +574,9 @@ export function BrazilMap({ className = "" }: { className?: string }) {
           {selectedState && !selectedHasUnits && (
             <text
               x={selectedState.center[0]}
-              y={selectedState.center[1] + px(AREA_FONT) * 0.35}
+              y={selectedState.center[1] + pxFont(AREA_FONT) * 0.35}
               textAnchor="middle"
-              fontSize={px(AREA_FONT)}
+              fontSize={pxFont(AREA_FONT)}
               fontWeight={700}
               strokeWidth={px(3.5)}
               strokeLinejoin="round"

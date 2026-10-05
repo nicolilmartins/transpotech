@@ -1,11 +1,11 @@
 import { Section } from "@/components/ui/section";
 import { IconCard, type IconCardProps } from "@/components/acessorios/icon-card/icon-card";
-import artFolder from "@/assets/images/stats/illustration-folder.webp";
+import artDocumento from "@/assets/images/stats/card-document.webp";
 import artBalanca from "@/assets/images/stats/card-balanca.webp";
 import artAlerta from "@/assets/images/stats/card-alerta.webp";
 import artPessoa from "@/assets/images/stats/card-person.webp";
 import artCadeado from "@/assets/images/stats/card-cadeado.webp";
-import artGrafico from "@/assets/images/stats/illustration-chart-2.webp";
+import artVisibilidade from "@/assets/images/stats/card-visibilidade.webp";
 
 // Dores levantadas nos materiais do cliente (E-Check List, FleetManager e ADAS).
 const challenges: IconCardProps[] = [
@@ -13,7 +13,7 @@ const challenges: IconCardProps[] = [
     title: "Check list em papel",
     description:
       "Preenchimento manual, documentos ilegíveis, perda do histórico e custo com papel e armazenamento.",
-    art: artFolder,
+    art: artDocumento,
   },
   {
     title: "Indisciplina operacional",
@@ -43,7 +43,7 @@ const challenges: IconCardProps[] = [
     title: "Pouca visibilidade da frota",
     description:
       "Sem dados de uso, tempo com carga e produtividade, as decisões sobre a frota ficam sem base.",
-    art: artGrafico,
+    art: artVisibilidade,
   },
 ];
 

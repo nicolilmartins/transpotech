@@ -4,7 +4,7 @@ import egvNg from "@/assets/images/empilhadeiras/egv_ng_1.webp";
 import egvSf from "@/assets/images/empilhadeiras/egv_sf_1.webp";
 import rce from "@/assets/images/empilhadeiras/rce_1.webp";
 import rc40 from "@/assets/images/empilhadeiras/rc_44_1.webp";
-import ech15c from "@/assets/images/empilhadeiras/maq-ech15c.webp";
+import ech20c from "@/assets/images/empilhadeiras/maq-ech20c.webp";
 import erx from "@/assets/images/empilhadeiras/maq-erx.webp";
 import exhSf from "@/assets/images/empilhadeiras/maq-exhsf.webp";
 import exhSf25 from "@/assets/images/empilhadeiras/maq-exhsf25.webp";
@@ -12,31 +12,33 @@ import exh20 from "@/assets/images/empilhadeiras/maq-exh20.webp";
 import fmx from "@/assets/images/empilhadeiras/maq-fmx.webp";
 import rx20 from "@/assets/images/empilhadeiras/maq-rx20.webp";
 import t20 from "@/assets/images/empilhadeiras/maq-t20.webp";
-import e50 from "@/assets/images/empilhadeiras/maq-e50.webp";
+import e35e50 from "@/assets/images/empilhadeiras/maq-e35-50.webp";
 import h50evo from "@/assets/images/empilhadeiras/maq-h50evo.webp";
 import h80evo from "@/assets/images/empilhadeiras/maq-h80evo.webp";
 import kbd35 from "@/assets/images/empilhadeiras/maq-kbd35.webp";
+import kbg30 from "@/assets/images/empilhadeiras/maq-kbg30.webp";
 import kbd70 from "@/assets/images/empilhadeiras/maq-kbd70.webp";
 
-// Catálogo atual da TranspoTech (11 STILL + 4 Linde + 2 Baoli).
+// Catálogo atual da TranspoTech (11 STILL + 4 Linde + 3 Baoli).
 // Specs técnicas baseadas nos dados oficiais STILL, Linde e Baoli (grupo KION);
 // liftHeight = altura máx. de elevação, aisleWidth = corredor operacional (Ast,
 // varia conforme o mastro). Disponibilidade/localização são dados comerciais.
 export const forkliftsNovas: Forklift[] = [
   {
-    id: "still-ech-15c",
-    name: "Transpaleteira Elétrica STILL ECH 15C",
+    id: "still-ech-20c",
+    name: "Transpaleteira Elétrica STILL ECH 20C",
     brand: "STILL",
     energyTag: "Elétrica",
     equipmentType: "Transpaleteira",
     application: "Movimentação horizontal e abastecimento",
-    capacity: "1,5 t",
+    capacity: "2,0 t",
     energy: "Elétrica (Li-Ion)",
     liftHeight: "135 mm",
     aisleWidth: "2.000 mm",
     availability: "Pronta entrega",
     location: "Curitiba - PR",
-    image: ech15c,
+    image: ech20c,
+    madeInBrazil: true,
   },
   {
     id: "still-egv-16-ng",
@@ -217,7 +219,7 @@ export const forkliftsNovas: Forklift[] = [
   },
   {
     id: "linde-e35-e50",
-    name: "Empilhadeira Elétrica Linde E35 – E100",
+    name: "Empilhadeira Elétrica Linde E35 – 100",
     brand: "Linde",
     energyTag: "Elétrica",
     equipmentType: "Contrabalançada",
@@ -228,7 +230,7 @@ export const forkliftsNovas: Forklift[] = [
     aisleWidth: "4.000 mm",
     availability: "Sob consulta",
     location: "São Paulo - SP",
-    image: e50,
+    image: e35e50,
   },
   {
     id: "linde-h50-evo",
@@ -274,6 +276,22 @@ export const forkliftsNovas: Forklift[] = [
     availability: "Sob consulta",
     location: "Curitiba - PR",
     image: kbd35,
+  },
+  // Specs replicadas da KBD 30 - 35 — pendente confirmação da ficha da KBG.
+  {
+    id: "baoli-kbg-30-35",
+    name: "Empilhadeira a Diesel Baoli KBG30-35",
+    brand: "Baoli",
+    energyTag: "Combustão",
+    equipmentType: "Contrabalançada",
+    application: "Operações externas e cargas pesadas",
+    capacity: "3,5 t",
+    energy: "Diesel",
+    liftHeight: "6.000 mm",
+    aisleWidth: "4.000 mm",
+    availability: "Sob consulta",
+    location: "Curitiba - PR",
+    image: kbg30,
   },
   {
     id: "baoli-kbd-70",

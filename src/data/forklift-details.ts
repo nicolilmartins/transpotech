@@ -336,10 +336,10 @@ const detailById: Record<string, ForkliftDetail> = {
     },
   },
   // Demais modelos: conteúdo genérico + foto ambientada própria no palco (seção 2).
-  "still-ech-15c": {
+  "still-ech-20c": {
     ...genericDetail,
     media: {
-      hero: { src: detEch15c, alt: "Transpaleteira Elétrica STILL ECH 15C em operação", fit: "cover" },
+      hero: { src: detEch15c, alt: "Transpaleteira Elétrica STILL ECH 20C em operação", fit: "cover" },
     },
   },
   "still-egv-16-sf": {
@@ -393,7 +393,7 @@ const detailById: Record<string, ForkliftDetail> = {
   "linde-e35-e50": {
     ...genericDetail,
     media: {
-      hero: { src: detE50, alt: "Empilhadeira Elétrica Linde E35–E100 em pátio", fit: "cover" },
+      hero: { src: detE50, alt: "Empilhadeira Elétrica Linde E35–100 em pátio", fit: "cover" },
     },
   },
   "linde-h50-evo": {

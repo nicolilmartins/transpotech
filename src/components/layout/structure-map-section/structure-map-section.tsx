@@ -36,8 +36,9 @@ export async function StructureMapSection({
       {/* Desktop: coluna esquerda (título + indicadores) | mapa ao lado de
           ambos, encostado no padding direito e com o topo alinhado ao da tag/título
           (referência: HTML de abrangência).
-          Mobile: título → mapa → indicadores — a coluna esquerda vira
-          `contents` e a ordem é controlada por `order`. */}
+          Mobile: título → indicadores → mapa → legenda. A coluna esquerda vira
+          `contents` (e o bloco interno também), então os quatro viram itens do
+          grid e a ordem é controlada por `order`. */}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start lg:gap-x-16">
         <div className="contents lg:flex lg:flex-col lg:gap-20">
           {/* Tag, título e descrição */}
@@ -68,22 +69,29 @@ export async function StructureMapSection({
             </p>
           </div>
 
-          {/* Indicadores + legenda */}
-          <div className="order-3 flex flex-col gap-6 lg:order-none">
+          {/* Indicadores + legenda: juntos numa coluna no desktop; no mobile
+              cada um vira item do grid, com o mapa entre os dois. */}
+          <div className="contents lg:flex lg:flex-col lg:gap-6">
             <StatsGrid
               stats={coverage.stats}
-              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+              className="order-2 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:order-none"
             />
 
-            {/* Legenda do mapa */}
-            <ul className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-neutral-400">
-              <li className="flex items-center gap-3">
-                <span
-                  aria-hidden
-                  className="size-4 shrink-0 rounded-sm border border-neutral-50/40 bg-primary-500/30"
-                />
-                {coverage.legendActive}
-              </li>
+            {/* Legenda do mapa — um item por faixa de atuação, do alcance
+                maior para o menor, na mesma intensidade usada no desenho. */}
+            <ul className="order-4 flex flex-col gap-3 text-sm text-neutral-400 lg:order-none">
+              {[
+                { tom: "bg-primary-500/30", texto: coverage.legendActive },
+                { tom: "bg-primary-500/55", texto: coverage.legendRental },
+              ].map(({ tom, texto }) => (
+                <li key={texto} className="flex items-center gap-3">
+                  <span
+                    aria-hidden
+                    className={`size-4 shrink-0 rounded-sm border border-neutral-50/40 ${tom}`}
+                  />
+                  {texto}
+                </li>
+              ))}
               <li className="flex items-center gap-3">
                 <span
                   aria-hidden
@@ -100,7 +108,7 @@ export async function StructureMapSection({
             o mapa (absolute) ocupa essa altura, encostado à direita — o sul não
             passa do fim dos indicadores. Mobile/tablet: largura total, reduzida
             (e centralizada) se a altura resultante passar do viewport. */}
-        <div className="order-2 lg:relative lg:order-none lg:self-stretch">
+        <div className="order-3 lg:relative lg:order-none lg:self-stretch">
           <BrazilMap className="mx-auto w-full max-w-[calc((100svh-8rem)*var(--map-ratio))] lg:absolute lg:right-0 lg:top-0 lg:mx-0 lg:h-full lg:max-h-[calc(100svh-8rem)] lg:w-auto lg:max-w-full" />
         </div>
       </div>

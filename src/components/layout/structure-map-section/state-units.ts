@@ -129,6 +129,8 @@ export const STATE_UNITS: Record<string, StateUnitsItem> = {
         y: 495.5,
         time: "30 min",
         labelPos: "right",
+        // No mobile o rótulo é longo e, à direita, sairia da caixa do mapa.
+        labelPosMobile: "bottom",
       },
     ],
   },

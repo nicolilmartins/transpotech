@@ -120,15 +120,21 @@ export const sharedPage = definePage({
           label: field.string("Rótulo", ""),
         },
         [
-          { value: "23", label: "estados com atuação" },
+          { value: "23", label: "UFs com atuação" },
           { value: "+660", label: "cidades atendidas" },
           { value: "11", label: "unidades físicas" },
           { value: "+3.700", label: "máquinas locadas" },
         ],
         { fixed: true },
       ),
-      legendActive: field.string("Legenda — estado destacado", "Estado com atuação TranspoTech"),
       legendUnit: field.string("Legenda — ponto no mapa", "Unidade física"),
+      // Faixas de atuação: a cobertura muda conforme o serviço, então a
+      // legenda nomeia cada tom do mapa com o respectivo número de UFs.
+      legendActive: field.string(
+        "Legenda — faixa de atuação",
+        "Atuação (venda e/ou manutenção)",
+      ),
+      legendRental: field.string("Legenda — faixa de locação", "Locação"),
     }),
     leadForm: defineSection("Formulário de solicitação", {
       eyebrow: field.string("Texto acima do título", "Falar com especialista"),
