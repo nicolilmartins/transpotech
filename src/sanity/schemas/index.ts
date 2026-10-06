@@ -8,8 +8,6 @@ import { article } from "./article";
 import { forkliftNew } from "./forklift-new";
 import { forkliftUsed } from "./forklift-used";
 import { unit } from "./unit";
-import { esgProject } from "./esg-project";
-import { faqPage } from "./faq-page";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   siteSettings,
@@ -18,8 +16,6 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   forkliftUsed,
   article,
   unit,
-  esgProject,
-  faqPage,
   imageWithAlt,
 ];
 

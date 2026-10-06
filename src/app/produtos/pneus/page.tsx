@@ -9,7 +9,6 @@ import { QuotationStepsSection } from "@/components/pneus/quotation-steps-sectio
 import { WhyTranspotechSection } from "@/components/pneus/why-transpotech-section/why-transpotech-section";
 import { BrandsSection } from "@/components/layout/brands-section/brands-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
-import { getFaqItems } from "@/sanity/queries/faq";
 import { getPage } from "@/sanity/queries/pages";
 import { pneusPage } from "@/sanity/content/pages/pneus";
 import { CtaSection } from "@/components/layout/cta/cta-section";
@@ -45,10 +44,7 @@ const partnerBrands = [
 ];
 
 export default async function PneusPage() {
-  const [faqItems, content] = await Promise.all([
-    getFaqItems("pneus"),
-    getPage(pneusPage),
-  ]);
+  const content = await getPage(pneusPage);
 
   return (
     <main>
@@ -90,10 +86,7 @@ export default async function PneusPage() {
 
       {/* Grupo claro 3 — FAQ (sem malha) */}
       <div className="bg-background">
-        <FaqSection
-          {...content.faq}
-          items={faqItems}
-        />
+        <FaqSection {...content.faq} />
       </div>
 
       <CtaSection

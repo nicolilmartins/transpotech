@@ -9,6 +9,7 @@ import imgSeparacao from "@/assets/images/automacao/separacao.webp";
 import imgEnvio from "@/assets/images/automacao/envio.webp";
 import imgSoftware from "@/assets/images/automacao/software.webp";
 import imgManutencao from "@/assets/images/automacao/manutencao.webp";
+import { faqAutomacao } from "@/data/faq-automacao";
 import { definePage, defineSection, field } from "../fields";
 
 const itemFields = {
@@ -366,11 +367,17 @@ export const automacaoPage = definePage({
       ),
       buttonLabel: field.string("Texto do botão", "Avaliar minha operação"),
     }),
-    faq: defineSection("Perguntas frequentes — título", {
+    faq: defineSection("Perguntas frequentes", {
       titleRegular: field.string("Título", "Perguntas que sempre recebemos "),
       titleAccent: field.string(
         "Título — final em destaque (laranja)",
         "sobre automação",
+      ),
+      items: field.list(
+        "Perguntas",
+        "Pergunta",
+        { question: field.string("Pergunta", ""), answer: field.text("Resposta", "") },
+        faqAutomacao,
       ),
     }),
     cta: defineSection("Chamada final (CTA)", {

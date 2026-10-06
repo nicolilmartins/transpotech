@@ -6,6 +6,7 @@ import { seminovasPage } from "./seminovas";
 import { pneusPage } from "./pneus";
 import { bateriasPage } from "./baterias";
 import { pecasPage } from "./pecas";
+import { acessoriosPage } from "./acessorios";
 import { servicosPage } from "./servicos";
 import { automacaoPage } from "./automacao";
 import { quemSomosPage } from "./quem-somos";
@@ -28,6 +29,7 @@ export const pages: PageDefinition<any>[] = [
   pneusPage,
   bateriasPage,
   pecasPage,
+  acessoriosPage,
   servicosPage,
   automacaoPage,
   quemSomosPage,

@@ -14,7 +14,6 @@ import { RentVsBuySection } from "@/components/locacao-de-empilhadeiras/rent-vs-
 import { FleetManagerSection } from "@/components/locacao-de-empilhadeiras/fleet-manager-section/fleet-manager-section";
 import { CompareSection } from "@/components/layout/compare-section/compare-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
-import { getFaqItems } from "@/sanity/queries/faq";
 import { getPage } from "@/sanity/queries/pages";
 import { locacaoPage } from "@/sanity/content/pages/locacao";
 import { BrandsSection } from "@/components/layout/brands-section/brands-section";
@@ -44,10 +43,7 @@ const dealerBrands = [
 ];
 
 export default async function LocacaoPage() {
-  const [faqItems, content] = await Promise.all([
-    getFaqItems("empilhadeiras"),
-    getPage(locacaoPage),
-  ]);
+  const content = await getPage(locacaoPage);
 
   return (
     <main>
@@ -100,7 +96,7 @@ export default async function LocacaoPage() {
           <RentVsBuySection content={content.rentVsBuy} />
           <FleetManagerSection content={content.fleetManager} />
         </div>
-        <FaqSection {...content.faq} items={faqItems} />
+        <FaqSection {...content.faq} />
       </div>
 
       <CtaSection {...content.cta} ctaHref="#solicitar-locacao" />

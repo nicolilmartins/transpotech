@@ -2,6 +2,7 @@ import heroImage from "@/assets/images/hero-servicos.webp";
 import heroImageMobile from "@/assets/images/hero-servicos-mobile.webp";
 // PLACEHOLDER: trocar por imagem de checklist técnico / técnico em atendimento
 import pm2pImage from "@/assets/images/operacao-image.webp";
+import { faqServicos } from "@/data/faq-servicos";
 import { definePage, defineSection, field } from "../fields";
 
 export const servicosPage = definePage({
@@ -323,11 +324,17 @@ export const servicosPage = definePage({
         { fixed: true },
       ),
     }),
-    faq: defineSection("Perguntas frequentes — título", {
+    faq: defineSection("Perguntas frequentes", {
       titleRegular: field.string("Título", "Perguntas frequentes sobre "),
       titleAccent: field.string(
         "Título — final em destaque (laranja)",
         "serviços e manutenção",
+      ),
+      items: field.list(
+        "Perguntas",
+        "Pergunta",
+        { question: field.string("Pergunta", ""), answer: field.text("Resposta", "") },
+        faqServicos,
       ),
     }),
     cta: defineSection("Chamada final (CTA)", {

@@ -1,3 +1,4 @@
+import { faqCanalTransparencia } from "@/data/faq-canal-transparencia";
 import { definePage, defineSection, field } from "../fields";
 
 export const canalTransparenciaPage = definePage({
@@ -161,9 +162,15 @@ export const canalTransparenciaPage = definePage({
         { fixed: true },
       ),
     }),
-    faq: defineSection("Perguntas frequentes — título", {
+    faq: defineSection("Perguntas frequentes", {
       titleRegular: field.string("Título", "Perguntas "),
       titleAccent: field.string("Título — final em destaque (laranja)", "frequentes"),
+      items: field.list(
+        "Perguntas",
+        "Pergunta",
+        { question: field.string("Pergunta", ""), answer: field.text("Resposta", "") },
+        faqCanalTransparencia,
+      ),
     }),
     cta: defineSection("Chamada final (CTA)", {
       titleRegular: field.string("Título", "Tem uma manifestação que não é sobre "),

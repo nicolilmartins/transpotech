@@ -4,6 +4,8 @@ import imgWomen from "@/assets/images/blog/post1.png";
 import imgSocial from "@/assets/images/blog/post2.png";
 import imgCitizen from "@/assets/images/blog/post3.jpg";
 import imgEfficiency from "@/assets/images/blog/post4.png";
+import { esgProjects } from "@/data/esg-projects";
+import projPescar from "@/assets/images/esg-projects/proj-pescar.webp";
 import { definePage, defineSection, field } from "../fields";
 
 export const sustentabilidadePage = definePage({
@@ -123,12 +125,25 @@ export const sustentabilidadePage = definePage({
         ],
       ),
     }),
-    projects: defineSection("Projetos que apoiamos — título", {
+    projects: defineSection("Projetos que apoiamos", {
       eyebrow: field.string("Texto acima do título", "Apoio"),
       title: field.string("Título", "Projetos que apoiamos"),
       description: field.text(
         "Texto de apoio",
         "A TranspoTech apoia iniciativas com impacto social, comunitário, esportivo, educacional e ambiental.",
+      ),
+      projects: field.list(
+        "Projetos",
+        "Projeto",
+        {
+          title: field.string("Título", ""),
+          category: field.string("Categoria", ""),
+          description: field.text("Descrição", ""),
+          image: field.image("Foto", projPescar, {
+            description: "No site, o texto alternativo da foto é o título do projeto.",
+          }),
+        },
+        esgProjects,
       ),
     }),
     sdg: defineSection("ODS da ONU", {

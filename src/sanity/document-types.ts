@@ -14,6 +14,4 @@ export const documentTypes = [
   "forkliftUsed",
   "article",
   "unit",
-  "esgProject",
-  "faqPage",
 ];

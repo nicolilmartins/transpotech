@@ -7,7 +7,6 @@ import { UnitsSection } from "@/components/contato/units-section/units-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
 import { HoverMesh } from "@/components/layout/hover-mesh";
 import { DriftMesh } from "@/components/layout/drift-mesh";
-import { getFaqItems } from "@/sanity/queries/faq";
 import { getUnits } from "@/sanity/queries/units";
 import { getPage } from "@/sanity/queries/pages";
 import { contatoPage } from "@/sanity/content/pages/contato";
@@ -25,9 +24,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ContatoPage() {
-  const [units, faqItems, content] = await Promise.all([
+  const [units, content] = await Promise.all([
     getUnits(),
-    getFaqItems("contato"),
     getPage(contatoPage),
   ]);
 
@@ -58,7 +56,7 @@ export default async function ContatoPage() {
         <FaqSection
           titleRegular={content.faq.titleRegular}
           titleAccent={content.faq.titleAccent}
-          items={faqItems}
+          items={content.faq.items}
         />
       </div>
     </main>

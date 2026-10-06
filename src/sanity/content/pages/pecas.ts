@@ -1,4 +1,5 @@
 import heroImage from "@/assets/images/hero-image-pecas.webp";
+import { faqPecas } from "@/data/faq-pecas";
 import { definePage, defineSection, field } from "../fields";
 
 const BREAK_HINT = "Enter quebra a linha só no desktop.";
@@ -252,9 +253,15 @@ export const pecasPage = definePage({
       ),
       buttonLabel: field.string("Texto do botão", "Falar com especialista"),
     }),
-    faq: defineSection("Perguntas frequentes — título", {
+    faq: defineSection("Perguntas frequentes", {
       titleRegular: field.string("Título", "Dúvidas frequentes sobre "),
       titleAccent: field.string("Título — final em destaque (laranja)", "peças"),
+      items: field.list(
+        "Perguntas",
+        "Pergunta",
+        { question: field.string("Pergunta", ""), answer: field.text("Resposta", "") },
+        faqPecas,
+      ),
     }),
     cta: defineSection("Chamada final (CTA)", {
       titleRegular: field.string("Título", "Precisa de peça, mas não sabe "),
@@ -264,6 +271,7 @@ export const pecasPage = definePage({
         "Descreva o problema, informe o equipamento e fale com a TranspoTech para direcionar sua cotação.",
       ),
       ctaLabel: field.string("Texto do botão", "Solicitar cotação de peças"),
+      secondaryLabel: field.string("Texto do botão secundário", "Conheça os acessórios"),
     }),
   },
 });

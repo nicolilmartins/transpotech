@@ -6,7 +6,6 @@ import { CompareSection } from "@/components/layout/compare-section/compare-sect
 import { ConsiderUsedSection } from "@/components/empilhadeiras-novas/consider-used-section/consider-used-section";
 import { WhyChooseSection } from "@/components/empilhadeiras-novas/why-choose-section/why-choose-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
-import { getFaqItems } from "@/sanity/queries/faq";
 import { getForkliftsNovas } from "@/sanity/queries/forklifts";
 import { getPage } from "@/sanity/queries/pages";
 import { empilhadeirasNovasPage } from "@/sanity/content/pages/empilhadeiras-novas";
@@ -29,9 +28,8 @@ export const metadata: Metadata = {
 };
 
 export default async function EmpilhadeirasNovasPage() {
-  const [forklifts, faqItems, content] = await Promise.all([
+  const [forklifts, content] = await Promise.all([
     getForkliftsNovas(),
-    getFaqItems("empilhadeiras"),
     getPage(empilhadeirasNovasPage),
   ]);
 
@@ -63,7 +61,7 @@ export default async function EmpilhadeirasNovasPage() {
 
       {/* Grupo claro — FAQ (sem malha) */}
       <div className="bg-background">
-        <FaqSection {...content.faq} items={faqItems} />
+        <FaqSection {...content.faq} />
       </div>
 
       <CtaSection {...content.cta} ctaHref={ROUTES.CONTATO} />

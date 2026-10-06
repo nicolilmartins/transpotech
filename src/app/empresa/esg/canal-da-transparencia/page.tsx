@@ -11,7 +11,6 @@ import { FaqSection } from "@/components/layout/faq/faq-section";
 import { HoverMesh } from "@/components/layout/hover-mesh";
 import { DriftMesh } from "@/components/layout/drift-mesh";
 import { DarkAmbient } from "@/components/layout/dark-ambient";
-import { getFaqItems } from "@/sanity/queries/faq";
 import { getSiteSettings } from "@/sanity/queries/site-settings";
 import { getPage } from "@/sanity/queries/pages";
 import { canalTransparenciaPage } from "@/sanity/content/pages/canal-transparencia";
@@ -30,9 +29,8 @@ export const metadata: Metadata = {
 };
 
 export default async function CanalTransparenciaPage() {
-  const [settings, faqItems, content] = await Promise.all([
+  const [settings, content] = await Promise.all([
     getSiteSettings(),
-    getFaqItems("canal-transparencia"),
     getPage(canalTransparenciaPage),
   ]);
 
@@ -64,10 +62,7 @@ export default async function CanalTransparenciaPage() {
 
       {/* Grupo claro 2 — FAQ (sem malha) */}
       <div className="bg-background">
-        <FaqSection
-          {...content.faq}
-          items={faqItems}
-        />
+        <FaqSection {...content.faq} />
       </div>
 
       <CtaSection {...content.cta} titleBreak ctaHref={ROUTES.OUVIDORIA} />

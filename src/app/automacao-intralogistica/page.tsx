@@ -11,7 +11,6 @@ import { SegmentsSection } from "@/components/automacao-intralogistica/segments-
 // Seção "O que nossos clientes dizem" temporariamente oculta a pedido do cliente.
 // import { CasesSection } from "@/components/automacao-intralogistica/cases-section/cases-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
-import { getFaqItems } from "@/sanity/queries/faq";
 import { getPage } from "@/sanity/queries/pages";
 import { automacaoPage } from "@/sanity/content/pages/automacao";
 import { CtaSection } from "@/components/layout/cta/cta-section";
@@ -32,10 +31,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AutomacaoPage() {
-  const [faqItems, content] = await Promise.all([
-    getFaqItems("automacao"),
-    getPage(automacaoPage),
-  ]);
+  const content = await getPage(automacaoPage);
 
   return (
     <main>
@@ -81,7 +77,7 @@ export default async function AutomacaoPage() {
 
       {/* Grupo claro 4 — FAQ (sem malha) */}
       <div className="bg-background">
-        <FaqSection {...content.faq} items={faqItems} />
+        <FaqSection {...content.faq} />
       </div>
 
       <CtaSection

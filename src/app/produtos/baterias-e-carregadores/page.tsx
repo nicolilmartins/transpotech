@@ -9,7 +9,6 @@ import { BatteryTypesSection } from "@/components/baterias-e-carregadores/batter
 import { RequestStepsSection } from "@/components/baterias-e-carregadores/request-steps-section/request-steps-section";
 import { WhyTranspotechSection } from "@/components/baterias-e-carregadores/why-transpotech-section/why-transpotech-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
-import { getFaqItems } from "@/sanity/queries/faq";
 import { getPage } from "@/sanity/queries/pages";
 import { bateriasPage } from "@/sanity/content/pages/baterias";
 import { CtaSection } from "@/components/layout/cta/cta-section";
@@ -29,10 +28,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BateriasPage() {
-  const [faqItems, content] = await Promise.all([
-    getFaqItems("baterias"),
-    getPage(bateriasPage),
-  ]);
+  const content = await getPage(bateriasPage);
 
   return (
     <main>
@@ -64,10 +60,7 @@ export default async function BateriasPage() {
           <RequestStepsSection content={content.requestSteps} />
           <WhyTranspotechSection content={content.whyTranspotech} />
         </div>
-        <FaqSection
-          {...content.faq}
-          items={faqItems}
-        />
+        <FaqSection {...content.faq} />
       </div>
 
       <CtaSection

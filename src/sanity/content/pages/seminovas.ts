@@ -1,6 +1,7 @@
 import heroImage from "@/assets/images/hero-image-empilhadeiras-seminovas.webp";
 import heroImageMobile from "@/assets/images/hero-image-empilhadeiras-seminovas-mobile.webp";
 import considerNewImage from "@/assets/images/RCE 20 + 16.webp";
+import { faqSeminovas } from "@/data/faq-seminovas";
 import { definePage, defineSection, field } from "../fields";
 
 const BREAK_HINT = "No celular, a linha quebra depois da primeira palavra.";
@@ -298,9 +299,15 @@ export const seminovasPage = definePage({
       labelCapacity: field.string("Card — rótulo da capacidade", "Capacidade"),
       labelLocation: field.string("Card — rótulo da localização", "Localização"),
     }),
-    faq: defineSection("Perguntas frequentes — título", {
+    faq: defineSection("Perguntas frequentes", {
       titleRegular: field.string("Título", "Dúvidas frequentes sobre "),
       titleAccent: field.string("Título — final em destaque (laranja)", "seminovas"),
+      items: field.list(
+        "Perguntas",
+        "Pergunta",
+        { question: field.string("Pergunta", ""), answer: field.text("Resposta", "") },
+        faqSeminovas,
+      ),
     }),
     // Textos iguais em todas as páginas de equipamento
     // (/produtos/empilhadeiras/seminovas/<equipamento>); o conteúdo de cada

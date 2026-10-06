@@ -15,7 +15,7 @@ export type EsgProject = {
   image: StaticImageData;
 };
 
-/** Projetos apoiados pela TranspoTech — conteúdo editável no CMS. */
+/** Projetos apoiados pela TranspoTech — default da seção de projetos em src/sanity/content/pages/sustentabilidade.ts. */
 export const esgProjects: EsgProject[] = [
   {
     title: "Projeto Pescar",
