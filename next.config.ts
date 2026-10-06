@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 import { SANITY_IMAGE_QUERY } from "./src/sanity/image";
-
-const sanityProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+import { sanityProjectId } from "./src/sanity/env";
 
 const nextConfig: NextConfig = {
   experimental: {

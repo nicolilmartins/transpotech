@@ -3,10 +3,11 @@ import { structureTool } from "sanity/structure";
 import { ptBRLocale } from "@sanity/locale-pt-br";
 import { fixedTypes, schemaTypes } from "./src/sanity/schemas";
 import { structure } from "./src/sanity/structure";
+import { SANITY_DATASET, SANITY_PROJECT_ID } from "./src/sanity/env";
 
 // O build do Studio (sanity deploy/dev) só expõe variáveis SANITY_STUDIO_*.
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? "";
-const dataset = process.env.SANITY_STUDIO_DATASET || "production";
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID || SANITY_PROJECT_ID;
+const dataset = process.env.SANITY_STUDIO_DATASET || SANITY_DATASET;
 
 export default defineConfig({
   name: "transpotech",
