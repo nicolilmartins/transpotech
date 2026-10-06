@@ -7,4 +7,6 @@ export default defineCliConfig({
     dataset: process.env.SANITY_STUDIO_DATASET || SANITY_DATASET,
   },
   studioHost: "transpotech",
+  // Studio publicado em https://transpotech.sanity.studio (npm run studio:deploy).
+  deployment: { appId: "qbdvss7xlylmvpqe72kxa40m" },
 });
