@@ -1,6 +1,6 @@
 import heroImage from "@/assets/images/hero-image-empilhadeiras-seminovas.webp";
 import heroImageMobile from "@/assets/images/hero-image-empilhadeiras-seminovas-mobile.webp";
-import considerNewImage from "@/assets/images/RCE 20 + 16.webp";
+import considerNewImage from "@/assets/images/rce-20-16.webp";
 import { faqSeminovas } from "@/data/faq-seminovas";
 import { definePage, defineSection, field } from "../fields";
 

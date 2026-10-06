@@ -1,5 +1,5 @@
 // Duas STILL RCE 20/16 em armazém.
-import heroImage from "@/assets/images/RCE 20 + 16.webp";
+import heroImage from "@/assets/images/rce-20-16.webp";
 import { faqAcessorios } from "@/data/faq-acessorios";
 import { definePage, defineSection, field } from "../fields";
 
