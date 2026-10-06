@@ -1,17 +1,21 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BlurRevealTitle } from "@/components/ui/blur-reveal-title";
-// Duas STILL RCE 20/16 em armazém — no mobile o crop é deslocado à direita
-// para manter as empilhadeiras (≈61% da largura da foto) no centro.
-import heroImage from "@/assets/images/RCE 20 + 16.webp";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { acessoriosPage } from "@/sanity/content/pages/acessorios";
 
-export function AcessoriosHeroSection() {
+type AcessoriosHeroContent = SectionContent<typeof acessoriosPage.sections.hero>;
+
+export function AcessoriosHeroSection({ content }: { content: AcessoriosHeroContent }) {
   return (
     <section data-header-hero className="relative w-full bg-[#fdfdfd] md:p-4">
       {/* Card de imagem — full-bleed no mobile; de md em diante, 16px de padding em volta e bordas de 20px */}
       <div className="relative flex h-svh md:h-[calc(100svh-2rem)] min-h-[560px] w-full overflow-hidden md:rounded-[20px]">
+        {/* Na foto atual (duas STILL RCE 20/16 em armazém), o crop no mobile é
+            deslocado à direita para manter as empilhadeiras (≈61% da largura
+            da foto) no centro. */}
         <Image
-          src={heroImage}
+          src={content.image}
           alt=""
           priority
           fill
@@ -36,16 +40,15 @@ export function AcessoriosHeroSection() {
               tone="dark"
               className="text-h2 text-neutral-50"
               segments={[
-                { text: "Mais controle e segurança", className: "font-normal", br: true },
+                { text: content.titleTop, className: "font-normal", br: true },
                 {
-                  text: "para a sua frota",
+                  text: content.titleAccent,
                   className: "font-bold text-primary-500",
                 },
               ]}
             />
             <p className="mx-auto max-w-[460px] text-h6 font-normal leading-[1.3] text-neutral-50">
-              Telemetria, check list eletrônico, assistência ao operador e
-              acessórios para empilhadeiras.
+              {content.description}
             </p>
           </div>
 
@@ -55,7 +58,7 @@ export function AcessoriosHeroSection() {
             href="#solicitar-acessorios"
             className="w-full lg:w-auto"
           >
-            Falar com especialista
+            {content.buttonLabel}
           </Button>
         </div>
       </div>

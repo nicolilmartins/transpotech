@@ -1,3 +1,4 @@
+import { faqOuvidoria } from "@/data/faq-ouvidoria";
 import { definePage, defineSection, field } from "../fields";
 
 export const ouvidoriaPage = definePage({
@@ -201,9 +202,15 @@ export const ouvidoriaPage = definePage({
         { fixed: true },
       ),
     }),
-    faq: defineSection("Perguntas frequentes — título", {
+    faq: defineSection("Perguntas frequentes", {
       titleRegular: field.string("Título", "Perguntas "),
       titleAccent: field.string("Título — final em destaque (laranja)", "frequentes"),
+      items: field.list(
+        "Perguntas",
+        "Pergunta",
+        { question: field.string("Pergunta", ""), answer: field.text("Resposta", "") },
+        faqOuvidoria,
+      ),
     }),
   },
 });

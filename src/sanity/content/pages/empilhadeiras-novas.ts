@@ -1,4 +1,5 @@
 import considerUsedImage from "@/assets/images/operacao-image.webp";
+import { faqEmpilhadeiras } from "@/data/faq-empilhadeiras";
 import { definePage, defineSection, field } from "../fields";
 
 export const empilhadeirasNovasPage = definePage({
@@ -82,11 +83,17 @@ export const empilhadeirasNovasPage = definePage({
         { fixed: true },
       ),
     }),
-    faq: defineSection("Perguntas frequentes — título", {
+    faq: defineSection("Perguntas frequentes", {
       titleRegular: field.string("Título", "Perguntas frequentes sobre "),
       titleAccent: field.string(
         "Título — final em destaque (laranja)",
         "locação de empilhadeiras",
+      ),
+      items: field.list(
+        "Perguntas",
+        "Pergunta",
+        { question: field.string("Pergunta", ""), answer: field.text("Resposta", "") },
+        faqEmpilhadeiras,
       ),
     }),
     cta: defineSection("Chamada final (CTA)", {

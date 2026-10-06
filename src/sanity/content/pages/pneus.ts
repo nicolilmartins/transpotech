@@ -1,4 +1,5 @@
 import heroImage from "@/assets/images/hero-image-pneus.webp";
+import { faqPneus } from "@/data/faq-pneus";
 import { definePage, defineSection, field } from "../fields";
 
 const BREAK_HINT = "Enter quebra a linha só no desktop.";
@@ -184,9 +185,15 @@ export const pneusPage = definePage({
       ),
       buttonLabel: field.string("Texto do botão", "Falar com especialista"),
     }),
-    faq: defineSection("Perguntas frequentes — título", {
+    faq: defineSection("Perguntas frequentes", {
       titleRegular: field.string("Título", "Dúvidas frequentes sobre "),
       titleAccent: field.string("Título — final em destaque (laranja)", "pneus"),
+      items: field.list(
+        "Perguntas",
+        "Pergunta",
+        { question: field.string("Pergunta", ""), answer: field.text("Resposta", "") },
+        faqPneus,
+      ),
     }),
     cta: defineSection("Chamada final (CTA)", {
       titleRegular: field.string("Título", "Precisa trocar ou cotar pneus para "),

@@ -11,7 +11,6 @@ import { DifferentialsSection } from "@/components/servicos/differentials-sectio
 import { TechStructureSection } from "@/components/servicos/tech-structure-section/tech-structure-section";
 import { SegmentsSection } from "@/components/servicos/segments-section/segments-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
-import { getFaqItems } from "@/sanity/queries/faq";
 import { getPage } from "@/sanity/queries/pages";
 import { servicosPage } from "@/sanity/content/pages/servicos";
 import { CtaSection } from "@/components/layout/cta/cta-section";
@@ -31,10 +30,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ServicosPage() {
-  const [faqItems, content] = await Promise.all([
-    getFaqItems("servicos"),
-    getPage(servicosPage),
-  ]);
+  const content = await getPage(servicosPage);
 
   return (
     <main>
@@ -86,7 +82,7 @@ export default async function ServicosPage() {
 
       {/* Grupo claro 4 — FAQ (sem malha) */}
       <div className="bg-background">
-        <FaqSection {...content.faq} items={faqItems} />
+        <FaqSection {...content.faq} />
       </div>
 
       <CtaSection {...content.cta} ctaHref="#solicitar-servico" />

@@ -1,3 +1,4 @@
+import { faqContato } from "@/data/faq-contato";
 import { definePage, defineSection, field } from "../fields";
 
 const REQUIRED_HINT =
@@ -159,11 +160,17 @@ export const contatoPage = definePage({
         "Encontrar atendimento na minha região",
       ),
     }),
-    faq: defineSection("Perguntas frequentes — título", {
+    faq: defineSection("Perguntas frequentes", {
       titleRegular: field.string("Título", "Perguntas "),
       titleAccent: field.string(
         "Título — final em destaque (laranja)",
         "frequentes",
+      ),
+      items: field.list(
+        "Perguntas",
+        "Pergunta",
+        { question: field.string("Pergunta", ""), answer: field.text("Resposta", "") },
+        faqContato,
       ),
     }),
   },

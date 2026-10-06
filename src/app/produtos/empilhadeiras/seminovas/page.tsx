@@ -12,7 +12,6 @@ import { ConsiderNewSection } from "@/components/empilhadeiras-seminovas/conside
 import { ClassifiedsSection } from "@/components/empilhadeiras-seminovas/classifieds-section/classifieds-section";
 import { CompareSection } from "@/components/layout/compare-section/compare-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
-import { getFaqItems } from "@/sanity/queries/faq";
 import { getForkliftsSeminovas } from "@/sanity/queries/forklifts";
 import { getPage } from "@/sanity/queries/pages";
 import { seminovasPage } from "@/sanity/content/pages/seminovas";
@@ -32,9 +31,8 @@ export const metadata: Metadata = {
 };
 
 export default async function EmpilhadeirasSeminovasPage() {
-  const [forklifts, faqItems, content] = await Promise.all([
+  const [forklifts, content] = await Promise.all([
     getForkliftsSeminovas(),
-    getFaqItems("seminovas"),
     getPage(seminovasPage),
   ]);
 
@@ -90,7 +88,7 @@ export default async function EmpilhadeirasSeminovasPage() {
       {/* Grupo claro 4 — FAQ (sem malha). pb-6 compensa o -mt-6 do footer (topo
           arredondado sobreposto), mantendo os 48/80px visuais da diretriz. */}
       <div className="bg-background pb-6">
-        <FaqSection {...content.faq} items={faqItems} />
+        <FaqSection {...content.faq} />
       </div>
     </main>
   );

@@ -1,4 +1,5 @@
 import heroImage from "@/assets/images/hero-image-baterias.webp";
+import { faqBaterias } from "@/data/faq-baterias";
 import { definePage, defineSection, field } from "../fields";
 
 export const bateriasPage = definePage({
@@ -247,11 +248,17 @@ export const bateriasPage = definePage({
       ),
       buttonLabel: field.string("Texto do botão", "Falar com especialista"),
     }),
-    faq: defineSection("Perguntas frequentes — título", {
+    faq: defineSection("Perguntas frequentes", {
       titleRegular: field.string("Título", "Dúvidas frequentes sobre "),
       titleAccent: field.string(
         "Título — final em destaque (laranja)",
         "baterias e carregadores",
+      ),
+      items: field.list(
+        "Perguntas",
+        "Pergunta",
+        { question: field.string("Pergunta", ""), answer: field.text("Resposta", "") },
+        faqBaterias,
       ),
     }),
     cta: defineSection("Chamada final (CTA)", {

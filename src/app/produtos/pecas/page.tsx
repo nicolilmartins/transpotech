@@ -9,7 +9,6 @@ import { RequestStepsSection } from "@/components/pecas/request-steps-section/re
 import { InfoCardsSection } from "@/components/pecas/info-cards-section/info-cards-section";
 import { WhyTranspotechSection } from "@/components/pecas/why-transpotech-section/why-transpotech-section";
 import { FaqSection } from "@/components/layout/faq/faq-section";
-import { getFaqItems } from "@/sanity/queries/faq";
 import { getPage } from "@/sanity/queries/pages";
 import { pecasPage } from "@/sanity/content/pages/pecas";
 import { CtaSection } from "@/components/layout/cta/cta-section";
@@ -30,10 +29,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PecasPage() {
-  const [faqItems, content] = await Promise.all([
-    getFaqItems("pecas"),
-    getPage(pecasPage),
-  ]);
+  const content = await getPage(pecasPage);
 
   return (
     <main>
@@ -64,16 +60,12 @@ export default async function PecasPage() {
           <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
           <WhyTranspotechSection content={content.whyTranspotech} />
         </div>
-        <FaqSection
-          {...content.faq}
-          items={faqItems}
-        />
+        <FaqSection {...content.faq} />
       </div>
 
       <CtaSection
         {...content.cta}
         ctaHref="#solicitar-pecas"
-        secondaryLabel="Conheça os acessórios"
         secondaryHref={ROUTES.ACESSORIOS}
       />
     </main>

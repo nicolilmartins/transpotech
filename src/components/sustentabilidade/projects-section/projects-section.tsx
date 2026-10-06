@@ -1,15 +1,13 @@
 import Image from "next/image";
 import { Section } from "@/components/ui/section";
-import type { EsgProject } from "@/data/esg-projects";
 import type { SectionContent } from "@/sanity/content/fields";
 import type { sustentabilidadePage } from "@/sanity/content/pages/sustentabilidade";
 
 type ProjectsSectionProps = {
-  projects: EsgProject[];
   content: SectionContent<typeof sustentabilidadePage.sections.projects>;
 };
 
-export function ProjectsSection({ projects, content }: ProjectsSectionProps) {
+export function ProjectsSection({ content }: ProjectsSectionProps) {
   return (
     <Section className="flex flex-col gap-10 lg:gap-14">
       <div className="flex max-w-[720px] flex-col gap-4">
@@ -25,11 +23,11 @@ export function ProjectsSection({ projects, content }: ProjectsSectionProps) {
       </div>
 
       {/* Cards no visual do blog da home (thumbnail à esquerda + texto),
-          em duas colunas com 3 projetos de cada lado. */}
+          em duas colunas. */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
-        {projects.map((project) => (
+        {content.projects.map((project, i) => (
           <article
-            key={project.title}
+            key={i}
             className="group flex gap-4 overflow-hidden rounded-xl bg-neutral-50 p-3"
           >
             {/* Thumbnail */}

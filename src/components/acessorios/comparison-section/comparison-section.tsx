@@ -2,68 +2,19 @@ import { Minus } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { ScrollHintBox } from "@/components/ui/scroll-hint-box";
+import { LineBreaks } from "@/components/ui/line-breaks";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { acessoriosPage } from "@/sanity/content/pages/acessorios";
 
-const columns = [
-  "KION E-Check List",
-  "Telemetria TranspoTech",
-  "STILL FleetManager 4.x",
-] as const;
+type ComparisonContent = SectionContent<typeof acessoriosPage.sections.comparison>;
 
-/** `null` = recurso não presente na solução. */
-type Cell = string | null;
+/** Célula com "-" (ou vazia): recurso não presente na solução. */
+function isUnavailable(cell: string) {
+  const value = cell.trim();
+  return value === "" || value === "-";
+}
 
-type Row = { label: string; cells: [Cell, Cell, Cell] };
-
-// Comparativo factual a partir dos materiais de cada solução. Pendente de
-// revisão técnica do gerente de produto.
-const rows: Row[] = [
-  {
-    label: "Indicada para",
-    cells: [
-      "Frotas com poucas máquinas",
-      "A solução mais aplicada",
-      "Gestão de grande parque de máquinas",
-    ],
-  },
-  {
-    label: "Identificação do operador",
-    cells: ["Cartão RFID ou senha", "Cartão RFID", "Cartão ou senha"],
-  },
-  {
-    label: "Check list com bloqueio\nda máquina",
-    cells: [
-      "Sim, com perguntas customizadas",
-      "Sim, check list eletrônico",
-      "Integra com o E-Check List (mesmo cartão)",
-    ],
-  },
-  {
-    label: "Transmissão de dados",
-    cells: [
-      "Rede local, sem internet",
-      "4G, sistema web",
-      "Aplicativo via Bluetooth e plataforma web",
-    ],
-  },
-  {
-    label: "Detecção de impactos",
-    cells: [
-      null,
-      "Sensor de impacto",
-      "Sim, com redução de velocidade, bloqueio e alertas",
-    ],
-  },
-  {
-    label: "Relatórios e alertas",
-    cells: [
-      "Histórico de respostas exportável",
-      "Produtividade, horímetro, tempo com carga e alertas por e-mail",
-      "Uso simultâneo, energia, acessos e impactos por operador",
-    ],
-  },
-];
-
-export function ComparisonSection() {
+export function ComparisonSection({ content }: { content: ComparisonContent }) {
   return (
     <Section
       data-header-dark
@@ -71,12 +22,11 @@ export function ComparisonSection() {
     >
       <div className="flex max-w-[640px] flex-col gap-4">
         <h2 className="text-h2 font-normal text-neutral-50">
-          Compare as <span className="font-bold text-primary-500">soluções</span>
+          {content.title}{" "}
+          <span className="font-bold text-primary-500">{content.titleAccent}</span>
         </h2>
         <p className="text-body leading-[1.35] text-neutral-400">
-          Cada nível adiciona mais controle sobre acesso, uso e segurança.{" "}
-          <br className="hidden lg:inline" />
-          As funções podem variar conforme o modelo do equipamento.
+          <LineBreaks text={content.description} brClassName="hidden lg:inline" />
         </p>
       </div>
 
@@ -84,28 +34,25 @@ export function ComparisonSection() {
           dica de arrastar ao entrar na tela */}
       <ScrollHintBox className="-mx-5 w-[calc(100%+2.5rem)] overflow-x-auto px-5 sm:mx-0 sm:w-full sm:px-0">
         <table className="w-full min-w-[720px] border-collapse text-left">
-          <caption className="sr-only">
-            Comparativo entre E-Check List, Telemetria TranspoTech e STILL
-            FleetManager
-          </caption>
+          <caption className="sr-only">{content.tableCaption}</caption>
           <thead>
             <tr className="border-b border-white/10">
               <th scope="col" className="w-1/4 py-8 pr-10 lg:py-10 lg:pr-12">
                 <span className="sr-only">Recurso</span>
               </th>
-              {columns.map((col) => (
+              {content.columns.map(({ title }, i) => (
                 <th
-                  key={col}
+                  key={i}
                   scope="col"
                   className="w-1/4 py-8 pr-6 align-bottom font-heading text-h6 font-normal text-neutral-100 lg:py-10"
                 >
-                  {col}
+                  {title}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {content.rows.map((row) => (
               <tr
                 key={row.label}
                 className="group border-b border-white/10 transition-colors"
@@ -122,16 +69,18 @@ export function ComparisonSection() {
                   />
                   {row.label}
                 </th>
-                {row.cells.map((cell, i) => (
+                {[row.cell1, row.cell2, row.cell3].map((cell, i) => (
                   <td
-                    key={columns[i]}
+                    key={i}
                     className="py-8 pr-6 align-top text-body leading-[1.35] text-neutral-400 transition-colors duration-300 group-hover:text-neutral-50 lg:py-10"
                   >
-                    {cell ?? (
+                    {isUnavailable(cell) ? (
                       <>
                         <Minus className="size-5 text-neutral-500" aria-hidden />
                         <span className="sr-only">Não disponível</span>
                       </>
+                    ) : (
+                      cell
                     )}
                   </td>
                 ))}
@@ -142,7 +91,7 @@ export function ComparisonSection() {
       </ScrollHintBox>
 
       <Button variant="primary" size="lg" href="#solicitar-acessorios">
-        Receber indicação da solução
+        {content.buttonLabel}
       </Button>
     </Section>
   );
