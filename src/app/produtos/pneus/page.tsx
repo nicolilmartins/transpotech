@@ -59,6 +59,7 @@ export default async function PneusPage() {
           brands={partnerBrands}
         />
         <LeadFormSection
+          form="pneus"
           id="solicitar-pneus"
           {...content.leadForm}
         />

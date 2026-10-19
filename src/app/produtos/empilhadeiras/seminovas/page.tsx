@@ -45,6 +45,7 @@ export default async function EmpilhadeirasSeminovasPage() {
       <div className="relative isolate bg-background">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
         <LeadFormSection
+          form="empilhadeiras-seminovas"
           id="consultar-seminovas"
           {...content.leadForm}
         />

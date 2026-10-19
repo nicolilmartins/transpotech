@@ -17,3 +17,9 @@ export const env = envSchema.parse({
   rdStationToken: process.env.NEXT_PUBLIC_RD_STATION_TOKEN ?? "",
   gaId: process.env.NEXT_PUBLIC_GA_ID ?? "",
 });
+
+// Segredo do servidor: sem NEXT_PUBLIC, o Next não o embute no client (lá vira
+// undefined). Lido na hora do uso para valer o valor do runtime.
+export function getRdStationApiKey(): string {
+  return process.env.RD_STATION_API_KEY ?? "";
+}

@@ -45,7 +45,7 @@ export default async function AutomacaoPage() {
           content={content.partnership}
           hotspots={content.hotspots}
         />
-        <LeadFormSection id="avaliar-automacao" {...content.leadForm} />
+        <LeadFormSection form="automacao-intralogistica" id="avaliar-automacao" {...content.leadForm} />
       </div>
 
       {/* Bloco dark — Números */}

@@ -72,6 +72,7 @@ export default async function AcessoriosPage() {
       {/* Grupo claro 3 — Captação + FAQ */}
       <div className="relative isolate bg-[#fdfdfd]">
         <LeadFormSection
+          form="acessorios"
           id="solicitar-acessorios"
           {...content.leadForm}
         />

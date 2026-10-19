@@ -19,6 +19,8 @@ import {
   contactResolver,
   loadContactValidation,
 } from "@/lib/contact-request.resolver";
+import type { LeadFormId } from "@/lib/lead-forms";
+import { useSubmitLead } from "@/hooks/use-submit-lead";
 
 const labelBase = "text-body font-semibold text-neutral-700";
 
@@ -31,6 +33,8 @@ function rentalPeriodOptions(singular: string, plural: string) {
 }
 
 type LeadFormSectionProps = {
+  /** Formulário que enviou — define a conversão no RD Station. */
+  form: LeadFormId;
   /** Primeira linha do título (peso normal). */
   titleTop: string;
   /** Segunda linha do título (negrito + laranja). */
@@ -51,6 +55,7 @@ type LeadFormSectionProps = {
 // hero de Contato. Se o usuário começa a preencher e rola para longe sem
 // enviar, um banner discreto no topo permite voltar e finalizar.
 export function LeadFormSection({
+  form,
   titleTop,
   titleBottom,
   description,
@@ -61,6 +66,7 @@ export function LeadFormSection({
 }: LeadFormSectionProps) {
   const uid = useId();
   const { leadForm: texts } = useSharedTexts();
+  const { submitLead } = useSubmitLead();
   const [sent, setSent] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [outOfView, setOutOfView] = useState(false);
@@ -110,12 +116,11 @@ export function LeadFormSection({
   }, []);
 
   const onSubmit = async (data: ContactRequestValues) => {
-    // Sem backend — simula o envio (padrão dos demais formulários).
-    await new Promise((r) => setTimeout(r, 500));
+    const ok = await submitLead({ ...data, form }, texts.successMessage);
+    if (!ok) return;
     reset();
     setSent(true);
     setEngaged(false);
-    void data;
   };
 
   const scrollToForm = () => {
@@ -355,6 +360,11 @@ export function LeadFormSection({
               {errors.consent.message}
             </p>
           )}
+
+          {/* Honeypot — escondido de pessoas e leitores de tela. */}
+          <div hidden aria-hidden>
+            <input type="text" tabIndex={-1} autoComplete="off" {...register("website")} />
+          </div>
 
           <div className="flex flex-col gap-3">
             <Button

@@ -52,7 +52,7 @@ export default async function ServicosPage() {
       {/* Grupo claro 1 — Captação + Portfólio. Malha única, sem cortes. */}
       <div className="relative isolate bg-background">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
-        <LeadFormSection id="solicitar-servico" {...content.leadForm} />
+        <LeadFormSection form="servicos" id="solicitar-servico" {...content.leadForm} />
         <PortfolioSection content={content.portfolio} />
       </div>
 

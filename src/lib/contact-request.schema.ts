@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { LEAD_FORM_IDS } from "./lead-forms";
 
 export const contactRequestSchema = z.object({
   name: z.string().trim().min(2, "Informe seu nome completo"),
@@ -22,6 +23,15 @@ export const contactRequestSchema = z.object({
   }),
   /** Opcional — usado só no formulário de locação (período em meses). */
   periodMonths: z.string().optional(),
+  /** Honeypot: campo escondido que só robô preenche. */
+  website: z.string().optional(),
 });
 
 export type ContactRequestValues = z.infer<typeof contactRequestSchema>;
+
+/** Corpo de POST /api/leads: os campos do formulário + qual formulário enviou. */
+export const leadRequestSchema = contactRequestSchema.extend({
+  form: z.enum(LEAD_FORM_IDS),
+});
+
+export type LeadRequest = z.infer<typeof leadRequestSchema>;

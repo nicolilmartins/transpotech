@@ -40,6 +40,7 @@ export default async function BateriasPage() {
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
         <TechSection content={content.tech} />
         <LeadFormSection
+          form="baterias-e-carregadores"
           id="solicitar-baterias"
           {...content.leadForm}
         />

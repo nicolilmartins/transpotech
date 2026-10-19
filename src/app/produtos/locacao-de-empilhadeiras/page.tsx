@@ -59,6 +59,7 @@ export default async function LocacaoPage() {
           brands={dealerBrands}
         />
         <LeadFormSection
+          form="locacao-de-empilhadeiras"
           id="solicitar-locacao"
           {...content.leadForm}
           withRentalPeriod

@@ -15,6 +15,7 @@ import {
   contactResolver,
   loadContactValidation,
 } from "@/lib/contact-request.resolver";
+import { useSubmitLead } from "@/hooks/use-submit-lead";
 import type { SectionContent } from "@/sanity/content/fields";
 import type { contatoPage } from "@/sanity/content/pages/contato";
 
@@ -24,6 +25,7 @@ const labelBase = "text-body font-semibold text-neutral-700";
 
 export function ContatoHeroSection({ content }: { content: ContatoHeroContent }) {
   const [sent, setSent] = useState(false);
+  const { submitLead } = useSubmitLead();
 
   const {
     register,
@@ -34,11 +36,13 @@ export function ContatoHeroSection({ content }: { content: ContatoHeroContent })
   } = useForm<ContactRequestValues>({ resolver: contactResolver });
 
   const onSubmit = async (data: ContactRequestValues) => {
-    // Sem backend — simula o envio (padrão dos demais formulários).
-    await new Promise((r) => setTimeout(r, 500));
+    const ok = await submitLead(
+      { ...data, form: "contato" },
+      content.successMessage,
+    );
+    if (!ok) return;
     reset();
     setSent(true);
-    void data;
   };
 
   return (
@@ -214,6 +218,11 @@ export function ContatoHeroSection({ content }: { content: ContatoHeroContent })
             {errors.consent.message}
           </p>
         )}
+
+        {/* Honeypot — escondido de pessoas e leitores de tela. */}
+        <div hidden aria-hidden>
+          <input type="text" tabIndex={-1} autoComplete="off" {...register("website")} />
+        </div>
 
         <div className="flex flex-col gap-3">
           <Button

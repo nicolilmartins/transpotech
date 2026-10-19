@@ -40,6 +40,7 @@ export default async function PecasPage() {
       <div className="relative isolate bg-background">
         <HoverMesh className="pointer-events-none absolute inset-0 -z-10" />
         <LeadFormSection
+          form="pecas"
           id="solicitar-pecas"
           {...content.leadForm}
         />
