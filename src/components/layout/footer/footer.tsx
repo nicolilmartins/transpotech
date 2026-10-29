@@ -193,15 +193,26 @@ export function Footer({ units, careersUrl, social }: FooterProps) {
           <div className="h-px w-full bg-white/10" />
 
           {/* Base */}
-          <div className="flex items-center justify-between">
-            <p className="text-body leading-[1.35] text-neutral-100">
-              © 2026 TranspoTech todos os direitos reservados.
-            </p>
+          {/* Mobile: copyright, política e crédito empilhados; de md em
+              diante, política na mesma linha do copyright (à direita) e o
+              crédito logo abaixo dela. */}
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <p className="text-body leading-[1.35] text-neutral-100">
+                © 2026 TranspoTech todos os direitos reservados.
+              </p>
+              <IntentLink
+                href={ROUTES.POLITICA_PRIVACIDADE}
+                className="w-fit text-body leading-[1.35] text-neutral-300 transition-colors hover:text-neutral-50"
+              >
+                Política de Privacidade
+              </IntentLink>
+            </div>
             <IntentLink
               href="https://www.atom6studio.com/pt-br"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2.5 text-neutral-300 transition-colors hover:text-neutral-50"
+              className="flex w-fit items-center gap-2.5 text-neutral-300 transition-colors hover:text-neutral-50 md:self-end"
             >
               {/* Única exceção ao piso de 16px do site: microcrédito de
                   assinatura, dimensionado para não competir com o logo. */}

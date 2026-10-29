@@ -113,8 +113,11 @@ export function FloatingActions() {
 
   return (
     <div ref={ref} className="fixed bottom-6 right-6 z-40 lg:bottom-8 lg:right-16">
-      {/* Opções — flutuam acima do botão */}
-      <div className="absolute bottom-full right-0 mb-3 flex flex-col items-end gap-3">
+      {/* Opções — flutuam acima do botão. pointer-events-none no wrapper: a
+          caixa (e os gaps entre as opções) cobre o canto da página mesmo com
+          o menu fechado e bloqueava cliques por baixo (ex.: links da base do
+          footer); cada opção liga o próprio pointer-events ao abrir. */}
+      <div className="pointer-events-none absolute bottom-full right-0 mb-3 flex flex-col items-end gap-3">
         {options.map((option, index) => (
           <IntentLink
             key={option.label}

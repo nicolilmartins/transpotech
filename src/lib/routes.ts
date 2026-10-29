@@ -32,6 +32,9 @@ export const ROUTES = {
   CONTATO: "/contato",
   SIMULADOR: "/simular-economia",
 
+  // Institucional
+  POLITICA_PRIVACIDADE: "/politica-de-privacidade",
+
   // Externos
   // PLACEHOLDER: confirmar a URL real do portal de carreiras (Gupy).
   GUPY: "https://transpotech.gupy.io/",

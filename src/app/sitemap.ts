@@ -64,5 +64,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Conversão
     { url: url(ROUTES.CONTATO), lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: url(ROUTES.SIMULADOR), lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
+
+    // Institucional
+    { url: url(ROUTES.POLITICA_PRIVACIDADE), lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
   ];
 }

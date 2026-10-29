@@ -23,6 +23,7 @@ const navItems: NavItem[] = [
 function useHeaderState(menuOpen: boolean) {
   const [onDark, setOnDark] = useState(false);
   const [onHero, setOnHero] = useState(false);
+  const [onBare, setOnBare] = useState(false);
   const [hidden, setHidden] = useState(false);
   const menuOpenRef = useRef(menuOpen);
 
@@ -54,6 +55,14 @@ function useHeaderState(menuOpen: boolean) {
           if (crosses(el)) hero = true;
         });
       setOnHero(hero);
+
+      let bare = false;
+      document
+        .querySelectorAll<HTMLElement>("[data-header-bare]")
+        .forEach((el) => {
+          if (crosses(el)) bare = true;
+        });
+      setOnBare(bare);
     };
 
     updateDark();
@@ -96,7 +105,7 @@ function useHeaderState(menuOpen: boolean) {
     };
   }, []);
 
-  return { onDark, onHero, hidden };
+  return { onDark, onHero, onBare, hidden };
 }
 
 type HeaderProps = {
@@ -107,7 +116,7 @@ type HeaderProps = {
 export function Header({ careersUrl }: HeaderProps) {
   const megaMenus = useMemo(() => getMegaMenus(careersUrl), [careersUrl]);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { onDark, onHero, hidden } = useHeaderState(menuOpen);
+  const { onDark, onHero, onBare, hidden } = useHeaderState(menuOpen);
   const [openLabel, setOpenLabel] = useState<string | null>(null);
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
@@ -165,12 +174,16 @@ export function Header({ careersUrl }: HeaderProps) {
   }, [megaOpen, openLabel]);
 
   // Sobre a hero: fundo laranja claro #FFF4ED opaco (legível sobre a imagem).
-  // Demais seções: comportamento atual (dark / branco translúcido).
+  // Sobre cabeçalho simples (data-header-bare, ex.: Política de Privacidade):
+  // fundo opaco na mesma cor do cabeçalho, sem blur. Demais seções:
+  // comportamento atual (dark / branco translúcido).
   const pillBg = onHero
-    ? "bg-[#fff4ed]"
-    : onDark
-      ? "bg-neutral-900/60"
-      : "bg-white/80";
+    ? "bg-[#fff4ed] backdrop-blur-md"
+    : onBare
+      ? "bg-background"
+      : onDark
+        ? "bg-neutral-900/60 backdrop-blur-md"
+        : "bg-white/80 backdrop-blur-md";
   // Pill claro (laranja na hero OU branco translúcido nas seções claras) → texto
   // escuro. Só fica claro quando sobre seção dark que NÃO é hero.
   const darkPill = onDark && !onHero;
@@ -196,7 +209,7 @@ export function Header({ careersUrl }: HeaderProps) {
           <div
           className={[
             "flex items-center justify-between rounded-[200px] py-4 pl-6 pr-4",
-            "backdrop-blur-md transition-colors duration-300",
+            "transition-colors duration-300",
             pillBg,
             "lg:pl-8",
           ].join(" ")}
