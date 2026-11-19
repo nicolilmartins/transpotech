@@ -11,7 +11,7 @@
   --accent-fg: #ffffff;
 
   /* Neutral */
-  --background: #ffffff;
+  --background: #fdfdfd;
   --foreground: #111827;
 
   --muted: #f9fafb;
@@ -30,7 +30,7 @@
   --heading-3: clamp(1.5rem, 3vw, 2.25rem);
   --heading-4: clamp(1.25rem, 2.5vw, 1.75rem);
 
-  --text-sm: 0.875rem;
+  --text-sm: 1rem; /* piso de 16px — ver theme.css */
   --text-base: 1rem;
   --text-lg: 1.125rem;
   --text-xl: 1.25rem;
@@ -56,4 +56,12 @@
   /* Layout */
   --container-max: 1280px;
   --section-padding-y: clamp(4rem, 8vw, 8rem);
+
+  /* Fundo das faixas de formulário — branco mais escuro que o --background
+     (#fdfdfd) das demais seções claras, para a área de captação se destacar.
+     A variante com alfa 0 é usada nos degradês de transição (globals.css),
+     onde a faixa desvanece para a cor da seção vizinha. */
+  --form-band: #f1f0f0;
+  --form-band-alpha-0: rgba(241, 240, 240, 0);
+
 }

@@ -1,72 +1,126 @@
 import type { Metadata } from "next";
-import { Geist, Sora, Mukta_Vaani } from "next/font/google";
+import { baseOpenGraph } from "@/lib/metadata";
+import { Mukta_Vaani } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { FloatingActions } from "@/components/layout/floating-actions";
+import { ScrollReveal } from "@/components/layout/scroll-reveal";
+import { ChatWidget } from "@/components/layout/chat-widget/chat-widget";
+import { GtmNoscript, GtmScript } from "@/components/layout/gtm/gtm";
+import { env } from "@/lib/env";
+import { getSiteSettings } from "@/sanity/queries/site-settings";
+import { getUnits } from "@/sanity/queries/units";
+import { getSharedTexts } from "@/sanity/queries/shared";
+import { SharedTextsProvider } from "@/components/layout/shared-texts";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-// "Stack Sans Text" é uma fonte licenciada do design original (fora do Google Fonts).
-// Usamos Sora como fallback fiel para os headings — --font-heading referencia
-// var(--font-stack-sans) primeiro, bastando carregá-la nessa variável ao licenciar.
-const stackSans = Sora({
+// "Stack Sans Text" — fonte do design original (TPT01 / Figma), carregada
+// localmente. O arquivo variável cobre os pesos 400–700 usados nos headings.
+// O .woff2 é um subconjunto do .ttf original (125KB → 37KB): Latin-1 (todos os
+// acentos do português), pontuação, setas e ≈ ≤ ≥ − € ™. Caractere fora disso
+// cai na fonte de fallback. Para regerar com outros caracteres:
+//   python -m fontTools.subset StackSansText-VariableFont_wght.ttf --flavor=woff2 --layout-features='*' --unicodes=...
+const stackSans = localFont({
+  src: "../components/ui/Typography/Stack_Sans_Text/StackSansText-VariableFont_wght.woff2",
   variable: "--font-stack-sans",
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: "400 700",
+  display: "swap",
 });
 
+// 400 e 600 aparecem acima da dobra em todas as páginas (header, hero) e são
+// pré-carregados; o 700 só aparece abaixo da dobra (exceto /simular-economia)
+// e fica numa segunda instância sem preload. Com Turbopack as duas instâncias
+// declaram o mesmo `font-family: Mukta Vaani`, então as @font-face se somam
+// numa família só e o CSS resultante é o mesmo de uma instância com os três
+// pesos; a variável dela entra no <html> só para garantir que esse CSS seja
+// incluído. (Com webpack o nome ganharia hash por instância e o 700 deixaria de
+// ser encontrado — aí é voltar para uma instância só.)
 const muktaVaani = Mukta_Vaani({
   variable: "--font-mukta-vaani",
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["400", "600"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "TranspoTech | Empilhadeiras Industriais",
-    template: "%s | TranspoTech",
-  },
-  description:
-    "TranspoTech — locação, assistência técnica e venda de empilhadeiras industriais. Representante oficial STILL, Linde e Baoli. 25 anos de mercado, 11 unidades.",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://transpotech.com.br"
-  ),
-  openGraph: {
-    type: "website",
-    locale: "pt_BR",
-    siteName: "TranspoTech",
-    title: "TranspoTech | Empilhadeiras Industriais",
-    description:
-      "Locação, assistência técnica e venda de empilhadeiras industriais. Representante oficial STILL, Linde e Baoli.",
-  },
-  twitter: {
-    card: "summary_large_image",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+const muktaVaaniBold = Mukta_Vaani({
+  variable: "--font-mukta-vaani-bold",
+  subsets: ["latin"],
+  weight: "700",
+  preload: false,
+});
 
-export default function RootLayout({
+export async function generateMetadata(): Promise<Metadata> {
+  const { seo } = await getSiteSettings();
+  return {
+    title: {
+      default: "TranspoTech | Empilhadeiras Industriais",
+      template: "%s | TranspoTech",
+    },
+    description: seo.description,
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_SITE_URL ?? "https://transpotech.com.br"
+    ),
+    openGraph: {
+      ...baseOpenGraph,
+      title: "TranspoTech | Empilhadeiras Industriais",
+      description: seo.shareDescription,
+      ...(seo.shareImage && {
+        images: [
+          {
+            url: seo.shareImage.src,
+            width: seo.shareImage.width,
+            height: seo.shareImage.height,
+            alt: seo.shareImage.alt,
+          },
+        ],
+      }),
+    },
+    twitter: {
+      card: "summary_large_image",
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [settings, units, shared] = await Promise.all([
+    getSiteSettings(),
+    getUnits(),
+    getSharedTexts(),
+  ]);
+  const { leadForm, newsletter, productCard, productQuote } = shared;
+
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${stackSans.variable} ${muktaVaani.variable} h-full antialiased`}
+      className={`${stackSans.variable} ${muktaVaani.variable} ${muktaVaaniBold.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-body text-neutral-900">
+        <GtmNoscript id={env.gtmId} />
+        <GtmScript id={env.gtmId} />
+        <ChatWidget />
         <Providers>
-          <Header />
-          {children}
-          <Footer />
+          <SharedTextsProvider
+            texts={{ leadForm, newsletter, productCard, productQuote }}
+          >
+            <Header careersUrl={settings.careersUrl} />
+            {children}
+            <Footer
+              units={units}
+              careersUrl={settings.careersUrl}
+              social={settings.social}
+            />
+            <FloatingActions />
+            <ScrollReveal />
+          </SharedTextsProvider>
         </Providers>
       </body>
     </html>

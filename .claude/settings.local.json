@@ -3,7 +3,9 @@
     "allow": [
       "mcp__claude_ai_Figma__get_screenshot",
       "Read(//tmp/transpotech-screenshots/**)",
-      "Read(//private/tmp/transpotech-screenshots/**)"
+      "Read(//private/tmp/transpotech-screenshots/**)",
+      "Bash(git add *)",
+      "Bash(git commit -q -m ' *)"
     ]
   }
 }

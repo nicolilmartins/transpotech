@@ -5,13 +5,17 @@ export const ROUTES = {
   LOCACAO: "/produtos/locacao-de-empilhadeiras",
   EMPILHADEIRAS: "/produtos/empilhadeiras",
   EMPILHADEIRAS_NOVAS: "/produtos/empilhadeiras/novas",
-  EMPILHADEIRAS_USADAS: "/produtos/empilhadeiras/usadas",
+  EMPILHADEIRAS_SEMINOVAS: "/produtos/empilhadeiras/seminovas",
   PNEUS: "/produtos/pneus",
   BATERIAS: "/produtos/baterias-e-carregadores",
   PECAS: "/produtos/pecas",
+  ACESSORIOS: "/produtos/acessorios",
 
   // Serviços
   SERVICOS: "/servicos",
+  SERVICOS_PREVENTIVA: "/servicos/manutencao-preventiva",
+  SERVICOS_CORRETIVA: "/servicos/manutencao-corretiva",
+  SERVICOS_MULTIMARCAS: "/servicos/assistencia-multimarcas",
 
   // Automação
   AUTOMACAO: "/automacao-intralogistica",
@@ -26,7 +30,15 @@ export const ROUTES = {
 
   // Conversão
   CONTATO: "/contato",
-  ORCAMENTO: "/orcamento",
+  SIMULADOR: "/simular-economia",
+
+  // Institucional
+  POLITICA_PRIVACIDADE: "/politica-de-privacidade",
+
+  // Externos
+  // PLACEHOLDER: confirmar a URL real do portal de carreiras (Gupy).
+  GUPY: "https://transpotech.gupy.io/",
+  OUVIDOR_DIGITAL: "https://canal.ouvidordigital.com.br/transpotech",
 } as const;
 
 export const NAV_PRODUTOS = [
@@ -35,6 +47,7 @@ export const NAV_PRODUTOS = [
   { label: "Pneus", href: ROUTES.PNEUS },
   { label: "Baterias e Carregadores", href: ROUTES.BATERIAS },
   { label: "Peças", href: ROUTES.PECAS },
+  { label: "Acessórios", href: ROUTES.ACESSORIOS },
 ] as const;
 
 export const NAV_EMPRESA = [
@@ -48,5 +61,5 @@ export const NAV_EMPRESA = [
     ],
   },
   { label: "Portal de Conteúdo", href: ROUTES.PORTAL_CONTEUDO },
-  { label: "Trabalhe Conosco", href: ROUTES.TRABALHE_CONOSCO },
+  { label: "Trabalhe Conosco", href: ROUTES.GUPY },
 ] as const;

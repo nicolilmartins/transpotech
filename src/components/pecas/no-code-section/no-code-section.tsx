@@ -1,0 +1,112 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import { Section } from "@/components/ui/section";
+import { WhatsappQuoteButton } from "@/components/layout/whatsapp-quote-button/whatsapp-quote-button";
+import { ease, onScrollPast, tween } from "@/lib/motion";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { pecasPage } from "@/sanity/content/pages/pecas";
+
+type NoCodeContent = SectionContent<typeof pecasPage.sections.noCode>;
+
+export function NoCodeSection({ content }: { content: NoCodeContent }) {
+  const wrapRef = useRef<HTMLOListElement>(null);
+  const fillRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const titleRefs = useRef<(HTMLHeadingElement | null)[]>([]);
+  const n = content.steps.length;
+
+  // Ao entrar na viewport, a linha laranja e os títulos "acendem" da esquerda
+  // para a direita uma única vez; depois permanecem no estado final.
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+
+    const apply = (p: number) => {
+      for (let i = 0; i < n; i++) {
+        const frac = Math.min(1, Math.max(0, (p - i / n) / (1 / n)));
+        const fill = fillRefs.current[i];
+        if (fill) fill.style.width = `${(frac * 100).toFixed(2)}%`;
+        const title = titleRefs.current[i];
+        if (title) {
+          const lit = frac > 0;
+          title.classList.toggle("text-neutral-50", lit);
+          title.classList.toggle("text-neutral-500", !lit);
+        }
+      }
+    };
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      apply(1);
+      return;
+    }
+
+    apply(0);
+    let stopTween: (() => void) | undefined;
+    const stopTrigger = onScrollPast(wrap, 0.85, () => {
+      stopTween = tween({ duration: 1.8, ease: ease.sineInOut, onUpdate: apply });
+    });
+    return () => {
+      stopTrigger();
+      stopTween?.();
+    };
+  }, [n]);
+
+  return (
+    <Section
+      data-header-dark
+      className="flex flex-col items-start gap-10 lg:gap-14"
+    >
+      {/* Cabeçalho — canto esquerdo */}
+      <div className="flex max-w-[640px] flex-col gap-4">
+        <h2 className="text-h2 font-normal text-neutral-50">
+          {content.title}
+        </h2>
+        <p className="text-body leading-[1.35] text-neutral-400">
+          {content.description}
+        </p>
+      </div>
+
+      {/* Passos — acendem da esquerda para a direita ao entrar na viewport */}
+      <ol
+        ref={wrapRef}
+        className="grid w-full grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-3"
+      >
+        {content.steps.map((step, i) => (
+          <li key={i} className="flex w-full flex-col">
+            <div className="flex flex-col gap-2">
+              <span className="font-heading text-h6 font-bold text-primary-500">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <h3
+                ref={(el) => {
+                  titleRefs.current[i] = el;
+                }}
+                className="font-heading text-h6 font-semibold text-neutral-500 transition-colors duration-300"
+              >
+                {step.title}
+              </h3>
+              <p className="truncate text-body leading-[1.35] text-neutral-400">
+                {step.description}
+              </p>
+            </div>
+
+            {/* Linha base + preenchimento laranja. 24px de distância do texto. */}
+            <span className="relative mt-6 block h-0.5 w-full overflow-hidden rounded-full bg-white/15">
+              <span
+                ref={(el) => {
+                  fillRefs.current[i] = el;
+                }}
+                className="absolute inset-y-0 left-0 rounded-full bg-primary-500"
+                style={{ width: "0%" }}
+              />
+            </span>
+          </li>
+        ))}
+      </ol>
+
+      <WhatsappQuoteButton section="pecas_acessorios_pneus">
+        {content.buttonLabel}
+      </WhatsappQuoteButton>
+    </Section>
+  );
+}

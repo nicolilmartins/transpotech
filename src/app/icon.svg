@@ -1,0 +1,15 @@
+<svg width="32" height="32" viewBox="-3 -3 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    /* Marca cinza escura por padrão (abas claras); clareia em abas escuras.
+       O laranja permanece igual nos dois temas. */
+    .tpt-dark { fill: #454A4F; }
+    @media (prefers-color-scheme: dark) {
+      .tpt-dark { fill: #EDEEF0; }
+    }
+  </style>
+  <path d="M20.1685 18.4592L23.2671 9.96942L14.6592 4.28638L29.9923 8.20476L20.1685 18.4592Z" fill="#F47521"/>
+  <path class="tpt-dark" d="M4.18945 17.3269L9.9906 24.2466L19.2169 19.6335L8.16341 30.9579L4.18945 17.3269Z"/>
+  <path class="tpt-dark" d="M13.6379 3.94618L4.6826 5.14114L3.64048 15.4026L0 0L13.6379 3.94618Z"/>
+  <path d="M23.2674 9.64282L12.0542 13.2903L12.2487 13.8808L23.3647 10.2611L23.462 10.2334L23.2674 9.64282Z" fill="#F47521"/>
+  <path class="tpt-dark" d="M4.47416 4.42529L4.01562 4.84214L11.9635 13.5543L9.55277 24.8092L9.53193 24.9065L10.1294 25.0315L12.6305 13.3736L4.47416 4.42529Z"/>
+</svg>

@@ -17,7 +17,7 @@ Baseado no sitemap aprovado. Legenda do arquivo original:
 │   ├── /produtos/locacao-de-empilhadeiras → Locação de Empilhadeiras
 │   ├── /produtos/empilhadeiras            → Venda de Empilhadeiras (Catálogo)
 │   │   ├── /produtos/empilhadeiras/novas  → Novas [Template]
-│   │   └── /produtos/empilhadeiras/usadas → Usadas [Template]
+│   │   └── /produtos/empilhadeiras/seminovas → Seminovas [Template]
 │   ├── /produtos/pneus                    → Pneus
 │   ├── /produtos/baterias-e-carregadores  → Baterias e Carregadores
 │   └── /produtos/pecas                    → Peças
@@ -39,7 +39,7 @@ Baseado no sitemap aprovado. Legenda do arquivo original:
 │   └── /empresa/trabalhe-conosco          → Trabalhe Conosco
 │
 ├── /contato                               → Contato
-└── /orcamento                             → Orçamento
+└── /simular-economia                      → Simular Economia
 ```
 
 ---
@@ -72,8 +72,8 @@ Visível no menu como dropdown. Não tem página própria.
 - **Tipo:** Template (página filtrada do catálogo)
 - **Prioridade SEO:** 0.8
 
-##### Usadas
-- **Rota:** `/produtos/empilhadeiras/usadas`
+##### Seminovas
+- **Rota:** `/produtos/empilhadeiras/seminovas` (`/usadas` redireciona em definitivo, 308)
 - **Tipo:** Template (página filtrada do catálogo)
 - **Prioridade SEO:** 0.8
 
@@ -164,8 +164,8 @@ Sub-dropdown dentro de Empresa. Não tem página própria.
 
 ---
 
-### Orçamento
-- **Rota:** `/orcamento`
+### Simular Economia
+- **Rota:** `/simular-economia`
 - **Tipo:** Página
 - **Prioridade SEO:** 0.8
 - **KPI:** Principal CTA do site — formulário qualificado de orçamento integrado com RD Station
@@ -187,7 +187,7 @@ app/
         page.tsx
         novas/
           page.tsx
-        usadas/
+        seminovas/
           page.tsx
       pneus/
         page.tsx
@@ -215,7 +215,7 @@ app/
       page.tsx
     contato/
       page.tsx
-    orcamento/
+    simular-economia/
       page.tsx
 ```
 
@@ -224,7 +224,7 @@ app/
 ## Navegação principal (menu)
 
 ```
-Início | Produtos ▾ | Serviços | Automação (Dematic) | Empresa ▾ | Contato | [Orçamento CTA]
+Início | Produtos ▾ | Serviços | Automação (Dematic) | Empresa ▾ | Contato | [Simular Economia CTA]
 ```
 
 **Dropdown Produtos:**

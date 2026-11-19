@@ -2,11 +2,28 @@
 @import "../styles/tokens.css";
 @import "../styles/theme.css";
 
+/* Viewports mobile de baixa altura (ex.: Safari iOS com a barra de ferramentas
+   visível, ou aparelhos curtos), onde a hero full-bleed da home encavalaria os
+   botões sobre a empilhadeira. Restrito a mobile (max-width < lg) para nunca
+   afetar o desktop. */
+@custom-variant hero-short (@media (max-height: 820px) and (max-width: 1023px));
+
+/* Navegação por âncora: o header é fixo, então o destino precisa parar abaixo
+   dele — senão o topo da seção fica coberto. */
+html {
+  scroll-padding-top: 96px;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body, Arial, Helvetica, sans-serif);
   -webkit-font-smoothing: antialiased;
+  /* Empurra o conteúdo para baixo quando o banner de "solicitação iniciada"
+     está visível (a barra ocupa o topo como uma seção). 0 quando ausente.
+     Transição suave para o empurrão/recolhimento não "saltar". */
+  padding-top: var(--app-banner-h, 0px);
+  transition: padding-top 0.25s ease;
 }
 
 h1,
@@ -22,4 +39,103 @@ h6 {
 :focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
+}
+
+/* Campos de formulário indicam foco pela própria borda laranja (padrão dos
+   primitivos Input/Select/Textarea) — sem o outline global, que somaria uma
+   segunda linha. Precisa ficar aqui (fora de @layer) para vencer a regra
+   acima; [data-field] cobre gatilhos custom, como o botão do Select. */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[data-field]:focus-visible {
+  outline: none;
+}
+
+/* Stroke em gradiente que apaga no canto inferior direito (cards de depoimento).
+   Usa máscara para respeitar o border-radius do card. */
+.stroke-fade {
+  position: relative;
+}
+.stroke-fade::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Faixa de fundo das seções de formulário (#f7f6f6). Dentro dos grupos claros
+   (#fdfdfd) uma cor chapada desenha uma linha reta no topo e na base da faixa;
+   aqui as pontas desvanecem para transparente ao longo de 120px, deixando o
+   tom do grupo aparecer por baixo, e a passagem de uma seção para a outra fica
+   contínua. O alfa é escrito em rgba do próprio #f7f6f6 (e não `transparent`)
+   para o degradê nunca passar por cinza em navegador antigo. */
+.form-band {
+  background-image: linear-gradient(
+    to bottom,
+    var(--form-band-alpha-0) 0px,
+    var(--form-band) 120px,
+    var(--form-band) calc(100% - 120px),
+    var(--form-band-alpha-0) 100%
+  );
+}
+
+/* Variante da classe acima para a faixa que ABRE a página — caso da hero do
+   Contato, que já traz o formulário. O topo fica chapado (não há seção antes
+   dele) e só a base desvanece. O mecanismo é o mesmo da `.form-band`: quem
+   aparece no lugar é o fundo do grupo claro em volta, então não existem duas
+   superfícies pintadas se encontrando e nenhuma emenda é possível. */
+.form-band-top {
+  background-image: linear-gradient(
+    to bottom,
+    var(--form-band) calc(100% - 120px),
+    var(--form-band-alpha-0) 100%
+  );
+}
+
+/* Pulso sutil das bolinhas da hero (piscar antes da interação). */
+@keyframes heroDotPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.28);
+  }
+}
+.hero-dot-pulse {
+  animation: heroDotPulse 1.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-dot-pulse {
+    animation: none;
+  }
+}
+
+/* Entrada do banner "retomar solicitação" (barra no topo da página). */
+@keyframes leadBannerIn {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.lead-banner-in {
+  animation: leadBannerIn 0.3s ease-out;
 }

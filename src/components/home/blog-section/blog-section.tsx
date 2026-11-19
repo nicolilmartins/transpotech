@@ -1,139 +1,148 @@
-import Image, { type StaticImageData } from "next/image";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "@/components/ui/icons";
-import time from "@/assets/icons/time.svg";
-import post1 from "@/assets/images/blog/post1.png";
-import post2 from "@/assets/images/blog/post2.png";
-import post3 from "@/assets/images/blog/post3.jpg";
-import post4 from "@/assets/images/blog/post4.png";
+import Image from "next/image";
+import { IntentLink } from "@/components/ui/intent-link";
+import { ArrowRight, Clock } from "lucide-react";
+import { TextLink } from "@/components/ui/text-link";
+import type { Article } from "@/data/articles";
+import { ROUTES } from "@/lib/routes";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { homePage } from "@/sanity/content/pages/home";
 
-type Post = {
-  img: StaticImageData;
-  category: string;
-  title: string;
-  description: string;
-  readTime: string;
-};
+const articleHref = (id: string) => `${ROUTES.PORTAL_CONTEUDO}/${id}`;
 
-const posts: Post[] = [
-  {
-    img: post1,
-    category: "LOCAÇÃO",
-    title: "TranspoTech inaugura nova unidade em Joinville",
-    description:
-      "Operação amplia atendimentos e estoque de peças para clientes do norte de Santa Catarina.",
-    readTime: "2 min",
-  },
-  {
-    img: post2,
-    category: "EMPILHADEIRAS NOVAS",
-    title: "Linde lança no Brasil a nova linha elétrica E20-E50",
-    description:
-      "Modelos chegam com bateria de íons de lítio integrada e ganha até 20% em ciclos por turno.",
-    readTime: "2 min",
-  },
-  {
-    img: post3,
-    category: "AUTOMAÇÃO",
-    title: "TranspoTech apresenta soluções de automação intralogística",
-    description:
-      "Estande integrado mostra AGVs, WMS e empilhadeiras conectadas em ambiente de operação.",
-    readTime: "2 min",
-  },
-  {
-    img: post4,
-    category: "LOCAÇÃO",
-    title: "TranspoTech apresenta soluções de automação intralogística",
-    description:
-      "Estande integrado mostra AGVs, WMS e empilhadeiras conectadas em ambiente de operação.",
-    readTime: "2 min",
-  },
-];
+// Conteúdos exibidos na home (o primeiro é o destaque, os demais os cards
+// menores). Cada card leva ao artigo correspondente no Portal de Conteúdo.
+type BlogContent = SectionContent<typeof homePage.sections.blog>;
 
-export function BlogSection() {
+export function BlogSection({
+  content,
+  articles,
+}: {
+  content: BlogContent;
+  articles: Article[];
+}) {
+  const [featured, ...rest] = articles;
+
+  // Nenhum artigo marcado para a home no CMS: a seção sai da página.
+  if (!featured) return null;
+
   return (
-    <section className="flex flex-col items-start gap-16 bg-[#fdfdfd] px-16 py-20">
-      {/* Cabeçalho com navegação */}
-      <div className="flex w-full items-end justify-end gap-4">
-        <div className="flex flex-1 flex-col gap-4">
-          <h2 className="w-[613px] max-w-full text-h2 text-neutral-800">
-            <span className="font-normal">Conteúdo prático para apoiar </span>
-            <span className="font-bold text-primary-500">suas decisões</span>
+    <section className="relative isolate mx-auto flex w-full max-w-[1440px] flex-col items-start gap-10 overflow-hidden px-5 py-12 sm:px-6 lg:gap-16 lg:px-16 lg:py-20">
+      {/* Cabeçalho — texto à esquerda, link "ver todos" à direita */}
+      {/* Mobile empilhado (link abaixo); desktop lado a lado. Largura do h2
+          fluida (max-w) para nunca estourar o viewport. */}
+      <div className="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex min-w-0 flex-col gap-4 lg:flex-1">
+          <h2 className="w-full max-w-[613px] text-h2 text-neutral-800">
+            <span className="font-normal">{content.titleRegular}</span>
+            <span className="font-bold text-primary-500">{content.titleAccent}</span>
           </h2>
           <p className="text-body leading-[1.35] text-neutral-600">
-            Guias, comparativos e tendências sobre locação, acessórios e
-            automação.
+            {content.description}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            aria-label="Anterior"
-            className="flex size-12 items-center justify-center rounded-full bg-secondary-600/10 text-secondary-600 transition-colors hover:bg-secondary-600/20"
-          >
-            <ArrowLeft className="size-7" />
-          </button>
-          <button
-            aria-label="Próximo"
-            className="flex size-12 items-center justify-center rounded-full bg-secondary-600/10 text-secondary-600 transition-colors hover:bg-secondary-600/20"
-          >
-            <ArrowRight className="size-7" />
-          </button>
-        </div>
+        <TextLink href={ROUTES.PORTAL_CONTEUDO} className="shrink-0">
+          {content.allLabel}
+        </TextLink>
       </div>
 
-      {/* Cards */}
-      <div className="flex w-full gap-4 overflow-hidden">
-        {posts.map((post, i) => (
-          <article
-            key={i}
-            className="flex h-[516px] w-[427px] shrink-0 flex-col gap-4 rounded-xl bg-neutral-50 p-4"
-          >
-            <div className="relative min-h-0 flex-1 overflow-hidden rounded-xl">
-              <Image
-                src={post.img}
-                alt={post.title}
-                fill
-                sizes="427px"
-                className="object-cover"
-              />
+      {/* Grade: artigo principal grande à esquerda + cards menores à direita.
+          Os cards transicionam só scale/box-shadow (o hover): opacity e
+          transform são do ScrollReveal (GSAP), e `transition` genérico fazia
+          cada quadro dele abrir e cancelar uma transição CSS. */}
+      <div className="flex w-full flex-col gap-4 lg:flex-row lg:items-stretch lg:gap-6">
+        {/* Artigo em destaque */}
+        <IntentLink
+          href={articleHref(featured.id)}
+          className="group/card relative flex min-h-[360px] flex-col justify-end overflow-hidden rounded-2xl bg-neutral-900 transition-[scale,box-shadow] duration-300 hover:z-10 hover:scale-[1.01] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)] lg:min-h-[560px] lg:flex-[1.35]"
+        >
+          <Image
+            src={featured.image}
+            alt={featured.title}
+            fill
+            sizes="(min-width: 1024px) 55vw, 100vw"
+            className="object-cover transition-transform duration-500 ease-out group-hover/card:scale-105"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/65 via-85% to-black/15"
+          />
+          {/* Conteúdo em fluxo (não absoluto): a altura do card acompanha o
+              texto e nada é cortado em viewports estreitos */}
+          <div className="relative flex flex-col gap-4 p-8">
+            <span className="text-body font-semibold uppercase tracking-wide leading-[1.35] text-primary-400">
+              {featured.category}
+            </span>
+            <h3 className="max-w-[560px] font-heading text-[28px] font-bold leading-[1.2] text-neutral-50">
+              {featured.title}
+            </h3>
+            <p className="max-w-[540px] text-body leading-[1.4] text-neutral-200">
+              {featured.excerpt}
+            </p>
+            {/* Rodapé: ler conteúdo (esquerda) · tempo de leitura (direita) */}
+            <div className="flex items-center justify-between pt-2">
+              <span className="flex items-center gap-2 text-body font-semibold leading-[1.35] text-neutral-400 transition-colors group-hover/card:text-neutral-200">
+                {content.readLabel}
+                <ArrowRight className="size-5" aria-hidden />
+              </span>
+              <div className="flex items-center gap-2 text-neutral-400">
+                <Clock className="size-4" aria-hidden />
+                <span className="text-body leading-[1.35]">
+                  {featured.readTime}
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                  <span className="text-body font-semibold leading-[1.35] text-primary-500">
-                    {post.category}
+          </div>
+        </IntentLink>
+
+        {/* Cards menores empilhados */}
+        <div className="flex flex-1 flex-col gap-4 lg:gap-6">
+          {rest.map((article) => (
+            <IntentLink
+              key={article.id}
+              href={articleHref(article.id)}
+              className="group/card relative flex min-h-[140px] flex-1 gap-4 overflow-hidden rounded-xl bg-white p-3 transition-[scale,box-shadow] duration-300 hover:z-10 hover:scale-[1.02] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.18)]"
+            >
+              {/* Thumbnail */}
+              <div className="relative aspect-[4/3] w-28 shrink-0 overflow-hidden rounded-lg sm:w-36 lg:h-full lg:w-auto">
+                <Image
+                  src={article.image}
+                  alt={article.title}
+                  fill
+                  sizes="220px"
+                  className="object-cover transition-transform duration-500 ease-out group-hover/card:scale-105"
+                />
+              </div>
+
+              {/* Texto — topo: categoria + título | rodapé: ler conteúdo + tempo */}
+              <div className="flex min-w-0 flex-1 flex-col justify-between py-1">
+                {/* Topo esquerdo */}
+                <div className="flex flex-col gap-1">
+                  <span className="text-body font-semibold uppercase tracking-wide leading-[1.35] text-primary-500">
+                    {article.category}
                   </span>
-                  <div className="flex flex-col gap-4">
-                    <h3 className="font-heading text-h6 font-semibold text-neutral-800">
-                      {post.title}
-                    </h3>
-                    <p className="text-body leading-[1.35] text-neutral-600">
-                      {post.description}
-                    </p>
+                  <h3 className="line-clamp-2 font-heading text-lg font-semibold leading-[1.3] text-neutral-800">
+                    {article.title}
+                  </h3>
+                </div>
+
+                {/* Rodapé: ler conteúdo (esquerda) · tempo (direita) */}
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center gap-1.5 text-body font-semibold leading-[1.35] text-neutral-500 transition-colors group-hover/card:text-neutral-700">
+                    {content.readLabel}
+                    <ArrowRight className="size-4" aria-hidden />
+                  </span>
+                  <div className="flex items-center gap-1.5 text-neutral-400">
+                    <Clock className="size-4" aria-hidden />
+                    <span className="text-body leading-[1.35]">
+                      {article.readTime}
+                    </span>
                   </div>
                 </div>
-                <div className="h-px w-full bg-neutral-200" />
               </div>
-              <div className="flex items-center gap-2">
-                <button className="flex flex-1 items-center gap-2 text-body font-semibold leading-[1.35] text-neutral-500">
-                  Ler conteúdo
-                  <ArrowRight className="size-6" />
-                </button>
-                <div className="flex items-center gap-2 text-neutral-500">
-                  <Image src={time} alt="" className="size-5" />
-                  <span className="text-body leading-[1.35]">
-                    {post.readTime}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </article>
-        ))}
+            </IntentLink>
+          ))}
+        </div>
       </div>
-
-      <Button variant="primary" size="lg">
-        Ver todos os conteúdos
-      </Button>
     </section>
   );
 }

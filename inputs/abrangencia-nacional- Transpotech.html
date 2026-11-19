@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TranspoTech — Abrangência Nacional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: #0D0D0D; color: #FFFFFF;
+    font-family: Montserrat, system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  a { color: #F47920; }
+  a:hover { color: #FFA45E; }
+
+  .sec {
+    position: relative;
+    padding: clamp(40px, 6vw, 96px) clamp(20px, 5vw, 72px) clamp(44px, 6vw, 88px);
+    background:
+      radial-gradient(1000px 640px at 76% 12%, rgba(242,108,0,.15), rgba(242,108,0,0) 62%),
+      radial-gradient(880px 700px at 6% 94%, rgba(255,255,255,.05), rgba(255,255,255,0) 60%),
+      linear-gradient(160deg, #1A1A1A 0%, #0D0D0D 58%, #101010 100%);
+    overflow: hidden;
+  }
+  .grid {
+    display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: clamp(28px, 4vw, 64px); align-items: start;
+    max-width: 1320px; margin: 0 auto;
+  }
+  .kicker {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+    color: #F47920; margin: 0 0 20px;
+  }
+  .kicker::before { content: ""; width: 28px; height: 2px; background: #F26C00; display: block; }
+  h1 {
+    font-size: clamp(30px, 3.4vw, 50px); font-weight: 800; line-height: 1.06;
+    letter-spacing: -.02em; margin: 0 0 18px; text-wrap: pretty;
+  }
+  .sub {
+    font-size: clamp(15px, 1.15vw, 18px); line-height: 1.6; color: #B5B5B5;
+    margin: 0 0 36px; max-width: 44ch; text-wrap: pretty;
+  }
+  .sub strong { color: #EDEDED; font-weight: 600; }
+
+  .nums {
+    display: grid; grid-template-columns: repeat(2, minmax(0,1fr));
+    border-top: 1px solid rgba(255,255,255,.10);
+  }
+  .n {
+    padding: 24px 22px 24px 0;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+  }
+  .n:nth-child(odd) { border-right: 1px solid rgba(255,255,255,.07); }
+  .n .v {
+    font-size: clamp(30px, 3vw, 44px); font-weight: 900; letter-spacing: -.03em; line-height: 1;
+    color: #F47920; margin-bottom: 10px;
+  }
+  .n .l { font-size: 13px; font-weight: 600; line-height: 1.4; color: #A8A8A8; }
+
+  .legend { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; }
+  .lg { display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 600; color: #9E9E9E; }
+  .sw { flex: 0 0 auto; width: 15px; height: 15px; border-radius: 4px; background: rgba(242,108,0,.42); border: 1px solid rgba(242,108,0,.6); }
+  .sw.pin { width: 11px; height: 11px; border-radius: 50%; background: #F26C00; border: 0; box-shadow: 0 0 0 4px rgba(242,108,0,.22); margin: 0 2px; }
+
+  .mapwrap {
+    position: relative; border: 1px solid rgba(255,255,255,.09); border-radius: 20px;
+    background: radial-gradient(120% 90% at 60% 15%, rgba(242,108,0,.08), rgba(255,255,255,0) 62%), rgba(255,255,255,.022);
+    padding: 12px; min-height: 420px;
+  }
+  .ocean { fill: rgba(0,0,0,0); pointer-events: all; }
+  .back {
+    position: absolute; right: 18px; top: 18px; z-index: 3;
+    background: rgba(13,13,13,.8); border: 1px solid rgba(255,255,255,.18); color: #D2D2D2;
+    font: inherit; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    padding: 12px 16px; border-radius: 10px; cursor: pointer;
+    opacity: 0; pointer-events: none; transform: translateY(-4px);
+    transition: opacity .3s ease, transform .3s ease, border-color .2s ease, color .2s ease;
+    backdrop-filter: blur(6px);
+  }
+  .back.show { opacity: 1; transform: none; pointer-events: auto; }
+  .back:hover { border-color: rgba(242,108,0,.65); color: #FFFFFF; }
+  .uf-shape.dim { opacity: .14; pointer-events: none; }
+  .uf-shape { opacity: 1; transition: fill .25s ease, stroke .25s ease, opacity .45s ease; }
+  .pin { transition: opacity .35s ease; }
+  .pin.off { opacity: 0; pointer-events: none; }
+  .area-lab {
+    fill: #FFFFFF; font-size: 12px; font-weight: 800; letter-spacing: .01em; opacity: 0;
+    paint-order: stroke; stroke: #0D0D0D; stroke-width: 3.5px; stroke-linejoin: round;
+    pointer-events: none; transition: opacity .35s ease;
+  }
+  .area-lab.show { opacity: 1; }
+  .mapwrap svg { display: block; width: 100%; height: auto; }
+  .tip {
+    position: absolute; pointer-events: none; opacity: 0; transform: translate(-50%, -100%);
+    background: #151515; border: 1px solid rgba(242,108,0,.45); border-radius: 10px;
+    padding: 9px 12px; max-width: 230px; font-size: 12px; font-weight: 600; line-height: 1.45;
+    color: #DDDDDD; box-shadow: 0 14px 34px rgba(0,0,0,.6);
+    transition: opacity .2s ease; z-index: 3;
+  }
+  .tip b { display: block; color: #F47920; font-size: 13px; margin-bottom: 3px; letter-spacing: -.01em; }
+  .tip .cities { display: block; color: #FFFFFF; font-weight: 600; margin-top: 4px; }
+
+  .panel {
+    position: absolute; left: 20px; bottom: 20px; width: 232px; z-index: 2;
+    background: rgba(13,13,13,.9); border: 1px solid rgba(242,108,0,.4); border-radius: 14px;
+    padding: 16px 18px; opacity: 0; transform: translateY(8px); pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease;
+    backdrop-filter: blur(6px);
+  }
+  .panel.show { opacity: 1; transform: none; pointer-events: auto; }
+  .panel .pname { font-size: 15px; font-weight: 800; letter-spacing: -.01em; margin-bottom: 4px; }
+  .panel .pmeta { font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #F47920; }
+  .panel ul { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .panel li { font-size: 13px; font-weight: 600; color: #DADADA; display: flex; gap: 9px; align-items: baseline; }
+  .panel li::before { content: ""; flex: 0 0 auto; width: 6px; height: 6px; border-radius: 50%; background: #F26C00; transform: translateY(-2px); }
+  .panel li span { display: block; font-size: 11.5px; font-weight: 500; color: #8F8F8F; margin-top: 2px; }
+  .panel .close {
+    position: absolute; top: 10px; right: 10px; width: 24px; height: 24px; border-radius: 6px;
+    background: none; border: 0; color: #8A8A8A; font: inherit; font-size: 15px; cursor: pointer; line-height: 1;
+  }
+  .panel .close:hover { color: #FFFFFF; }
+
+  .uf-shape { fill: #181818; stroke: #0D0D0D; stroke-width: .7; vector-effect: non-scaling-stroke; transition: fill .25s ease, stroke .25s ease; }
+  .uf-shape.on { fill: rgba(242,108,0,.34); stroke: rgba(242,108,0,.55); cursor: pointer; }
+  .uf-shape.on.unit { fill: rgba(242,108,0,.52); }
+  .uf-shape.on:hover, .uf-shape.on.sel { fill: rgba(244,121,32,.78); stroke: #FFB472; }
+  .pin { pointer-events: none; }
+  .pin .ring { fill: none; stroke: #F47920; stroke-width: 1.4; transform-origin: center; animation: pulse 3s ease-out infinite; }
+  .pin .dot { fill: #F26C00; stroke: #1A0E04; stroke-width: 1; }
+  .pin .hit { fill: transparent; pointer-events: auto; cursor: pointer; }
+  .pin .leader { stroke: rgba(255,255,255,.45); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .pin .cty {
+    fill: #FFFFFF; font-size: 10px; font-weight: 700; letter-spacing: .01em;
+    paint-order: stroke; stroke: #0D0D0D; stroke-width: 3px; stroke-linejoin: round;
+  }
+  .pin.hot .dot { fill: #FFFFFF; }
+  @keyframes pulse { 0% { r: 4.5; opacity: .85; } 100% { r: 17; opacity: 0; } }
+
+  @media (max-width: 980px) {
+    .grid { grid-template-columns: minmax(0,1fr); }
+    .legend { flex-direction: row; flex-wrap: wrap; gap: 10px 24px; order: 3; }
+    .panel { position: static; width: auto; margin-top: 12px; transform: none; }
+  }
+  @media (max-width: 520px) {
+    .nums { grid-template-columns: minmax(0,1fr); }
+    .n:nth-child(odd) { border-right: 0; }
+  }
+</style>
+</head>
+<body>
+<section class="sec">
+  <div class="grid">
+    <div>
+      <p class="kicker">Abrangência nacional</p>
+      <h1>Onde sua operação estiver, a gente chega</h1>
+      <p class="sub">Atuação em 23 estados e mais de 660 cidades — locação, peças e assistência técnica. <strong>11 unidades físicas sustentando a estrutura.</strong></p>
+      <div class="nums" id="nums"></div>
+      <div class="legend">
+        <span class="lg"><span class="sw"></span>Estado com atuação TranspoTech</span>
+        <span class="lg"><span class="sw pin"></span>Unidade física</span>
+      </div>
+    </div>
+    <div>
+      <div class="mapwrap" id="mapwrap">
+        <svg id="map" viewBox="0 0 660 680" role="img" aria-label="Mapa do Brasil com os 23 estados de atuação da TranspoTech e as cidades com unidade física"></svg>
+        <div class="tip" id="tip"></div>
+        <button class="back" id="back" type="button">Ver Brasil todo</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+const NUMS = [
+  { v: "23", l: "estados com atuação" },
+  { v: "+660", l: "cidades atendidas" },
+  { v: "11", l: "unidades físicas" },
+  { v: "+3.700", l: "máquinas locadas" }
+];
+const ACTIVE_UFS = ["SC","PR","RS","SP","GO","MG","PE","DF","MT","BA","MA","RJ","PA","AL","AM","CE","RO","ES","TO"];
+const UNIT_UFS = ["SC","PR","RS","SP","GO"];
+const UNITS = [
+  { cidade:"Blumenau", uf:"SC", lat:-26.92, lng:-49.07, nota:"HUB Administrativo e Centro Técnico" },
+  { cidade:"Blumenau", uf:"SC", lat:-26.895, lng:-49.13, nota:"Unidade de Seminovas" },
+  { cidade:"Joinville", uf:"SC", lat:-26.30, lng:-48.85 },
+  { cidade:"Itajaí", uf:"SC", lat:-26.91, lng:-48.66, nota:"Hub de Rental" },
+  { cidade:"Chapecó", uf:"SC", lat:-27.10, lng:-52.62 },
+  { cidade:"Curitiba", uf:"PR", lat:-25.43, lng:-49.27 },
+  { cidade:"Maringá", uf:"PR", lat:-23.42, lng:-51.94 },
+  { cidade:"Nova Santa Rita", uf:"RS", lat:-29.85, lng:-51.28 },
+  { cidade:"Caxias do Sul", uf:"RS", lat:-29.17, lng:-51.18 },
+  { cidade:"Indaiatuba", uf:"SP", lat:-23.09, lng:-47.22 },
+  { cidade:"Aparecida de Goiânia", uf:"GO", lat:-16.82, lng:-49.24 }
+];
+/* posicionamento automático: cada rótulo testa lados até achar um livre */
+const LABEL_CANDIDATES = [
+  { x: 11, y: 3.5, anchor: "start" },
+  { x: -11, y: 3.5, anchor: "end" },
+  { x: 11, y: -8, anchor: "start" },
+  { x: -11, y: -8, anchor: "end" },
+  { x: 11, y: 15, anchor: "start" },
+  { x: -11, y: 15, anchor: "end" },
+  { x: 0, y: -12, anchor: "middle" },
+  { x: 0, y: 19, anchor: "middle" },
+  { x: 22, y: -14, anchor: "start" },
+  { x: -22, y: -14, anchor: "end" },
+  { x: 22, y: 22, anchor: "start" },
+  { x: -22, y: 22, anchor: "end" },
+  { x: 34, y: -26, anchor: "start" },
+  { x: -34, y: -26, anchor: "end" },
+  { x: 34, y: 30, anchor: "start" },
+  { x: -34, y: 30, anchor: "end" },
+  { x: 0, y: -28, anchor: "middle" },
+  { x: 0, y: 34, anchor: "middle" },
+  { x: 46, y: 6, anchor: "start" },
+  { x: -46, y: 6, anchor: "end" }
+];
+
+document.getElementById("nums").innerHTML = NUMS.map(n =>
+  `<div class="n"><div class="v">${n.v}</div><div class="l">${n.l}</div></div>`).join("");
+
+const svg = d3.select("#map");
+const tip = document.getElementById("tip");
+const panel = document.getElementById("panel");
+const box = () => document.getElementById("mapwrap").getBoundingClientRect();
+const W = 660, H = 680;
+const projection = d3.geoMercator();
+const path = d3.geoPath(projection);
+const ocean = svg.append("rect").attr("class", "ocean").attr("width", W).attr("height", H);
+const gCam = svg.append("g").attr("id", "cam");
+const gUfs = gCam.append("g");
+const gArea = gCam.append("g");
+const gPins = gCam.append("g");
+let selected = null, scale = 1;
+const EASE = "transform .54s cubic-bezier(.45,.05,.25,1)";
+let ufFeatures = [];
+
+const unitsByUf = UNITS.reduce((m, u) => { (m[u.uf] = m[u.uf] || []).push(u); return m; }, {});
+
+d3.json("https://cdn.jsdelivr.net/gh/codeforamerica/click_that_hood@master/public/data/brazil-states.geojson")
+  .then(geo => {
+    projection.fitExtent([[26, 22], [W - 26, H - 22]], geo);
+    ufFeatures = geo.features;
+    gUfs.selectAll("path").data(geo.features).join("path")
+      .attr("d", path)
+      .attr("data-uf", d => d.properties.sigla)
+      .attr("class", d => {
+        const s = d.properties.sigla;
+        return "uf-shape" + (ACTIVE_UFS.includes(s) ? " on" : "") + (UNIT_UFS.includes(s) ? " unit" : "");
+      })
+      .on("mousemove", function (e, d) {
+        const s = d.properties.sigla;
+        if (!ACTIVE_UFS.includes(s)) { tip.style.opacity = 0; return; }
+        const list = unitsByUf[s];
+        tip.innerHTML = `<b>${d.properties.name}</b>Atuação TranspoTech` +
+          (list ? `<span class="cities">${list.map(u => u.cidade).join(" · ")}</span>` : "");
+        const b = box();
+        tip.style.left = (e.clientX - b.left) + "px";
+        tip.style.top = (e.clientY - b.top - 12) + "px";
+        tip.style.opacity = 1;
+      })
+      .on("mouseleave", () => { tip.style.opacity = 0; })
+      .on("click", (e, d) => {
+        const s = d.properties.sigla;
+        if (!ACTIVE_UFS.includes(s)) return;
+        e.stopPropagation();
+        zoomTo(selected === s ? null : s);
+      });
+
+    /* rótulo central para estados de atuação sem unidade */
+    gArea.selectAll("text")
+      .data(ACTIVE_UFS.filter(s => !UNIT_UFS.includes(s))
+        .map(s => geo.features.find(f => f.properties.sigla === s)).filter(Boolean))
+      .join("text")
+      .attr("class", "area-lab")
+      .attr("data-uf", d => d.properties.sigla)
+      .attr("text-anchor", "middle")
+      .text("Atuação TranspoTech");
+
+    gPins.selectAll("g").data(UNITS).join("g")
+      .attr("class", "pin")
+      .attr("transform", d => `translate(${projection([d.lng, d.lat]).join(",")})`)
+      .each(function (d) {
+        const g = d3.select(this);
+        g.append("circle").attr("class", "ring").attr("r", 4.5)
+          .style("animation-delay", (Math.random() * 1.6).toFixed(2) + "s");
+        g.append("circle").attr("class", "dot").attr("r", 4);
+        g.append("line").attr("class", "leader");
+        g.append("text").attr("class", "cty").text(d.cidade);
+        g.append("circle").attr("class", "hit").attr("r", 14)
+          .on("click", e => { e.stopPropagation(); zoomTo(selected === d.uf ? null : d.uf); })
+          .on("mousemove", e => {
+            g.classed("hot", true);
+            tip.innerHTML = `<b>${d.cidade} — ${d.uf}</b>${d.nota || "Unidade TranspoTech"}`;
+            const b = box();
+            tip.style.left = (e.clientX - b.left) + "px";
+            tip.style.top = (e.clientY - b.top - 12) + "px";
+            tip.style.opacity = 1;
+          })
+          .on("mouseleave", () => { g.classed("hot", false); tip.style.opacity = 0; });
+      });
+
+    gCam.style("transition", EASE);
+    gPins.selectAll(".pin").style("transition", EASE);
+    gArea.selectAll("text").style("transition", EASE);
+    render();
+  });
+
+ocean.on("click", () => zoomTo(null));
+document.getElementById("back").addEventListener("click", () => zoomTo(null));
+
+function zoomTo(uf) {
+  selected = uf;
+  tip.style.opacity = 0;
+  render();
+}
+
+function render() {
+  let k = 1, tx = 0, ty = 0;
+  if (selected) {
+    const f = ufFeatures.find(d => d.properties.sigla === selected);
+    const [[x0, y0], [x1, y1]] = path.bounds(f);
+    k = Math.min(60, 0.82 / Math.max((x1 - x0) / W, (y1 - y0) / H));
+    tx = W / 2 - k * (x0 + x1) / 2;
+    ty = H / 2 - k * (y0 + y1) / 2;
+  }
+  scale = k;
+  const s = 1 / k;
+  gCam.style("transform", `translate(${tx}px,${ty}px) scale(${k})`);
+
+  gUfs.selectAll("path")
+    .classed("sel", function () { return this.getAttribute("data-uf") === selected; })
+    .classed("dim", function () { return !!selected && this.getAttribute("data-uf") !== selected; });
+
+  gPins.selectAll(".pin")
+    .classed("off", d => !!selected && d.uf !== selected)
+    .style("transform", d => {
+      const p = projection([d.lng, d.lat]);
+      return `translate(${p[0]}px,${p[1]}px) scale(${s})`;
+    })
+    .select("text.cty")
+    .text(d => (selected === d.uf && d.nota) ? `${d.cidade} — ${d.nota}` : d.cidade);
+
+  gArea.selectAll("text")
+    .classed("show", d => d.properties.sigla === selected)
+    .style("transform", d => {
+      const c = path.centroid(d);
+      return `translate(${c[0]}px,${c[1]}px) scale(${s})`;
+    });
+
+  document.getElementById("back").classList.toggle("show", !!selected);
+  placeLabels(k, tx, ty);
+}
+
+/* mede as caixas reais e resolve colisões contra rótulos e pinos já colocados */
+function placeLabels(k, camX, camY) {
+  k = k || 1; camX = camX || 0; camY = camY || 0;
+  const pins = gPins.selectAll(".pin").nodes()
+    .map(n => ({ node: n, text: n.querySelector("text"), d: d3.select(n).datum() }))
+    .filter(p => !selected || p.d.uf === selected)
+    .sort((a, b) => a.text.textContent.length - b.text.textContent.length);
+
+  /* na visão Brasil, uma cidade com dois endereços mostra um único rótulo */
+  const seen = new Set();
+  pins.forEach(p => {
+    const dup = !selected && seen.has(p.d.cidade);
+    seen.add(p.d.cidade);
+    p.dup = dup;
+    p.text.style.display = dup ? "none" : "";
+    p.node.querySelector(".leader").style.display = dup ? "none" : "";
+  });
+
+  const dots = pins.map(p => {
+    const [x, y] = projection([p.d.lng, p.d.lat]).map(v => v * k);
+    return { x0: x - 6, x1: x + 6, y0: y - 6, y1: y + 6 };
+  });
+  const placed = [];
+  const hits = (a, b) => a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1;
+
+  pins.forEach((p, i) => {
+    if (p.dup) return;
+    const [px, py] = projection([p.d.lng, p.d.lat]).map(v => v * k);
+    let best = null, bestScore = Infinity;
+    for (const c of LABEL_CANDIDATES) {
+      p.text.setAttribute("x", c.x);
+      p.text.setAttribute("y", c.y);
+      p.text.setAttribute("text-anchor", c.anchor);
+      const bb = p.text.getBBox();
+      const r = { x0: px + bb.x - 1, x1: px + bb.x + bb.width + 1, y0: py + bb.y - 1, y1: py + bb.y + bb.height + 1 };
+      let score = 0;
+      placed.forEach(q => { if (hits(r, q)) score += 10; });
+      dots.forEach((q, j) => { if (j !== i && hits(r, q)) score += 6; });
+      /* penaliza sair da área visível em qualquer nível de zoom (espaço de tela) */
+      if (r.x0 + camX < 4 || r.x1 + camX > W - 4 || r.y0 + camY < 4 || r.y1 + camY > H - 4) score += 20;
+      /* pertencimento: nenhum pino alheio pode estar mais perto do rótulo que o próprio */
+      const own = rectDist(r, px, py);
+      dots.forEach((q, j) => {
+        if (j === i) return;
+        const cx = (q.x0 + q.x1) / 2, cy = (q.y0 + q.y1) / 2;
+        if (rectDist(r, cx, cy) < own + 6) score += 8;
+      });
+      score += own * 0.06;
+      if (score < bestScore) { bestScore = score; best = c; }
+    }
+    p.text.setAttribute("x", best.x);
+    p.text.setAttribute("y", best.y);
+    p.text.setAttribute("text-anchor", best.anchor);
+    const bb = p.text.getBBox();
+    placed.push({ x0: px + bb.x - 1, x1: px + bb.x + bb.width + 1, y0: py + bb.y - 1, y1: py + bb.y + bb.height + 1 });
+    /* linha-guia: resolve a ambiguidade geometricamente quando o rótulo fica afastado */
+    const tx = best.anchor === "end" ? bb.x + bb.width : best.anchor === "start" ? bb.x : bb.x + bb.width / 2;
+    const ty = bb.y + bb.height / 2;
+    const far = true;
+    const leader = p.node.querySelector(".leader");
+    if (far) {
+      const a = Math.atan2(ty, tx);
+      leader.setAttribute("x1", (Math.cos(a) * 6).toFixed(1));
+      leader.setAttribute("y1", (Math.sin(a) * 6).toFixed(1));
+      leader.setAttribute("x2", tx.toFixed(1));
+      leader.setAttribute("y2", ty.toFixed(1));
+      leader.style.display = "";
+    } else {
+      leader.style.display = "none";
+    }
+  });
+}
+
+function rectDist(r, x, y) {
+  const dx = Math.max(r.x0 - x, 0, x - r.x1);
+  const dy = Math.max(r.y0 - y, 0, y - r.y1);
+  return Math.hypot(dx, dy);
+}
+</script>
+</body>
+</html>

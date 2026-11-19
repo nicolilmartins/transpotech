@@ -1,56 +1,84 @@
 import Image from "next/image";
-import Link from "next/link";
-import { Facebook, Instagram, Linkedin, Spotify, Youtube } from "@/components/ui/icons";
+import { IntentLink } from "@/components/ui/intent-link";
+import { Facebook, Instagram, Linkedin, Youtube } from "@/components/ui/icons";
+import { ROUTES } from "@/lib/routes";
+import type { Unit } from "@/data/units";
+import type { SiteSettings, SocialNetwork } from "@/sanity/queries/site-settings";
+import { FooterGlow } from "./footer-glow";
+import { DriftMesh } from "@/components/layout/drift-mesh";
 import logoLight from "@/assets/images/logo-transpotech-light.svg";
-import gptw from "@/assets/images/gptw-badge.png";
+import gptw from "@/assets/images/gptw-badge.webp";
 import atomsix from "@/assets/images/atomsix-symbol.svg";
 
 const logoWatermark = logoLight;
 
-const linkGroups = [
+// Selo GPTW: altura fixa (90px / lg:115px) e largura proporcional. Sem
+// `sizes`, o srcset em 1x/2x da largura intrínseca baixava a versão de 1080px.
+const gptwSizes = `(min-width: 1024px) ${Math.ceil((115 * gptw.width) / gptw.height)}px, ${Math.ceil((90 * gptw.width) / gptw.height)}px`;
+
+const getLinkGroups = (careersUrl: string) => [
   {
     title: "Produtos",
     links: [
-      "Locação de empilhadeiras",
-      "Empilhadeiras novas",
-      "Empilhadeiras usadas",
-      "Pneus",
-      "Baterias e carregadores",
-      "Peças",
+      { label: "Locação de empilhadeiras", href: ROUTES.LOCACAO },
+      { label: "Empilhadeiras novas", href: ROUTES.EMPILHADEIRAS_NOVAS },
+      { label: "Empilhadeiras seminovas", href: ROUTES.EMPILHADEIRAS_SEMINOVAS },
+      { label: "Pneus", href: ROUTES.PNEUS },
+      { label: "Baterias e carregadores", href: ROUTES.BATERIAS },
+      { label: "Peças", href: ROUTES.PECAS },
+      { label: "Acessórios", href: ROUTES.ACESSORIOS },
     ],
   },
   {
     title: "Serviços",
-    links: ["Automação intralogística", "Assistência técnica multimarcas"],
+    links: [
+      { label: "Automação intralogística", href: ROUTES.AUTOMACAO },
+      { label: "Assistência técnica multimarcas", href: ROUTES.SERVICOS_MULTIMARCAS },
+    ],
   },
   {
     title: "Empresa",
-    links: ["Quem somos", "Portal de conteúdo", "Trabalhe conosco", "Contato"],
+    links: [
+      { label: "Quem somos", href: ROUTES.QUEM_SOMOS },
+      { label: "Portal de conteúdo", href: ROUTES.PORTAL_CONTEUDO },
+      { label: "Trabalhe conosco", href: careersUrl },
+      { label: "Contato", href: ROUTES.CONTATO },
+    ],
   },
   {
     title: "ESG",
-    links: ["Sustentabilidade", "Canal de transparência", "Ouvidoria digital"],
+    links: [
+      { label: "Sustentabilidade", href: ROUTES.SUSTENTABILIDADE },
+      { label: "Canal de transparência", href: ROUTES.CANAL_TRANSPARENCIA },
+      { label: "Ouvidoria digital", href: ROUTES.OUVIDORIA },
+    ],
   },
 ];
 
-const units = [
-  { city: "Blumenau - SC", note: " (Hub Técnico e Seminovas)", phone: "(47) 3331-4900" },
-  { city: "Chapecó - SC", phone: "(49) 3981-9975" },
-  { city: "Itajaí - SC", phone: "(47) 3331-4901" },
-  { city: "Joinville - SC", phone: "(47) 3419-0033" },
-  { city: "Curitiba - PR", phone: "(41) 3377-3303" },
-  { city: "Caxias do Sul - RS", phone: "(54) 3771-4129" },
-  { city: "Nova Santa Rita - RS", phone: "(51) 3479-6740" },
-  { city: "Indaiatuba - SP", phone: "(19) 3825-3370" },
-  { city: "Aparecida de Goiânia - PR", phone: "(62) 3413-8334" },
-  { city: "Maringá - PR", phone: "(44) 3200-0414" },
+// Rede sem URL em siteSettings mantém o ícone com href "#" (as URLs reais
+// ainda não foram fornecidas).
+const socials: { key: SocialNetwork; name: string; Icon: typeof Facebook }[] = [
+  { key: "facebook", name: "Facebook", Icon: Facebook },
+  { key: "instagram", name: "Instagram", Icon: Instagram },
+  { key: "linkedin", name: "LinkedIn", Icon: Linkedin },
+  { key: "youtube", name: "YouTube", Icon: Youtube },
 ];
 
-const socials = [Facebook, Instagram, Linkedin, Spotify, Youtube];
+type FooterProps = {
+  units: Unit[];
+  careersUrl: SiteSettings["careersUrl"];
+  social: SiteSettings["social"];
+};
 
-export function Footer() {
+export function Footer({ units, careersUrl, social }: FooterProps) {
+  const linkGroups = getLinkGroups(careersUrl);
   return (
-    <footer className="relative overflow-hidden rounded-t-2xl bg-neutral-800 px-[70px] pb-8 pt-20 text-body">
+    <footer
+      id="rodape"
+      data-header-dark
+      data-reveal-skip
+      className="relative -mt-6 overflow-hidden rounded-t-2xl bg-neutral-800 text-body"
+    >
       {/* Watermark */}
       <Image
         src={logoWatermark}
@@ -59,86 +87,140 @@ export function Footer() {
         className="pointer-events-none absolute -bottom-10 left-1/2 w-[1200px] max-w-none -translate-x-1/2 opacity-[0.03] blur-2xl"
       />
 
-      <div className="relative flex flex-col gap-16">
+      {/* Blur radial laranja no rodapé — acompanha o cursor na horizontal */}
+      <FooterGlow />
+
+      <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-5 pb-10 pt-14 sm:px-6 lg:px-16 lg:pb-16 lg:pt-20">
         {/* Topo: logo + social + links + selo */}
-        <div className="flex justify-between gap-8">
+        <div className="flex flex-col gap-8 lg:flex-row lg:justify-between">
           <div className="flex flex-col gap-9">
             <Image src={logoLight} alt="TranspoTech" className="h-8 w-[174px]" />
             <div className="flex items-center gap-5">
-              {socials.map((Social, i) => (
-                <Link
-                  key={i}
-                  href="#"
+              {socials.map(({ key, name, Icon }) => (
+                <IntentLink
+                  key={name}
+                  href={social[key] ?? "#"}
+                  target={social[key] ? "_blank" : undefined}
+                  rel={social[key] ? "noopener noreferrer" : undefined}
+                  aria-label={`TranspoTech no ${name}`}
                   className="text-neutral-300 transition-colors hover:text-neutral-50"
                 >
-                  <Social className="size-5" />
-                </Link>
+                  <Icon className="size-5" aria-hidden />
+                </IntentLink>
               ))}
             </div>
           </div>
 
-          <div className="flex gap-16">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:flex lg:gap-16">
             {linkGroups.map((group) => (
-              <div key={group.title} className="flex w-[184px] flex-col gap-2">
-                <p className="font-semibold leading-[1.35] text-neutral-200">
+              <div
+                key={group.title}
+                className="flex w-full flex-col gap-2 lg:w-fit lg:max-w-[184px] lg:shrink-0"
+              >
+                <p className="font-semibold leading-[1.35] text-neutral-100">
                   {group.title}
                 </p>
-                {group.links.map((link) => (
-                  <Link
-                    key={link}
-                    href="#"
-                    className="leading-[1.35] text-neutral-300 transition-colors hover:text-neutral-50"
-                  >
-                    {link}
-                  </Link>
-                ))}
+                {group.links.map((link) => {
+                  const external = link.href.startsWith("http");
+                  return (
+                    <IntentLink
+                      key={link.label}
+                      href={link.href}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noopener noreferrer" : undefined}
+                      className="leading-[1.35] text-neutral-300 transition-colors hover:text-neutral-50"
+                    >
+                      {link.label}
+                    </IntentLink>
+                  );
+                })}
               </div>
             ))}
           </div>
 
           <Image
             src={gptw}
-            alt="Great Place To Work Certificada"
-            className="h-[115px] w-auto shrink-0"
+            alt="Great Place To Work Certificada — 4 anos consecutivos"
+            sizes={gptwSizes}
+            className="h-[90px] w-auto shrink-0 self-start lg:h-[115px] lg:self-auto"
           />
         </div>
 
         {/* Divisor */}
         <div className="h-px w-full bg-white/10" />
 
-        {/* Unidades */}
-        <div className="flex flex-col gap-8">
-          <h3 className="font-heading text-h6 font-semibold text-neutral-200">
-            Nossas unidades
-          </h3>
-          <div className="grid grid-cols-5 gap-x-[100px] gap-y-5">
-            {units.map((unit) => (
-              <div key={unit.city} className="flex flex-col gap-[5px] text-body-sm">
-                <p className="leading-[1.35] text-neutral-300">
-                  <span className="font-semibold">{unit.city}</span>
-                  {unit.note && <span className="font-normal">{unit.note}</span>}
-                </p>
-                <p className="font-normal leading-[1.35] text-neutral-100">
-                  {unit.phone}
-                </p>
-              </div>
-            ))}
+        {/* Unidades + base — malha que anda sozinha (DriftMesh, como nas
+            heros) bem suave nesta região; isolate mantém a malha acima do bg
+            do footer e atrás do texto. A máscara elíptica esvanece as bordas
+            para a malha não terminar num corte reto. */}
+        <div className="relative isolate flex flex-col gap-8">
+          <DriftMesh
+            speed={1.6}
+            className="pointer-events-none absolute inset-0 -z-10 opacity-60 [mask-image:radial-gradient(ellipse_85%_90%_at_50%_50%,#000_45%,transparent_95%)]"
+          />
+
+          {/* Unidades */}
+          <div className="flex flex-col gap-8">
+            <h3 className="font-heading text-h6 font-semibold text-neutral-100">
+              Nossas unidades
+            </h3>
+            {/* units vem na ordem por estado (SC > PR > RS > SP > GO). A grade
+                preenche por coluna (grid-flow-col, 2 linhas), então cada coluna
+                agrupa unidades vizinhas — as duas de Blumenau ficam juntas na
+                primeira coluna. */}
+            <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:gap-x-8 lg:grid-flow-col lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-x-12 lg:gap-y-6">
+              {units.map((unit) => {
+                const note = unit.footerNote ?? unit.note;
+                return (
+                  <div
+                    key={`${unit.city}${unit.note ?? ""}`}
+                    className="flex flex-col gap-[5px] text-body"
+                  >
+                    <p className="leading-[1.35] text-neutral-300">
+                      <span className="font-semibold">{unit.city}</span>
+                      {note && <span className="font-normal">{` (${note})`}</span>}
+                    </p>
+                    <p className="font-normal leading-[1.35] text-neutral-100">
+                      {unit.phone}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* Divisor */}
-        <div className="h-px w-full bg-white/10" />
+          {/* Divisor */}
+          <div className="h-px w-full bg-white/10" />
 
-        {/* Base */}
-        <div className="flex items-center justify-between">
-          <p className="text-body-sm leading-[1.35] text-neutral-100">
-            © 2026 Transpotech todos os direitos reservados.
-          </p>
-          <div className="flex items-center gap-2.5 text-neutral-300">
-            <span className="text-[8px] font-medium uppercase tracking-[0.1em]">
-              Criado por
-            </span>
-            <Image src={atomsix} alt="Atomsix" className="size-6" />
+          {/* Base */}
+          {/* Mobile: copyright, política e crédito empilhados; de md em
+              diante, política na mesma linha do copyright (à direita) e o
+              crédito logo abaixo dela. */}
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <p className="text-body leading-[1.35] text-neutral-100">
+                © 2026 TranspoTech todos os direitos reservados.
+              </p>
+              <IntentLink
+                href={ROUTES.POLITICA_PRIVACIDADE}
+                className="w-fit text-body leading-[1.35] text-neutral-300 transition-colors hover:text-neutral-50"
+              >
+                Política de Privacidade
+              </IntentLink>
+            </div>
+            <IntentLink
+              href="https://www.atom6studio.com/pt-br"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-fit items-center gap-2.5 text-neutral-300 transition-colors hover:text-neutral-50 md:self-end"
+            >
+              {/* Única exceção ao piso de 16px do site: microcrédito de
+                  assinatura, dimensionado para não competir com o logo. */}
+              <span className="text-[8px] font-medium uppercase tracking-[0.1em]">
+                Criado por
+              </span>
+              <Image src={atomsix} alt="Atom6 Studio" className="size-6" />
+            </IntentLink>
           </div>
         </div>
       </div>

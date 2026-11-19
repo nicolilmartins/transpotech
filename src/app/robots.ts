@@ -1,7 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://transpotech.com.br";
+import { env } from "@/lib/env";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -10,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/"],
     },
-    sitemap: `${BASE_URL}/sitemap.xml`,
+    sitemap: `${env.siteUrl}/sitemap.xml`,
   };
 }

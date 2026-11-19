@@ -1,5 +1,5 @@
 import type { AxiosError } from "axios";
-import { toast } from "react-toastify";
+import { showToast } from "@/components/ui/toast";
 
 type ApiErrorResponse = {
   message?: string;
@@ -14,17 +14,26 @@ export function handleApiError(error: AxiosError<ApiErrorResponse>) {
   const message =
     data?.message ??
     data?.error ??
-    "Não foi possível concluir a operação. Tente novamente.";
+    "Tente novamente em alguns instantes, por favor.";
 
   if (status === 404) {
-    toast.error("Recurso não encontrado.");
+    showToast.error({
+      title: "Não encontramos o que você procura",
+      description: "Verifique as informações e tente novamente.",
+    });
     return;
   }
 
   if (status !== undefined && status >= 500) {
-    toast.error("Erro interno no servidor. Tente novamente mais tarde.");
+    showToast.error({
+      title: "Tivemos um imprevisto por aqui",
+      description: "Tente novamente em alguns instantes, por favor.",
+    });
     return;
   }
 
-  toast.error(message);
+  showToast.error({
+    title: "Algo não saiu como esperado",
+    description: message,
+  });
 }

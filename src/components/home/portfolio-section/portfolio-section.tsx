@@ -1,90 +1,274 @@
-import Image from "next/image";
-import novas from "@/assets/images/portfolio-novas.png";
-import sparkling from "@/assets/icons/sparkling.svg";
-import coins from "@/assets/icons/coins.svg";
-import calendar from "@/assets/icons/calendar.svg";
+"use client";
 
-export function PortfolioSection() {
+import { useEffect, useRef, useState } from "react";
+import Image, { type StaticImageData } from "next/image";
+import { TextLink } from "@/components/ui/text-link";
+import { ParallaxFrame } from "@/components/layout/parallax-frame";
+import { ROUTES } from "@/lib/routes";
+import iconNovas from "@/assets/images/stats/portfolio-icon-novas.webp";
+import iconSeminovas from "@/assets/images/stats/portfolio-icon-seminovas.webp";
+import iconLocacao from "@/assets/images/stats/portfolio-icon-locacao.webp";
+import { cssEase, tweenStyle } from "@/lib/motion";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { homePage } from "@/sanity/content/pages/home";
+
+// Ícone 3D (imagem) posicionado exatamente como no Figma (node 3593:3337):
+// caixa transbordando o canto superior esquerdo do card, com máscara radial
+// (mesma do SVG do Figma) desvanecendo as bordas para fundir no card.
+type IconArt = {
+  src: StaticImageData;
+  width: number;
+  height: number;
+  left: number;
+  top: number;
+  maskX: number;
+  maskY: number;
+  /** Espelhamento horizontal (flip do export do Figma). Default: true. */
+  flip?: boolean;
+  /** Escala extra da arte (mantém o centro; útil pra equilibrar tamanhos). */
+  scale?: number;
+};
+
+// Ícone e destino de cada card, na ordem dos cards editados no Studio.
+type PortfolioCardArt = {
+  iconArt: IconArt;
+  href: string;
+};
+
+const MASK_IMAGE =
+  "radial-gradient(74.7585px 66.9338px at 74.7585px 66.9338px, #000 0%, transparent 100%)";
+const MASK_SIZE = "149.517px 133.868px";
+
+const cardArts: PortfolioCardArt[] = [
+  {
+    iconArt: {
+      src: iconNovas,
+      width: 204.438,
+      height: 153.328,
+      left: -42,
+      top: -12,
+      maskX: 26.78,
+      maskY: 4.819,
+      flip: true,
+      scale: 0.85,
+    },
+    href: ROUTES.EMPILHADEIRAS_NOVAS,
+  },
+  {
+    iconArt: {
+      src: iconSeminovas,
+      width: 204.438,
+      height: 153.328,
+      left: -47,
+      top: -14,
+      maskX: 27.655,
+      maskY: 7.819,
+      flip: false,
+    },
+    href: ROUTES.EMPILHADEIRAS_SEMINOVAS,
+  },
+  {
+    iconArt: {
+      src: iconLocacao,
+      width: 204.438,
+      height: 153.328,
+      left: -40,
+      top: -19,
+      maskX: 26.78,
+      maskY: 12.819,
+      flip: true,
+    },
+    href: ROUTES.CONTATO,
+  },
+];
+
+function CardIcon({ art }: { art: IconArt }) {
+  const mask = {
+    maskImage: MASK_IMAGE,
+    WebkitMaskImage: MASK_IMAGE,
+    maskSize: MASK_SIZE,
+    WebkitMaskSize: MASK_SIZE,
+    maskPosition: `${art.maskX}px ${art.maskY}px`,
+    WebkitMaskPosition: `${art.maskX}px ${art.maskY}px`,
+    maskRepeat: "no-repeat",
+    WebkitMaskRepeat: "no-repeat",
+    // Chrome trata o gradiente como luminance por padrão (esconde o preto);
+    // alpha faz o centro opaco aparecer e as bordas desvanecerem.
+    maskMode: "alpha",
+  } as const;
+
   return (
-    <section className="flex flex-col items-start gap-[67px] px-16 py-20">
+    <div
+      aria-hidden
+      className="pointer-events-none absolute select-none overflow-hidden [--icon-scale:0.7] xl:[--icon-scale:1]"
+      style={{
+        left: art.left,
+        top: art.top,
+        width: art.width,
+        height: art.height,
+        // scaleX(-1) = flip do Figma (opcional); scale(var) reduz no mobile.
+        transform: `${art.flip === false ? "" : "scaleX(-1) "}scale(var(--icon-scale, 1))${
+          art.scale ? ` scale(${art.scale})` : ""
+        }`,
+        ...mask,
+      }}
+    >
+      <Image src={art.src} alt="" fill sizes="180px" className="object-cover" />
+    </div>
+  );
+}
+
+type PortfolioContent = SectionContent<typeof homePage.sections.portfolio>;
+
+export function PortfolioSection({ content }: { content: PortfolioContent }) {
+  const cards = content.cards.map((card, i) => ({ ...card, ...cardArts[i] }));
+  const [active, setActive] = useState(0);
+  const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Inicializa: card ativo com imagem aberta (gap fixo de 40px), demais fechadas.
+  // A LARGURA da imagem é controlada por flex (preenche o espaço restante do
+  // card, adaptando-se ao tamanho da tela); aqui só animamos o gap e a opacidade.
+  useEffect(() => {
+    imageRefs.current.forEach((el, i) => {
+      if (!el) return;
+      el.style.marginLeft = i === active ? "40px" : "0px";
+      el.style.opacity = i === active ? "1" : "0";
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Anima ao mudar o card ativo. Na montagem o efeito acima já aplicou esse
+  // estado.
+  const isFirstRun = useRef(true);
+  useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
+    imageRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const isActive = i === active;
+      tweenStyle(
+        el,
+        { marginLeft: isActive ? "40px" : "0px", opacity: isActive ? "1" : "0" },
+        { duration: 0.3, easing: cssEase.power1Out }
+      );
+    });
+  }, [active]);
+
+  return (
+    <section
+      data-header-dark
+      className="mx-auto flex w-full max-w-[1440px] flex-col items-start gap-10 px-5 py-12 sm:px-6 lg:gap-[67px] lg:px-16 lg:py-20"
+    >
       {/* Cabeçalho */}
       <div className="flex w-[641px] max-w-full flex-col gap-6">
-        <div className="flex w-[535px] max-w-full flex-col gap-4">
-          <p className="text-body font-semibold leading-[1.35] text-secondary-600">
-            PORTFÓLIO
+        <div className="flex flex-col gap-4">
+          <p className="text-body font-semibold leading-[1.35] text-primary-400">
+            {content.eyebrow}
           </p>
-          <h2 className="text-h2 font-normal text-neutral-800">
-            Equipamentos novos, usados e locação de frota
+          {/* Duas linhas fixas: "Equipamentos novos," / "seminovos e locação
+              de frota" (nowrap só no desktop; no mobile flui natural) */}
+          <h2 className="text-h2 font-normal text-neutral-100">
+            <span className="lg:block">{content.titleRegular}</span>{" "}
+            <span className="lg:block font-bold text-primary-500 lg:whitespace-nowrap">
+              {content.titleAccent}
+            </span>
           </h2>
         </div>
-        <p className="text-body leading-6 text-neutral-600">
-          Da aquisição e locação so suporte técnico e automação, a TranspoTech
-          conecta as principais necessidades da movimentação e intralogística em
-          uma estrutura integrada.
+        <p className="text-body leading-6 text-neutral-300">
+          {content.description}
         </p>
       </div>
 
-      {/* Cards */}
-      <div className="flex w-full items-center gap-4">
-        {/* Card destaque com imagem */}
-        <div className="flex h-[373px] flex-1 items-center gap-[25px] rounded-xl bg-neutral-50 p-6">
-          <div className="flex h-full min-w-0 flex-1 flex-col justify-between">
-            <Image src={sparkling} alt="" className="size-8" />
-            <div className="flex flex-col gap-4">
-              <h3 className="font-heading text-[28px] font-semibold leading-[1.3] text-neutral-800">
-                Empilhadeiras novas
-              </h3>
-              <p className="text-body leading-[1.35] text-neutral-600">
-                Equipamentos de marcas reconhecidas para operações que exigem
-                desempenho, segurança e confiabilidade no longo prazo.
-              </p>
+      {/* Cards — apenas um aberto por vez. Layout horizontal a partir de xl
+          (≥1280px), onde cabe o texto fixo + imagem sem sobrepor; abaixo disso
+          os cards empilham. */}
+      <div className="flex w-full flex-col gap-4 xl:flex-row xl:items-stretch">
+        {cards.map((card, index) => {
+          const open = index === active;
+          return (
+            <div
+              key={index}
+              onMouseEnter={() => setActive(index)}
+              onFocusCapture={() => setActive(index)}
+              className={`relative flex items-start overflow-hidden rounded-xl bg-surface-dark p-6 transition-[flex-grow] duration-300 ease-out xl:h-[400px] xl:items-center ${
+                open ? "xl:flex-[1_1_315px]" : "xl:flex-[0_0_315px]"
+              }`}
+            >
+              {/* Ícone 3D do Figma — transborda o canto superior esquerdo */}
+              <CardIcon art={card.iconArt} />
+
+              {/* Coluna de texto com largura fixa (267px) no desktop: abre igual
+                  a fechada, e a imagem entra sempre a 40px dela. overflow-hidden
+                  como trava para o texto nunca invadir a imagem. */}
+              <div className="relative flex flex-1 flex-col gap-5 overflow-hidden xl:h-full xl:w-[267px] xl:flex-none xl:justify-between xl:gap-0">
+                {/* Espaçador — reserva o espaço do ícone (absoluto que
+                    transborda). Alto no mobile p/ o título não sobrepor o
+                    ícone; no desktop empurra o texto um pouco mais para baixo. */}
+                <div aria-hidden className="h-24 shrink-0 xl:h-14" />
+                <div className="flex flex-col gap-4">
+                  <h3 className="min-h-[2.6em] font-heading text-[20px] font-semibold leading-[1.3] text-neutral-100 lg:text-[24px]">
+                    {card.title.split("\n").map((line) => (
+                      <span key={line} className="block">
+                        {line}
+                      </span>
+                    ))}
+                  </h3>
+                  {/* Altura mínima da maior descrição (4 linhas) no desktop,
+                      para os blocos ficarem iguais e os títulos alinhados. */}
+                  <p className="text-body leading-[1.35] text-neutral-300 xl:min-h-[5.4em]">
+                    {card.description}
+                  </p>
+                </div>
+                {/* pb-1.5 evita que o overflow-hidden da coluna corte a
+                    linhazinha do hover (que fica logo abaixo do texto). */}
+                <TextLink
+                  href={card.href}
+                  className="whitespace-nowrap pb-1.5 text-left"
+                >
+                  {card.cta}
+                </TextLink>
+              </div>
+
+              {/* Imagem — apenas no desktop largo. flex-1 preenche o espaço
+                  restante do card (fica maior em telas grandes, menor nas
+                  menores); o gap de 40px é o marginLeft animado. */}
+              <ParallaxFrame
+                ref={(node) => { imageRefs.current[index] = node; }}
+                aria-hidden={!open}
+                noParallax={index === 2}
+                className="hidden h-[325px] min-w-0 rounded-lg xl:block xl:flex-1"
+                style={{ opacity: 0 }}
+              >
+                {index === 2 ? (
+                  // Card 3 (Locação): imagem retrato. Caixa de largura FIXA
+                  // (≈ largura final do frame) para o object-cover não reescalar
+                  // enquanto o card abre — a moldura só "revela" a imagem
+                  // (sem zoom), preenchendo e mantendo os cantos arredondados.
+                  <div className="absolute inset-y-0 left-1/2 w-[300px] max-w-none -translate-x-1/2">
+                    <Image
+                      src={card.image}
+                      alt={card.title}
+                      fill
+                      sizes="300px"
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  // Demais cards: preenche a largura do card, com parallax.
+                  <Image
+                    src={card.image}
+                    alt={card.title}
+                    fill
+                    sizes="(min-width: 1280px) 40vw, 100vw"
+                    className="rounded-lg object-cover"
+                  />
+                )}
+              </ParallaxFrame>
             </div>
-            <button className="text-left text-body font-semibold leading-[1.35] text-primary-500">
-              Ver empilhadeiras novas
-            </button>
-          </div>
-          <div className="h-[325px] w-[310px] shrink-0 overflow-hidden rounded-lg">
-            <Image
-              src={novas}
-              alt="Empilhadeira nova"
-              className="h-full w-full object-cover"
-            />
-          </div>
-        </div>
-
-        {/* Card usadas */}
-        <div className="flex h-[373px] w-[315px] shrink-0 flex-col justify-between rounded-xl bg-neutral-50 p-6">
-          <Image src={coins} alt="" className="size-8" />
-          <div className="flex w-[267px] max-w-full flex-col gap-4">
-            <h3 className="w-[224px] max-w-full font-heading text-[28px] font-semibold leading-[1.3] text-neutral-800">
-              Empilhadeiras Usadas
-            </h3>
-            <p className="text-body leading-[1.35] text-neutral-600">
-              Alternativo para quem busca disponibilidade rápida, revisão técnica
-              e melhor adequação ao orçamento.
-            </p>
-          </div>
-          <button className="text-left text-body font-semibold leading-[1.35] text-primary-500">
-            Ver empilhadeiras usadas
-          </button>
-        </div>
-
-        {/* Card locação */}
-        <div className="flex h-[373px] w-[315px] shrink-0 flex-col justify-between rounded-xl bg-neutral-50 p-6">
-          <Image src={calendar} alt="" className="size-8" />
-          <div className="flex w-[267px] max-w-full flex-col gap-4">
-            <h3 className="w-[224px] max-w-full font-heading text-[28px] font-semibold leading-[1.3] text-neutral-800">
-              Locação de equipamentos
-            </h3>
-            <p className="text-body leading-[1.35] text-neutral-600">
-              Solução para operações que precisam de flexibilidade,
-              previsibilidade de custo e resposta rápida à demanda.
-            </p>
-          </div>
-          <button className="text-left text-body font-semibold leading-[1.35] text-primary-500">
-            Solicitar proposta
-          </button>
-        </div>
+          );
+        })}
       </div>
     </section>
   );

@@ -215,6 +215,35 @@ Fazer:
 
 ---
 
+## Ícones
+
+A biblioteca de ícones obrigatória é **lucide-react** (`lucide-react@latest`).
+
+Regras:
+- Sempre importar ícones direto de `lucide-react` — nunca criar SVGs manuais para ícones que já existem na lib.
+- Nunca usar arquivos `.svg` em `src/assets/icons/` para ícones de UI — usar Lucide.
+- Usar a prop `aria-hidden` em ícones decorativos.
+- Usar `aria-label` ou texto visível em ícones clicáveis (sem `aria-hidden`).
+- Dimensionar com classes Tailwind: `size-4`, `size-5`, `size-6`, etc.
+
+Exceção — `src/components/ui/icons.tsx`:
+- Contém apenas **ícones de redes sociais** (Facebook, Instagram, LinkedIn, YouTube, Spotify) que o Lucide não inclui por serem brand icons.
+- Para qualquer outro ícone, sempre usar `lucide-react`.
+
+Não fazer:
+```tsx
+import shield from "@/assets/icons/shield.svg";
+<Image src={shield} alt="" className="size-6" />
+```
+
+Fazer:
+```tsx
+import { ShieldCheck } from "lucide-react";
+<ShieldCheck className="size-6" aria-hidden />
+```
+
+---
+
 ## Tailwind CSS
 
 Tailwind CSS 4+ é obrigatório.
@@ -226,6 +255,73 @@ Regras:
 - Usar tokens e variáveis CSS
 - Criar padrões reutilizáveis para botões, inputs, cards, containers e seções
 - Manter responsividade desde o início (mobile-first)
+
+---
+
+## Responsividade
+
+Toda implementação deve ser **mobile-first**. Proibido criar layouts desktop-only sem breakpoints.
+
+### Breakpoints (padrão Tailwind CSS 4)
+
+| Prefixo | Largura mínima | Uso |
+|---|---|---|
+| (base) | 0px | Mobile portrait |
+| `sm:` | 640px | Mobile landscape |
+| `md:` | 768px | Tablet |
+| `lg:` | 1024px | Desktop |
+| `xl:` | 1280px | Desktop largo |
+
+### Padrões obrigatórios
+
+**Container padding:**
+```tsx
+// Não fazer:
+<section className="px-16">
+// Fazer:
+<section className="px-4 sm:px-8 lg:px-16">
+```
+
+**Layout de seção com duas colunas:**
+```tsx
+// Não fazer:
+<div className="flex items-center gap-16">
+// Fazer:
+<div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-16">
+```
+
+**Grid de cards:**
+```tsx
+// Não fazer:
+<div className="flex gap-4"> {/* cards em linha sem stacking */}
+// Fazer:
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+```
+
+**Larguras fixas:**
+```tsx
+// Não fazer:
+<div className="w-[600px]">
+// Fazer:
+<div className="w-full lg:max-w-[600px]">
+```
+
+**Alturas fixas:**
+```tsx
+// Não fazer:
+<div className="h-[373px]">
+// Fazer:
+<div className="min-h-[240px] lg:h-[373px]">
+```
+
+### Regras
+
+- Testar sempre em 375px (iPhone SE), 768px (tablet) e 1440px (desktop)
+- Header sempre deve ter menu hambúrguer para mobile (`lg:hidden` / `lg:flex`)
+- Grids começam em 1 coluna e expandem com breakpoints
+- Tipografia usa `clamp()` via tokens — não sobrescrever com tamanhos fixos em px
+- Carrosséis complexos (3D, órbita) devem ter fallback simples em mobile (grid ou scroll horizontal)
+- Nunca usar `overflow-hidden` em container externo sem testar scroll lateral no mobile
 
 ---
 
@@ -472,6 +568,23 @@ Services: `camelCase` — `leadsService`
 
 ---
 
+## Git — branches por fluxo
+
+Sempre que iniciar um novo fluxo de trabalho (nova feature, página, refactor ou correção), criar uma branch separada antes de qualquer alteração:
+
+```bash
+git checkout -b <tipo>/<descricao-curta>
+# exemplos:
+# feat/pagina-servicos
+# feat/hero-section-redesign
+# fix/formulario-contato
+# refactor/estrutura-pastas
+```
+
+Só commitar na `main` via merge/PR após revisão. Nunca trabalhar diretamente na `main`.
+
+---
+
 ## Regras finais
 
 - Não criar padrões novos sem necessidade
@@ -482,3 +595,69 @@ Services: `camelCase` — `leadsService`
 - Sempre pensar em SEO, performance e acessibilidade
 - `use client` é exceção, não regra — Server Components por padrão
 - `TranspoTech` — sempre grafado assim, nunca referência a transportadora
+
+---
+
+## Construção de Páginas Novas — Fluxo Wireframe-Driven
+
+> A partir de agora, **toda página nova nasce de um wireframe**. Um prompt curto
+> (ex.: *"monte a página de Peças a partir do wireframe X, na rota /produtos/pecas"*)
+> já deve acionar TODO o processo descrito abaixo automaticamente.
+
+### 1. Fontes de verdade
+
+| Fonte | É verdade de… | NÃO é fonte de… |
+|---|---|---|
+| **Wireframe** | **Estrutura e copy**: ordem das seções, hierarquia, blocos e textos exatos | Estilo visual — o wireframe é esquemático/cru |
+| **Páginas já construídas** (Home + todas as demais) | **Visual, componentes e interações**: cores, tipografia, espaçamentos, raios, sombras, animações e convenções de código | Estrutura/copy da página nova |
+
+**Regra de ouro:** o *"o quê e em que ordem"* vem do **wireframe**; o *"como se parece e se comporta"* vem das **páginas já construídas**. **Nunca** copiar o estilo cru do wireframe.
+
+### 2. Regras de fidelidade (não-negociáveis)
+
+- **Estrutura:** replicar a ordem e a composição das seções **exatamente** como no wireframe. Não adicionar, remover nem reordenar seções sem perguntar.
+- **Copy:** usar o texto do wireframe **exatamente como está** — não reescrever, resumir nem "melhorar". Texto que pareça placeholder (ex.: *lorem ipsum*) vira **pendência** para o usuário confirmar.
+- **Visual:** cores, tipografia, espaçamentos, raios, sombras e interações **exatamente** como nas páginas já construídas. Não aproximar nem inventar valores.
+- **Componentes:** reutilizar componentes já existentes — da Home **e de qualquer outra página** (cards, seções, blocos, primitivos como `Button`, `Section`, etc.). Antes de criar algo, **procurar um equivalente em todo o projeto**. Só criar novo se realmente não houver equivalente — e **justificar**.
+- **Ícones:** **sempre** da biblioteca **Lucide** (`lucide-react`). Nenhuma outra fonte. Se o wireframe indicar um ícone, mapear para o nome Lucide; se não indicar, usar o padrão equivalente das páginas já construídas. (Exceção: brand icons de redes sociais em `ui/icons.tsx`.)
+- **Imagens:** usar **somente** os caminhos fornecidos pelo usuário. Nunca inventar caminhos nem gerar imagens. Sempre via `next/image`. Falta de caminho vira **pendência**.
+- **Dependências novas:** **nunca** adicionar sem consultar o usuário.
+
+### 3. Mapeamento Wireframe → Componentes existentes (passo crítico)
+
+Para **cada** seção/bloco do wireframe, identificar o componente correspondente **já existente** no projeto que será usado para renderizá-lo. Onde o wireframe pedir algo **sem equivalente em nenhuma página**, descrever a lacuna e **perguntar antes** de criar algo novo.
+
+### 4. Navegação e rotas
+
+- O usuário **sempre** fornece o **caminho exato** de cada página.
+- Toda página deve ser acessível pelo caminho indicado (App Router: `src/app/<caminho>/page.tsx`, sem route groups — conforme a arquitetura deste arquivo).
+- Páginas **"em construção"** devem ser substituídas pela versão final **sem quebrar** o roteamento nem o link no header.
+- Seguir **sempre** o padrão de roteamento e navegação já existente no projeto.
+
+### 5. Fluxo obrigatório — PLANO antes de código
+
+Para **qualquer** página nova, primeiro entregar um **PLANO** e só codar **após aprovação**. O plano deve conter:
+
+1. **Inventário das seções do wireframe**, na ordem exata, com a copy de cada uma referenciada.
+2. **Mapeamento Wireframe → componentes existentes:** para cada seção, qual componente/estilo (da Home ou de outra página) será usado. Marcar **[reutiliza]** ou **[criar novo + justificativa]**.
+3. **Design tokens herdados:** cores (hex/tokens), fontes, tamanhos, pesos, line-heights, espaçamentos, raios, sombras e interações.
+4. **Mapeamento de ícones → nomes em Lucide.**
+5. **Lista de imagens necessárias** (placeholders aguardando os caminhos).
+6. **Plano de rota/navegação:** onde a página vai morar (caminho fornecido), como será acessada pelo header e, se aplicável, qual página "em construção" será substituída.
+7. **Dúvidas e ambiguidades** (perguntar antes de prosseguir).
+8. **Autoavaliação de confiança em %**, com **meta mínima de 95%**; se abaixo, listar o que falta e perguntar.
+
+### 6. Política de dúvidas
+
+Sempre que algo estiver ambíguo — copy que parece placeholder, seção sem equivalente em nenhuma página, comportamento não definido, qual componente reutilizar, caminho de imagem, ou onde a página deve ficar — **perguntar antes de assumir**. Preferir perguntar a errar. **Nunca** inventar textos, valores, caminhos ou componentes.
+
+### 7. Template por página (preencher a cada página nova)
+
+```txt
+- Nome da página:
+- Caminho/rota (sempre fornecido pelo usuário) e local de acesso no header:
+- Caminho do wireframe: inputs/wireframes/[arquivo]
+- Caminho atual "em construção" a ser substituído (se houver):
+- Pasta de imagens:
+- Observações específicas (se houver):
+```

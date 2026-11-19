@@ -1,0 +1,397 @@
+"use client";
+
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { useScrollHint } from "@/hooks/use-scroll-hint";
+import { createPortal } from "react-dom";
+import { SlidersHorizontal, X } from "lucide-react";
+import { Section } from "@/components/ui/section";
+import { Button } from "@/components/ui/button";
+import {
+  compararCustos,
+  DEFAULT_INPUTS,
+  type ResultadoEquipamento,
+  type SimuladorInputs,
+} from "@/data/glp-vs-eletrica";
+import { formatBRL, formatBRLInteiro, formatMeses } from "@/lib/format";
+import { LineBreaks } from "@/components/ui/line-breaks";
+import type { SectionContent } from "@/sanity/content/fields";
+import type { simularEconomiaPage } from "@/sanity/content/pages/simular-economia";
+
+type SimulatorContent = SectionContent<
+  typeof simularEconomiaPage.sections.simulator
+>;
+
+type FieldKey = keyof SimuladorInputs;
+
+// Um controle por nome editado no Studio, na mesma ordem.
+const fields: {
+  key: FieldKey;
+  min: number;
+  max: number;
+  step: number;
+  format: (v: number) => string;
+}[] = [
+  {
+    key: "turnos",
+    min: 1,
+    max: 3,
+    step: 0.5,
+    format: (v) =>
+      `${v.toLocaleString("pt-BR")} ${v === 1 ? "turno" : "turnos"}`,
+  },
+  {
+    key: "cilindro",
+    min: 100,
+    max: 350,
+    step: 10,
+    format: (v) => formatBRLInteiro(v),
+  },
+  {
+    key: "kwh",
+    min: 0,
+    max: 1.2,
+    step: 0.01,
+    format: (v) => formatBRL(v),
+  },
+];
+
+// Trilha fina cinza + thumb laranja (mesmo slider dos filtros do catálogo).
+const sliderClass =
+  "h-1 w-full appearance-none rounded-full bg-neutral-200 outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 [&::-moz-range-thumb]:size-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary-500 [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary-500 [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110";
+
+// Valor de cada linha da tabela, na ordem dos nomes editados no Studio.
+const metricRows: ((r: ResultadoEquipamento) => string)[] = [
+  (r) => formatBRL(r.custoHora),
+  (r) => formatBRL(r.custoMes),
+  (r) => formatBRL(r.custoAno),
+  (r) => formatBRL(r.custoCincoAnos),
+  (r) =>
+    r.eletrica
+      ? formatMeses(r.paybackMeses ?? Infinity)
+      : formatBRLInteiro(r.preco ?? 0),
+];
+
+const valueColor = (r: ResultadoEquipamento) =>
+  r.eletrica ? "text-secondary-600" : "text-neutral-800";
+
+export function SimulatorSection({ content }: { content: SimulatorContent }) {
+  const [inputs, setInputs] = useState<SimuladorInputs>(DEFAULT_INPUTS);
+  const [showFilters, setShowFilters] = useState(false);
+  const { glp, baterias } = compararCustos(inputs);
+  const colunas = [glp, ...baterias];
+
+  const isDefault =
+    inputs.turnos === DEFAULT_INPUTS.turnos &&
+    inputs.cilindro === DEFAULT_INPUTS.cilindro &&
+    inputs.kwh === DEFAULT_INPUTS.kwh;
+
+  const setField = (key: FieldKey, raw: string) =>
+    setInputs((prev) => ({ ...prev, [key]: Number(raw) }));
+
+  const openerRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  // Bottom sheet (mobile): foco no Fechar ao abrir, Tab preso no painel,
+  // Escape fecha, scroll do body travado e foco devolvido ao botão que abriu.
+  useEffect(() => {
+    if (!showFilters) return;
+    const opener = openerRef.current;
+    closeRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShowFilters(false);
+        return;
+      }
+      if (e.key !== "Tab" || !dialogRef.current) return;
+      const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      const outside = !dialogRef.current.contains(active);
+      if (e.shiftKey && (active === first || outside)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (active === last || outside)) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+      opener?.focus();
+    };
+  }, [showFilters]);
+
+  // Painel de filtros reutilizado no aside (desktop) e no bottom sheet (mobile).
+  const filtersPanel = (
+    <div className="flex h-full flex-col gap-5">
+      <div className="flex flex-col gap-1">
+        <h2 className="font-heading text-body-lg font-semibold text-neutral-800">
+          {content.filtersTitle}
+        </h2>
+        <p className="text-body leading-[1.4] text-neutral-600">
+          <LineBreaks text={content.filtersDescription} />
+        </p>
+      </div>
+
+      <div className="flex flex-col">
+        {fields.map((f, i) => {
+          const { label } = content.inputLabels[i];
+          return (
+            // Linha divisória acima de cada filtro (como no catálogo, sem seta).
+            <div
+              key={f.key}
+              className="flex flex-col gap-2 border-t border-neutral-200 pt-5 [&:not(:first-child)]:mt-5"
+            >
+              <span className="text-body font-semibold text-neutral-700">
+                {label}
+              </span>
+              <input
+                type="range"
+                min={f.min}
+                max={f.max}
+                step={f.step}
+                value={inputs[f.key]}
+                onChange={(e) => setField(f.key, e.target.value)}
+                aria-label={`${label}: ${f.format(inputs[f.key])}`}
+                aria-valuetext={f.format(inputs[f.key])}
+                className={sliderClass}
+              />
+              <div className="flex items-center justify-between text-body text-neutral-400">
+                <span>{f.format(f.min)}</span>
+                <span className="font-semibold text-primary-500">
+                  {f.format(inputs[f.key])}
+                </span>
+                <span>{f.format(f.max)}</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <Button
+        variant="gray"
+        size="md"
+        onClick={() => setInputs(DEFAULT_INPUTS)}
+        disabled={isDefault}
+        className="w-full"
+      >
+        {content.resetLabel}
+      </Button>
+    </div>
+  );
+
+  return (
+    <Section className="flex flex-col gap-8 pt-0 lg:gap-10">
+      {/* Botão de filtros (mobile) — mesmo padrão do catálogo de empilhadeiras */}
+      <button
+        ref={openerRef}
+        type="button"
+        onClick={() => setShowFilters(true)}
+        className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-neutral-800/10 px-5 text-body font-semibold text-neutral-700 lg:hidden"
+      >
+        <SlidersHorizontal aria-hidden className="size-5" />
+        {content.mobileFiltersLabel}
+      </button>
+
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[300px_1fr]">
+        {/* Filtros — sem box (só o fundo do site); no mobile viram bottom sheet */}
+        <aside className="hidden lg:flex">{filtersPanel}</aside>
+
+        {/* Comparação — box cinza com card branco interno para os equipamentos */}
+        <ComparisonTable
+          colunas={colunas}
+          title={content.tableTitle}
+          rowLabels={content.metricLabels}
+        />
+      </div>
+
+      {/* Nota de rodapé — mesma ressalva da planilha comercial */}
+      <p className="max-w-[820px] text-body leading-[1.5] text-neutral-500">
+        <strong className="font-semibold text-neutral-600">
+          {content.noteLabel}
+        </strong>{" "}
+        {content.note}
+      </p>
+
+      {/* Filtros como bottom sheet no mobile (mesmo padrão do catálogo) */}
+      {showFilters &&
+        createPortal(
+          <div
+            ref={dialogRef}
+            className="fixed inset-0 z-[200] flex flex-col justify-end lg:hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label={content.mobileFiltersLabel}
+          >
+            <div
+              className="absolute inset-0 bg-black/50"
+              onClick={() => setShowFilters(false)}
+              aria-hidden
+            />
+            <div className="relative z-10 flex max-h-[88svh] flex-col overflow-hidden rounded-t-2xl bg-white">
+              <div className="flex items-center justify-between border-b border-neutral-200 p-5">
+                <h2 className="font-heading text-h6 font-semibold text-neutral-800">
+                  {content.mobileFiltersLabel}
+                </h2>
+                <button
+                  ref={closeRef}
+                  type="button"
+                  onClick={() => setShowFilters(false)}
+                  aria-label="Fechar"
+                  className="flex size-9 items-center justify-center rounded-full text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-800"
+                >
+                  <X className="size-5" aria-hidden />
+                </button>
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto p-5">
+                {filtersPanel}
+              </div>
+              <div className="border-t border-neutral-200 p-5">
+                <button
+                  type="button"
+                  onClick={() => setShowFilters(false)}
+                  className="h-12 w-full rounded-full bg-primary-500 text-body font-semibold text-neutral-50 transition-colors hover:bg-primary-600"
+                >
+                  {content.mobileApplyLabel}
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
+    </Section>
+  );
+}
+
+// ─── Tabela comparativa: rótulos no card cinza, equipamentos no card branco ───
+function ComparisonTable({
+  colunas,
+  title,
+  rowLabels,
+}: {
+  colunas: ResultadoEquipamento[];
+  title: string;
+  rowLabels: SimulatorContent["metricLabels"];
+}) {
+  const lastRow = metricRows.length - 1;
+  const boxRef = useRef<HTMLDivElement>(null);
+
+  useScrollHint(boxRef);
+
+  return (
+    // Sem padding à esquerda: a coluna de rótulos (sticky) encosta na borda do
+    // box e não deixa nada vazar por trás dela. pt extra dá espaço para as
+    // empilhadeiras transbordarem o topo do card branco. min-w-0 deixa o box
+    // encolher e rolar internamente no mobile.
+    <div
+      ref={boxRef}
+      className="flex min-w-0 overflow-x-auto rounded-2xl bg-neutral-50 pb-3 pt-8 sm:pb-4 sm:pt-9"
+    >
+      <table className="min-w-[560px] flex-1 table-fixed border-separate border-spacing-0 text-left">
+        <colgroup>
+          <col className="w-[160px]" />
+          <col className="w-4" />
+          {colunas.map((c) => (
+            <col key={c.id} />
+          ))}
+        </colgroup>
+        <thead>
+          {/* Coluna de rótulos fixa (sticky): os cards de equipamento arrastam
+              "para trás" dela. align-top sobe o título para a linha do topo do
+              card branco. */}
+          <tr>
+            <th className="sticky left-0 z-20 bg-neutral-50 pl-4 pr-4 pt-2 align-top text-left">
+              {/* Estende o cinza para cima cobrindo a faixa onde as
+                  empilhadeiras transbordam (acima da linha do cabeçalho). */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 bottom-full h-12 bg-neutral-50"
+              />
+              <span className="block font-heading text-xl font-bold leading-[1.15] text-neutral-800">
+                <LineBreaks text={title} />
+              </span>
+            </th>
+            <td aria-hidden />
+            {colunas.map((c, i) => (
+              <th
+                key={c.id}
+                scope="col"
+                className={`bg-white px-3 pb-4 pt-4 text-center align-bottom ${
+                  i === 0 ? "rounded-tl-xl" : ""
+                } ${i === colunas.length - 1 ? "rounded-tr-xl" : ""}`}
+              >
+                <span className="flex flex-col items-center gap-2">
+                  {/* -mt negativo faz a empilhadeira transbordar o topo do card */}
+                  <span className="relative -mt-8 h-16 w-full sm:-mt-9">
+                    <Image
+                      src={c.image}
+                      alt={c.nome}
+                      fill
+                      sizes="160px"
+                      className="object-contain"
+                    />
+                  </span>
+                  <span className="flex flex-col">
+                    <span className="text-body font-bold text-neutral-800">
+                      {c.nomeCurto}
+                    </span>
+                    <span className="text-body font-normal leading-tight text-neutral-500">
+                      {c.motor}
+                    </span>
+                  </span>
+                </span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {metricRows.map((fmt, ri) => {
+            const last = ri === lastRow;
+            const { label } = rowLabels[ri];
+            return (
+              <tr key={label}>
+                <th
+                  scope="row"
+                  className={`sticky left-0 z-20 border-t border-neutral-200 bg-neutral-50 py-4 pl-4 pr-4 align-middle text-body ${
+                    last
+                      ? "font-bold text-neutral-800"
+                      : "font-medium text-neutral-600"
+                  }`}
+                >
+                  {label}
+                </th>
+                <td aria-hidden />
+                {colunas.map((c, i) => (
+                  <td
+                    key={c.id}
+                    className={`border-t border-neutral-100 px-3 py-4 text-center text-body font-bold ${
+                      last ? "bg-secondary-600/10" : "bg-white"
+                    } ${valueColor(c)} ${last && i === 0 ? "rounded-bl-xl" : ""} ${
+                      last && i === colunas.length - 1 ? "rounded-br-xl" : ""
+                    }`}
+                  >
+                    {fmt(c)}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      {/* Espaço à direita como conteúdo rolável — ao chegar no fim do scroll
+          horizontal o fundo cinza do box aparece à direita do último card
+          (o padding-right no próprio container de scroll é ignorado no fim). */}
+      <div aria-hidden className="w-3 shrink-0 sm:w-4" />
+    </div>
+  );
+}
